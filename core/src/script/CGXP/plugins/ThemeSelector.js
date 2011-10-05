@@ -87,7 +87,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                     if (record) {
                         this.tree.loadTheme.apply(this.tree, [record.data]);
                     }   
-                    button.menu.hide();
+                    themeSelector.menu.hide();
                 }   
             }   
         };  
