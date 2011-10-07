@@ -86,11 +86,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }),
             new cgxp.tree.TreeNodeLoading()
         ];
-        var layerNodeUI = Ext.extend(Ext.tree.TreeNodeTriStateUI, new GeoExt.tree.TreeNodeUIEventMixin());
+        var layerNodeUI = Ext.extend(cgxp.tree.TreeNodeTriStateUI, new GeoExt.tree.TreeNodeUIEventMixin());
         this.loader = new Ext.tree.TreeLoader({
             uiProviders: {
                 layer: layerNodeUI,
-                'default': Ext.tree.TreeNodeTriStateUI
+                'default': cgxp.tree.TreeNodeTriStateUI
             }
         });
         cgxp.tree.LayerTree.superclass.initComponent.call(this, arguments);

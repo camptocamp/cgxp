@@ -1,13 +1,29 @@
 /**
  * See http://www.jbruni.com.br/extjs-tristate/
  * and http://www.sencha.com/forum/showthread.php?98442-TreePanel-with-tri-state-checkboxes&s=396391365361edfc52edc242327be057
+ *
+ * CGXP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CGXP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
-Ext.tree.TreeNodeTriStateUI = function() {
-    Ext.tree.TreeNodeTriStateUI.superclass.constructor.apply(this, arguments);
+
+Ext.namespace("cgxp.tree");
+
+cgxp.tree.TreeNodeTriStateUI = function() {
+    cgxp.tree.TreeNodeTriStateUI.superclass.constructor.apply(this, arguments);
     this.partial = false;
 };
 
-Ext.extend(Ext.tree.TreeNodeTriStateUI, Ext.tree.TreeNodeUI, {
+Ext.extend(cgxp.tree.TreeNodeTriStateUI, Ext.tree.TreeNodeUI, {
     renderElements : function(n, a, targetNode, bulkRender){
         this.indentMarkup = n.parentNode ? n.parentNode.ui.getChildIndent() : '';
 
