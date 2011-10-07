@@ -54,7 +54,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
         config = Ext.apply({
             xtype: "cgxp_layertree",
-            map: GeoExt.MapPanel.guess().map
+            map: this.target.mapPanel.map
         }, config || {});
         
         this.tree = cgxp.plugins.LayerTree.superclass.addOutput.call(this, config);
