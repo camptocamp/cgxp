@@ -44,11 +44,11 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
      */
     themes: null,
 
-    /** api: config[tree]
-     *  ``Object``
-     *  Layertree panel.
+    /** api: config[layerTreeId]
+     *  ``String``
+     *  Id of the layertree tool.
      */
-    tree: null,
+    layerTreeId: null,
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -85,10 +85,12 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 selectionchange: function(view, nodes) {
                     var record = view.getRecords(nodes)[0];
                     if (record) {
-                        this.tree.loadTheme.apply(this.tree, [record.data]);
+                        var tree = this.target.tools[this.layerTreeId].tree;
+                        tree.loadTheme.apply(tree, [record.data]);
                     }   
                     themeSelector.menu.hide();
-                }   
+                },
+                scope: this
             }   
         };  
         var localView = new Ext.DataView(Ext.apply({
