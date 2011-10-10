@@ -254,7 +254,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var groupNode = this.root.insertBefore({
             text: OpenLayers.i18n(group.name),
             groupId: group.name,
-            nodeType: 'app_layer',
+            nodeType: 'cgxp_layer',
             iconCls: 'no-icon',
             cls: 'x-tree-node-theme',
             loaded: true,
@@ -579,9 +579,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *
      * Parameters:
      * theme {Object} the theme config
-     * layers {Array} the sub layers displayed at once. optional.
-     * opacity {Float} the OL layer opacity. optional
-     * visibility {Boolean} the OL layer visibility. optional
      */
     loadTheme: function(theme) {
         Ext.each(theme.children, function(group) {
@@ -790,4 +787,4 @@ cgxp.tree.LayerNode = Ext.extend(GeoExt.tree.LayerNode, {
     // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
     onLayerVisibilityChanged: Ext.emptyFn
 });
-Ext.tree.TreePanel.nodeTypes.app_layer = cgxp.tree.LayerNode;
+Ext.tree.TreePanel.nodeTypes.cgxp_layer = cgxp.tree.LayerNode;
