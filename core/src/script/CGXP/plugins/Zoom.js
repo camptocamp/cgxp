@@ -40,6 +40,11 @@ cgxp.plugins.Zoom = Ext.extend(gxp.plugins.Zoom, {
     /** api: ptype = cgxp_zoom */
     ptype: "cgxp_zoom",
 
+    /** api: config[toggleGroup]
+     *  The group this toggle button is a member of.
+     */
+    toggleGroup: null,
+
     /** api: method[addActions]
      */
     addActions: function() {
