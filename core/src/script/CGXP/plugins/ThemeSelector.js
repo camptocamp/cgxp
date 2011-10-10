@@ -86,7 +86,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                     var record = view.getRecords(nodes)[0];
                     if (record) {
                         var tree = this.target.tools[this.layerTreeId].tree;
-                        tree.loadTheme.apply(tree, [record.data]);
+                        tree.loadTheme(record.data);
                     }   
                     themeSelector.menu.hide();
                 },
