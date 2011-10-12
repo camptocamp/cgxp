@@ -68,7 +68,6 @@ cgxp.plugins.Zoom = Ext.extend(gxp.plugins.Zoom, {
         }];
         return gxp.plugins.Zoom.superclass.addActions.apply(this, [actions]);
     }
-
 });
 
 Ext.preg(cgxp.plugins.Zoom.prototype.ptype, cgxp.plugins.Zoom);

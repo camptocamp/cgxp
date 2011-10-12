@@ -210,7 +210,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
-    addOutput: function() {
+    addOutput: function(config) {
         var map = this.target.mapPanel.map;
 
         this.events.addEvents({
@@ -328,20 +328,20 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             center = new  OpenLayers.LonLat(centroid.x, centroid.y);
                         }
                         feature.layer.map.setCenter(center);
-                    });
+                    }, this);
                     // task to fix an ext bug ...
                     var task = new Ext.util.DelayedTask(function() {
                         var sm = this.currentGrid.getSelectionModel();
                         sm.clearSelections();
                         sm.selectFirstRow();
-                    });
+                    }, this);
                     grid.on('render', function(renderGrid) {
                         if (this.currentGrid != null) {
                             this.currentGrid.getSelectionModel().clearSelections();
                         }
                         this.currentGrid = renderGrid
                         task.delay(200);
-                    });
+                    }, this);
                     this.gridByType[feature.type] = grid;
                     this.tabpan.add(grid);
                 }
@@ -363,12 +363,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             this.tabpan.setActiveTab(this.gridByType[firstType].id);
-            this.currentGrid = this.tabpan.getActiveTab();
             this.textItem.setText(this.getCount());
-            this.currentGrid.getSelectionModel().selectFirstRow();
+            this.currentGrid = this.tabpan.getActiveTab();
             this.tabpan.ownerCt.setVisible(true);
+            this.currentGrid.getSelectionModel().selectFirstRow();
             this.tabpan.ownerCt.expand();
-            this.tabpan.ownerCt.doLayout();
+            this.tabpan.ownerCt.ownerCt.doLayout();
         }, this);
         
         
@@ -377,7 +377,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             text: ''
         }); 
         var dummy_form = Ext.DomHelper.append(document.body, {tag : 'form'});
-        this.tabpan = new Ext.TabPanel({
+        config = {
+            xtype: 'tabpanel',
             plain: true,
             enableTabScroll: true,
             listeners: {
@@ -437,7 +438,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                                 if (bbox.getWidth() + bbox.getHeight() > 0) {
                                     map.zoomToExtent(bbox.scale(1.05));
                                 }
-                            }
+                            },
+                            scope: this
                         }, {
                             text: OpenLayers.i18n('ResultsPanel.actions.csvSelectionExport'), 
                             handler: this.csvExport,
@@ -453,20 +455,23 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         this.tabpan.ownerCt.ownerCt.doLayout();
                     }
                 }
-            ]
-        });
-
-        this.tabpan.on('tabchange', function(tabpanel, tab) {
-            if (this.currentGrid != null) {
-                this.currentGrid.getSelectionModel().clearSelections();
+            ],
+            listners: {
+                'tabchange': function(tabpanel, tab) {
+                    if (this.currentGrid != null) {
+                        this.currentGrid.getSelectionModel().clearSelections();
+                    }
+                    this.currentGrid = tab;
+                    if (this.currentGrid != null) {
+                        this.currentGrid.getSelectionModel().selectFirstRow();
+                        this.textItem.setText(this.getCount());
+                    }
+                },
+                scope: this
             }
-            this.currentGrid = tab;
-            if (this.currentGrid != null) {
-                this.currentGrid.getSelectionModel().selectFirstRow();
-                this.textItem.setText(this.getCount());
-            }
-        });
+        };
 
+        this.tabpan = cgxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         return this.tabpan;
     }
 });
