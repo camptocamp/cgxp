@@ -16,6 +16,7 @@
  */
 
 /*
+ * @requires plugins/Tool.js
  * @include GeoExt/data/LayerStore.js
  */
 
@@ -35,7 +36,7 @@ Ext.namespace("cgxp.plugins");
  */   
 cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_featuregrid */
+    /** api: ptype = cgxp_mapopacityslider */
     ptype: "cgxp_mapopacityslider",
 
     /** api: config[orthoRef]
