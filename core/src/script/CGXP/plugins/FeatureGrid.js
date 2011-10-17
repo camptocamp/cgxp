@@ -106,6 +106,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
+    /** api: config[dummy_form]
+     * ´´Object´´
+     * fake form used for csv export
+     */
+    dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
+
     /** public: method[csvExport]
      * Export as a SCV by default using the rfc4180 recomantation.
      * http://tools.ietf.org/html/rfc4180
@@ -126,11 +132,16 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 var properties = [];
                 for (prop in attributes) {
                     if (attributes.hasOwnProperty(prop)) {
-                        properties.push(quote + attributes[prop].replace(quote, quote+quote) + quote);
+                        // special IE as it doesnt handle null element as string
+                        if (attributes[prop] != null) {
+                            properties.push(this.quote + attributes[prop].replace(this.quote, this.quote+this.quote) + this.quote);
+                        } else {
+                            properties.push(this.quote + this.quote);
+                        }
                     }
                 }
-                csv.push(properties.join(comma));
-            });
+                csv.push(properties.join(this.comma));
+            }, this);
 
             Ext.Ajax.request({
                 url: App["csvURL"],
@@ -139,7 +150,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     name: this.currentGrid.title,
                     csv: csv.join('\n')
                 },
-                form: dummy_form,
+                form: this.dummy_form,
                 isUpload: true
             });
         }
@@ -246,10 +257,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             if (this.tabpan !== null) {
                 this.tabpan.items.each(function (item) {
                     this.tabpan.hideTabStripItem(item);
-                });
+                }.createDelegate(this));
                 this.tabpan.doLayout();
             }
-        }, this);
+        }.createDelegate(this));
 
         this.events.on('queryresults', function(features) {
             // if no feature do nothing
@@ -376,7 +387,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.textItem = new Ext.Toolbar.TextItem({
             text: ''
         }); 
-        var dummy_form = Ext.DomHelper.append(document.body, {tag : 'form'});
+
         config = {
             xtype: 'tabpanel',
             plain: true,
@@ -401,11 +412,13 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             {text: OpenLayers.i18n('ResultsPanel.select.all'), handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 sm.selectAll();
-                            }},
+                            },
+                            scope: this},
                             {text: OpenLayers.i18n('ResultsPanel.select.none'), handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 sm.clearSelections();
-                            }},
+                            },
+                            scope: this},
                             {text: OpenLayers.i18n('ResultsPanel.select.toggle'), handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 var recordsToSelect = [];
@@ -417,9 +430,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                                 });
                                 sm.clearSelections();
                                 sm.selectRecords(recordsToSelect);
-                            }}
+                            }, 
+                            scope: this}
                         ]
-                    })
+                    }), 
+                    scope: this
                 }),
                 {
                     text: OpenLayers.i18n('ResultsPanel.actions'),
@@ -443,7 +458,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         }, {
                             text: OpenLayers.i18n('ResultsPanel.actions.csvSelectionExport'), 
                             handler: this.csvExport,
-                            target: this
+                            target: this,
+                            scope: this
                         }]
                     }
                 } ,'->', this.textItem, '-',{
@@ -453,7 +469,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         this.textItem.setText('');
                         this.tabpan.ownerCt.setVisible(false);
                         this.tabpan.ownerCt.ownerCt.doLayout();
-                    }
+                    },
+                    scope: this
                 }
             ],
             listners: {
