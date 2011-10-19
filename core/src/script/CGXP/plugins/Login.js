@@ -127,9 +127,9 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                         if (el.getKey() == Ext.EventObject.ENTER) {
                             this.submitForm();
                         }
-                    }
-                },
-                scope: this
+                    },
+                    scope: this
+                }
             },
             items:[{
                 fieldLabel: OpenLayers.i18n('Tools.username'),
