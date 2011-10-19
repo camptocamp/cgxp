@@ -38,10 +38,6 @@
  */
 Ext.namespace("cgxp.plugins");
 
-if(!window.App) App = {};
-// Maximum number of features returned by query
-App.MAX_FEATURES = App.MAX_FEATURES || 100;
-
 /** api: constructor
  *  .. class:: QueryBuilder(config)
  *
@@ -51,17 +47,40 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_print */
     ptype: "cgxp_querier",
 
-    /** 
-     *  Property: options
-     *  json object
+    /** api: config[options]
+     *  ``Json Object``
+     *  parameters for the panel
      */
     options: null,
 
-    /** 
-     *  Property: events
-     *  {Ext.util.Observable}
+    /** api: config[maxFeatures]
+     *  ``Int``
+     *  Limit of features returned by mapserver
+     */
+    maxFeatures: null,
+
+    /** api: config[mapserverproxyURL]
+     *  ``String``
+     *  url of the mapserver proxy
+     */
+    mapserverproxyURL: null,
+
+    /** api: config[srid]
+     *  ``String``
+     *  projection EPSG code, for example EPSG:21781
+     */
+    srsName: null,
+
+    /** api: config[events]
+     *  ``Ext.util.Observable``
      */
     events: null,
+
+    /** api: config[featureType]
+     *  ``String``
+     *  The name of the mapserver layer
+     */
+    featureType: null,
 
     /**
      * Property: panel
@@ -92,13 +111,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      * {OpenLayers.Protocol.WFS}
      */
     protocol: null,
-    
-    /**
-     * Property: featureType
-     * {String} The name of the mapserver layer
-     */
-    featureType: App["queryBuilderLayer"],
-    
+       
     /**
      * Property: drawingLayer
      * {OpenLayers.Layer.Vector}
@@ -164,8 +177,9 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             
             this.protocol.read({
                 // don't work with actual version of mapserver, the proxy will limit to 200
+                // it is intended to be reactivated this once mapserver is fixed
                 // features to protect the browser.
-                // maxFeatures: App.MAX_FEATURES || 100,
+                // maxFeatures: this.maxFeatures || 100,
                 filter: filter,
                 callback: function(response) {
                     btn.setIconClass(btn.initialConfig.iconCls);
@@ -271,10 +285,10 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             }
             
             this.protocol = new OpenLayers.Protocol.WFS({
-                url: App.mapserverproxyURL,
+                url: this.mapserverproxyURL,
                 featureType: this.featureType,
                 featureNS: "http://mapserver.gis.umn.edu/mapserver",
-                srsName: "EPSG:21781", // FIXME ?
+                srsName: this.srsName,
                 version: "1.1.0",
                 geometryName: this.geometryName
             });
@@ -298,7 +312,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             }
             if (!this.store) {
                 this.store = new GeoExt.data.AttributeStore({
-                    url: App.mapserverproxyURL,
+                    url: this.mapserverproxyURL,
                     fields: ["name", "type", "displayName"],
                     baseParams: {
                         "TYPENAME": this.featureType,
@@ -313,10 +327,6 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                             // attributes translation:
                             this.store.each(function(r) {
                                 r.set("displayName", OpenLayers.i18n(r.get("name")));
-                                if (App.filters && App.filters[r.get('name')]) {
-                                    r.set('type', r.get('type').replace(/xsd:/, ''));
-                                    r.set('url', App.filters[r.get('name')]);
-                                }
                             });
                             createProtocol();                        
                             createQuerierPanel();
