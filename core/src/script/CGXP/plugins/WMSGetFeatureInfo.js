@@ -67,6 +67,7 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             iconCls: 'info',
             tooltip: OpenLayers.i18n("Query.actiontooltip"),
+            toggleGroup: this.toggleGroup,
             control: this.createControl()
         }, this.options));
         return cgxp.plugins.WMSGetFeatureInfo.superclass.addActions.apply(this, [[action]]);
