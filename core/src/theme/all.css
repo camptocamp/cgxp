@@ -32,9 +32,18 @@ div#header-out {
 .x-toolbar .mapHistoryNext {
     background: url('img/arrow_right.png') top left no-repeat;
 }
-.x-toolbar .mapMeasurePosition {
-    background: url('img/bullet_orange.png') top left no-repeat;
+
+/* cgxp_measure */
+.x-btn .cgxp-icon-measure-point, .x-menu-item .cgxp-icon-measure-point, .x-tree-node .cgxp-icon-measure-point {
+    background-image: url('img/bullet_orange.png') !important;
 }
+.x-btn .cgxp-icon-measure-length, .x-menu-item .cgxp-icon-measure-length, .x-tree-node .cgxp-icon-measure-length {
+    background-image: url(img/ruler.png) !important;
+}
+.x-btn .cgxp-icon-measure-area, .x-menu-item .cgxp-icon-measure-area, .x-tree-node .cgxp-icon-measure-area {
+   background-image: url(img/ruler_square.png) !important;
+}
+
 .x-toolbar .permalink {
     background: url('img/permalink.png') top left no-repeat;
 }
