@@ -153,18 +153,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             node.getUI().toggleCheck(!node.getUI().isChecked());
         });
 
-        this.on('afterrender', function() {
-            Ext.each(this.defaultThemes, function(theme) {
-                this.loadTheme(this.findThemeByName(theme));
-            }, this);
-        }, this);
-
         this.map.events.on({
             'zoomend': function() {
                 this.getRootNode().cascade(this.checkInRange);
             },
             scope: this
         });
+
         this.on({
             "expandnode": function(node) {
                 node.eachChild(this.checkInRange);
@@ -695,7 +690,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return state;
     },
 
-
     /**
      * Method: findGroupByName
      * Finds the group config using its name
@@ -723,7 +717,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }, this);
         return group;
     },
-
 
     /**
      * Method: findThemeByName
@@ -777,6 +770,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 zoomToScale.hide();
             }
         }
+    },
+
+    /**
+     * Method: loadDefaultThemes
+     * load the default Theme
+     */
+    loadDefaultThemes: function() {
+        Ext.each(this.defaultThemes, function(theme) {
+            this.loadTheme(this.findThemeByName(theme));
+        }, this);
     }
 });
 
