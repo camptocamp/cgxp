@@ -112,6 +112,15 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
 
+    init: function() {
+        cgxp.plugins.FeatureGrid.superclass.init.apply(this, arguments);
+        this.target.on('ready', this.viewerReady, this);
+    },
+
+    viewerReady: function() {
+        this.target.mapPanel.map.addLayer(this.vectorLayer);
+    },
+
     /** public: method[csvExport]
      * Export as a SCV by default using the rfc4180 recomantation.
      * http://tools.ietf.org/html/rfc4180
@@ -239,7 +248,6 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 displayInLayerSwitcher: false,
                 alwaysInRange: true
         });
-        map.addLayer(this.vectorLayer);
 
         this.events.on('queryopen', function() {
         }, this);
