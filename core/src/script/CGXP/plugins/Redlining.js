@@ -51,24 +51,20 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     toggleGroup: null,
 
-    /** api: method[addActions]
-     */
-    addActions: function() {
-        /**
-         * Method: deactivateRedlining
-         * Deactivates all redlining controls
-         */
-        // See monkey patch (end of this file)
-        var deactivateRedlining = function() {
-            var actions = redliningPanel.controler.actions;
-            for (var i=0; i < actions.length; i++) {
-                if (actions[i].control) {
-                    actions[i].control.deactivate();
-                }
-            }
-        };
+    redliningPanel: null,
 
-        var redliningPanel = new GeoExt.ux.form.RedLiningPanel({
+    redliningWindow: null,
+
+    init: function() {
+        cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
+        this.target.on('ready', this.viewerReady, this);
+    },
+
+    viewerReady: function() {
+        /* instanciating the RedLiningPanel at the 'ready' stage because the 
+           actions depends of the existence of the layer, which can only be
+           added now to be correctly placed above the background layers */
+        this.redliningPanel = new GeoExt.ux.form.RedLiningPanel({
             map: this.target.mapPanel.map,
             popupOptions: {
                 unpinnable: false,
@@ -82,14 +78,36 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
             'import': false,
             bodyStyle: 'display: none',
             border: false
-        }); 
+        });
+        /* pushing the RedLiningPanel with all the actions into the existing but 
+           empty redliningWindow */
+        this.redliningWindow.add(this.redliningPanel);
+    },
+
+    /** api: method[addActions]
+     */
+    addActions: function() {
+
+        /**
+         * Method: deactivateRedlining
+         * Deactivates all redlining controls
+         */
+        // See monkey patch (end of this file)
+        var deactivateRedlining = function() {
+            var actions = this.redliningPanel.controler.actions;
+            for (var i=0; i < actions.length; i++) {
+                if (actions[i].control) {
+                    actions[i].control.deactivate();
+                }
+            }
+        }.createDelegate(this);
 
         /** 
-         * Prorperty: redliningWindow
+         * Property: redliningWindow
          */
-        var redliningWindow = new cgxp.tool.Window({
+        this.redliningWindow = new cgxp.tool.Window({
             width: 200, 
-            items: [redliningPanel]
+            items: []
         }); 
 
         var button = new cgxp.tool.Button(
@@ -97,7 +115,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
                 text: OpenLayers.i18n('Tools.redlining'),
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
-                window: redliningWindow
+                window: this.redliningWindow
             })  
         );  
         button.on({
