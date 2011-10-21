@@ -85,7 +85,7 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         // when we have no sub-layers selected
         return new OpenLayers.Control.WMSGetFeatureInfo({
             infoFormat: "application/vnd.ogc.gml",
-            maxFeatures: App.MAX_FEATURES || 100,
+            maxFeatures: this.maxFeatures || 100,
             queryVisible: true,
             drillDown: true,
             map: this.target.mapPanel.map,

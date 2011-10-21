@@ -153,7 +153,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }, this);
 
             Ext.Ajax.request({
-                url: App["csvURL"],
+                url: this.csvURL,
                 method: 'POST',
                 params: {
                     name: this.currentGrid.title,
@@ -221,9 +221,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         }
         var count = this.currentGrid.getStore().getCount();
         var plural = (count>1) ? "s" : "";
-        return (count == App.MAX_FEATURES) ?
-            OpenLayers.i18n("ResultsPanel.max_features_msg")+' ('+App.MAX_FEATURES+')':
-            count+" "+OpenLayers.i18n("ResultsPanel.result"+plural);
+        return (count == this.maxFeatures) ?
+            OpenLayers.i18n("ResultsPanel.max_features_msg")
+                + '(' + this.maxFeatures + ')' :
+                count + " " + OpenLayers.i18n("ResultsPanel.result" + plural);
         
     },
 

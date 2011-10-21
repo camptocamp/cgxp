@@ -77,9 +77,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         // create a print provider
         var printProvider = new GeoExt.data.PrintProvider({
-            url: App.printURL,
+            url: this.printURL,
             baseParams: {
-                url: App.printURL
+                url: this.printURL
             },
             listeners: {
                 beforedownload: function(pp, url) {
@@ -148,23 +148,13 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         });
         printProvider.on('encodelayer', function(printProvider, layer, encodedLayer) {
             var apply = false;
-            if (layer.ref == 'plan_color') {
-                encodedLayer.layers = App["encodedLayers"]["plan_color"];
+            if (layer.mapserverLayers) {
+                encodedLayer.layers = layer.mapserverLayers;
                 encodedLayer.format = 'image/png';
                 apply = true;
             }  
-            if (layer.ref == 'plan') {
-                encodedLayer.layers = App["encodedLayers"]["plan"];
-                encodedLayer.format = 'image/png';
-                apply = true;
-            }
-            if (layer.ref == 'ortho') {
-                encodedLayer.layers = App["encodedLayers"]["ortho"];
-                encodedLayer.format = 'image/jpeg';
-                apply = true;
-            }
             if (apply) {
-                encodedLayer.baseURL =  App["mapserverproxyURL"];
+                encodedLayer.baseURL =  this.mapserverURL;
                 encodedLayer.type =  'WMS';
                 delete encodedLayer.dimensions;
                 delete encodedLayer.formatSuffix;
