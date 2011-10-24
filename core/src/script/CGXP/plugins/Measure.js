@@ -161,54 +161,70 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             return metric.toFixed(2) + " " + metricUnit + dim;
         };
 
-        var measureToolTip;
+        var popup = null;
+
+        var showPopup = function(event, complet) {
+            var complet = typeof(complet) != 'undefined' ? complet : false;
+            if (!popup) {
+                popup = new GeoExt.Popup({
+                    title: title,
+                    border: false,
+                    map: this.target.mapPanel.map,
+                    unpinnable: false,
+                    closeAction: 'hide',
+                    location: new OpenLayers.LonLat(0, 0)
+                });
+            }
+            popup.hide();
+            var singlePoint = false;
+            var measure = null;
+            if (event.geometry.components) {
+                var points = event.geometry.components;
+                measure = event.measure.toFixed(2);
+            } else {
+                var points = Array(event.geometry);
+                singlePoint = true;
+                measure = event.measure;
+            }
+            if (points[0] instanceof OpenLayers.Geometry.LinearRing) {
+                var line = points[0];
+                points = points[0].components;              
+            }
+            // conditions to show the popup are different for partial and final 
+            // geometries, the cases are: poly ongoing, poly complet, line ongoing, 
+            // line complet, point
+            if (points.length > 4 || (points.length > 3 && complet)|| 
+                (points.length > 2 && event.order == 1) || 
+                (points.length > 1 && event.order == 1 && complet) || singlePoint) {
+                if (event.order == 2) {
+                    var poly = new OpenLayers.Geometry.Polygon([line]);
+                    popup.location = poly.getBounds().getCenterLonLat();
+                } else {
+                    popup.location = points[points.length-1].getBounds().getCenterLonLat();
+                }
+                popup.position();
+                popup.show();
+                var measure
+                popup.update({
+                    measure: measure,
+                    units: event.units,
+                    dim: event.order == 2 ? '<sup>2</sup>' : '',
+                    html: makeString(event)
+                });
+            }
+        }.createDelegate(this);
+
         var controlOptions = Ext.apply({}, this.initialConfig.controlOptions);
         Ext.applyIf(controlOptions, {
             geodesic: true,
             persist: true,
             handlerOptions: {layerOptions: {styleMap: styleMap}},
             eventListeners: {
-                measurepartial: function(event) {
-                    cleanup();
-                    measureToolTip = this.addOutput({
-                        xtype: 'tooltip',
-                        html: makeString(event),
-                        title: title,
-                        autoHide: false,
-                        closable: true,
-                        draggable: false,
-                        mouseOffset: [0, 0],
-                        showDelay: 1,
-                        listeners: {hide: cleanup}
-                    });
-                    if(event.measure > 0) {
-                        var px = measureControl.handler.lastUp;
-                        var p0 = this.target.mapPanel.getPosition();
-                        measureToolTip.targetXY = [p0[0] + px.x, p0[1] + px.y];
-                        measureToolTip.show();
-                    }
-                },
+                measurepartial: showPopup,
                 measure: function(event) {
-                    cleanup();
-                    measureToolTip = this.addOutput({
-                        xtype: 'tooltip',
-                        target: Ext.getBody(),
-                        html: makeString(event),
-                        title: title,
-                        autoHide: false,
-                        closable: true,
-                        draggable: false,
-                        mouseOffset: [0, 0],
-                        showDelay: 1,
-                        listeners: {
-                            hide: function() {
-                                measureControl.cancel();
-                                cleanup();
-                            }
-                        }
-                    });
+                  showPopup(event, true);
                 },
-                deactivate: cleanup,
+                deactivate: function() { popup && popup.hide(); },
                 scope: this
             }
         });
