@@ -30,9 +30,10 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: Redlining(config)
+ *  .. class:: Permalink(config)
  *
- *    Provides an action that opens a redlining tools panel.
+ *    Provides an action that opens a window containing a permalink
+ *    for the application.
  */
 cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 
@@ -40,7 +41,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_permalink",
 
     /** api: config[options]
-     *  ``Json Object``
+     *  ``Object``
      *  parameters for the tool
      */
     options: null,
@@ -48,27 +49,6 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-
-        /**
-         * Method: showPermalink
-         * Handler of the {Ext.Action}.
-         */
-        var showPermalink = function() {
-            permalinkWindow.show();
-        };
-
-        // Public
-
-        Ext.apply(this, {
-
-            /**
-             * APIProperty: action
-             * {Ext.Action} The permalink action. Read-only.
-             */
-            action: null
-        });
-
-        // Main
 
         var permalinkTextField = new Ext.form.TextField({
             hideLabel: true,
@@ -113,7 +93,9 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         options = Ext.apply({
             allowDepress: false,
             iconCls: 'permalink',
-            handler: showPermalink
+            handler: function() {
+                permalinkWindow.show();
+            }
         }, this.options);
         
         var action = new Ext.Action(options);
