@@ -780,8 +780,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     loadDefaultThemes: function() {
         if (this.defaultThemes) {
             // reverse to have the first theme in the list at the top
-            Ext.each(this.defaultThemes.concat().reverse(), function(theme) {
-                this.loadTheme(this.findThemeByName(theme));
+            Ext.each(this.defaultThemes.concat().reverse(), function(themeName) {
+                theme = this.findThemeByName(themeName);
+                // if found
+                if (theme) {
+                    this.loadTheme(theme);
+                }
             }, this);
         }
     }
