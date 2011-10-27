@@ -145,6 +145,7 @@ div.baseLayersOpacitySlider .opacityToolbar {
 }
 .gx-tree-layer-actions .zoomtoscale {
     background: transparent url(img/magnifier--arrow.png) no-repeat;
+    margin-right: 3px;
 }
 .x-tree-root-node li {
     padding: 4px 0;
@@ -176,6 +177,7 @@ div.baseLayersOpacitySlider .opacityToolbar {
 }
 .gx-tree-layer-actions .legend {
     background: transparent url(img/legend.png) no-repeat;
+    margin-right: 2px;
 }
 .gx-tree-layer-actions .legend-on {
     background: transparent url(img/legend-up.png) no-repeat;
@@ -326,4 +328,16 @@ div.legend label {
 
 #search-tip em, #search-tip em strong {
     font-style: italic;
+}
+
+/* layertree legend */
+
+.legend_level_1 {
+    margin-left: 52px;
+}
+.legend_level_2 {
+    margin-left: 66px;
+}
+.legend_level_3 {
+    margin-left: 80px;
 }

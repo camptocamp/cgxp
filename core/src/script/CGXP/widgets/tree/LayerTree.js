@@ -175,7 +175,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * {Object} The group config object
      */
     addGroup: function(group) {
-        function addNodes(children, parentNode) {
+        function addNodes(children, parentNode, level) {
+            if (!level) {
+                level = 1;
+            }
             var checkedNodes = group.layer.params.LAYERS;
             Ext.each(children, function(item) {
                 var nodeConfig = {
@@ -189,7 +192,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 };
                 if (!item.children) {
                     this.addMetadata(item, nodeConfig);
-                    this.addLegend(item, nodeConfig);
+                    this.addLegend(item, nodeConfig, level);
                     this.addScaleAction(item, nodeConfig);
                     Ext.apply(nodeConfig, {
                         nodeType: 'gx_layerparam',
@@ -203,7 +206,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 var node = parentNode.appendChild(nodeConfig);
                 if (item.children) {
-                    addNodes.call(this, item.children, node);
+                    addNodes.call(this, item.children, node, level+1);
                 }
             }, this);
         }
@@ -273,7 +276,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 qtip: OpenLayers.i18n("Tree.delete")
             }]
         }, this.root.firstChild);
-        addNodes.call(this, group.children, groupNode);
+        addNodes.call(this, group.children, groupNode, 1);
         this.fireEvent('addgroup');
         groupNode.expand(true, false);
         groupNode.collapse(true, false);
@@ -284,7 +287,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Method: addLegend
      * Adds the action and the legend component to a node config
      */
-    addLegend: function(item, nodeConfig) {
+    addLegend: function(item, nodeConfig, level) {
+        if (!level) {
+          level = 1;
+        }
         var config = {};
         nodeConfig.actions = nodeConfig.actions || [];
         if (item.icon) {
@@ -302,7 +308,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 config.legend = new Ext.Container({
                     items: [{
                         xtype: 'box',
-                        html: '<img src="' + src + '" />'
+                        html: '<img src="' + src + '" />',
+                        cls: 'legend_level_' + level.toString()
                     }],
                     listeners: {
                         render: function(cmp) {
