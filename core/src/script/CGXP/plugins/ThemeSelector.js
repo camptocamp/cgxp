@@ -125,7 +125,14 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             menu: [{
                 xtype: 'container',
                 layout: 'fit',
-                items: [tabs]
+                items: [tabs],
+            items: [tabs],
+            listeners: {
+                afterrender: function(cmp)  {
+                    // force rendering for IE, otherwise the panel width is wrong
+                    cmp.doLayout();
+                }
+            }
             }]
         }, config || {});
         
