@@ -62,6 +62,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     printPanel: null,
 
+    mapserverURL: null,
+
     /** api: config[options]
      *  ``String``
      *  panel config options.
@@ -174,7 +176,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             if (encodedLayer) {
                 encodedLayer.useNativeAngle = true;
             }
-        });
+        }.createDelegate(this));
+
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
             // need to define the table object even for page0 as java expects it
