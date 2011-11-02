@@ -1,0 +1,116 @@
+/**
+ * Copyright (c) 2011 Camptocamp
+ *
+ * CGXP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CGXP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * @include GeoExt/widgets/tree/LayerParamNode.js
+ */
+
+Ext.namespace('cgxp.api');
+
+cgxp.api.Map = Ext.extend(Object, {
+
+    /**
+     * Constructor
+     * see apihelp.html page to see hoe to use the API.
+     */
+    constructor: function(config) {
+        this.viewer = this.getViewer({
+            width: config.width,
+            height: config.height,
+            renderTo: config.div
+        });
+
+        this.viewer.on('ready', function() {
+            if (config.easting != undefined && config.northing != undefined 
+                    && config.zoom != undefined) {
+                var center = new OpenLayers.LonLat(config.easting, config.northing);
+                this.viewer.mapPanel.map.setCenter(center, config.zoom);
+            }
+
+            if (config.showMarker) {
+                var vectorLayer = new OpenLayers.Layer.Vector(
+                    OpenLayers.Util.createUniqueID("c2cgeoportal"), {
+                        displayInLayerSwitcher: false,
+                        alwaysInRange: true
+                });
+                this.viewer.mapPanel.map.addLayer(vectorLayer);
+                this.showMarker(vectorLayer, center || map.mapPanel.map.getCenter());
+            }
+        }, this);
+    },
+
+    /**
+     * Method: getViewer
+     * Returns the gxp viewer object
+     */
+    getViewer: function(viewerConfig, apiConfig) {
+        // should be overwritten
+    },
+
+    /**
+     * Method: recenterCb
+     * The recenter callback function.
+     *
+     * Parameters:
+     * geojson - {String} The GeoJSON string.
+     */
+    recenterCb: function(geojson) {
+        var format = new OpenLayers.Format.GeoJSON();
+        var feature = format.read(geojson, "Feature");
+        this.viewer.mapPanel.map.zoomToExtent(feature.bounds);
+    },
+
+    /**
+     * Method: showMarker
+     * Add a marker to the map at a specific location.
+     *
+     * Parameters:
+     * vector - {OpenLayers.Layer.Vector} The vector layer.
+     * loc - {OpenLayers.LonLat} The location.
+     */
+    showMarker: function(vector, loc) {
+        var geometry = new OpenLayers.Geometry.Point(loc.lon, loc.lat);
+        var feature = new OpenLayers.Feature.Vector(geometry, {}, {
+            externalGraphic: OpenLayers.Util.getImagesLocation() + 'marker.png',
+            graphicWidth: 21,
+            graphicHeight: 25,
+            graphicYOffset: -25/2
+        });
+        vector.addFeatures([feature]);
+    },
+
+
+    /**
+     * APIMethod: recenter
+     * Center the map on a specific feature.
+     *
+     * Parameters:
+     * fid - {String} The id of the feature.
+     */
+    recenter: function(fid) {
+        var url = 'changeme/' + fid + '.json';
+        Ext.ux.JSONP.request(url, {
+            callbackKey: "cb",
+            params: {
+                no_geom: true
+            },
+            callback: recenterCb,
+            scope: this
+        });
+    }
+});
+

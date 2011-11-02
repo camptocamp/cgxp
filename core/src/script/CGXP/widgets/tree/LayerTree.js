@@ -59,12 +59,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     stateEvents: ["addgroup", "ordergroup", "removegroup", "themeopacitychange", "layervisibilitychange"],
 
+    // used for the permalink
     stateId: 'tree',
 
     /**
      * Property: actionsPlugin
      */
-
     initComponent: function() {
         this.root = {
             nodeType: 'async',

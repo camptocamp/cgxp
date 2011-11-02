@@ -18,6 +18,7 @@
 /*
  * @requires plugins/Tool.js
  * @include GeoExt/data/LayerStore.js
+ * @include GeoExt/widgets/LayerOpacitySlider.js
  */
 
 /** api: (define)
