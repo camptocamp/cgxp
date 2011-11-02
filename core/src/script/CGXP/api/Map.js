@@ -28,7 +28,7 @@ cgxp.api.Map = Ext.extend(Object, {
      * see apihelp.html page to see hoe to use the API.
      */
     constructor: function(config) {
-        this.viewer = this.getViewer({
+        this.initialiseViewer({
             width: config.width,
             height: config.height,
             renderTo: config.div
@@ -39,6 +39,24 @@ cgxp.api.Map = Ext.extend(Object, {
                     && config.zoom != undefined) {
                 var center = new OpenLayers.LonLat(config.easting, config.northing);
                 this.viewer.mapPanel.map.setCenter(center, config.zoom);
+            }
+
+            if (config.overlays) {
+                var hasLocal = config.overlays.local;
+                var hasExternal = config.overlays.external;
+                if (hasLocal) {
+                    this.viewer.mapPanel.map.addLayer(
+                            this.createApiOverlays(config.overlays.local, 'local'));
+                }
+                if (hasExternal) {
+                    this.viewer.mapPanel.map.addLayer(
+                            this.createApiOverlays(config.overlays.external, 'external'));
+                }
+                // if local/external is not specified, take overlays as local
+                if (!hasLocal && !hasExternal) {
+                    this.viewer.mapPanel.map.addLayer(
+                            this.createApiOverlays(config.overlays, 'local'));
+                }
             }
 
             if (config.showMarker) {
@@ -54,24 +72,16 @@ cgxp.api.Map = Ext.extend(Object, {
     },
 
     /**
-     * Method: getViewer
-     * Returns the gxp viewer object
+     * Method: initializeViewer
+     * Initialize the gxp viewer object
      */
-    getViewer: function(viewerConfig, apiConfig) {
+    initializeViewer: function(viewerConfig, apiConfig) {
         // should be overwritten
-    },
 
-    /**
-     * Method: recenterCb
-     * The recenter callback function.
-     *
-     * Parameters:
-     * geojson - {String} The GeoJSON string.
-     */
-    recenterCb: function(geojson) {
-        var format = new OpenLayers.Format.GeoJSON();
-        var feature = format.read(geojson, "Feature");
-        this.viewer.mapPanel.map.zoomToExtent(feature.bounds);
+        // thoses properties should be defined
+        // this.mapserverproxyURL
+        // this.themes
+        // this.viewer
     },
 
     /**
@@ -93,6 +103,75 @@ cgxp.api.Map = Ext.extend(Object, {
         vector.addFeatures([feature]);
     },
 
+    /**
+     * Method: createApiOverlays
+     * Return WMS overlays for the map.
+     *
+     * Returns:
+     * {OpenLayers.Layer.WMS} overlay layer instance.
+     */
+    createApiOverlays: function(overlays, type) {
+        var layers = [], themes = this.themes[type];
+        if (themes) {
+            uppermost: for (var i = 0, len = overlays.length; i < len; i++) {
+                var name = overlays[i];
+                for (var j = 0, lenj = themes.length; j < lenj; j++) {
+                    var theme = themes[j];
+                    if (theme.name == name) {
+                        layers = layers.concat(this._getNodeChildren(theme));
+                        continue uppermost;
+                    }
+                }
+                layers.push(name);
+            }
+        }
+        var params = {
+            layers: layers,
+            format: 'image/png'
+        };
+        if (type == 'external') {
+            params.external = true;
+        }
+        return new OpenLayers.Layer.WMS("overlays_" + type, 
+            this.mapserverproxyURL, params, {
+            isBaseLayer: false,
+            singleTile: true,
+            ratio: 1,
+            visibility: true
+        });
+    },
+
+    /**
+     * Method: _getNodeChildren
+     * Gets the Mapserver layers associated to given theme node 
+     *
+     * Returns:
+     * Array
+     */
+    _getNodeChildren: function(node) {
+        var children = [];
+        if (node.children) {
+            for (var i = 0, len = node.children.length; i < len; i++) {
+                children = children.concat(this._getNodeChildren(node.children[i]));
+            }
+        } else {
+            children.push(node.name);
+        }
+        return children;
+    },
+
+    /**
+     * Method: recenterCb
+     * The recenter callback function.
+     *
+     * Parameters:
+     * geojson - {String} The GeoJSON string.
+     */
+    recenterCb: function(geojson) {
+        var format = new OpenLayers.Format.GeoJSON();
+        var feature = format.read(geojson, "Feature");
+        this.viewer.mapPanel.map.zoomToExtent(feature.bounds);
+    },
 
     /**
      * APIMethod: recenter
@@ -112,5 +191,7 @@ cgxp.api.Map = Ext.extend(Object, {
             scope: this
         });
     }
+
+
 });
 
