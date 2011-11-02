@@ -151,7 +151,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         printProvider.on('encodelayer', function(printProvider, layer, encodedLayer) {
             var apply = false;
             if (layer.mapserverLayers) {
-                encodedLayer.layers = layer.mapserverLayers;
+                if (Ext.isArray(layer.mapserverLayers)) {
+                    encodedLayer.layers = layer.mapserverLayers;
+                } else {
+                    encodedLayer.layers = layer.mapserverLayers.split(',');
+                }
                 encodedLayer.format = 'image/png';
                 apply = true;
             }  
