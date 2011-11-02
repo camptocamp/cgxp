@@ -122,7 +122,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             return !coords;
-        });
+        }, this);
         return store;
     },
 
