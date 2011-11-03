@@ -86,6 +86,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     measureTooltip: "Measure",
 
+    popup: null,
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -97,6 +99,13 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     destroy: function() {
         this.button = null;
         cgxp.plugins.Measure.superclass.destroy.apply(this, arguments);
+    },
+
+    cleanup: function() {
+        if (this.popup) {
+            this.popup.destroy();
+            delete this.popup;
+        }  
     },
 
     /** private: method[createMeasureControl]
@@ -139,11 +148,6 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 })]
             })
         });
-        var cleanup = function() {
-            if (measureToolTip) {
-                measureToolTip.destroy();
-            }  
-        };
 
         var makeString = function(metricData) {
             var metric = metricData.measure;
@@ -161,12 +165,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             return metric.toFixed(2) + " " + metricUnit + dim;
         };
 
-        var popup = null;
-
         var showPopup = function(event, complet) {
             var complet = typeof(complet) != 'undefined' ? complet : false;
-            if (!popup) {
-                popup = new GeoExt.Popup({
+            if (!this.popup) {
+                this.popup = new GeoExt.Popup({
                     title: title,
                     border: false,
                     map: this.target.mapPanel.map,
@@ -175,7 +177,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                     location: new OpenLayers.LonLat(0, 0)
                 });
             }
-            popup.hide();
+            this.popup.hide();
             var singlePoint = false;
             var measure = null;
             if (event.geometry.components) {
@@ -198,14 +200,14 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 (points.length > 1 && event.order == 1 && complet) || singlePoint) {
                 if (event.order == 2) {
                     var poly = new OpenLayers.Geometry.Polygon([line]);
-                    popup.location = poly.getBounds().getCenterLonLat();
+                    this.popup.location = poly.getBounds().getCenterLonLat();
                 } else {
-                    popup.location = points[points.length-1].getBounds().getCenterLonLat();
+                    this.popup.location = points[points.length-1].getBounds().getCenterLonLat();
                 }
-                popup.position();
-                popup.show();
+                this.popup.position();
+                this.popup.show();
                 var measure
-                popup.update({
+                this.popup.update({
                     measure: measure,
                     units: event.units,
                     dim: event.order == 2 ? '<sup>2</sup>' : '',
@@ -224,7 +226,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 measure: function(event) {
                   showPopup(event, true);
                 },
-                deactivate: function() { popup && popup.hide(); },
+                deactivate: function() { this.popup && this.popup.hide(); },
                 scope: this
             }
         });
@@ -280,6 +282,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                                     if (checked) {
                                         this.button.setIconClass(item.iconCls);
                                     }
+                                    this.cleanup();
                                 },
                                 scope: this
                             },
@@ -302,6 +305,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                                     if (checked) {
                                         this.button.setIconClass(item.iconCls);
                                     }
+                                    this.cleanup();
                                 },
                                 scope: this
                             },
@@ -325,6 +329,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                                     if (checked) {
                                         this.button.setIconClass(item.iconCls);
                                     }
+                                    this.cleanup();
                                 },
                                 scope: this
                             },
