@@ -223,23 +223,37 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
     makePointString: function(metric, unit) {
         if (unit == 'm') {
+            if (!this.pointMeterTemplate) {
+                this.pointMeterTemplate = new Ext.Template(
+                        '<table class="measure point"><tr>' +
+                        '<td>' + OpenLayers.i18n('Coordinate') + '</td>' + 
+                        '<td>{lonm}  {latm} m</td>' +
+                        '</tr><tr>' +
+                        '<td>' + OpenLayers.i18n('WGS 84') + '</td>' +
+                        '<td>{lond} {latd}°</td>' + 
+                        '</tr></table>', {compiled: true});
+            }
+
             var metricLonLat = new OpenLayers.LonLat(metric.x, metric.y).transform(
                     this.target.mapPanel.map.getProjectionObject(),
                     new OpenLayers.Projection("EPSG:4326"));
-            return '<table class="measure point"><tr>' +
-                    '<td>' + OpenLayers.i18n('Coordinate') + '</td>' + 
-                    '<td>' + metric.x.toFixed(1) + ' ' + 
-                    metric.y.toFixed(1) + ' ' + unit + '</td>' +
-                    '</tr><tr>' +
-                    '<td>' + OpenLayers.i18n('WGS 84') + '</td>' +
-                    '<td>' + metricLonLat.lon.toFixed(5) + ' ' +
-                    metricLonLat.lat.toFixed(5) + '°</td>' + 
-                    '</tr></table>';
+            return this.pointMeterTemplate.apply({
+                lonm: metric.x.toFixed(1), latm: metric.y.toFixed(1),
+                lond: metricLonLat.lon.toFixed(5), latd: metricLonLat.lat.toFixed(5)
+            });
         }
         else {
-            return 
-                    OpenLayers.i18n('eastern: ') + metric.x.toFixed(5) + ' ' + metricUnit + '<br />' +
-                    OpenLayers.i18n('northern: ') + metric.y.toFixed(5) + ' ' + metricUnit;
+            if (!this.pointTemplate) {
+                this.pointTemplate = new Ext.Template(
+                        OpenLayers.i18n('eastern:') + ' {lon} {unit}<br />' +
+                        OpenLayers.i18n('northern:') + ' {lat} {unit}',
+                        {compiled: true});
+            }
+            return this.pointTemplate.apply({
+                lon: metric.x.toFixed(5), 
+                lat: metric.y.toFixed(5),
+                unit: metricUnit
+            }) 
         }
     },
 
