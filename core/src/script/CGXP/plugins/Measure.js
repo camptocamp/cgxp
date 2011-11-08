@@ -149,22 +149,6 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             })
         });
 
-        var makeString = function(metricData) {
-            var metric = metricData.measure;
-            var metricUnit = metricData.units;
-
-            if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
-                return 'x: ' + metric.x.toFixed(0) + ' ' + metricUnit + '<br>' +
-                    'y: ' + metric.y.toFixed(0) + ' ' + metricUnit;
-            }
-
-            var dim = metricData.order == 2 ?
-            '<sup>2</sup>' :
-            '';
-
-            return metric.toFixed(2) + " " + metricUnit + dim;
-        };
-
         var showPopup = function(event, complet) {
             var complet = typeof(complet) != 'undefined' ? complet : false;
             if (!this.popup) {
@@ -211,7 +195,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                     measure: measure,
                     units: event.units,
                     dim: event.order == 2 ? '<sup>2</sup>' : '',
-                    html: makeString(event)
+                    html: this.makeString(event)
                 });
             }
         }.createDelegate(this);
@@ -224,7 +208,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             eventListeners: {
                 measurepartial: showPopup,
                 measure: function(event) {
-                  showPopup(event, true);
+                    showPopup(event, true);
                 },
                 deactivate: function() { this.popup && this.popup.hide(); },
                 scope: this
@@ -235,6 +219,43 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             new OpenLayers.Control.Measure(handlerType, controlOptions);
 
         return measureControl;
+    },
+
+    makePointString: function(metric, unit) {
+        if (unit == 'm') {
+            var metricLonLat = new OpenLayers.LonLat(metric.x, metric.y).transform(
+                    this.target.mapPanel.map.getProjectionObject(),
+                    new OpenLayers.Projection("EPSG:4326"));
+            return '<table class="measure point"><tr>' +
+                    '<td>' + OpenLayers.i18n('Coordinate') + '</td>' + 
+                    '<td>' + metric.x.toFixed(1) + ' ' + 
+                    metric.y.toFixed(1) + ' ' + unit + '</td>' +
+                    '</tr><tr>' +
+                    '<td>' + OpenLayers.i18n('WGS 84') + '</td>' +
+                    '<td>' + metricLonLat.lon.toFixed(5) + ' ' +
+                    metricLonLat.lat.toFixed(5) + '°</td>' + 
+                    '</tr></table>';
+        }
+        else {
+            return 
+                    OpenLayers.i18n('eastern: ') + metric.x.toFixed(5) + ' ' + metricUnit + '<br />' +
+                    OpenLayers.i18n('northern: ') + metric.y.toFixed(5) + ' ' + metricUnit;
+        }
+    },
+
+    makeString: function(metricData) {
+        var metric = metricData.measure;
+        var metricUnit = metricData.units;
+
+        if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
+            return this.makePointString(metric, metricUnit);
+        }
+
+        var dim = metricData.order == 2 ?
+        '<sup>2</sup>' :
+        '';
+
+        return metric.toFixed(2) + " " + metricUnit + dim;
     },
 
     /** api: method[addActions]
