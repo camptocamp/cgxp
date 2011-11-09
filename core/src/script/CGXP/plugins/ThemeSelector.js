@@ -58,7 +58,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
         var tpl = new Ext.XTemplate(
             '<tpl for=".">',
                 '<div class="thumb-wrap">',
-                '<div class="thumb"><img src="{icon}"></div>',
+                '<div class="thumb"><img src="{icon}" onError="event.target.src=Ext.BLANK_IMAGE_URL"></div>',
                 '<span>{name}</span></div>',
             '</tpl>',
             '<div class="x-clear"></div>'
