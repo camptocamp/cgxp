@@ -58,7 +58,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
         var tpl = new Ext.XTemplate(
             '<tpl for=".">',
                 '<div class="thumb-wrap">',
-                '<div class="thumb"><img src="{icon}" onError="event.target.src=Ext.BLANK_IMAGE_URL"></div>',
+                '<div class="thumb"><img src="{icon}" onError="if (event.target) event.target.src=Ext.BLANK_IMAGE_URL"></div>',
                 '<span>{name}</span></div>',
             '</tpl>',
             '<div class="x-clear"></div>'
@@ -107,12 +107,17 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             items.push(externalView);
         }
         var tabs = new Ext.TabPanel({
-            width: 560,
+            width: 530,
             activeItem: 0,
             plain: true,
             border: false,
             tabPosition: 'bottom',
-            items: items
+            items: items,
+            listeners: {
+                tabchange: function(cmp) {
+                    cmp.ownerCt.doLayout();
+                }
+            }
         });        
 
         config = Ext.apply({
@@ -122,18 +127,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             iconCls: 'themes',
             scale: 'large',
             width: '100%',
-            menu: [{
-                xtype: 'container',
-                layout: 'fit',
-                items: [tabs],
-            items: [tabs],
-            listeners: {
-                afterrender: function(cmp)  {
-                    // force rendering for IE, otherwise the panel width is wrong
-                    cmp.doLayout();
-                }
-            }
-            }]
+            menu: [tabs]
         }, config || {});
         
         var themeSelector = cgxp.plugins.ThemeSelector.superclass.addOutput.call(this, config);
