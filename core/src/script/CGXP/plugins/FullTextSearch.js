@@ -91,35 +91,53 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             var coords = store.baseParams.query.match(
                 /([\d\.']+)[\s,]+([\d\.']+)/
             );
+            this.position = null;
+            this.closeLoading.cancel();
+            this.applyPosition.cancel();
             if (coords) {
                 var map = this.target.mapPanel.map;
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
-                // for switzerland:
-                // EPSG:21781: lon > lat
-                // EPSG:4326 : lat > lon
-                var position = new OpenLayers.LonLat(
-                    left > right ? left : right,
-                    right < left ? right : left);
+                // EPSG:4326: when lon and lat <= 180 
+                var is4326 = left <= 180 && right <= 180
+                // EPSG:21781 or EPSG:2056: lon > lat
+                var isSwiss = !is4326 && (map.getProjection() === "EPSG:21781"
+                        || map.getProjection() === "EPSG:2056");
+                if (isSwiss && right > left) {
+                    var tmp = left;
+                    left = right;
+                    right = tmp;
+                }
+                this.position = new OpenLayers.LonLat(left, right);
+                if (is4326) {
+                    this.position = this.position.transform(
+                            new OpenLayers.Projection("EPSG:4326"),
+                            map.getProjectionObject());
+                }
                 var valid = false;
-                if (map.maxExtent.containsLonLat(position)) {
-                    // try with EPSG:21781
+                if (map.maxExtent.containsLonLat(this.position)) {
                     valid = true;
                 } else {
-                    // try with EPSG:4326
-                    position = new OpenLayers.LonLat(
-                        left < right ? left : right,
-                        right > left ? right : left);
-                    position.transform(
-                        new OpenLayers.Projection("EPSG:4326"),
-                        map.getProjectionObject());
-                    if (map.maxExtent.containsLonLat(position)) {
-                        valid = true;
+                    if (!isSwiss) {
+                        this.position = new OpenLayers.LonLat(right, left);
+                        if (is4326) {
+                            this.position = this.position.transform(
+                                    new OpenLayers.Projection("EPSG:4326"),
+                                    map.getProjectionObject());
+                        }
+
+                        if (map.maxExtent.containsLonLat(this.position)) {
+                            valid = true;
+                        }
                     }
                 }
-                if (valid) {
-                    map.setCenter(position, 8);
+                if (!valid) {
+                    this.position = null;
                 }
+                // close the loading twin box.
+                this.closeLoading.delay(10);
+                // apply the position
+                this.applyPosition.delay(1000);
             }
             return !coords;
         }, this);
@@ -153,6 +171,14 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             width: 200,
             selectOnFocus: true
         });
+        // used to close the loading panel
+        this.closeLoading = new Ext.util.DelayedTask(function () {
+            combo.list.hide();
+        }, this)
+        // used to apply the position
+        this.applyPosition = new Ext.util.DelayedTask(function () {
+            map.setCenter(this.position);
+        }, this)
         combo.on({
             'select': function(combo, record, index) {
                 // add feature to vector layer
@@ -170,7 +196,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             'clear': function(combo) {
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
             },
-            'render': function() {
+            'render': function(component) {
                 new Ext.ToolTip({
                     target: combo.getEl(),
                     title: OpenLayers.i18n('Search.Search'),
@@ -179,6 +205,15 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                     trackMouse: true,
                     dismissDelay: 15000
                 });
+                component.getEl().dom.onkeydown = function(event) {
+                    event.stopPropagation();
+                };
+            },
+            'specialkey': function(field, event) {
+                if (this.position && event.getKey() == event.ENTER) {
+                    map.setCenter(this.position);
+                    this.applyPosition.cancel();
+                }
             },
             scope: this
         });
