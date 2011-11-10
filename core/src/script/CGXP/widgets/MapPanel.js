@@ -19,7 +19,7 @@
  * @requires GeoExt/widgets/MapPanel.js
  */
 
-Ext.namespace("cgxp_mappanel");
+Ext.namespace("cgxp");
 
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
