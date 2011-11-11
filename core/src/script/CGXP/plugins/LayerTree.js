@@ -53,6 +53,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     },
 
     viewerReady: function() {
+        this.tree.delayedApplyState();
         this.tree.loadDefaultThemes();
     },
 

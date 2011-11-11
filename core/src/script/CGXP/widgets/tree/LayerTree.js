@@ -661,22 +661,31 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     applyState: function(state) {
-        if (state.groups) {
+        // actual state is loaded later in delayedApplyState to prevent 
+        // the layer from being displayed under the baselayers
+        this.initialState = state;
+    },
+
+    delayedApplyState: function() {
+        if (!this.initialState) {
+            return;
+        }
+        if (this.initialState.groups) {
             this.defaultThemes = null;
         }
-        var groups = Ext.isArray(state.groups) ?
-            state.groups : [state.groups];
+        var groups = Ext.isArray(this.initialState.groups) ?
+            this.initialState.groups : [this.initialState.groups];
         Ext.each(groups.reverse(), function(t) {
             if (!this.checkGroupIsAllowed(t)) {
                 return;
             }
-            var opacity = state['group_opacity_' + t];
-            var visibility = state['group_visibility_' + t];
-            var layers = state['group_layers_' + t];
-            var group = this.findGroupByName(t);
-            this.on('afterrender', function() {
-                this.loadGroup(group, layers, opacity, visibility);
-            }, this);
+            var opacity = this.initialState['group_opacity_' + t] ? 
+                this.initialState['group_opacity_' + t] : 1;
+            var layers = this.initialState['group_layers_' + t] ? 
+                this.initialState['group_layers_' + t] : '';
+            var visibility = layers != '' ? true : false;
+            var group = this.findGroupByName(t);            
+            this.loadGroup(group, layers, opacity, visibility);
         }, this);
     },
 
@@ -688,10 +697,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var id = group.attributes.groupId;
             groups.push(id);
             var layer = group.layer;
-            state['group_opacity_' + id] = (layer.opacity !== null) ?
-                layer.opacity : 1;
-            state['group_visibility_' + id] = layer.visibility;
-            state['group_layers_' + id] = [layer.params.LAYERS].join(',');
+            if (layer.opacity !== null && layer.opacity != 1) {
+                state['group_opacity_' + id] = layer.opacity;
+            }
+            if (layer.params.LAYERS.length > 0) {
+                state['group_layers_' + id] = [layer.params.LAYERS].join(',');
+            }
         }, this);
         state.groups = groups.join(',');
 

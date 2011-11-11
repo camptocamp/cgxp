@@ -16,7 +16,7 @@
  */
 
 /**
- * @requires GeoExt/state/PermalinkProvider.js
+ * @requires CGXP/widgets/PermalinkProvider.js
  */
 
 /** api: (define)
@@ -49,6 +49,8 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
+
+        var link = '';
 
         var permalinkTextField = new Ext.form.TextField({
             hideLabel: true,
@@ -86,7 +88,8 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         // of the permalink text field.
         Ext.state.Manager.getProvider().on({
             statechange: function(provider) {
-                permalinkTextField.setValue(provider.getLink());
+                link = provider.getLink();
+                permalinkTextField.setValue(link);
             }
         });
 
@@ -94,6 +97,8 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             allowDepress: false,
             iconCls: 'permalink',
             handler: function() {
+                // reset the link in case the user deleted/modified it by error
+                permalinkTextField.setValue(link);
                 permalinkWindow.show();
             }
         }, this.options);
@@ -110,5 +115,5 @@ Ext.preg(cgxp.plugins.Permalink.prototype.ptype, cgxp.plugins.Permalink);
  * Creates the permalink provider.
  */
 Ext.state.Manager.setProvider(
-    new GeoExt.state.PermalinkProvider({encodeType: false})
+    new cgxp.PermalinkProvider({encodeType: false})
 );
