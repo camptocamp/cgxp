@@ -17,13 +17,14 @@
 
 (function() {
 
-    var jsfiles = new Array(
+    var jsfiles = [
         "plugins/ThemeSelector.js",
+        "plugins/MapQuery.js",
         "locale/en.js",
         "locale/fr.js",
         "locale/de.js",
         "locale/it.js"
-    );
+    ];
     
     var scripts = document.getElementsByTagName("script");
     var parts = scripts[scripts.length-1].src.split("/");
