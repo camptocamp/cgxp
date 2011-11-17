@@ -28,7 +28,7 @@ cgxp.api.Map = Ext.extend(Object, {
      * see apihelp.html page to see hoe to use the API.
      */
     constructor: function(config) {
-        this.initialiseViewer({
+        this.initializeViewer({
             width: config.width,
             height: config.height,
             renderTo: config.div
