@@ -37,6 +37,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     useArrows: true,
 
     /**
+     * Property: mapPanel
+     */
+    mapPanel: null,
+
+    /**
      * Property: themes
      * The initialConfig of themes
      */
@@ -153,7 +158,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             node.getUI().toggleCheck(!node.getUI().isChecked());
         });
 
-        this.map.events.on({
+        this.mapPanel.map.events.on({
             'zoomend': function() {
                 this.getRootNode().cascade(this.checkInRange);
             },
@@ -635,7 +640,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         group.layer = layer;
         group.allLayers = allLayers; 
         layer.params.LAYERS = layers || allLayers;
-        this.map.addLayers([layer]);
+        this.mapPanel.layers.loadData([layer], true);
         this.addGroup(group);
         layer.setOpacity(opacity || 1);
         layer.setVisibility(visibility !== 'false');
