@@ -16,7 +16,7 @@
  */
 
 /**
- * @requires CGXP/state/PermalinkProvider.js
+ * @requires GeoExt/state/PermalinkProvider.js
  */
 
 /** api: (define)
@@ -96,7 +96,6 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                                 window.location.pathname;
                 var params = OpenLayers.Util.getParameters();
                 if (params.debug !== undefined) {
-                    console.log('passing by');
                     var base = Ext.urlAppend(base, 'debug=' + params.debug);
                 }
                 link = provider.getLink(base);
