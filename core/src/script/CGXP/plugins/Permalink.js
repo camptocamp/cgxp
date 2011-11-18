@@ -16,7 +16,7 @@
  */
 
 /**
- * @requires CGXP/widgets/PermalinkProvider.js
+ * @requires CGXP/state/PermalinkProvider.js
  */
 
 /** api: (define)
@@ -88,7 +88,18 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         // of the permalink text field.
         Ext.state.Manager.getProvider().on({
             statechange: function(provider) {
-                link = provider.getLink();
+                
+                // generate a clean url to provide to the PermalinkProvider
+                // to avoid recovering unvanted parameters from the url
+                var base = window.location.protocol + "//" +
+                                window.location.host + 
+                                window.location.pathname;
+                var params = OpenLayers.Util.getParameters();
+                if (params.debug !== undefined) {
+                    console.log('passing by');
+                    var base = Ext.urlAppend(base, 'debug=' + params.debug);
+                }
+                link = provider.getLink(base);
                 permalinkTextField.setValue(link);
             }
         });
@@ -115,5 +126,5 @@ Ext.preg(cgxp.plugins.Permalink.prototype.ptype, cgxp.plugins.Permalink);
  * Creates the permalink provider.
  */
 Ext.state.Manager.setProvider(
-    new cgxp.PermalinkProvider({encodeType: false})
+    new GeoExt.state.PermalinkProvider({encodeType: false})
 );
