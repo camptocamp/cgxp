@@ -18,9 +18,13 @@
 /*
  * @requires plugins/Tool.js
  * @includes OpenLayers/Control/WMSGetFeatureInfo.js
+ * @includes OpenLayers/Layer/Vector.js
+ * @includes OpenLayers/Layer/WMS.js
  * @includes OpenLayers/Request.js
+ * @includes OpenLayers/Geometry/Collection.js
  * @includes GeoExt/Action.js
  * @includes GeoExt/Popup.js
+ * @includes Ext/XTemplate.js
  */
 
 /** api: (define)
@@ -43,103 +47,121 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_mapquery",
 
     popup: null,
+    xtemplate: null,
+
+    /** api: config[layerName]
+     */
+    layerName: null,
+
+    /** api: config[template]
+     */
+    template: null,
+
+    /** api: config[alwaysActive]
+     */
+    alwaysActive: false,
+
+    /** api: config[handlerOptions]
+     */
+    handlerOptions: null,
+
+    /** api: config[styleMap]
+     */
+    styleMap: null,
+
+    init: function() {
+        cgxp.plugins.MapQuery.superclass.init.apply(this, arguments);
+
+        this.highlightLayer = new OpenLayers.Layer.Vector(
+            OpenLayers.Util.createUniqueID("cgxp"), {
+                displayInLayerSwitcher: false,
+                alwaysInRange: true,
+                styleMap: this.styleMap
+            });
+
+        this.target.on('ready', this.viewerReady, this);
+
+        if (this.template) {
+            this.xtemplate = new Ext.XTemplate(this.template);
+            this.xtemplate.compile();
+        }
+    },
+
+    viewerReady: function() {
+        this.target.mapPanel.map.addLayer(this.highlightLayer);
+    },
 
     /** api: method[addActions]
      */
-    addActions: function() {        
-        var options = Ext.apply({
-            allowDepress: true,
-            enableToggle: true,
-            iconCls: 'info',
-            tooltip: OpenLayers.i18n("Query.actiontooltip"),
-            toggleGroup: this.toggleGroup,
-            control: this.createControl(this.layerName, this.htmlTemplate),
-            alwaysActive: false            
-        }, this.options);
-        if (options.alwaysActive) {
-            var control = this.createControl(this.layerName, this.htmlTemplate);
+    addActions: function() { 
+       
+        if (this.alwaysActive) {
+            var control = this.createControl();            
+            this.target.mapPanel.map.addControl(control);
             control.activate();
             return;
-        } 
-        var action = new GeoExt.Action(options);
-        return cgxp.plugins.MapQuery.superclass.addActions.apply(this, [[action]]);         
-    },
-
-    /** api: method[getPopupHtml]
-     */
-    getPopupHtml: function(features) {
-        var html = '';
-        for (var i=0; i<features.length; i++) {
-            var htmlf = this.htmlTemplate;
-            for (a in features[i].attributes) {
-                htmlf = htmlf.replace('%' + a + '%', features[i].attributes[a]);
-            }
-            html += htmlf;
+        } else {
+            var options = Ext.apply({
+                allowDepress: true,
+                enableToggle: true,
+                iconCls: 'info',
+                tooltip: OpenLayers.i18n("Query.actiontooltip"),
+                toggleGroup: this.toggleGroup,
+                control: this.createControl()
+            }, this.options);
+            var action = new GeoExt.Action(options);
+            return cgxp.plugins.MapQuery.superclass.addActions.apply(this, [[action]]);         
         }
-        return html;
     },
 
     /**
      * api: method[createControl]
      * Create the WMS GFI control.
      */
-    createControl: function(layerName, htmlTemplate) {
-
-        this.map = this.target.mapPanel.map;
-        this.htmlTemplate = htmlTemplate;
+    createControl: function() {
 
         return new OpenLayers.Control.WMSGetFeatureInfo({
 
             infoFormat: "application/vnd.ogc.gml",
             maxFeatures: this.maxFeatures || 100,
-            map: this.map,
+            handlerOptions: this.handlerOptions || {},
             hover: true,
+            layer: new OpenLayers.Layer.WMS("MapQuery WMS", this.wmsURL, 
+                                            {layers: [this.layerName]}),
 
             request: function(clickPosition, options) {
 
-                var layers = this.map.getLayersByName(layerName);
-                if (layers.length == 0) {
-                    OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
-                    return;
-                }
-
-                options = options || {};
-                if (this.drillDown === false) {
-                    var wmsOptions = this.buildWMSOptions(layers[0].url, layers,
-                                                          clickPosition, layers[0].params.FORMAT);
-                    var request = OpenLayers.Request.GET(wmsOptions);
-
-                    if (options.hover === true) {
-                        this.hoverRequest = request;
-                    }
-                } else {
-   
-                    this._requestCount = 0;
-                    this._numRequests = layers.length;
-                    this.features = [];
-                    for (var i=0, len=layers.length; i<len; i++) {
-                        var url = layer.url instanceof Array ? layer.url[0] : layer.url;
-                        var wmsOptions = this.buildWMSOptions(url, [layer],
-                                                              clickPosition, layer.params.FORMAT);
-                        OpenLayers.Request.GET(wmsOptions);
-                    }
-                }
+                var wmsOptions = this.buildWMSOptions(this.layer.url, [this.layer],
+                                                      clickPosition, this.layer.params.FORMAT);
+                var request = OpenLayers.Request.GET(wmsOptions);                
+                this.hoverRequest = request;
             },
             eventListeners: {
 
                 getfeatureinfo: function(e) {
+
                     if (e.features.length > 0) {
 
-                        var location = this.map.getLonLatFromPixel(e.xy);
-                        var html = this.getPopupHtml(e.features);
+                        this.highlightLayer.destroyFeatures();
+                        this.highlightLayer.addFeatures(e.features);
+                        this.highlightLayer.redraw();
+
+                        var geoms = [];
+                        for (var i = 0; i < e.features.length; i++) {
+                            geoms.push(e.features[i].geometry);
+                        }
+                        var location = new OpenLayers.Geometry.Collection(geoms).getCentroid();
+
                         if (this.popup != null) {
                             this.popup.close();
                         }
                         this.popup = new GeoExt.Popup({
                             title: "",
-                            map: this.map,
+                            map: this.target.mapPanel.map,
                             location: location,
-                            html: html
+                            tpl: this.xtemplate,
+                            data: e.features,
+                            unpinnable: false
                         });
                         this.popup.show();
                     }
