@@ -17,6 +17,7 @@
 
 /*
  * @requires GeoExt/widgets/tree/LayerNode.js
+ * @requires GeoExt/data/LayerRecord.js
  * @include GeoExt/widgets/tree/LayerParamNode.js
  * @include GeoExt/widgets/tree/TreeNodeUIEventMixin.js
  * @include GeoExt/plugins/TreeNodeActions.js
@@ -66,6 +67,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     // used for the permalink
     stateId: 'tree',
+
+    /** private: property[recordType]
+     *  ``GeoExt.data.LayerRecord`` Custom record type based on
+     *      GeoExt.data.LayerRecord
+     */
+    recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer"}]),
 
     /**
      * Property: actionsPlugin
@@ -566,15 +573,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Parameters:
      * child {Object} the node to parse
      * layer {<OpenLayers.Layer.WMS>} The reference to the OL Layer
-     * allLayers {Array(String)} The list of WMS subLayers for this layer.
+     * result {Object} The result object of the parsed children, it contains
+     *     - allLayers {Array(String)} The list of WMS subLayers for this layer.
+     *     - disclaimer {Object} The list layers disclaimers.
      */
-    parseChildren: function(child, layer, allLayers) {
+    parseChildren: function(child, layer, result) {
         if (child.children) {
             for (var j = 0; j < child.children.length; j++) {
-                this.parseChildren(child.children[j], layer, allLayers);
+                this.parseChildren(child.children[j], layer, result);
             }
         } else {
-            allLayers.push(child.name);
+            if (child.disclaimer) {
+                result.disclaimer[child.disclaimer] = true;
+            }
+            result.allLayers.push(child.name);
             // put a reference to ol layer in the config object
             child.layer = layer;
         }
@@ -635,12 +647,19 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         );
 
-        var allLayers = [];
-        this.parseChildren(group, layer, allLayers);
+        var result = {
+            allLayers: [],
+            disclaimer: {}
+        };
+        this.parseChildren(group, layer, result);
         group.layer = layer;
-        group.allLayers = allLayers; 
-        layer.params.LAYERS = layers || allLayers;
-        this.mapPanel.layers.loadData([layer], true);
+        group.allLayers = result.allLayers;
+        layer.params.LAYERS = layers || result.allLayers;
+        this.mapPanel.layers.add(
+            new this.recordType({
+                disclaimer: result.disclaimer,
+                layer: layer
+            }, layer.id));
         this.addGroup(group);
         layer.setOpacity(opacity || 1);
         layer.setVisibility(visibility !== 'false');
