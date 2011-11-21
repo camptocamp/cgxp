@@ -20,6 +20,7 @@
     var jsfiles = [
         "plugins/ThemeSelector.js",
         "plugins/MapQuery.js",
+        "plugins/Disclaimer.js",
         "locale/en.js",
         "locale/fr.js",
         "locale/de.js",

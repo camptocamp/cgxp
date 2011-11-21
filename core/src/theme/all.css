@@ -33,6 +33,23 @@ div#header-out {
     background: url('img/arrow_right.png') top left no-repeat;
 }
 
+/* cgxp_disclaimer */
+.disclaimer-ct {
+    position: absolute;
+    bottom: 30px;
+    left: 10px;
+    width: 300px;
+}
+.disclaimer-item {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-size: 12px;
+    margin: 5px 0 0;
+    padding: 5px;
+    width: 100%;
+}
+
 /* cgxp_measure */
 .x-btn .cgxp-icon-measure-point, .x-menu-item .cgxp-icon-measure-point, .x-tree-node .cgxp-icon-measure-point {
     background-image: url('img/bullet_orange.png') !important;
