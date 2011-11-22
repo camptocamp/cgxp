@@ -17,14 +17,16 @@
 
 /*
  * @requires plugins/Tool.js
- * @includes OpenLayers/Control/WMSGetFeatureInfo.js
- * @includes OpenLayers/Layer/Vector.js
- * @includes OpenLayers/Layer/WMS.js
- * @includes OpenLayers/Request.js
- * @includes OpenLayers/Geometry/Collection.js
- * @includes GeoExt/Action.js
- * @includes GeoExt/Popup.js
- * @includes Ext/XTemplate.js
+ * @include OpenLayers/Control/WMSGetFeatureInfo.js
+ * @include OpenLayers/Format/WMSGetFeatureInfo.js
+ * @include OpenLayers/Format/GML.js
+ * @include OpenLayers/Request/XMLHttpRequest.js
+ * @include OpenLayers/Layer/Vector.js
+ * @include OpenLayers/Layer/WMS.js
+ * @include OpenLayers/Request.js
+ * @include OpenLayers/Geometry/Collection.js
+ * @include GeoExt/widgets/Action.js
+ * @include GeoExt/widgets/Popup.js
  */
 
 /** api: (define)
@@ -47,15 +49,18 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_mapquery",
 
     popup: null,
-    xtemplate: null,
 
     /** api: config[layerName]
      */
     layerName: null,
 
-    /** api: config[template]
+    /** api: config[bodyTemplate]
      */
-    template: null,
+    titleTemplate: null,
+
+    /** api: config[bodyTemplate]
+     */
+    bodyTemplate: null,
 
     /** api: config[alwaysActive]
      */
@@ -81,9 +86,11 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
 
         this.target.on('ready', this.viewerReady, this);
 
-        if (this.template) {
-            this.xtemplate = new Ext.XTemplate(this.template);
-            this.xtemplate.compile();
+        if (typeof this.titleTemplate === 'string') {
+            this.titleTemplate = new Ext.XTemplate(this.titleTemplate);
+        }
+        if (typeof this.bodyTemplate === 'string') {
+            this.bodyTemplate = new Ext.XTemplate(this.bodyTemplate);
         }
     },
 
@@ -155,11 +162,17 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
                         if (this.popup != null) {
                             this.popup.close();
                         }
+                        var title = this.titleTemplate.apply(e.features);
                         this.popup = new GeoExt.Popup({
-                            title: "",
+                            title: title,
+                            closable: false,
+                            header: false,
+                            bodyBorder: false,
+                            border: false,
+                            resizable: false,
                             map: this.target.mapPanel.map,
                             location: location,
-                            tpl: this.xtemplate,
+                            tpl: this.bodyTemplate,
                             data: e.features,
                             unpinnable: false
                         });
