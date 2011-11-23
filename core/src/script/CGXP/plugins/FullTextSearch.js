@@ -48,6 +48,11 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     url: null,
 
+    /** api: config[pointRecenterZoom]
+     *  Zoom level to use when recentering on point items
+     */
+    pointRecenterZoom: null,
+
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
         
@@ -190,8 +195,16 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 if (layer && layer.length > 0) {
                     layer[0].setVisibility(true);
                 }
+                
                 // zoom onto the feature
-                map.zoomToExtent(feature.bounds);
+                if (this.pointRecenterZoom &&
+                    feature.geometry instanceof OpenLayers.Geometry.Point) {
+                    map.setCenter(new OpenLayers.LonLat(feature.geometry.x,
+                                                        feature.geometry.y),
+                                  this.pointRecenterZoom);
+                } else {
+                    map.zoomToExtent(feature.bounds);
+                }
             },
             'clear': function(combo) {
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
