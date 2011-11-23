@@ -575,6 +575,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * layer {<OpenLayers.Layer.WMS>} The reference to the OL Layer
      * result {Object} The result object of the parsed children, it contains
      *     - allLayers {Array(String)} The list of WMS subLayers for this layer.
+     *     - checkedLayers {Array(String)} The list of checked subLayers.
      *     - disclaimer {Object} The list layers disclaimers.
      */
     parseChildren: function(child, layer, result) {
@@ -587,6 +588,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 result.disclaimer[child.disclaimer] = true;
             }
             result.allLayers.push(child.name);
+            if (child.isChecked) {
+                result.checkedLayers.push(child.name);
+            }
             // put a reference to ol layer in the config object
             child.layer = layer;
         }
@@ -649,12 +653,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         var result = {
             allLayers: [],
+            checkedLayers: [],
             disclaimer: {}
         };
         this.parseChildren(group, layer, result);
         group.layer = layer;
         group.allLayers = result.allLayers;
-        layer.params.LAYERS = layers || result.allLayers;
+        layer.params.LAYERS = layers || result.checkedLayers;
         this.mapPanel.layers.add(
             new this.recordType({
                 disclaimer: result.disclaimer,
