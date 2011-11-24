@@ -156,9 +156,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     encodedLayer.layers = layer.mapserverLayers.split(',');
                 }
+                encodedLayer.customParams = layer.mapserverParams;
                 encodedLayer.format = 'image/png';
                 apply = true;
-            }  
+            }
             if (apply) {
                 encodedLayer.baseURL =  this.mapserverURL;
                 encodedLayer.type =  'WMS';
@@ -176,6 +177,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 delete encodedLayer.version;
                 delete encodedLayer.zoomOffset;
                 encodedLayer.singleTile = true;
+            }
+            if (encodedLayer.customParams) {
+                encodedLayer.baseURL = OpenLayers.Util.urlAppend(encodedLayer.baseURL,
+                        OpenLayers.Util.getParameterString(encodedLayer.customParams));
+                delete encodedLayer.customParams;
             }
             if (encodedLayer) {
                 encodedLayer.useNativeAngle = true;
