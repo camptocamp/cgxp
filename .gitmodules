@@ -1,0 +1,9 @@
+[submodule "openlayers"]
+	path = openlayers
+	url = git@github.com:openlayers/openlayers.git
+[submodule "geoext"]
+	path = geoext
+	url = git@github.com:geoext/geoext.git
+[submodule "gxp"]
+	path = gxp
+	url = git@github.com:opengeo/gxp.git

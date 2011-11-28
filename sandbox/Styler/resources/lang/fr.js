@@ -1,0 +1,21 @@
+OpenLayers.Util.extend(OpenLayers.Lang.fr, {
+    "any": "un",
+    "all": "plusieurs",
+    "none": "aucun",
+    "not all": "pas tous",
+    "condition": "condition",
+    "spatial condition": "condition spatiale",
+    "group": "Groupe",
+    "from_point": "Avec un point",
+    "from_line": "Avec une ligne",
+    "from_polygon": "Avec un polygone",
+    "from_stored_geometry": "Depuis une géometrie stockée",
+    "remove condition": "Condition de suppression",
+    "required field": "Champ obligatoire",
+    "intersects": "Intersecte",
+    "inside": "À l'intérieur",
+    "contains": "Contient",
+    "edit geometry": "Édite la géometrie",
+    "save geometry": "Enregistre la géometrie",
+    "geometry recorded": "La géometrie a bien été enregistrée."
+});

@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>GeoExt Feature Style Selector Example</title>
+
+        <script type="text/javascript" src="http://extjs.cachefly.net/builds/ext-cdn-771.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-2.2.1/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-2.2.1/examples/shared/examples.css" />
+        <script src="../../../trunk/openlayers/lib/OpenLayers.js"></script>
+        <script type="text/javascript" src="../../../trunk/geoext/lib/GeoExt.js"></script>
+        
+        <script type="text/javascript" src="../ux/LayerStyleManager.js"></script>
+        <script type="text/javascript" src="../ux/widgets/StyleSelectorComboBox.js"></script>
+        <script type="text/javascript" src="feature-style-selector.js"></script>
+
+    </head>
+    <body>
+        <div id="title">
+            <h1>GeoExt Style Selector in a ComboBox</h1>
+        </div>
+
+        <div id="description">
+            <p>This example shows how to use the Styler ux to change the style of a feature. The Styler is made of 2 parts:
+             <ul><li>The LayerStyleManager</li><li>A Styler</li></ul></p>
+
+            <p><b>LayerStyleManager:</b> This object is a manager that provides methods to set the current layer and/or current feature(s) being worked on. This manager contains Events that are fired when a style is changed. This object take the style from returned by the Styler and apply it to the layer or feature. </p>
+
+            <p><b>Styler:</b> The Styler object is the type of styler displayed by the LayerStyleManager. This UX can contains many different stylers, from the simple style list in a combobox to a full fledged filter builder that includes a complex style creation tool. The only requirement is for the Styler to have a <u>createLayout</u> method that returns a ExtJS component and a <u>change</u> event that is used to return the Style or Rule to apply to the layer(s) or feature(s). </p>
+
+            <p>By using this concept, we could have many different representation of the Styler (complex, simple, with rules or not, etc.) and always use the same LayerStyleManager object to interact with them.</p>
+            
+            <p>The js is not minified so it is readable. See <a
+            href="feature-style-selector.js">feature-style-selector.js</a>.</p>
+        </div>
+    </body>
+</html>

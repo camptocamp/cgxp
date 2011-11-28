@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.0.0/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.0.0/ext-all.js"></script>
+    <script type="text/javascript" src="../../../../../../trunk/geoext/lib/GeoExt.js"></script>
+    <script type="text/javascript" src="../../../../../../trunk/openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../../../../ux/FeatureEditing.js"></script>
+
+    <script type="text/javascript">
+        function test_constructor(t) {
+            t.plan(0);
+
+            /*
+             * Set up
+             */
+
+            var mapPanel = new GeoExt.MapPanel({
+                region: "center",
+                layers: [new OpenLayers.Layer.WMS("Global Imagery",
+                        "http://labs.metacarta.com/wms/vmap0",
+                {layers: "basic"})] ,
+                center: [16,48],
+                zoom: 5
+            });
+        }
+    </script>
+<body>
+<div id="featurePanel"></div>
+</body>
+</html>
