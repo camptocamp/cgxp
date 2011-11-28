@@ -81,5 +81,8 @@ OpenLayers.Util.extend(OpenLayers.Lang.en, {
     // Theme selector
     "Themeselector.local": "Local layers",
     "Themeselector.external": "External layers",
-    "Themeselector.themes": "Themes"
+    "Themeselector.themes": "Themes",
+
+    // Theme finder
+    "ThemeFinder.emptytext": "Find a theme or a layer"
 });

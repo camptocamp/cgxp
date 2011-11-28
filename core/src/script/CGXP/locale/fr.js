@@ -92,5 +92,8 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     // Theme selector
     "Themeselector.local": "Couches locales",
     "Themeselector.external": "Couches externes",
-    "Themeselector.themes": "Thèmes"
+    "Themeselector.themes": "Thèmes",
+
+    // Theme finder
+    "ThemeFinder.emptytext": "Rechercher un thème ou une couche"
 });

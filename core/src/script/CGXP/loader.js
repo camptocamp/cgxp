@@ -18,7 +18,14 @@
 (function() {
 
     var jsfiles = [
+        "widgets/MapPanel.js",
+        "widgets/tree/LayerTree.js",
+        "widgets/tree/TreeNodeComponent.js",
+        "widgets/tree/TreeNodeLoading.js",
+        "widgets/tree/TreeNodeTriStateUI.js",
+        "plugins/LayerTree.js",
         "plugins/ThemeSelector.js",
+        "plugins/ThemeFinder.js",
         "plugins/MapQuery.js",
         "plugins/Disclaimer.js",
         "locale/en.js",

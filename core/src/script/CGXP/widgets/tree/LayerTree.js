@@ -78,6 +78,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Property: actionsPlugin
      */
     initComponent: function() {
+        // fill displaynames one time for everybody
+        function fillDisplayNames(nodes) {
+            Ext.each(nodes, function(node) {
+                node.displayName = OpenLayers.i18n(node.name);
+                if (node.children) {
+                    fillDisplayNames(node.children);
+                }
+            });
+        }
+        fillDisplayNames(this.themes.local);
+        if (this.themes.external) {
+            fillDisplayNames(this.themes.external);
+        }
+
         this.root = {
             nodeType: 'async',
             children: [],
@@ -194,7 +208,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var checkedNodes = group.layer.params.LAYERS;
             Ext.each(children, function(item) {
                 var nodeConfig = {
-                    text: OpenLayers.i18n(item.name),
+                    text: item.displayName,
                     iconCls: 'no-icon',
                     loaded: true,
                     checked: checkedNodes.indexOf(item.name) != -1,
@@ -262,7 +276,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         var groupNode = this.root.insertBefore({
-            text: OpenLayers.i18n(group.name),
+            text: group.displayName,
             groupId: group.name,
             nodeType: 'cgxp_layer',
             iconCls: 'no-icon',
@@ -643,7 +657,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         var layer = new OpenLayers.Layer.WMS(
-            OpenLayers.i18n(group.name),
+            group.displayName,
             this.wmsURL, params, {
                 ref: group.name,
                 singleTile: true,

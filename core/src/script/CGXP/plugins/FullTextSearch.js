@@ -179,11 +179,11 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         // used to close the loading panel
         this.closeLoading = new Ext.util.DelayedTask(function () {
             combo.list.hide();
-        }, this)
+        }, this);
         // used to apply the position
         this.applyPosition = new Ext.util.DelayedTask(function () {
             map.setCenter(this.position);
-        }, this)
+        }, this);
         combo.on({
             'select': function(combo, record, index) {
                 // add feature to vector layer
@@ -218,9 +218,10 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                     trackMouse: true,
                     dismissDelay: 15000
                 });
-                component.getEl().dom.onkeydown = function(event) {
+                function stop(event) {
                     event.stopPropagation();
-                };
+                }
+                component.getEl().dom.onkeydown = stop;
             },
             'specialkey': function(field, event) {
                 if (this.position && event.getKey() == event.ENTER) {
