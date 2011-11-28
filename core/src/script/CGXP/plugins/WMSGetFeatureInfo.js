@@ -16,11 +16,10 @@
  */
 
 /*
+ * @requires plugins/Tool.js
  * @include OpenLayers/Control/WMSGetFeatureInfo.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
  * @include OpenLayers/Format/GML.js
- * @include OpenLayers/Format/GML.js
- * @include OpenLayers/Request/XMLHttpRequest.js
  * @include GeoExt/widgets/Action.js
  */
 
@@ -28,6 +27,9 @@
 /** api: (define)
  *  module = cgxp.plugins
  *  class = WMSGetFeatureInfo
+ *
+ *  To use this plugin all the layers should support the WFS, and should have 
+ *  the same name for the geometrie. 
  */
 
 /** api: (extends)
@@ -62,13 +64,15 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
+        var control =  this.createControl();
+        this.target.mapPanel.map.addControl(control);
         var action = new GeoExt.Action(Ext.applyIf({
             allowDepress: true,
             enableToggle: true,
             iconCls: 'info',
             tooltip: OpenLayers.i18n("Query.actiontooltip"),
             toggleGroup: this.toggleGroup,
-            control: this.createControl()
+            control: control
         }, this.options));
         return cgxp.plugins.WMSGetFeatureInfo.superclass.addActions.apply(this, [[action]]);
     },
@@ -88,9 +92,9 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             maxFeatures: this.maxFeatures || 100,
             queryVisible: true,
             drillDown: true,
-            map: this.target.mapPanel.map,
+            globalEvents: this.events,
             findLayers: function() {
-                var wmsLayers = this.map.getLayersByClass("OpenLayers.Layer.WMS")
+                var wmsLayers = this.map.getLayersByClass("OpenLayers.Layer.WMS");
                 for (var i = 0, len = wmsLayers.length ; i < len ; i++) {
                     var layer = wmsLayers[i];
                     if (layer.getVisibility() === true) {
@@ -107,8 +111,8 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             // stated in comments
             request: function(clickPosition, options) {
                 var layers = this.findLayers();
-                if (layers.length == 0) {
-                    this.events.fireEvent("nogetfeatureinfo");
+                if (layers.length === 0) {
+                    this.globalEvents.fireEvent("nogetfeatureinfo");
                     // Reset the cursor.
                     OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
                     return;
