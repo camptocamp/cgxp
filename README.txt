@@ -1,4 +1,4 @@
-Tom was here!
+Fred was here!
 
 The root directory of CGXP includes svn:externals to base libraries, and
 the "core" subdir where CGXP itself resides.
