@@ -399,13 +399,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Adds the action for the metadata
      */
     addMetadata: function(item, nodeConfig) {
-        if (item.metadataUrls) {
+        var metadataUrl;
+        if (Ext.isString(item.metadataUrls)) {
+            metadataUrl = item.metadataUrls;
+        }
+        else if(Ext.isArray(item.metadataUrls)) {
+            metadataUrl = item.metadataUrls[0].url;
+        }
+        if (metadataUrl) {
             nodeConfig.actions = nodeConfig.actions || [];
             nodeConfig.actions.push({
                 action: "metadata",
                 qtip: OpenLayers.i18n("Tree.moreinfo")
             });
-            nodeConfig.metadataUrl = item.metadataUrls[0].url;
+            nodeConfig.metadataUrl = metadataUrl;
         }
     },
 
