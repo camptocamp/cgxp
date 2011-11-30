@@ -49,9 +49,39 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     url: null,
 
     /** api: config[pointRecenterZoom]
-     *  Zoom level to use when recentering on point items
+     *  Zoom level to use when recentering on point items (optional).
      */
     pointRecenterZoom: null,
+
+    /** api: config[coordsRecenterZoom]
+     *  Zoom level to use when recentering on coordinates (optional).
+     */
+    coordsRecenterZoom: null,
+
+    /** api: config[projectionCodes]
+     * ´´Array´´
+     *  List of EPSG codes of projections that should be used when trying to 
+     *  recenter on coordinates. Leftmost projections are used preferably.
+     */
+    projectionCodes: [4326],
+
+    projections: null,
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        cgxp.plugins.FullTextSearch.superclass.constructor.apply(this, arguments);
+
+        // define projections that may be used for coordinates recentering
+        this.projections = {};
+        for (var i = 0, len = this.projectionCodes.length, code; i < len; i++) {
+            code = String(this.projectionCodes[i]).toUpperCase();
+            if (code.substr(0, 5) != "EPSG:") {
+                code = "EPSG:" + code;
+            }
+            this.projections[code] = new OpenLayers.Projection(code);
+        }
+    },
 
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
@@ -103,42 +133,24 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 var map = this.target.mapPanel.map;
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
-                // EPSG:4326: when lon and lat <= 180 
-                var is4326 = left <= 180 && right <= 180
-                // EPSG:21781 or EPSG:2056: lon > lat
-                var isSwiss = !is4326 && (map.getProjection() === "EPSG:21781"
-                        || map.getProjection() === "EPSG:2056");
-                if (isSwiss && right > left) {
-                    var tmp = left;
-                    left = right;
-                    right = tmp;
-                }
-                this.position = new OpenLayers.LonLat(left, right);
-                if (is4326) {
-                    this.position = this.position.transform(
-                            new OpenLayers.Projection("EPSG:4326"),
-                            map.getProjectionObject());
-                }
-                var valid = false;
-                if (map.maxExtent.containsLonLat(this.position)) {
-                    valid = true;
-                } else {
-                    if (!isSwiss) {
-                        this.position = new OpenLayers.LonLat(right, left);
-                        if (is4326) {
-                            this.position = this.position.transform(
-                                    new OpenLayers.Projection("EPSG:4326"),
-                                    map.getProjectionObject());
-                        }
+                
+                var tryProjection = function(lon, lat, projection) {
+                    var position = new OpenLayers.LonLat(lon, lat);
+                    position.transform(projection, map.getProjectionObject());
+                    if (map.maxExtent.containsLonLat(position)) {
+                        this.position = position;
+                        return true;
+                    }
+                    return false;
+                }.createDelegate(this);
 
-                        if (map.maxExtent.containsLonLat(this.position)) {
-                            valid = true;
-                        }
+                for (var projection in this.projections) {
+                    if (tryProjection(left, right, projection) ||
+                        tryProjection(right, left, projection)) {
+                        break;
                     }
                 }
-                if (!valid) {
-                    this.position = null;
-                }
+                
                 // close the loading twin box.
                 this.closeLoading.delay(10);
                 // apply the position
@@ -182,7 +194,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         }, this);
         // used to apply the position
         this.applyPosition = new Ext.util.DelayedTask(function () {
-            map.setCenter(this.position);
+            map.setCenter(this.position, this.coordsRecenterZoom);
         }, this);
         combo.on({
             'select': function(combo, record, index) {
