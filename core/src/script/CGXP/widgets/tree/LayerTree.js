@@ -216,8 +216,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     minResolutionHint: item.minResolutionHint,
                     maxResolutionHint: item.maxResolutionHint
                 };
+                this.addMetadata(item, nodeConfig);
                 if (!item.children) {
-                    this.addMetadata(item, nodeConfig);
                     this.addLegend(item, nodeConfig, level);
                     this.addScaleAction(item, nodeConfig);
                     Ext.apply(nodeConfig, {
