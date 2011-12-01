@@ -400,8 +400,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     addMetadata: function(item, nodeConfig) {
         var metadataUrl;
-        if (Ext.isString(item.metadataUrls)) {
-            metadataUrl = item.metadataUrls;
+        if (Ext.isString(item.metadataURL)) {
+            metadataUrl = item.metadataURL;
         }
         else if(Ext.isArray(item.metadataUrls)) {
             metadataUrl = item.metadataUrls[0].url;
