@@ -720,7 +720,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (!this.initialState) {
             return;
         }
-        if (this.initialState.groups) {
+        if (this.initialState.groups !== undefined) {
             this.defaultThemes = null;
         }
         var groups = Ext.isArray(this.initialState.groups) ?
