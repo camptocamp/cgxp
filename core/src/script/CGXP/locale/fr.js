@@ -83,7 +83,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     // tree
     "Tree.moveup": "Monter",
     "Tree.movedown": "Descendre",
-    "Tree.moreinfo": "Plus d'informations sur la couche",
+    "Tree.moreinfo": "Plus d'informations",
     "Tree.delete": "Supprimer la couche",
     "Tree.opacity": "Modifier l'opacité de la couche",
     "Tree.zoomtoscale": "Cette couche n'est pas visible à ce niveau de zoom.",
