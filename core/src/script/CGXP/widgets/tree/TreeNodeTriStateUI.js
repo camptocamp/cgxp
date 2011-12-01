@@ -16,6 +16,10 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * @requires GeoExt/widgets/tree/TreeNodeUIEventMixin.js
+ */
+
 Ext.namespace("cgxp.tree");
 
 cgxp.tree.TreeNodeTriStateUI = function() {
@@ -23,7 +27,8 @@ cgxp.tree.TreeNodeTriStateUI = function() {
     this.partial = false;
 };
 
-Ext.extend(cgxp.tree.TreeNodeTriStateUI, Ext.tree.TreeNodeUI, {
+Ext.extend(cgxp.tree.TreeNodeTriStateUI,
+    Ext.extend(Ext.tree.TreeNodeUI, new GeoExt.tree.TreeNodeUIEventMixin()), {
     renderElements : function(n, a, targetNode, bulkRender){
         this.indentMarkup = n.parentNode ? n.parentNode.ui.getChildIndent() : '';
 
