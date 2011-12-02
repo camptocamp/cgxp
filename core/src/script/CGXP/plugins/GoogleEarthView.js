@@ -42,30 +42,48 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_googleearthview */
     ptype: "cgxp_googleearthview",
 
+    /** TODO description */
+    apiKey: null,
+
+    /** TODO description */
     earthReadyCallback: null,
 
+    /** TODO description */
     googleEarthViewControl: null,
 
-    googleEarthPanel: null,
+    /** TODO description */
+    outputTarget: null,
+
+    init: function() {
+        gxp.plugins.GoogleEarth.loader.loadScript({
+            apiKey: this.apiKey,
+            callback: Ext.emptyFn,
+            errback: Ext.emptyFn,
+            failure: Ext.emptyFn,
+            ready: Ext.emptyFn,
+            scope: this,
+            timeout: 30 * 1000
+        });
+        cgxp.plugins.GoogleEarthView.superclass.init.apply(this, arguments);
+    },
 
     /** private: method[addActions]
      */
     addActions: function() {
-        window.g = this;
-        window.console.log("addActions");
+        this.outputTarget = Ext.getCmp(this.outputTarget);
         var button = new Ext.Button({
             text: OpenLayers.i18n("Tools.googleearthview"),
             enableToggle: true
         });
         button.on({
             "toggle": function(button) {
-                window.console.log("toggle(" + button.pressed + ")");
                 if (button.pressed) {
+
                     this.googleEarthPanel = new gxp.GoogleEarthPanel({
                         mapPanel: this.target.mapPanel,
                         region: "east"
                     });
-                    // FIXME add googleEarthPanel
+
                     this.googleEarthViewControl = new OpenLayers.Control.GoogleEarthView();
                     this.earthReadyCallback = OpenLayers.Function.bind(function(gePlugin) {
                         this.setGEPlugin(gePlugin);
@@ -73,24 +91,31 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     }, this.googleEarthViewControl);
                     this.googleEarthPanel.on("earthready", this.earthReadyCallback);
                     this.target.mapPanel.map.addControl(this.googleEarthViewControl);
+
+                    this.outputTarget.add(this.googleEarthPanel);
+                    this.outputTarget.setSize("40%", 0);
+                    this.outputTarget.setVisible(true);
+                    this.outputTarget.ownerCt.doLayout();
+
                 } else {
+
                     this.target.mapPanel.map.removeControl(this.googleEarthViewControl);
                     this.googleEarthViewControl = null;
+
                     this.googleEarthPanel.un("earthready", this.earthReadyCallback);
                     this.earthReadyCallback = null;
-                    // FIXME remove googleEarthPanel
+
+                    this.outputTarget.remove(this.googleEarthPanel);
+                    this.googleEarthPanel = null;
+
+                    this.outputTarget.setVisible(false);
+                    this.outputTarget.ownerCt.doLayout();
+
                 }
             },
             scope: this
         });
         return cgxp.plugins.GoogleEarthView.superclass.addActions.apply(this, [button]);
-    },
-
-    /** private: method[addOutput]
-     */
-    addOutput: function() {
-        window.console.log("addOutput");
-        return cgxp.plugins.GoogleEarthView.superclass.addOutput.apply(this, [googleEarthPanel]);
     }
 
 });
