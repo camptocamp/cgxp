@@ -160,15 +160,15 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                     tree.loadGroup(record.data);
                 }
                 else {
-                    var layers = [record.data.name]
-                    function fillLayers(nodes) {
+                    var layers = [record.data.name];
+                    var fillLayers = function(nodes) {
                         Ext.each(nodes, function(node) {
                             layers.push(node.name);
                             if (node.chldren) {
                                 fillLayers(node.children);
                             }
                         });
-                    }
+                    };
                     if (record.data.children) {
                         fillLayers(record.data.children);
                     }
@@ -187,7 +187,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
         
         var searchField = cgxp.plugins.ThemeFinder.superclass.addOutput.call(this, twinField);
         return searchField;
-    },
+    }
 });
 
 Ext.preg(cgxp.plugins.ThemeFinder.prototype.ptype, cgxp.plugins.ThemeFinder);
