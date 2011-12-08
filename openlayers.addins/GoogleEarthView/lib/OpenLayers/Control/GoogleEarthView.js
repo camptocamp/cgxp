@@ -321,8 +321,10 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
     onDrag: function(feature, pixel) {
         var mapProjection = this.map.getProjectionObject();
         var lonLat = this.layer.getLonLatFromViewPortPx(pixel);
+        var point = new OpenLayers.Geometry.Point(lonLat.lon, lonLat.lat);
         OpenLayers.Projection.transform(
-            lonLat, mapProjection, this.geProjection);
+            point, mapProjection, this.geProjection);
+        lonLat = new OpenLayers.LonLat(point.x, point.y);
         var view = this.gePlugin.getView();
         var geLookAt = view.copyAsLookAt(this.altitudeMode);
         if (feature === this.cameraFeature) {
