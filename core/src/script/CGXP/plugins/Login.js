@@ -95,7 +95,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                             success: function() {
                                 window.location.href = window.location.href;
                             }
-                        })
+                        });
                     },
                     scope: this
                 })
