@@ -103,7 +103,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        options = Ext.apply({
+        var action = new Ext.Action(Ext.apply({
             allowDepress: false,
             iconCls: 'permalink',
             handler: function() {
@@ -111,9 +111,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                 permalinkTextField.setValue(link);
                 permalinkWindow.show();
             }
-        }, this.options);
-        
-        var action = new Ext.Action(options);
+        }, this.options));
 
         return cgxp.plugins.Permalink.superclass.addActions.apply(this, [action]);
     }
