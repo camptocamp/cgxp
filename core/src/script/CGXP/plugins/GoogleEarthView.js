@@ -46,7 +46,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     apiKey: null,
 
     /** TODO description */
-    earthReadyCallback: null,
+    pluginReadyCallback: null,
 
     /** TODO description */
     googleEarthViewControl: null,
@@ -85,11 +85,11 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     });
 
                     this.googleEarthViewControl = new OpenLayers.Control.GoogleEarthView();
-                    this.earthReadyCallback = OpenLayers.Function.bind(function(gePlugin) {
+                    this.pluginReadyCallback = OpenLayers.Function.bind(function(gePlugin) {
                         this.setGEPlugin(gePlugin);
                         this.activate();
                     }, this.googleEarthViewControl);
-                    this.googleEarthPanel.on("earthready", this.earthReadyCallback);
+                    this.googleEarthPanel.on("pluginready", this.pluginReadyCallback);
                     this.target.mapPanel.map.addControl(this.googleEarthViewControl);
 
                     this.outputTarget.add(this.googleEarthPanel);
@@ -102,8 +102,8 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     this.target.mapPanel.map.removeControl(this.googleEarthViewControl);
                     this.googleEarthViewControl = null;
 
-                    this.googleEarthPanel.un("earthready", this.earthReadyCallback);
-                    this.earthReadyCallback = null;
+                    this.googleEarthPanel.un("earthready", this.pluginReadyCallback);
+                    this.pluginReadyCallback = null;
 
                     this.outputTarget.remove(this.googleEarthPanel);
                     this.googleEarthPanel = null;
