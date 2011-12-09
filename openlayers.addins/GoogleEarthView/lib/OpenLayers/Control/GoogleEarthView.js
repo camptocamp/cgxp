@@ -236,30 +236,30 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      * APIMethod: setGEPlugin
      */
     setGEPlugin: function(gePlugin) {
-        this.removeGEPluginListener();
+        this.disconnectGEPlugin();
         this.gePlugin = gePlugin;
         if (this.gePlugin) {
             this.altitudeMode = this.gePlugin.ALTITUDE_RELATIVE_TO_GROUND;
             if (this.active) {
-                this.addGEPluginListener();
+                this.connectGEPlugin();
                 this.onFrameend();
             }
         }
     },
 
     /**
-     * Method: addGEPluginListener
+     * Method: connectGEPlugin
      */
-    addGEPluginListener: function() {
+    connectGEPlugin: function() {
         this.frameendCallback = OpenLayers.Function.bind(this.onFrameend, this);
         google.earth.addEventListener(
             this.gePlugin, "frameend", this.frameendCallback);
     },
 
     /**
-     * Method: removeGEPluginListener
+     * Method: disconnectGEPlugin
      */
-    removeGEPluginListener: function() {
+    disconnectGEPlugin: function() {
         if (this.frameendCallback) {
             google.earth.removeEventListener(
                 this.gePlugin, "frameend", this.frameendCallback);
@@ -309,7 +309,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             this.map.addLayer(this.layer);
             this.map.addControl(this.dragFeatureControl);
             this.dragFeatureControl.activate();
-            this.addGEPluginListener();
+            this.connectGEPlugin();
             this.onFrameend();
             return true;
         } else {
@@ -322,7 +322,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      */
     deactivate: function() {
         if (OpenLayers.Control.prototype.deactivate.apply(this, arguments)) {
-            this.removeGEPluginListener();
+            this.disconnectGEPlugin();
             this.dragFeatureControl.deactivate();
             this.map.removeControl(this.dragFeatureControl);
             this.map.removeLayer(this.layer);
