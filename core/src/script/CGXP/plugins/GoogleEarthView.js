@@ -80,6 +80,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                 if (button.pressed) {
 
                     this.googleEarthPanel = new gxp.GoogleEarthPanel({
+                        flyToSpeed: 0,
                         mapPanel: this.target.mapPanel,
                         region: "east"
                     });
