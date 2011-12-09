@@ -55,6 +55,11 @@
  * The Google Earth plugin's altitude mode constants are only available once
  * the plugin is initialized, hence the delayed initialization.
  *
+ * Gimball lock occurs when the camera is directly above the look at point. In
+ * this case, the calculation of the range and heading from the camera to the
+ * look at point on the map becomes degenerate.  We treat this case specially
+ * by removing the camera and only allowing the user to move the look at point.
+ *
  * Known bugs:
  *
  * The calculation of the camera range when the camera is moved assumes that
@@ -173,6 +178,18 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      * {OpenLayers.Feature.Vector}
      */
     lookAtFeature: null,
+
+    /**
+     * Property: gimballLock
+     * {boolean}
+     */
+    gimballLock: false,
+
+    /**
+     * Property: gimballLockThreshold
+     * {number}
+     */
+    gimballLockThreshold: 1,
 
     /**
      * Property: geProjection
@@ -327,7 +344,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         lonLat = new OpenLayers.LonLat(point.x, point.y);
         var view = this.gePlugin.getView();
         var geLookAt = view.copyAsLookAt(this.altitudeMode);
-        if (feature === this.cameraFeature) {
+        if (feature === this.cameraFeature && !this.gimballLock) {
             // Set the camera heading and range
             var lookAtLonLat = new OpenLayers.LonLat(
                 geLookAt.getLongitude(), geLookAt.getLatitude());
@@ -336,7 +353,8 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             geLookAt.setRange(
                 1000 * OpenLayers.Util.distVincenty(lonLat, lookAtLonLat) /
                     Math.sin(Math.PI * geLookAt.getTilt() / 180));
-        } else if (feature === this.lookAtFeature) {
+        } else if (feature === this.lookAtFeature ||
+                   (feature === this.cameraFeature && this.gimballLock)) {
             // Set the look at point
             geLookAt.setLongitude(lonLat.lon);
             geLookAt.setLatitude(lonLat.lat);
@@ -366,7 +384,11 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         OpenLayers.Projection.transform(
             newLookAtGeometry, this.geProjection, mapProjection);
 
+        var prevGimballLock = this.gimballLock;
+        this.gimballLock = geCamera.getTilt() < this.gimballLockThreshold;
+
         if (!this.featuresAdded ||
+            this.gimballLock != prevGimballLock ||
             newCameraGeometry.x != this.cameraFeature.geometry.x ||
             newCameraGeometry.y != this.cameraFeature.geometry.y ||
             newLookAtGeometry.x != this.lookAtFeature.geometry.x ||
@@ -381,21 +403,31 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             this.lineFeature.geometry = new OpenLayers.Geometry.LineString(
                 [newCameraGeometry, newLookAtGeometry]);
 
-            this.layer.addFeatures(
-                [this.lineFeature, this.lookAtFeature, this.cameraFeature]);
-            this.featuresAdded = true;
+            if (this.gimballLock) {
 
-            // Calculate camera rotation
-            var cameraLonLat = new OpenLayers.LonLat(
-                geCamera.getLongitude(), geCamera.getLatitude());
-            var cameraPixel = this.layer.getViewPortPxFromLonLat(cameraLonLat);
-            var lookAtLonLat = new OpenLayers.LonLat(
-                geLookAt.getLongitude(), geLookAt.getLatitude());
-            var lookAtPixel = this.layer.getViewPortPxFromLonLat(lookAtLonLat);
-            var rotation =
-                90 + 180 * Math.atan2(lookAtPixel.y - cameraPixel.y,
-                                      lookAtPixel.x - cameraPixel.x) / Math.PI;
-            this.cameraFeature.style.rotation = rotation;
+                this.layer.addFeatures([this.cameraFeature]);
+                this.cameraFeature.style.rotation = geLookAt.getHeading();
+
+            } else {
+
+                this.layer.addFeatures(
+                    [this.lineFeature, this.lookAtFeature, this.cameraFeature]);
+
+                // Calculate camera rotation
+                var cameraLonLat = new OpenLayers.LonLat(
+                    geCamera.getLongitude(), geCamera.getLatitude());
+                var cameraPixel = this.layer.getViewPortPxFromLonLat(cameraLonLat);
+                var lookAtLonLat = new OpenLayers.LonLat(
+                    geLookAt.getLongitude(), geLookAt.getLatitude());
+                var lookAtPixel = this.layer.getViewPortPxFromLonLat(lookAtLonLat);
+                var rotation =
+                    90 + 180 * Math.atan2(lookAtPixel.y - cameraPixel.y,
+                                          lookAtPixel.x - cameraPixel.x) / Math.PI;
+                this.cameraFeature.style.rotation = rotation;
+
+            }
+
+            this.featuresAdded = true;
 
         }
 
