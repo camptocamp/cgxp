@@ -204,6 +204,12 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
     frameendCallback: null,
 
     /**
+     * Property: gePluginFlyToSpeedSet
+     * {boolean}
+     */
+    gePluginFlyToSpeedSet: false,
+
+    /**
      * Constructor: OpenLayers.Control.GoogleEarthView
      *
      * Parameters:
@@ -254,6 +260,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         this.frameendCallback = OpenLayers.Function.bind(this.onFrameend, this);
         google.earth.addEventListener(
             this.gePlugin, "frameend", this.frameendCallback);
+        this.gePluginFlyToSpeedSet = false;
     },
 
     /**
@@ -294,7 +301,8 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             this.dragFeatureControl = new OpenLayers.Control.DragFeature(
                 this.layer, {
                     geometryTypes: [OpenLayers.Geometry.Point.prototype.CLASS_NAME],
-                    onDrag: OpenLayers.Function.bind(this.onDrag, this)
+                    onDrag: OpenLayers.Function.bind(this.onDrag, this),
+                    onStart: OpenLayers.Function.bind(this.onStart, this)
                 });
         }
         return this.div;
@@ -431,6 +439,17 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
 
         }
 
+    },
+
+    /** Method: onStart
+     */
+    onStart: function() {
+        // Set the fly to speed to teleport (instantaneous) when the user first
+        // starts dragging a feature so that the GE Plugin does not lag
+        if (this.gePlugin != null && !this.gePluginFlyToSpeedSet) {
+            this.gePlugin.getOptions().setFlyToSpeed(this.gePlugin.SPEED_TELEPORT);
+            this.gePluginFlyToSpeedSet = true;
+        }
     },
 
     CLASS_NAME: "OpenLayers.Control.GoogleEarthView"
