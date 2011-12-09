@@ -99,13 +99,15 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
                 } else {
 
-                    this.target.mapPanel.map.removeControl(this.googleEarthViewControl);
-                    this.googleEarthViewControl = null;
-
-                    this.googleEarthPanel.un("earthready", this.pluginReadyCallback);
+                    this.googleEarthPanel.un("pluginready", this.pluginReadyCallback);
                     this.pluginReadyCallback = null;
 
+                    this.target.mapPanel.map.removeControl(this.googleEarthViewControl);
+                    this.googleEarthViewControl.destroy();
+                    this.googleEarthViewControl = null;
+
                     this.outputTarget.remove(this.googleEarthPanel);
+                    this.googleEarthPanel.destroy();
                     this.googleEarthPanel = null;
 
                     this.outputTarget.setVisible(false);
