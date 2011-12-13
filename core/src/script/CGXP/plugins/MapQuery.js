@@ -74,15 +74,21 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
      */
     styleMap: null,
 
+    /** api: config[highlightLayerOptions]
+     *  ``Object``
+     *  Optional options passed to the highlight layer constructor.
+     */
+    highlightLayerOptions: null,
+
     init: function() {
         cgxp.plugins.MapQuery.superclass.init.apply(this, arguments);
 
         this.highlightLayer = new OpenLayers.Layer.Vector(
-            OpenLayers.Util.createUniqueID("cgxp"), {
+            OpenLayers.Util.createUniqueID("cgxp"), Ext.apply({
                 displayInLayerSwitcher: false,
                 alwaysInRange: true,
                 styleMap: this.styleMap
-            });
+            }, this.highlightLayerOptions));
 
         this.target.on('ready', this.viewerReady, this);
 

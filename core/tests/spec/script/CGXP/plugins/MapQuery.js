@@ -23,6 +23,24 @@ describe('plugins.MapQuery', function() {
             expect(mq).toBeInstanceOf(cgxp.plugins.MapQuery);
         });
     });
+    describe('when calling constructor with options', function() {
+        beforeEach(function() {
+            mq = new cgxp.plugins.MapQuery({
+                highlightLayerOptions: {
+                    displayInLayerSwitcher: true,
+                    renderers: ['Canvas']
+                }
+            });
+            mq.init({
+                tools: {},
+                on: function() {}
+            });
+        });
+        it('sets the highlight layer options', function() {
+            expect(mq.highlightLayer.displayInLayerSwitcher).toEqual(true);
+            expect(mq.highlightLayer.renderers).toEqual(['Canvas']);
+        });
+    });
     describe('when calling addActions', function() {
         var actions;
         beforeEach(function() {
