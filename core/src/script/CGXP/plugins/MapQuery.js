@@ -75,6 +75,8 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
     styleMap: null,
 
     /** api: config[highlightLayerOptions]
+     *  ``Object``
+     *  Optional options passed to the highlight layer constructor.
      */
     highlightLayerOptions: null,
 
