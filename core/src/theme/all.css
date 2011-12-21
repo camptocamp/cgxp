@@ -61,6 +61,11 @@ div#header-out {
    background-image: url(img/ruler_square.png) !important;
 }
 
+/* cgxp_googleearthview */
+.x-btn .cgxp-icon-googleearthview {
+    background-image: url(img/google_earth.png) !important;
+}
+
 .x-toolbar .permalink {
     background: url('img/permalink.png') top left no-repeat;
 }
