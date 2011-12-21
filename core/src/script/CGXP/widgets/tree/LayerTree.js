@@ -835,18 +835,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             minResolutionHint = n.attributes.minResolutionHint,
             maxResolutionHint = n.attributes.maxResolutionHint;
         if (n.getUI().rendered) {
-            var actions = Ext.select(".gx-tree-layer-actions img", true, n.getUI().elNode);
-            actions.setVisibilityMode(Ext.Element.DISPLAY);
+            var legend = Ext.select(".gx-tree-layer-actions img.legend", true, n.getUI().elNode);
+            legend.setVisibilityMode(Ext.Element.DISPLAY);
             var zoomToScale = Ext.select(".gx-tree-layer-actions img.zoomtoscale", true, n.getUI().elNode);
             zoomToScale.setVisibilityMode(Ext.Element.DISPLAY);
 
             if ((minResolutionHint && minResolutionHint > resolution) || (maxResolutionHint && maxResolutionHint < resolution)) {
                 n.getUI().addClass("gx-tree-layer-outofrange");
-                actions.hide();
+                legend.hide();
                 zoomToScale.show();
             } else if (minResolutionHint || maxResolutionHint) {
                 n.getUI().removeClass("gx-tree-layer-outofrange");
-                actions.show();
+                legend.show();
                 zoomToScale.hide();
             }
         }
