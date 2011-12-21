@@ -433,6 +433,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var maxResolutionHint = item.maxResolutionHint,
             minResolutionHint = item.minResolutionHint;
         if (maxResolutionHint || minResolutionHint) {
+            nodeConfig.actions = nodeConfig.actions || [];
             nodeConfig.actions.push({
                 action: "zoomtoscale",
                 qtip: this.zoomtoscaleText
