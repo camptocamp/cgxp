@@ -838,6 +838,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var actions = Ext.select(".gx-tree-layer-actions img", true, n.getUI().elNode);
             actions.setVisibilityMode(Ext.Element.DISPLAY);
             var zoomToScale = Ext.select(".gx-tree-layer-actions img.zoomtoscale", true, n.getUI().elNode);
+            zoomToScale.setVisibilityMode(Ext.Element.DISPLAY);
 
             if ((minResolutionHint && minResolutionHint > resolution) || (maxResolutionHint && maxResolutionHint < resolution)) {
                 n.getUI().addClass("gx-tree-layer-outofrange");
