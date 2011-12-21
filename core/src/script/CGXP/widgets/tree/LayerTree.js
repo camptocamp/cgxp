@@ -227,6 +227,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 };
                 this.addMetadata(item, nodeConfig);
                 if (!item.children) {
+                    this.addShowIn3DAction(item, nodeConfig);
                     this.addLegend(item, nodeConfig, level);
                     this.addScaleAction(item, nodeConfig);
                     Ext.apply(nodeConfig, {
@@ -438,6 +439,21 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 action: "zoomtoscale",
                 qtip: this.zoomtoscaleText
             });
+        }
+    },
+
+    /**
+     * Method: addShowIn3DAction
+     * Adds the action to show in 3D
+     */
+    addShowIn3DAction: function(item, nodeConfig) {
+        if (item.kml) {
+            nodeConfig.actions = nodeConfig.actions || [];
+            nodeConfig.actions.push({
+                action: "showin3d",
+                qtip: OpenLayers.i18n("Tree.showin3d")
+            });
+            nodeConfig.kml = item.kml;
         }
     },
 
