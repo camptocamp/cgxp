@@ -50,7 +50,7 @@ cgxp.plugins.MenuShortcut = Ext.extend(gxp.plugins.Tool, {
         var classes = {
             '->': Ext.Toolbar.Fill,
             '-': Ext.Toolbar.Separator,
-            ' ': Ext.Toolbar.Spacer,
+            ' ': Ext.Toolbar.Spacer
         }
         
         return cgxp.plugins.MenuShortcut.superclass.addActions.apply(this, 
