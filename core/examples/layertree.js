@@ -2,12 +2,14 @@ var mapPanel, map, tree;
 Ext.onReady(function() {
     Ext.QuickTips.init();
 
-    map = new OpenLayers.Map('olmap');
+    map = new OpenLayers.Map();
     map.addLayers([
         new OpenLayers.Layer('fake', {isBaseLayer: true})
     ]); 
     mapPanel = new GeoExt.MapPanel({
-        renderTo: 'olmap',
+        renderTo: document.body,
+        width: 512,
+        height: 256,
         map: map
     });
 
