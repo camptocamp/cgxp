@@ -124,9 +124,6 @@ div.baseLayersOpacitySlider .opacityToolbar {
     background-color: transparent;
     background-image: none;
 }
-.layertree .x-tree-node .x-tree-node-over {
-    background-color: transparent;
-}
 .gx-tree-layer-actions {
     float: right;
 }
@@ -139,6 +136,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
     padding: 0;
     vertical-align: middle;
     width: 16px;
+    display: none;
+}
+.x-tree-node-over .gx-tree-layer-action {
+    display: inline-block;
 }
 .gx-tree-layer-actions .up {
     background: transparent url(img/bullet_arrow_up.png);
