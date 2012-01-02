@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+        <meta name="content-language" content="fr" />
+
+        <link rel="stylesheet" type="text/css" href="../../ext/Ext/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="../src/theme/all.css" />
+
+        <script type="text/javascript" src="../../ext/Ext/adapter/ext/ext-base.js"></script>
+
+        <script type="text/javascript" src="../../ext/Ext/ext-all-debug.js"></script>
+
+        <script type="text/javascript" src="../../openlayers/lib/OpenLayers.js"></script>
+        <script type="text/javascript" src="../../geoext/lib/GeoExt.js"></script>
+        <script type="text/javascript" src="../../geoext/lib/GeoExt.js"></script>
+        <script type="text/javascript" src="themes.js"></script>
+        <script type="text/javascript" src="layertree.js"></script>
+        <script type="text/javascript" src="../src/script/CGXP/widgets/tree/TreeNodeLoading.js"></script>
+        <script type="text/javascript" src="../src/script/CGXP/widgets/tree/TreeNodeComponent.js"></script>
+        <script type="text/javascript" src="../src/script/CGXP/widgets/tree/TreeNodeTriStateUI.js"></script>
+        <script type="text/javascript" src="../src/script/CGXP/widgets/tree/LayerTree.js"></script>
+        <script type="text/javascript" src="../../gxp/src/script/plugins/Tool.js"></script>
+        <script type="text/javascript" src="../src/script/CGXP/plugins/ThemeSelector.js"></script>
+        <script type="text/javascript">
+        </script>
+
+        <style type="text/css">
+        </style>
+    </head>
+
+    <body>
+
+        <script type="text/javascript">
+            // we need to set the lang early enougth, because we use
+            // OpenLayers.i18n in the values of App.catalog_nodes
+            // and App.layer_config below
+        OpenLayers.Lang.setCode("fr");
+
+        </script>
+        <button onclick="tree.loadTheme(App.themes.local[1]);">Load theme</button>
+        <div id="tree" style="width:150px;"></div>
+        <div id="olmap" style="width:512px;height:256px;"></div>
+    </body>
+</html>
