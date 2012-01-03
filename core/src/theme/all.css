@@ -177,6 +177,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
     padding-top: 2px;
     font-weight: bold;
 }
+.x-tree-node-el {
+    /* apparently mandatory for IE to correctly hide the components */
+    border-bottom: 1px solid transparent;
+}
 .x-tree-node-el .no-icon {
     width: 0;
 }
