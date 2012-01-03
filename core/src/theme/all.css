@@ -211,6 +211,7 @@ div.baseLayersOpacitySlider .opacityToolbar {
     color: #777;
 }
 
+.ext-ie input.styledCheckbox,
 .styledCheckbox {
     height: 13px;
     width: 13px;
