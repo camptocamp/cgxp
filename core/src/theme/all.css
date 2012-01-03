@@ -167,11 +167,19 @@ div.baseLayersOpacitySlider .opacityToolbar {
 }
 .x-tree-root-node li {
     padding: 4px 0;
-    border-bottom: 1px solid #ddd;
+    margin: 4px;
+    border-bottom: 1px solid #eee;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
 }
 .x-tree-root-node li li {
     padding: 0;
+    margin: 0;
     border-bottom: 0;
+    -moz-box-sizing: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 .x-tree-node-theme {
     padding-top: 2px;
