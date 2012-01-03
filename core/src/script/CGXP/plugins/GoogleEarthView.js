@@ -79,6 +79,12 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             "toggle": function(button) {
                 if (button.pressed) {
 
+                    Ext.each(
+                        this.target.mapPanel.map.getControlsByClass("OpenLayers.Control.KeyboardDefaults"),
+                        function(control) {
+                          control.deactivate();
+                        });
+
                     this.googleEarthPanel = new gxp.GoogleEarthPanel({
                         flyToSpeed: 0,
                         mapPanel: this.target.mapPanel,
@@ -113,6 +119,12 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
                     this.outputTarget.setVisible(false);
                     this.outputTarget.ownerCt.doLayout();
+
+                    Ext.each(
+                        this.target.mapPanel.map.getControlsByClass("OpenLayers.Control.KeyboardDefaults"),
+                        function(control) {
+                          control.activate();
+                        });
 
                 }
             },
