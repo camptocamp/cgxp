@@ -160,6 +160,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                     closeAction: 'hide',
                     location: new OpenLayers.LonLat(0, 0)
                 });
+                if (Ext.isIE7) {
+                    // IE7 needs an explicit width.
+                    this.popup.setWidth(200);
+                }
             }
             this.popup.hide();
             var singlePoint = false;
