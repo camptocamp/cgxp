@@ -219,6 +219,12 @@ div.baseLayersOpacitySlider .opacityToolbar {
     color: #777;
 }
 
+.ext-strict .ext-ie9 .x-tree-node-el {
+    /* prevents IE9 from setting a floating value for height (ie. 18.8px) */
+    line-height: 16px;
+}
+
+.ext-strict .ext-ie8 input.styledCheckbox,
 .ext-ie input.styledCheckbox,
 .styledCheckbox {
     height: 13px;
