@@ -444,6 +444,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             isFormField: true,
             hideLabel: true,
             aggressive: true,
+            anchor: '95%',
             plugins: new GeoExt.LayerOpacitySliderTip({
                 template: '<div>' + OpenLayers.i18n('Tree.opacitylabel') + ' {opacity}%</div>'
             })
