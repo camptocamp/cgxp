@@ -177,8 +177,13 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             'render': function(component) {
-                function stop(event) {
-                    event.stopPropagation();
+                function stop(e) {
+                    var event = e || window.event;
+                    if (event.stopPropagation) {
+                        event.stopPropagation();
+                    } else {
+                        event.cancelBubble = true;
+                    }
                 }
                 component.getEl().dom.onkeydown = stop;
             },

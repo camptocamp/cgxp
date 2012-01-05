@@ -230,8 +230,13 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                     trackMouse: true,
                     dismissDelay: 15000
                 });
-                function stop(event) {
-                    event.stopPropagation();
+                function stop(e) {
+                    var event = e || window.event;
+                    if (event.stopPropagation) {
+                        event.stopPropagation();
+                    } else {
+                        event.cancelBubble = true;
+                    }
                 }
                 component.getEl().dom.onkeydown = stop;
             },
