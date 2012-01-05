@@ -86,7 +86,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                         });
 
                     this.googleEarthPanel = new gxp.GoogleEarthPanel({
-                        flyToSpeed: 0,
+                        flyToSpeed: null,
                         mapPanel: this.target.mapPanel,
                         region: "east"
                     });
