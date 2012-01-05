@@ -231,8 +231,6 @@ div.baseLayersOpacitySlider .opacityToolbar {
 .styledCheckboxWrap {
     position: relative;
     background: url('img/checkboxes.gif') no-repeat top left;
-    width: 13px;
-    height: 13px;
     margin: 3px;
 }
 
