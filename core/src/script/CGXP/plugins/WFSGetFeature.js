@@ -114,6 +114,18 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     geometryName: 'geom',
 
+    /** api: config[clickTolerance]
+     * ´´Integer´´
+     * Buffer around clicked point, in pixels
+     */
+    clickTolerance: 8,
+
+    /** api: config[enableWMTSLayers]
+     * ´´Boolean´´
+     * If true, WMTS layers will be queried as well.
+     */
+    enableWMTSLayers: false,
+
     /** api: config[WFSTypes]
      * ´´Array´´
      * The queryable type on the internal server
@@ -171,9 +183,10 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             box: true, 
             click: true, 
             single: false, 
-            clickTolerance: 8, 
+            clickTolerance: this.clickTolerance, 
             WFSTypes: this.WFSTypes,
             externalWFSTypes: this.externalWFSTypes,
+            enableWMTSLayers: this.enableWMTSLayers, 
             eventListeners: {
                 beforefeatureselected: function() {
                     this.events.fireEvent('querystarts');
@@ -191,11 +204,16 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             },
             request: function() {
                 var olLayers = this.map.getLayersByClass("OpenLayers.Layer.WMS");
-                var wmsLayers = [];
-                var externalWmsLayers = [];
+                if (this.enableWMTSLayers) {
+                    olLayers = olLayers.concat(
+                        this.map.getLayersByClass("OpenLayers.Layer.WMTS")
+                    );
+                }
+                var internalLayers = [];
+                var externalLayers = [];
                 Ext.each(olLayers, function(layer) {
                     if (layer.getVisibility() === true) {
-                        var layers = layer.params.LAYERS;
+                        var layers = layer.params.LAYERS || layer.mapserverLayers;
                         if (Ext.isArray(layers)) {
                             layers = layers.join(',');
                         }
@@ -203,26 +221,26 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                         for (var j = 0, lenj = layers.length ; j < lenj ; j++) {
                             for (var i = 0, leni = this.WFSTypes.length ; i < leni ; i++) {
                                 if (this.WFSTypes[i] === layers[j]) {
-                                    wmsLayers.push(this.WFSTypes[i]);
+                                    internalLayers.push(this.WFSTypes[i]);
                                     break;
                                 }
                             }
                             for (var k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
                                 if (this.externalWFSTypes[k] === layers[j]) {
-                                    externalWmsLayers.push(this.externalWFSTypes[k]);
+                                    externalLayers.push(this.externalWFSTypes[k]);
                                     break;
                                 }
                             }
                         }
                     }
                 }, this);
-                this.internalProtocol.format.featureType = wmsLayers;
-                this.externalProtocol.format.featureType = externalWmsLayers;
-                if (wmsLayers.length > 0) {
+                this.internalProtocol.format.featureType = internalLayers;
+                this.externalProtocol.format.featureType = externalLayers;
+                if (internalLayers.length > 0) {
                     this.protocol = this.internalProtocol;
                     OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
                 }
-                if (externalWmsLayers.length > 0) {
+                if (externalLayers.length > 0) {
                     this.protocol = this.externalProtocol;
                     OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
                 }
