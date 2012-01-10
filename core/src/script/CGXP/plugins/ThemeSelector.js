@@ -108,11 +108,12 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
         }
         var tabs = new Ext.TabPanel({
             width: 530,
-            activeItem: 0,
+            activeTab: 0,
             plain: true,
             border: false,
             tabPosition: 'bottom',
             items: items,
+            deferredRender: false,
             listeners: {
                 tabchange: function(cmp) {
                     cmp.ownerCt.doLayout();
