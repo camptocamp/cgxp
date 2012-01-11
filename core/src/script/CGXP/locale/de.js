@@ -13,18 +13,18 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "QueryBuilder.describefeaturetype_exception": "Es ist ein Fehler aufgetreten.",
     "QueryBuilder.getfeature_exception": "Es ist ein Fehler aufgetreten.",
     "QueryBuilder.match": "Trifft auf",
-    "QueryBuilder.of": "der folgenden Bedingungen zu :",
+    "QueryBuilder.of": "die folgenden Bedingungen zu:",
      
     // search
     'Search.Search': 'Suchen',
-    'Search.ToolTip': 'In diesem Feld können Sie nach verschiedenen geografischen <br />Orten und Objekten suchen: <br /><b>Amtliche Vermessung:</b> Adressen, Parzellen, Asserkuranznummern z.B. <b>wohlen 1716</b><br /><b>Werkplan Elektro:</b> Trafostationen, Verteilkabinen z.B. <b>ts 41</b><br /><b>Werkplan Wasser:</b> Hydranten, Reservoir z.B. <b>hydr 5612 102</b><br /><b>Werkplan Gas:</b> Druckreduzierstationen z.B. <b>drs 15</b><br /><b>Werkplan Abwasser:</b> Kontrollschächte z.B. <b>k 150</b>',
+    'Search.ToolTip': 'In diesem Feld können Sie nach verschiedenen geografischen <br />Orten und Objekten suchen: <br /><b>Amtliche Vermessung:</b> Adressen, Parzellen, Assekuranznummern z.B. <b>wohlen 1716</b><br /><b>Werkplan Elektro:</b> Trafostationen, Verteilkabinen z.B. <b>ts 41</b><br /><b>Werkplan Wasser:</b> Hydranten, Reservoir z.B. <b>hydr 5612 102</b><br /><b>Werkplan Gas:</b> Druckreduzierstationen z.B. <b>drs 15</b><br /><b>Werkplan Abwasser:</b> KontrollschÃ¤chte z.B. <b>k 150</b>',
 
     "ResultsPanel.clearAll": "Resultate löschen",
     "ResultsPanel.select": "Auswahl",
     "ResultsPanel.select.all": "alle",
     "ResultsPanel.select.none": "keine",
     "ResultsPanel.select.toggle": "umkehren",
-    "ResultsPanel.actions": "Auf Auswahl anwenden",
+    "ResultsPanel.actions": "auf Auswahl anwenden",
     "ResultsPanel.actions.zoomToSelection": "zentrieren auf Ausdehnung",
     "ResultsPanel.actions.csvSelectionExport": "als CSV Datei exportieren",
     "ResultsPanel.max_features_msg": "maximale Anzahl Resultate erreicht",
@@ -40,25 +40,25 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "Print.rotationfieldlabel": "Rotation",
     "Print.printbuttonlabel": "Drucken",
     "Print.waitingmessage": "PDF Generierung...",
-    'Print.Download': 'Download', // TODO translate
-    'Print.Ready': 'Your PDF is ready.', // TODO translate
-    "Print.failuretitle": "Printing Failure", // TODO translate
-    "Print.failuremsg": "An error occured while printing. Please check the parameters.", // TODO translate
+    'Print.Download': 'Download',
+    'Print.Ready': 'PDF ist bereit.',
+    "Print.failuretitle": "Fehler beim Drucken",
+    "Print.failuremsg": "Es ist ein Fehler aufgetreten beim Drucken. Bitte prüfen Sie die Parameter.",
     
     "Tools.authenticationFailure": "Benutzername oder Passwort fehlerhaft. Bitte geben Sie Ihre Daten erneut ein.",
     "Tools.maxextentactiontooltip": "Gesamtübersicht",
-    "Tools.measurelengthactiontooltip": "Messen einer Strecke",
-    "Tools.measureareaactiontooltip": "Messen einer Fläche",
+    "Tools.measurelengthactiontooltip": "Strecke messen",
+    "Tools.measureareaactiontooltip": "Fläche messen",
     "Tools.measurepositionactiontooltip": "Koordinaten eines Punktes abfragen",
-    "Tools.ortholabel": "Orthophoto",
+    "Tools.ortholabel": "Orthofoto",
     "Tools.legendbuttontext": "Legende",
-    "Tools.legendbuttontooltip": "Zeigt die Legende der Themen an",
+    "Tools.legendbuttontooltip": "Legende anzeigen",
     "Tools.legendwindowtitle": "Legende",
     "Tools.helpactiontooltip": "Hilfe",
     "Tools.redlining": "Zeichnen",
-    "Tools.LoggedAs": "Eingeloggt als <b>${user}</b>",
-    "Tools.Logout": "Logout",
-    "Tools.Login": "Login",
+    "Tools.LoggedAs": "Angemeldet als <b>${user}</b>",
+    "Tools.Logout": "Abmelden",
+    "Tools.Login": "Anmelden",
     "Tools.username": "Benutzername",
     "Tools.password": "Passwort",
 
@@ -80,18 +80,20 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     //"csv.comma": ",",
     //"csv.quote": '"',
 
-     // TODO translate from here
     // tree
-    "Tree.moveup": "Raise",
-    "Tree.movedown": "Move down",
-    "Tree.moreinfo": "More information",
-    "Tree.delete": "Remove layer",
-    "Tree.opacity": "Modify layer opacity",
-    "Tree.zoomtoscale": "This layer is not visible at this zoom level.",
-    "Tree.opacitylabel": "Opacity",
+    "Tree.moveup": "nach oben",
+    "Tree.movedown": "nach unten",
+    "Tree.moreinfo": "mehr Information",
+    "Tree.delete": "Layer löschen",
+    "Tree.opacity": "Layertransparenz anpassen",
+    "Tree.zoomtoscale": "Der Layer ist nicht sichtbar in diesem Massstab.",
+    "Tree.opacitylabel": "Transparenz",
 
     // Theme selector
-    "Themeselector.local": "Local layers",
-    "Themeselector.external": "External layers",
-    "Themeselector.themes": "Themes"
+    "Themeselector.local": "lokale Layer",
+    "Themeselector.external": "externe Layer",
+    "Themeselector.themes": "Themen",
+
+    // Theme finder
+    "ThemeFinder.emptytext": "Themen- oder Layername eingeben"
 });
