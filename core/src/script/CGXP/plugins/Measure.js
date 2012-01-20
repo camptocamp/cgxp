@@ -257,7 +257,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 lon: metric.x.toFixed(5), 
                 lat: metric.y.toFixed(5),
                 unit: metricUnit
-            }) 
+            });
         }
     },
 
