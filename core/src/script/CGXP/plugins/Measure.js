@@ -194,7 +194,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 }
                 this.popup.position();
                 this.popup.show();
-                var measure
+                var measure;
                 this.popup.update({
                     measure: measure,
                     units: event.units,
