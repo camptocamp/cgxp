@@ -52,6 +52,8 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      */
     defaultBaseLayerRef: 'plan',
 
+    orthoText: "Orthophoto",
+
     /**
      * Method: createMapBar
      * Creates the map toolbar.
@@ -108,9 +110,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      */
     createOrthoLabel: function() {
         return new Ext.BoxComponent({
-            html: ['<span class="tools-baselayer-label">',
-                   OpenLayers.i18n('Tools.ortholabel'),
-                   '</span>'].join('')
+            html: '<span class="tools-baselayer-label">' + this.orthoText + '</span>'
         });
     },
 
