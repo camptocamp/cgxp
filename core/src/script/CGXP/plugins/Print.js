@@ -70,6 +70,21 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     options: null,
 
+    printTitle: "Printing",
+    titlefieldText: "Title",
+    titlefieldvalueText: "Map title",
+    commentfieldText: "Comment",
+    commentfieldvalueText: "Comment on the map",
+    dpifieldText: "Resolution",
+    scalefieldText: "Scale",
+    rotationfieldText: "Rotation",
+    printbuttonText: "Print",
+    waitingText: "Printing...",
+    downloadText: 'Download',
+    readyText: 'Your PDF is ready.',
+    failureTitle: "Printing Failure",
+    failureText: "An error occured while printing. Please check the parameters.",
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -91,11 +106,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                             cls: 'pdf-window',
                             items: [
                                 {
-                                    html: OpenLayers.i18n('Print.Ready')
+                                    html: this.readyText
                                 },
                                 {
                                     xtype: 'button',
-                                    text: OpenLayers.i18n('Print.Download'),
+                                    text: this.downloadText,
                                     handler: function() {
                                         window.open(url);
                                         win.hide();
@@ -231,39 +246,36 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             printOptions: {'legend': legendPanel},
             bodyStyle: 'padding: 10px',
             printProvider: printProvider,
-            title: OpenLayers.i18n("print"),
+            title: this.printTitle,
             items: [{
                 xtype: 'textfield',
                 name: 'title',
-                fieldLabel: OpenLayers.i18n("Print.titlefieldlabel"),
-                value: OpenLayers.i18n("Print.titlefieldvalue"),
+                fieldLabel: this.titlefieldText,
+                value: this.titlefieldvalueText,
                 plugins: new GeoExt.plugins.PrintProviderField(),
                 autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
             }, {
                 xtype: 'textarea',
                 name: 'comment',
-                fieldLabel: OpenLayers.i18n("Print.commentfieldlabel"),
-                value: OpenLayers.i18n("Print.commentfieldvalue"),
+                fieldLabel: this.commentfieldText,
+                value: this.commentfieldvalueText,
                 plugins: new GeoExt.plugins.PrintProviderField(),
                 autoCreate: {tag: "textarea", maxLength: "100"}
             }],
             comboOptions: {
                 editable: false
             },
-            dpiText: OpenLayers.i18n("Print.dpifieldlabel"),
-            scaleText: OpenLayers.i18n("Print.scalefieldlabel"),
-            rotationText:  OpenLayers.i18n("Print.rotationfieldlabel"),
-            printText: OpenLayers.i18n("Print.printbuttonlabel"),
-            creatingPdfText: OpenLayers.i18n("Print.waitingmessage")
+            dpiText: this.dpifieldText,
+            scaleText: this.scalefieldText,
+            rotationText: this.rotationfieldText,
+            printText: this.printbuttonText,
+            creatingPdfText: this.waitingText
         }, this.options);
         printPanel = new GeoExt.ux.SimplePrint(options);
 
         printProvider.on('printexception', function(printProvider, response) {
             printPanel.busyMask.hide();
-            Ext.Msg.alert(
-                OpenLayers.i18n('Print.failuretitle'),
-                OpenLayers.i18n('Print.failuremsg')
-            );
+            Ext.Msg.alert(this.failureTitle, this.failureText);
         });
 
         // the print panel auto-shows the print extent when
