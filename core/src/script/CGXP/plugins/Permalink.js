@@ -46,6 +46,11 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
      */
     options: null,
 
+    toolTitle: "Permalink",
+    windowTitle: "Permalink",
+    openlinkText: "Open Link",
+    closeText: "Close",
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -68,16 +73,16 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             width: 400,
             closeAction: 'hide',
             plain: true,
-            title: OpenLayers.i18n('Permalink.title'),
+            title: this.windowTitle,
             items: permalinkTextField,
             buttons: [{
-                text: OpenLayers.i18n('Permalink.openlink'),
+                text: this.openlinkText,
                 handler: function() {
                     window.open(permalinkTextField.getValue());
                     permalinkWindow.hide();
                 }
             }, {
-                text: OpenLayers.i18n('close'),
+                text: this.closeText,
                 handler: function() {
                     permalinkWindow.hide();
                 }
@@ -106,6 +111,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         var action = new Ext.Action(Ext.apply({
             allowDepress: false,
             iconCls: 'permalink',
+            tooltip: this.toolTitle,
             handler: function() {
                 // reset the link in case the user deleted/modified it by error
                 permalinkTextField.setValue(link);
