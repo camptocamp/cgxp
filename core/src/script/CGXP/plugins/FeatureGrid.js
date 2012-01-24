@@ -112,6 +112,18 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
 
+    clearAllText: "Clear all",
+    selectText: "Select",
+    selectAllText: "All",
+    selectNoneText: "None",
+    selectToggleText: "Toggle",
+    actionsText: "Actions on selected results",
+    zoomToSelectionText: "Zoom on selection",
+    csvSelectionExportText: "Export as CSV",
+    maxFeaturesText: "Maximum of results",
+    resultText: "Result",
+    resultsText: "Results",
+
     init: function() {
         cgxp.plugins.FeatureGrid.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
@@ -220,12 +232,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             return '';
         }
         var count = this.currentGrid.getStore().getCount();
-        var plural = (count>1) ? "s" : "";
+        var resultText = (count>1) ? this.resultsText : this.resultText;
         return (count == this.maxFeatures) ?
-            OpenLayers.i18n("ResultsPanel.max_features_msg")
-                + '(' + this.maxFeatures + ')' :
-                count + " " + OpenLayers.i18n("ResultsPanel.result" + plural);
-        
+                this.maxFeaturesText + '(' + this.maxFeatures + ')' :
+                count + " " + resultText;
     },
 
     /** private: method[addOutput]
@@ -415,24 +425,24 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             },
             bbar: [
                 new Ext.SplitButton({
-                    text: OpenLayers.i18n('ResultsPanel.select'),
+                    text: this.selectText,
                     handler: function() {
                         var sm = this.currentGrid.getSelectionModel();
                         sm.selectAll();
                     }, // handle a click on the button itself
                     menu: new Ext.menu.Menu({
                         items: [
-                            {text: OpenLayers.i18n('ResultsPanel.select.all'), handler: function() {
+                            {text: this.selectAllText, handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 sm.selectAll();
                             },
                             scope: this},
-                            {text: OpenLayers.i18n('ResultsPanel.select.none'), handler: function() {
+                            {text: this.selectNoneText, handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 sm.clearSelections();
                             },
                             scope: this},
-                            {text: OpenLayers.i18n('ResultsPanel.select.toggle'), handler: function() {
+                            {text: this.selectToggleText, handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 var recordsToSelect = [];
                                 this.currentGrid.getStore().each(function(record) {
@@ -450,13 +460,13 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     scope: this
                 }),
                 {
-                    text: OpenLayers.i18n('ResultsPanel.actions'),
+                    text: this.actionsText,
                     //iconCls: 'user',
                     menu: {
                         xtype: 'menu',
                         plain: true,
                         items: [{
-                            text: OpenLayers.i18n('ResultsPanel.actions.zoomToSelection'), 
+                            text: this.zoomToSelectionText, 
                             handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 var bbox = new OpenLayers.Bounds();
@@ -469,14 +479,14 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             },
                             scope: this
                         }, {
-                            text: OpenLayers.i18n('ResultsPanel.actions.csvSelectionExport'), 
+                            text: this.csvSelectionExportText, 
                             handler: this.csvExport,
                             target: this,
                             scope: this
                         }]
                     }
                 } ,'->', this.textItem, '-', {
-                    text: OpenLayers.i18n('ResultsPanel.clearAll'),
+                    text: this.clearAllText,
                     handler: function() {
                         this.vectorLayer.destroyFeatures();
                         this.textItem.setText('');
