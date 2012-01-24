@@ -1,3 +1,13 @@
+GeoExt.Lang.add("fr", {
+    "cgxp.plugins.Measure.prototype": {
+        lengthMenuText: "Longueur",
+        areaMenuText: "Surface",
+        lengthTooltip: "Mesure de longueur",
+        areaTooltip: "Mesure de surface",
+        measureTooltip: "Mesure"
+    }
+});
+
 OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "layertree": "Arbre des couches",
     "print": "Impression",
