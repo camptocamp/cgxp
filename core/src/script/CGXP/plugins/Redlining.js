@@ -55,6 +55,8 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
 
     redliningWindow: null,
 
+    redliningText: "Redlining",
+
     init: function() {
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
@@ -112,7 +114,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
 
         var button = new cgxp.tool.Button(
             new Ext.Action({
-                text: OpenLayers.i18n('Tools.redlining'),
+                text: this.redliningText,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
                 window: this.redliningWindow
