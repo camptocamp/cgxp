@@ -46,12 +46,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     apiKey: null,
 
     /** TODO description */
-    pluginReadyCallback: null,
-
-    /** TODO description */
-    googleEarthViewControl: null,
-
-    /** TODO description */
     outputTarget: null,
 
     init: function() {
@@ -65,6 +59,8 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             timeout: 30 * 1000
         });
         cgxp.plugins.GoogleEarthView.superclass.init.apply(this, arguments);
+        this.googleEarthViewControl = null;
+        this.pluginReadyCallback = null;
     },
 
     /** private: method[addActions]
