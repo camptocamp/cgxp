@@ -19,7 +19,7 @@
  * @requires plugins/Tool.js
  * @include OpenLayers/Control/GoogleEarthView.js
  * @include plugins/GoogleEarth.js
- * @include widgets/GoogleEarthPanel.js
+ * @include CGXP/widgets/GoogleEarthPanel.js
  */
 
 /** api: (define)
@@ -93,8 +93,9 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                             control.deactivate();
                         });
 
-                    this.googleEarthPanel = new gxp.GoogleEarthPanel({
+                    this.googleEarthPanel = new cgxp.GoogleEarthPanel({
                         flyToSpeed: null,
+                        id: "googleearthpanel",
                         mapPanel: this.target.mapPanel,
                         region: this.region
                     });

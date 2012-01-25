@@ -570,6 +570,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     zoom = map.getZoomForResolution(minResolutionHint);
                 }
                 map.setCenter(center, zoom);
+                break;
+            case 'showin3d':
+                var googleEarthPanel = Ext.getCmp("googleearthpanel");
+                if (googleEarthPanel) {
+                    googleEarthPanel.toggleKmlUrl(node.attributes.kml);
+                }
+                break;
         }
 
         if (key) {
