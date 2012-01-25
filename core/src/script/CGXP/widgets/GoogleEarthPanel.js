@@ -5,6 +5,34 @@
 /** api: (define)
  *  module = cgxp
  *  class = GoogleEarthPanel
+ *
+ *  This class extends gxp.GoogleEarthPanel to add support for KML URL layers.
+ *  gxp.GoogleEarthPanel uses the map's layers directly, which is not
+ *  appropriate for us.  The map's layers are an GeoExt.data.LayerStore
+ *  containing GeoExt.data.LayerRecords, which correspond to the high-level
+ *  nodes in the layer tree, not the individual layer tree nodes (which we
+ *  require).  Furthermore, OpenLayers only supports parsing KML files to
+ *  extract features, it does not support the concept of a KML layer
+ *  represented simply by a URL.  Therefore, we cannot use
+ *  OpenLayers.Format.KML or OpenLayers.Layer.Vector.
+ *
+ *  Consequently we use a totally separate mechanism to manage KML URL layers
+ *  in the GoogleEarthPanel.  KML URLs must first be converted to NetworkLinks,
+ *  which can then be added as Features to the Google Earth plugin.  We
+ *  maintain a feature cache of these network links, but we test for visibility
+ *  by checking whether the feature has been added to the Google Earth plugin
+ *  or not.  The visible/not visible state of the layers is effectively
+ *  maintained by the Google Earth plugin.
+ *
+ *  We never clear or expire items from our feature cache because it is assumed
+ *  that the NetworkLink features are small objects and in any case become
+ *  invalid when the Google Earth plugin is destroyed.  Note that the Google
+ *  Earth plugin is destroyed whenever the panel is hidden, see the comments in
+ *  gxp.GoogleEarthPanel for an explanation.  Therefore, hiding the Google
+ *  Earth panel destroys all state about which KML URL layers are visible or
+ *  not, and when a new Google Earth Panel is created in its place it starts
+ *  with no visible KML URL layers and an empty feature cache.
+ *
  */
 Ext.namespace("cgxp");
 
