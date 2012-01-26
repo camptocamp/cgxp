@@ -126,7 +126,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "Locator.easting": "Abscisse :", //deprecated?
     "Locator.northing": "Ordonnée :", //deprecated?
 
-    "Query.countertext": "Élément {0} sur {1}", //deprecated?
-    "Query.actiontooltip": "Questionne la carte", //deprecated?
-    "Query.nolayerselectedmsg": "Pas de couche sélectionnée" //deprecated?
+    "Query.countertext": "Élément {0} sur {1}",
+    "Query.actiontooltip": "Questionne la carte",
+    "Query.nolayerselectedmsg": "Pas de couche sélectionnée"
 });

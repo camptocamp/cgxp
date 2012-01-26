@@ -129,7 +129,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "Locator.easting": "Rechtswert:", //deprecated?
     "Locator.northing": "Hochwert:", //deprecated?
 
-    "Query.countertext": "Element {0} von {1}", //deprecated?
-    "Query.actiontooltip": "Informationen in der Karte abfragen", //deprecated?
-    "Query.nolayerselectedmsg": "Keine Ebene ausgewählt" //deprecated?
+    "Query.countertext": "Element {0} von {1}",
+    "Query.actiontooltip": "Informationen in der Karte abfragen",
+    "Query.nolayerselectedmsg": "Keine Ebene ausgewählt"
 });

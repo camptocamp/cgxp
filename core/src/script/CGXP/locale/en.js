@@ -116,7 +116,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.en, {
     "Locator.easting": "Easting:", //deprecated?
     "Locator.northing": "Northing:", //deprecated?
 
-    "Query.countertext": "Element {0} of {1}", //deprecated?
+    "Query.countertext": "Element {0} of {1}",
     "Query.actiontooltip": "Query the map",
     "Query.nolayerselectedmsg": "No layer selected"
 });
