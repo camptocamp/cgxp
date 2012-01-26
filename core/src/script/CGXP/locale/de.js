@@ -1,5 +1,7 @@
 GeoExt.Lang.add("de", {
     "cgxp.plugins.Measure.prototype": {
+        pointMenuText: "Punkt",
+        pointTooltip: "Punkt messen",
         lengthMenuText: "Länge",
         areaMenuText: "Fläche",
         lengthTooltip: "Länge messen",
@@ -31,81 +33,79 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.FeatureGrid.prototype": {
-        clearAllText: "Clear all",
-        selectText: "Select",
-        selectAllText: "All",
-        selectNoneText: "None",
-        selectToggleText: "Toggle",
-        actionsText: "Actions on selected results",
-        zoomToSelectionText: "Zoom on selection",
-        csvSelectionExportText: "Export as CSV",
-        maxFeaturesText: "Maximum of results",
-        resultText: "Result",
-        resultsText: "Results"
+        clearAllText: "Resultate löschen",
+        selectText: "Auswahl",
+        selectAllText: "Alle",
+        selectNoneText: "Keine",
+        selectToggleText: "Umkehren",
+        actionsText: "Auf Auswahl anwenden",
+        zoomToSelectionText: "Zentrieren auf Ausdehnung",
+        csvSelectionExportText: "Als CSV Datei exportieren",
+        maxFeaturesText: "Maximale Anzahl Resultate erreicht",
+        resultText: "Resultat",
+        resultsText: "Resultate"
     },
 
     "cgxp.plugins.Print.prototype": {
-        printTitle: "Printing",
-        titlefieldText: "Title",
-        titlefieldvalueText: "Map title",
-        commentfieldText: "Comment",
-        commentfieldvalueText: "Comment on the map",
-        dpifieldText: "Resolution",
-        scalefieldText: "Scale",
+        printTitle: "Drucken",
+        titlefieldText: "Titel",
+        titlefieldvalueText: "Kartentitel",
+        commentfieldText: "Kommentar",
+        commentfieldvalueText: "Kommentar auf der Karte",
+        dpifieldText: "Auflösung",
+        scalefieldText: "Massstab",
         rotationfieldText: "Rotation",
-        printbuttonText: "Print",
-        waitingText: "Printing...",
+        printbuttonText: "Drucken",
+        waitingText: "PDF Generierung...",
         downloadText: 'Download',
-        readyText: 'Your PDF is ready.',
-        failureTitle: "Printing Failure",
-        failureText: "An error occured while printing. Please check the parameters."
+        readyText: "PDF ist bereit.",
+        failureTitle: "Fehler beim Drucken",
+        failureText: "Es ist ein Fehler aufgetreten beim Drucken. Bitte prüfen Sie die Parameter."
     },
 
     "cgxp.plugins.Login.prototype": {
-        authenticationFailureText: "Impossible to connect.",
-        loggedAsText: "Logged in as ${user}",
-        logoutText: "Logout",
-        loginText: "Login",
-        usernameText: "Username",
-        passwordText: "Password"
+        authenticationFailureText: "Benutzername oder Passwort fehlerhaft. Bitte geben Sie Ihre Daten erneut ein.",
+        loggedAsText: "Angemeldet als <b>${user}</b>",
+        logoutText: "Abmelden",
+        loginText: "Anmelden",
+        usernameText: "Benutzername",
+        passwordText: "Passwort"
     },
 
-    "cgxp.plugins.Login.prototype": {
-        helpactiontooltipText: "Help"
+    "cgxp.plugins.Help.prototype": {
+        helpactiontooltipText: "Hilfe"
     },
 
     "cgxp.plugins.Redlining.prototype": {
-        redliningText: "Redlining"
+        redliningText: "Zeichnen"
     },
 
     "cgxp.plugins.MapOpacitySlider.prototype": {
-        orthoText: "Orthophoto"
+        orthoText: "Orthofoto"
     },
 
     "cgxp.plugins.Legend.prototype": {
-        legendbuttonText: "Legend",
-        legendbuttonTooltip: "Display the map legend",
-        legendwindowTitle: "Legend"
+        legendbuttonText: "Legende",
+        legendbuttonTooltip: "Legende anzeigen",
+        legendwindowTitle: "Legende"
     },
 
     "cgxp.tree.LayerTree.prototype": {
-        moveupText: "Raise",
-        movedownText: "Move down",
-        moreinfoText: "More information",
-        deleteText: "Remove layer",
-        opacityText: "Modify layer opacity",
-        zoomtoscaleText: "This layer is not visible at this zoom level.",
-        opacitylabelText: "Opacity",
-        showhidelegendText: "Show/hide legend"
+        moveupText: "Nach oben",
+        movedownText: "Nach unten",
+        moreinfoText: "Mehr Information",
+        deleteText: "Layer löschen",
+        opacityText: "Layertransparenz anpassen",
+        zoomtoscaleText: "Der Layer ist nicht sichtbar in diesem Massstab.",
+        opacitylabelText: "Transparenz",
+        showhidelegendText: "Legende anzeigen/verstecken"
     }
 });
 
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "layertree": "Themen",
-    "print": "Drucken",
     "querier": "Attributabfrage Eigentümer",
-    "close": "Schliessen",
 
     // query builder
     "QueryBuilder.loading": "Lade Daten...",
@@ -118,65 +118,18 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "QueryBuilder.match": "Trifft auf",
     "QueryBuilder.of": "die folgenden Bedingungen zu:",
      
-    'Search.ToolTip': 'In diesem Feld können Sie nach verschiedenen geografischen <br />Orten und Objekten suchen: <br /><b>Amtliche Vermessung:</b> Adressen, Parzellen, Assekuranznummern z.B. <b>wohlen 1716</b><br /><b>Werkplan Elektro:</b> Trafostationen, Verteilkabinen z.B. <b>ts 41</b><br /><b>Werkplan Wasser:</b> Hydranten, Reservoir z.B. <b>hydr 5612 102</b><br /><b>Werkplan Gas:</b> Druckreduzierstationen z.B. <b>drs 15</b><br /><b>Werkplan Abwasser:</b> KontrollschÃ¤chte z.B. <b>k 150</b>',
-
-    "ResultsPanel.clearAll": "Resultate löschen",
-    "ResultsPanel.select": "Auswahl",
-    "ResultsPanel.select.all": "alle",
-    "ResultsPanel.select.none": "keine",
-    "ResultsPanel.select.toggle": "umkehren",
-    "ResultsPanel.actions": "auf Auswahl anwenden",
-    "ResultsPanel.actions.zoomToSelection": "zentrieren auf Ausdehnung",
-    "ResultsPanel.actions.csvSelectionExport": "als CSV Datei exportieren",
-    "ResultsPanel.max_features_msg": "maximale Anzahl Resultate erreicht",
-    "ResultsPanel.result": "Resultat",
-    "ResultsPanel.results": "Resultate",
-
-    "Print.titlefieldlabel": "Titel",
-    "Print.titlefieldvalue": "Kartentitel",
-    "Print.commentfieldlabel": "Kommentar",
-    "Print.commentfieldvalue": "Kommentar auf der Karte",
-    "Print.dpifieldlabel": "Auflösung", 
-    "Print.scalefieldlabel": "Massstab",
-    "Print.rotationfieldlabel": "Rotation",
-    "Print.printbuttonlabel": "Drucken",
-    "Print.waitingmessage": "PDF Generierung...",
-    'Print.Download': 'Download',
-    'Print.Ready': 'PDF ist bereit.',
-    "Print.failuretitle": "Fehler beim Drucken",
-    "Print.failuremsg": "Es ist ein Fehler aufgetreten beim Drucken. Bitte prüfen Sie die Parameter.",
+    'Search.ToolTip': 'In diesem Feld können Sie nach verschiedenen geografischen <br />Orten und Objekten suchen: <br /><b>Amtliche Vermessung:</b> Adressen, Parzellen, Assekuranznummern z.B. <b>wohlen 1716</b><br /><b>Werkplan Elektro:</b> Trafostationen, Verteilkabinen z.B. <b>ts 41</b><br /><b>Werkplan Wasser:</b> Hydranten, Reservoir z.B. <b>hydr 5612 102</b><br /><b>Werkplan Gas:</b> Druckreduzierstationen z.B. <b>drs 15</b><br /><b>Werkplan Abwasser:</b> KontrollschÃ¤chte z.B. <b>k 150</b>', //deprecated?
     
-    "Tools.authenticationFailure": "Benutzername oder Passwort fehlerhaft. Bitte geben Sie Ihre Daten erneut ein.",
-    "Tools.maxextentactiontooltip": "Gesamtübersicht",
-    "Tools.measurelengthactiontooltip": "Strecke messen",
-    "Tools.measureareaactiontooltip": "Fläche messen",
-    "Tools.measurepositionactiontooltip": "Koordinaten eines Punktes abfragen",
-    "Tools.ortholabel": "Orthofoto",
-    "Tools.legendbuttontext": "Legende",
-    "Tools.legendbuttontooltip": "Legende anzeigen",
-    "Tools.legendwindowtitle": "Legende",
-    "Tools.helpactiontooltip": "Hilfe",
-    "Tools.redlining": "Zeichnen",
-    "Tools.LoggedAs": "Angemeldet als <b>${user}</b>",
-    "Tools.Logout": "Abmelden",
-    "Tools.Login": "Anmelden",
-    "Tools.username": "Benutzername",
-    "Tools.password": "Passwort",
+    "Tools.maxextentactiontooltip": "Gesamtübersicht", //deprecated?
+    "Tools.measurelengthactiontooltip": "Strecke messen", //deprecated?
+    "Tools.measureareaactiontooltip": "Fläche messen", //deprecated?
+    "Tools.measurepositionactiontooltip": "Koordinaten eines Punktes abfragen", //deprecated?
 
     // toolbar
-    "Locator.easting": "Rechtswert:",
-    "Locator.northing": "Hochwert:",
+    "Locator.easting": "Rechtswert:", //deprecated?
+    "Locator.northing": "Hochwert:", //deprecated?
 
-    "Query.countertext": "Element {0} von {1}",
-    "Query.actiontooltip": "Informationen in der Karte abfragen",
-    "Query.nolayerselectedmsg": "Keine Ebene ausgewählt",
-
-    // tree
-    "Tree.moveup": "nach oben",
-    "Tree.movedown": "nach unten",
-    "Tree.moreinfo": "mehr Information",
-    "Tree.delete": "Layer löschen",
-    "Tree.opacity": "Layertransparenz anpassen",
-    "Tree.zoomtoscale": "Der Layer ist nicht sichtbar in diesem Massstab.",
-    "Tree.opacitylabel": "Transparenz",
+    "Query.countertext": "Element {0} von {1}", //deprecated?
+    "Query.actiontooltip": "Informationen in der Karte abfragen", //deprecated?
+    "Query.nolayerselectedmsg": "Keine Ebene ausgewählt" //deprecated?
 });

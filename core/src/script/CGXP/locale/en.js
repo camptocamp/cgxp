@@ -1,6 +1,8 @@
 GeoExt.Lang.add("en", {
     
     "cgxp.plugins.Measure.prototype": {
+        pointMenuText: "Point",
+        pointTooltip: "Measure point",
         lengthMenuText: "Length",
         areaMenuText: "Area",
         lengthTooltip: "Measure length",
@@ -71,7 +73,7 @@ GeoExt.Lang.add("en", {
         passwordText: "Password"
     },
 
-    "cgxp.plugins.Login.prototype": {
+    "cgxp.plugins.Help.prototype": {
         helpactiontooltipText: "Help"
     },
 
