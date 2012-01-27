@@ -52,6 +52,14 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: null,
 
+    /** api: Region of the outputTarget
+     */
+    region: "east",
+
+    /** api: Size of the GoogleEarthPanel in the outputTarget
+     */
+    size: "40%",
+
     init: function() {
         gxp.plugins.GoogleEarth.loader.loadScript({
             apiKey: this.apiKey,
@@ -88,7 +96,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     this.googleEarthPanel = new gxp.GoogleEarthPanel({
                         flyToSpeed: null,
                         mapPanel: this.target.mapPanel,
-                        region: "east"
+                        region: this.region
                     });
 
                     this.googleEarthViewControl = new OpenLayers.Control.GoogleEarthView();
@@ -100,7 +108,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     this.target.mapPanel.map.addControl(this.googleEarthViewControl);
 
                     this.outputTarget.add(this.googleEarthPanel);
-                    this.outputTarget.setSize("40%", 0);
+                    this.outputTarget.setSize(this.size, 0);
                     this.outputTarget.setVisible(true);
                     this.outputTarget.ownerCt.doLayout();
 
