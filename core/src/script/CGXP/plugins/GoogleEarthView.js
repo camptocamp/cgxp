@@ -35,17 +35,21 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: GoogleEarthView(config)
  *
- *  TODO description
+ *  GoogleEarthView provides a toolbar button that toggles a GoogleEarthPanel
+ *  view of the map.
+ *
  */
 cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_googleearthview */
     ptype: "cgxp_googleearthview",
 
-    /** TODO description */
+    /** api: Google Earth API key
+     */
     apiKey: null,
 
-    /** TODO description */
+    /** api: Component in which to create the GoogleEarthPanel
+     */
     outputTarget: null,
 
     init: function() {
