@@ -41,7 +41,7 @@ describe('plugins.ScaleCombo', function() {
                     map: map
                 }
             };
-            actions = s.addActions();
+            var actions = s.addActions();
             combo = actions[1];
         });
         it('creates a ComboBox', function() {
@@ -52,6 +52,17 @@ describe('plugins.ScaleCombo', function() {
             map.zoomIn();
             expect(combo.getValue()).toEqual("1 : " + parseInt(map.getScale()));
         });
+        /*it('updates map scale', function() {
+            var zoom = map.getNumZoomLevels() - 1;
+            var res = map.getResolutionForZoom(zoom);
+            var scale = OpenLayers.Util.getScaleFromResolution(res, map.units);
+            var record = combo.getStore().getAt(zoom);
+            combo.setValue("1 : " + parseInt(scale));
+            combo.fireEvent("select", combo, record, zoom);
+            //expect(combo.getValue()).toEqual("1 : " + parseInt(map.getScale()));
+            expect(combo.getValue()).toEqual("combo");
+            expect("1 : " + parseInt(map.getScale())).toEqual("map");
+        });*/
     });
 });
 
