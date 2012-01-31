@@ -64,11 +64,18 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     button: null,
     loginForm: null,
 
+    authenticationFailureText: "Impossible to connect.",
+    loggedAsText: "Logged in as ${user}",
+    logoutText: "Logout",
+    loginText: "Login",
+    usernameText: "Username",
+    passwordText: "Password",
+
     /** api: method[addActions]
      */
     addActions: function() {
         this.button = new Ext.Button({
-            text: OpenLayers.i18n("Login"),
+            text: this.loginText,
             formBind: true,
             handler: this.submitForm,
             scope: this
@@ -85,10 +92,10 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         if (this.username) {
             loginButton = [
                 new Ext.Toolbar.TextItem({
-                    text: OpenLayers.i18n('Tools.LoggedAs', {user : this.username})
+                    text: OpenLayers.String.format(this.loggedAsText, {user : this.username})
                 }),
                 new Ext.Button({
-                    text: OpenLayers.i18n('Tools.Logout'),
+                    text: this.logoutText,
                     handler: function() {
                         Ext.Ajax.request({
                             url: this.logoutURL,
@@ -102,7 +109,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             ];
         } else {
             loginButton = new cgxp.tool.Button({
-                text: OpenLayers.i18n("Tools.Login"),
+                text: this.loginText,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
                 window: loginWindow
@@ -132,13 +139,13 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             items:[{
-                fieldLabel: OpenLayers.i18n('Tools.username'),
+                fieldLabel: this.usernameText,
                 name: 'login',
                 applyTo: 'login',
                 width: 120,
                 allowBlank: false
             }, {
-                fieldLabel: OpenLayers.i18n('Tools.password'),
+                fieldLabel: this.passwordText,
                 name: 'password',
                 applyTo: 'password',
                 inputType: 'password',
@@ -147,7 +154,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             }, {
                 xtype: 'box',
                 ref: 'failureMsg',
-                html: OpenLayers.i18n('Tools.authenticationFailure'),
+                html: this.authenticationFailureText,
                 hidden: true
             }],
             buttons:[this.button]

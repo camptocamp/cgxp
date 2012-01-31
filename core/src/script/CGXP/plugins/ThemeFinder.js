@@ -50,6 +50,8 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
+    emptyText: "Find a theme or a layer",
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -138,7 +140,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
             },
             minChars: 1,
             queryDelay: 0,
-            emptyText: OpenLayers.i18n('ThemeFinder.emptytext'),
+            emptyText: this.emptyText,
             displayField: 'displayName',
             hideTrigger: true,
             margins: { left: 3, right: 3, top: 0, bottom: 0 }
