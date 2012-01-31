@@ -60,6 +60,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     wmsURL: null,
 
+    moveupText: "Raise",
+    movedownText: "Move down",
+    moreinfoText: "More information",
+    deleteText: "Remove layer",
+    opacityText: "Modify layer opacity",
+    zoomtoscaleText: "This layer is not visible at this zoom level.",
+    opacitylabelText: "Opacity",
+    showhidelegendText: "Show/hide legend",
+
     /** private: property[stateEvents]
      *  ``Array(String)`` Array of state events
      */
@@ -288,18 +297,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             component: this.getOpacitySlider(group),
             actions: [{
                 action: "opacity",
-                qtip: OpenLayers.i18n("Tree.opacity")
+                qtip: this.opacityText
             }, {
                 action: "up",
-                qtip: OpenLayers.i18n('Tree.moveup'),
+                qtip: this.moveupText,
                 update: updateMoveUp
             }, {
                 action: "down",
-                qtip: OpenLayers.i18n('Tree.movedown'),
+                qtip: this.movedownText,
                 update: updateMoveDown
             }, {
                 action: "delete",
-                qtip: OpenLayers.i18n("Tree.delete")
+                qtip: this.deleteText
             }]
         }, this.root.firstChild);
         addNodes.call(this, group.children, groupNode, 1);
@@ -347,7 +356,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
                 nodeConfig.actions.push({
                     action: "legend",
-                    qtip: OpenLayers.i18n("Tree.showhidelegend")
+                    qtip: this.showhidelegendText
                 });
             }
         }
@@ -410,7 +419,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             nodeConfig.actions = nodeConfig.actions || [];
             nodeConfig.actions.push({
                 action: "metadata",
-                qtip: OpenLayers.i18n("Tree.moreinfo")
+                qtip: this.moreinfoText
             });
             nodeConfig.metadataUrl = metadataUrl;
         }
@@ -426,7 +435,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (maxResolutionHint || minResolutionHint) {
             nodeConfig.actions.push({
                 action: "zoomtoscale",
-                qtip: OpenLayers.i18n("Tree.zoomtoscale")
+                qtip: this.zoomtoscaleText
             });
         }
     },
@@ -446,7 +455,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             hideLabel: true,
             aggressive: true,
             plugins: new GeoExt.LayerOpacitySliderTip({
-                template: '<div>' + OpenLayers.i18n('Tree.opacitylabel') + ' {opacity}%</div>'
+                template: '<div>' + this.opacitylabelText + ' {opacity}%</div>'
             })
         });
         slider.on('changecomplete', function() {

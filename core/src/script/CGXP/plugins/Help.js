@@ -44,12 +44,14 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
      */
     url: null,
 
+    helpactiontooltipText: "Help",
+
     /** api: method[addActions]
      */
     addActions: function() {
         var action = new GeoExt.Action({
             iconCls: "help",
-            tooltip: OpenLayers.i18n("Tools.helpactiontooltip"),
+            tooltip: this.helpactiontooltipText,
             handler: function() {
                 window.open(this.url);
             },
