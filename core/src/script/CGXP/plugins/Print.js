@@ -267,14 +267,14 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 xtype: 'textfield',
                 name: 'title',
                 fieldLabel: this.titlefieldText,
-                value: this.titlefieldvalueText,
+                emptyText: this.titlefieldvalueText,
                 plugins: new GeoExt.plugins.PrintProviderField(),
                 autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
             }, {
                 xtype: 'textarea',
                 name: 'comment',
                 fieldLabel: this.commentfieldText,
-                value: this.commentfieldvalueText,
+                emptyText: this.commentfieldvalueText,
                 plugins: new GeoExt.plugins.PrintProviderField(),
                 autoCreate: {tag: "textarea", maxLength: "100"}
             }],
