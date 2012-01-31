@@ -91,6 +91,10 @@ GeoExt.Lang.add("fr", {
         legendwindowTitle: "Légende"
     },
 
+    "cgxp.plugins.ScaleChooser.prototype": {
+        labelText: "Échelle : "
+    },
+
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Monter",
         movedownText: "Descendre",

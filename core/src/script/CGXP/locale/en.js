@@ -92,6 +92,10 @@ GeoExt.Lang.add("en", {
         legendwindowTitle: "Legend"
     },
 
+    "cgxp.plugins.ScaleChooser.prototype": {
+        labelText: "Zoom to: "
+    },
+
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Raise",
         movedownText: "Move down",

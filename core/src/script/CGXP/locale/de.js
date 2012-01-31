@@ -91,6 +91,10 @@ GeoExt.Lang.add("de", {
         legendwindowTitle: "Legende"
     },
 
+    "cgxp.plugins.ScaleChooser.prototype": {
+        labelText: "Massstab: "
+    },
+
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Nach oben",
         movedownText: "Nach unten",
