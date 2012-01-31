@@ -75,6 +75,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     titlefieldvalueText: "Map title",
     commentfieldText: "Comment",
     commentfieldvalueText: "Comment on the map",
+    includelegendText: "Include legend",
     dpifieldText: "Resolution",
     scalefieldText: "Scale",
     rotationfieldText: "Rotation",
@@ -91,7 +92,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config) {
         
-        var legendPanel = this.target.tools[this.legendPanelId].legendPanel;
+        this.legendPanel = this.target.tools[this.legendPanelId].legendPanel;
+        this.includeLegend = !!(this.legendPanel);
 
         // create a print provider
         var printProvider = new GeoExt.data.PrintProvider({
@@ -206,6 +208,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
+            options.legend = this.includeLegend ? this.legendPanel : null;
+
             // need to define the table object even for page0 as java expects it
             pages[0].customParams = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
             pages[0].customParams.showMap = true;
@@ -317,6 +321,17 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 emptyText: this.commentfieldvalueText,
                 plugins: new GeoExt.plugins.PrintProviderField(),
                 autoCreate: {tag: "textarea", maxLength: "100"}
+            }, {
+                xtype: 'checkbox',
+                name: 'legend',
+                fieldLabel: this.includelegendText,
+                checked: this.includeLegend,
+                // deactivate the checkbox if no legend panel is available
+                hidden: !this.includeLegend, 
+                handler: function(cb, checked) {
+                    this.includeLegend = checked;
+                },
+                scope: this
             }],
             comboOptions: {
                 editable: false
