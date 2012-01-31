@@ -51,13 +51,17 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
     legendPanel: null,
     legendPanelAdded: false,
 
+    legendbuttonText: "Legend",
+    legendbuttonTooltip: "Display the map legend",
+    legendwindowTitle: "Legend",
+
     /** api: method[addActions]
      */
     addActions: function() {
         var legendWin = new cgxp.tool.Window({
             width: 340,
             bodyStyle: 'padding: 5px',
-            title: OpenLayers.i18n("Tools.legendwindowtitle"),
+            title: this.legendwindowTitle,
             border: false,
             layout: 'fit',
             autoHeight: false,
@@ -89,8 +93,8 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
         });
 
         var button = new cgxp.tool.Button({
-            text: OpenLayers.i18n("Tools.legendbuttontext"),
-            tooltip: OpenLayers.i18n("Tools.legendbuttontooltip"),
+            text: this.legendbuttonText,
+            tooltip: this.legendbuttonTooltip,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             window: legendWin

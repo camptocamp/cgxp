@@ -309,6 +309,7 @@ div.legend label {
     margin: 4px;
     margin-right: 0;
     padding: 5px;
+    cursor: pointer;
 }
 .theme-selector .thumb-wrap span {
     display: block;

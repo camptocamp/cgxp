@@ -194,7 +194,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 }
                 this.popup.position();
                 this.popup.show();
-                var measure
+                var measure;
                 this.popup.update({
                     measure: measure,
                     units: event.units,
@@ -257,7 +257,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 lon: metric.x.toFixed(5), 
                 lat: metric.y.toFixed(5),
                 unit: metricUnit
-            }) 
+            });
         }
     },
 

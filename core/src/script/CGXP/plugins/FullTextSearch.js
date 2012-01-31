@@ -43,6 +43,10 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_fulltextsearch */
     ptype: "cgxp_fulltextsearch",
 
+    tooltipTitle: "Search",
+    emptyText: "Search...",
+    loadingText: "Searching...",
+
     /** api: config[url]
      *  URL of the search service.
      */
@@ -179,8 +183,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             tpl: tpl,
             minChars: 1,
             queryDelay: 50,
-            emptyText: OpenLayers.i18n('Search.emptytext'),
-            loadingText: OpenLayers.i18n('Search.loadingtext'),
+            emptyText: this.emptyText,
+            loadingText: this.loadingText,
             displayField: 'label',
             triggerAction: 'all',
             trigger2Class: 'x-form-trigger-no-width x-hidden',
@@ -224,7 +228,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             'render': function(component) {
                 new Ext.ToolTip({
                     target: combo.getEl(),
-                    title: OpenLayers.i18n('Search.Search'),
+                    title: this.tooltipTitle,
                     width: 500,
                     contentEl: 'search-tip',
                     trackMouse: true,

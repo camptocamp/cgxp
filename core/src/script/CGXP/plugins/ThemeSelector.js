@@ -50,6 +50,10 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
+    localTitle: "Local layers",
+    externalTitle: "External layers",
+    toolTitle: "Themes",
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -94,11 +98,11 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             }   
         };  
         var localView = new Ext.DataView(Ext.apply({
-            title: OpenLayers.i18n('Themeselector.local'),
+            title: this.localTitle,
             store: localStore
         }, tabconfig));
         var externalView = new Ext.DataView(Ext.apply({
-            title: OpenLayers.i18n('Themeselector.external'),
+            title: this.externalTitle,
             store: externalStore
         }, tabconfig));
 
@@ -123,7 +127,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
 
         config = Ext.apply({
             xtype: "button",
-            text: OpenLayers.i18n("Themeselector.themes"),
+            text: this.toolTitle,
             cls: "themes",
             iconCls: 'themes',
             scale: 'large',

@@ -1,88 +1,123 @@
+GeoExt.Lang.add("en", {
+    
+    "cgxp.plugins.Measure.prototype": {
+        pointMenuText: "Point",
+        pointTooltip: "Measure point",
+        lengthMenuText: "Length",
+        areaMenuText: "Area",
+        lengthTooltip: "Measure length",
+        areaTooltip: "Measure area",
+        measureTooltip: "Measure"
+    },
+
+    "cgxp.plugins.FullTextSearch.prototype": {
+        tooltipTitle: "Search",
+        emptyText: "Search...",
+        loadingText: "Searching..."
+    },
+    
+    "cgxp.plugins.ThemeFinder.prototype": {
+        emptyText: "Find a theme or a layer"
+    },
+
+    "cgxp.plugins.ThemeSelector.prototype": {
+        localTitle: "Local layers",
+        externalTitle: "External layers",
+        toolTitle: "Themes"
+    },
+    
+    "cgxp.plugins.Permalink.prototype": {
+        toolTitle: "Permalink",
+        windowTitle: "Permalink",
+        openlinkText: "Open Link",
+        closeText: "Close"
+    },
+    
+    "cgxp.plugins.FeatureGrid.prototype": {
+        clearAllText: "Clear all",
+        selectText: "Select",
+        selectAllText: "All",
+        selectNoneText: "None",
+        selectToggleText: "Toggle",
+        actionsText: "Actions on selected results",
+        zoomToSelectionText: "Zoom on selection",
+        csvSelectionExportText: "Export as CSV",
+        maxFeaturesText: "Maximum of results",
+        resultText: "Result",
+        resultsText: "Results"
+    },
+
+    "cgxp.plugins.Print.prototype": {
+        printTitle: "Printing",
+        titlefieldText: "Title",
+        titlefieldvalueText: "Map title",
+        commentfieldText: "Comment",
+        commentfieldvalueText: "Comment on the map",
+        dpifieldText: "Resolution",
+        scalefieldText: "Scale",
+        rotationfieldText: "Rotation",
+        printbuttonText: "Print",
+        exportpngbuttonText: "Export in PNG",
+        waitingText: "Printing...",
+        downloadText: 'Download',
+        readyText: 'Your PDF is ready.',
+        failureTitle: "Printing Failure",
+        failureText: "An error occured while printing. Please check the parameters."
+    },
+    
+    "cgxp.plugins.Login.prototype": {
+        authenticationFailureText: "Impossible to connect.",
+        loggedAsText: "Logged in as ${user}",
+        logoutText: "Logout",
+        loginText: "Login",
+        usernameText: "Username",
+        passwordText: "Password"
+    },
+
+    "cgxp.plugins.Help.prototype": {
+        helpactiontooltipText: "Help"
+    },
+
+    "cgxp.plugins.Redlining.prototype": {
+        redliningText: "Redlining"
+    },
+
+    "cgxp.plugins.MapOpacitySlider.prototype": {
+        orthoText: "Orthophoto"
+    },
+
+    "cgxp.plugins.Legend.prototype": {
+        legendbuttonText: "Legend",
+        legendbuttonTooltip: "Display the map legend",
+        legendwindowTitle: "Legend"
+    },
+
+    "cgxp.tree.LayerTree.prototype": {
+        moveupText: "Raise",
+        movedownText: "Move down",
+        moreinfoText: "More information",
+        deleteText: "Remove layer",
+        opacityText: "Modify layer opacity",
+        zoomtoscaleText: "This layer is not visible at this zoom level.",
+        opacitylabelText: "Opacity",
+        showhidelegendText: "Show/hide legend"
+    }
+});
+
 OpenLayers.Util.extend(OpenLayers.Lang.en, {
     "layertree": "Layer tree",
-    "print": "Printing",
     "querier": "Querier",
-    "close": "Close",
 
-    // search
-    'Search.Search': 'Search',
-    'Search.ToolTip': 'Search',
-
-    "ResultsPanel.clearAll": "Clear all",
-    "ResultsPanel.select": "Select",
-    "ResultsPanel.select.all": "All",
-    "ResultsPanel.select.none": "None",
-    "ResultsPanel.select.toggle": "Toggle",
-    "ResultsPanel.actions": "Actions on selected results",
-    "ResultsPanel.actions.zoomToSelection": "Zoom on selection",
-    "ResultsPanel.actions.csvSelectionExport": "Export as CSV",
-    "ResultsPanel.max_features_msg": "Maximum of results",
-    "ResultsPanel.result": "Result",
-    "ResultsPanel.results": "Results",
-
-    "Print.titlefieldlabel": "Title",
-    "Print.titlefieldvalue": "Map title",
-    "Print.commentfieldlabel": "Comment",
-    "Print.commentfieldvalue": "Comment on the map",
-    "Print.dpifieldlabel": "Resolution",
-    "Print.scalefieldlabel": "Scale",
-    "Print.rotationfieldlabel": "Rotation",
-    "Print.printbuttonlabel": "Print",
-    "Print.waitingmessage": "Printing...",
-    'Print.Download': 'Download',
-    'Print.Ready': 'Your PDF is ready.',
-    "Print.failuretitle": "Printing Failure",
-    "Print.failuremsg": "An error occured while printing. Please check the parameters.",
-
-    "Tools.authenticationFailure": "Impossible to connect.",
-    "Tools.maxextentactiontooltip": "Go back to initial extent",
-    "Tools.measurelengthactiontooltip": "Measure a length",
-    "Tools.measureareaactiontooltip": "Measure an area",
-    "Tools.measurepositionactiontooltip": "Get point coordinates",
-    "Tools.ortholabel": "Orthophoto",
-    "Tools.legendbuttontext": "Legend",
-    "Tools.legendbuttontooltip": "Display the map legend",
-    "Tools.legendwindowtitle": "Legend",
-    "Tools.redlining": "Redlining",
-    "Tools.LoggedAs": "Logged in as ${user}",
-    "Tools.Logout": "Logout",
-    "Tools.Login": "Login",
-    "Tools.username": "Username",
-    "Tools.password": "Password",
-    "Tools.helpactiontooltip": "Help",
+    "Tools.maxextentactiontooltip": "Go back to initial extent", //deprecated?
+    "Tools.measurelengthactiontooltip": "Measure a length", //deprecated?
+    "Tools.measureareaactiontooltip": "Measure an area", //deprecated?
+    "Tools.measurepositionactiontooltip": "Get point coordinates", //deprecated?
 
     // toolbar
-    "Locator.easting": "Easting:",
-    "Locator.northing": "Northing:",
-
-    "Permalink.title": "Permalink",
-    "Permalink.openlink": "Open Link",
-
-    "Search.emptytext": "Search...",
-    "Search.loadingtext": "Searching...",
+    "Locator.easting": "Easting:", //deprecated?
+    "Locator.northing": "Northing:", //deprecated?
 
     "Query.countertext": "Element {0} of {1}",
     "Query.actiontooltip": "Query the map",
-    "Query.nolayerselectedmsg": "No layer selected",
-
-    // csv export
-    //"csv.comma": ",",
-    //"csv.quote": '"',
-
-    // tree
-    "Tree.moveup": "Raise",
-    "Tree.movedown": "Move down",
-    "Tree.moreinfo": "More information",
-    "Tree.delete": "Remove layer",
-    "Tree.opacity": "Modify layer opacity",
-    "Tree.zoomtoscale": "This layer is not visible at this zoom level.",
-    "Tree.opacitylabel": "Opacity",
-
-    // Theme selector
-    "Themeselector.local": "Local layers",
-    "Themeselector.external": "External layers",
-    "Themeselector.themes": "Themes",
-
-    // Theme finder
-    "ThemeFinder.emptytext": "Find a theme or a layer"
+    "Query.nolayerselectedmsg": "No layer selected"
 });

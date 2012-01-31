@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html debug="true">
   <head>
-    <script type="text/javascript" src="http://www.openlayers.org/api/2.10/OpenLayers.js"></script>
-    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/ext-all.js"></script>
+    <script type="text/javascript" src="http://www.openlayers.org/api/2.11/OpenLayers.js"></script>
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.4.0/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.4.0/ext-all.js"></script>
     <script type="text/javascript" src="../../../../../../geoext/lib/GeoExt.js"></script>
     <script type="text/javascript" src="../../../lib/GeoExt.ux/SimplePrint.js"></script>
 
@@ -44,6 +44,51 @@
             mapPanel.destroy();
         }
 
+        function test_comboOptions(t) {
+
+            var printForm = new GeoExt.ux.SimplePrint({
+                mapPanel:  new GeoExt.MapPanel({
+                    renderTo: "mappanel"
+                }),
+                printProvider: new GeoExt.data.PrintProvider({
+                    capabilities: printCapabilities
+                }),
+                comboOptions: {
+                    foo: 'bar',
+                    displayField: 'baz',
+                }
+            });
+
+            var comboboxes = printForm.items.filter('xtype', 'combo');
+            t.plan(comboboxes.getCount() * 2);
+            comboboxes.each(function(combo) {
+                t.eq(combo.foo, 'bar', 'combo.foo is set');
+                t.eq(combo.displayField, 'baz', 'combo.displayField is set');
+            });
+            printForm.destroy();
+        }
+
+        function test_printExtentOptions(t) {
+            t.plan(2);
+
+            var printForm = new GeoExt.ux.SimplePrint({
+                mapPanel:  new GeoExt.MapPanel({
+                    renderTo: "mappanel"
+                }),
+                printProvider: new GeoExt.data.PrintProvider({
+                    capabilities: printCapabilities
+                }),
+                printExtentOptions: {
+                    foo: "bar",
+                    baz: 42,
+                }
+            });
+
+            t.eq(printForm.printExtent.foo, "bar", "printExtentOptions.foo passed to printExtent");
+            t.eq(printForm.printExtent.baz, 42, "printExtentOptions.baz passed to printExtent");
+
+            printForm.destroy();
+        }
     </script>
   <body>
     <div id="mappanel"></div>
