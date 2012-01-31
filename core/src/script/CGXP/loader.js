@@ -28,7 +28,7 @@
         "plugins/ThemeFinder.js",
         "plugins/MapQuery.js",
         "plugins/Disclaimer.js",
-        "plugins/ScaleCombo.js",
+        "plugins/ScaleChooser.js",
         "locale/en.js",
         "locale/fr.js",
         "locale/de.js",

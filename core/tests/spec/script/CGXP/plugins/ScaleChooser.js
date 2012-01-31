@@ -1,4 +1,4 @@
-describe('plugins.ScaleCombo', function() {
+describe('plugins.ScaleChooser', function() {
     var s;
     afterEach(function() {
         // clean up the DOM, which must be Ext-free
@@ -14,13 +14,13 @@ describe('plugins.ScaleCombo', function() {
     });
     describe('when calling constructor', function() {
         beforeEach(function() {
-            s = new cgxp.plugins.ScaleCombo();
+            s = new cgxp.plugins.ScaleChooser();
         });
         it('creates a gxp tool', function() {
             expect(s).toBeInstanceOf(gxp.plugins.Tool);
         });
         it('creates a scale combo', function() {
-            expect(s).toBeInstanceOf(cgxp.plugins.ScaleCombo);
+            expect(s).toBeInstanceOf(cgxp.plugins.ScaleChooser);
         });
     });
     describe('when calling addActions', function() {
@@ -34,7 +34,7 @@ describe('plugins.ScaleCombo', function() {
             );
             map.addLayer(layer);
             
-            s = new cgxp.plugins.ScaleCombo();
+            s = new cgxp.plugins.ScaleChooser();
             s.actionTarget = [null];
             s.target = {
                 mapPanel: {
@@ -52,17 +52,17 @@ describe('plugins.ScaleCombo', function() {
             map.zoomIn();
             expect(combo.getValue()).toEqual("1 : " + parseInt(map.getScale()));
         });
-        /*it('updates map scale', function() {
-            var zoom = map.getNumZoomLevels() - 1;
-            var res = map.getResolutionForZoom(zoom);
-            var scale = OpenLayers.Util.getScaleFromResolution(res, map.units);
-            var record = combo.getStore().getAt(zoom);
-            combo.setValue("1 : " + parseInt(scale));
-            combo.fireEvent("select", combo, record, zoom);
-            //expect(combo.getValue()).toEqual("1 : " + parseInt(map.getScale()));
-            expect(combo.getValue()).toEqual("combo");
-            expect("1 : " + parseInt(map.getScale())).toEqual("map");
-        });*/
+        /*
+        it('updates map scale', function() {
+            var nb = combo.getStore().getCount();
+            var random = Math.floor(Math.random()*nb);
+            var record = combo.getStore().getAt(random);
+            var scale = parseInt(record.data.scale);
+            combo.setValue("1 : " + parseInt(record.data.scale));
+            // FIXME: the map is not updated by combo.setValue()
+            expect(combo.getValue()).toEqual("1 : " + parseInt(map.getScale()));
+        });
+        */
     });
 });
 
