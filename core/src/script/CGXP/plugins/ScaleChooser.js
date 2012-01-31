@@ -26,7 +26,7 @@
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = ScaleCombo
+ *  class = ScaleChooser
  */
 
 /** api: (extends)
@@ -35,15 +35,15 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: ScaleCombo(config)
+ *  .. class:: ScaleChooser(config)
  *
  * Tip: if this tool must be placed in the map.bbar, the bbar must be
  * initialized in the map object definition: "bbar: []".
  */   
-cgxp.plugins.ScaleCombo = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_scalecombo */
-    ptype: "cgxp_scalecombo",
+    /** api: ptype = cgxp_scalechooser */
+    ptype: "cgxp_scalechooser",
 
     /** api: config[labelText]
      *  ``String``
@@ -97,9 +97,9 @@ cgxp.plugins.ScaleCombo = Ext.extend(gxp.plugins.Tool, {
 
         var args = [this.labelText, zoomSelector];
         
-        return cgxp.plugins.ScaleCombo.superclass.addActions.apply(this, [args]);
+        return cgxp.plugins.ScaleChooser.superclass.addActions.apply(this, [args]);
     }
 });
 
-Ext.preg(cgxp.plugins.ScaleCombo.prototype.ptype, cgxp.plugins.ScaleCombo);
+Ext.preg(cgxp.plugins.ScaleChooser.prototype.ptype, cgxp.plugins.ScaleChooser);
 
