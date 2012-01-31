@@ -79,6 +79,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     scalefieldText: "Scale",
     rotationfieldText: "Rotation",
     printbuttonText: "Print",
+    exportpngbuttonText: "Export in PNG",
     waitingText: "Printing...",
     downloadText: 'Download',
     readyText: 'Your PDF is ready.',
@@ -236,6 +237,21 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
               if (pages[1]) {
                   pages.pop();
               }          
+            }
+        }.createDelegate(this));
+
+        printProvider.on('loadcapabilities', function(printProvider, capabilities) {
+            // if png if supported, add a button into the print panel
+            if (Ext.pluck(capabilities.outputFormats, 'name').indexOf('png') != -1) {
+                if (this.printPanel) {
+                    this.printPanel.addButton({
+                        text: this.exportpngbuttonText
+                    }, function() {
+                        printProvider.customParams.outputFormat = 'png';
+                        this.printExtent.print(this.printOptions);
+                        delete printProvider.customParams.outputFormat;
+                    }, this.printPanel);
+                }
             }
         }.createDelegate(this));
 
