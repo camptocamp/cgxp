@@ -29,6 +29,7 @@
         "plugins/MapQuery.js",
         "plugins/Disclaimer.js",
         "plugins/ScaleChooser.js",
+        "plugins/GoogleEarthView.js",
         "locale/en.js",
         "locale/fr.js",
         "locale/de.js",
