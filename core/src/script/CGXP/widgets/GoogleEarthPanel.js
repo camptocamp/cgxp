@@ -77,7 +77,7 @@ cgxp.GoogleEarthPanel = Ext.extend(gxp.GoogleEarthPanel, {
      */
     findKmlUrlFeature: function(kmlUrl) {
         if (kmlUrl in this.featureCache) {
-            feature = this.featureCache[kmlUrl];
+            var feature = this.featureCache[kmlUrl];
             var childNodes = this.earth.getFeatures().getChildNodes();
             var i, n = childNodes.getLength();
             for (i = 0; i < n; ++i) {
