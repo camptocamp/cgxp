@@ -227,6 +227,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 };
                 this.addMetadata(item, nodeConfig);
                 if (!item.children) {
+                    this.addShowIn3DAction(item, nodeConfig);
                     this.addLegend(item, nodeConfig, level);
                     this.addScaleAction(item, nodeConfig);
                     Ext.apply(nodeConfig, {
@@ -433,10 +434,26 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var maxResolutionHint = item.maxResolutionHint,
             minResolutionHint = item.minResolutionHint;
         if (maxResolutionHint || minResolutionHint) {
+            nodeConfig.actions = nodeConfig.actions || [];
             nodeConfig.actions.push({
                 action: "zoomtoscale",
                 qtip: this.zoomtoscaleText
             });
+        }
+    },
+
+    /**
+     * Method: addShowIn3DAction
+     * Adds the action to show in 3D
+     */
+    addShowIn3DAction: function(item, nodeConfig) {
+        if (item.kml) {
+            nodeConfig.actions = nodeConfig.actions || [];
+            nodeConfig.actions.push({
+                action: "showin3d",
+                qtip: OpenLayers.i18n("Tree.showin3d")
+            });
+            nodeConfig.kml = item.kml;
         }
     },
 
@@ -553,6 +570,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     zoom = map.getZoomForResolution(minResolutionHint);
                 }
                 map.setCenter(center, zoom);
+                break;
+            case 'showin3d':
+                var googleEarthPanel = Ext.getCmp("googleearthpanel");
+                if (googleEarthPanel) {
+                    googleEarthPanel.toggleKmlUrl(node.attributes.kml);
+                }
+                break;
         }
 
         if (key) {
@@ -834,17 +858,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             minResolutionHint = n.attributes.minResolutionHint,
             maxResolutionHint = n.attributes.maxResolutionHint;
         if (n.getUI().rendered) {
-            var actions = Ext.select(".gx-tree-layer-actions img", true, n.getUI().elNode);
-            actions.setVisibilityMode(Ext.Element.DISPLAY);
+            var legend = Ext.select(".gx-tree-layer-actions img.legend", true, n.getUI().elNode);
+            legend.setVisibilityMode(Ext.Element.DISPLAY);
             var zoomToScale = Ext.select(".gx-tree-layer-actions img.zoomtoscale", true, n.getUI().elNode);
+            zoomToScale.setVisibilityMode(Ext.Element.DISPLAY);
 
             if ((minResolutionHint && minResolutionHint > resolution) || (maxResolutionHint && maxResolutionHint < resolution)) {
                 n.getUI().addClass("gx-tree-layer-outofrange");
-                actions.hide();
+                legend.hide();
                 zoomToScale.show();
             } else if (minResolutionHint || maxResolutionHint) {
                 n.getUI().removeClass("gx-tree-layer-outofrange");
-                actions.show();
+                legend.show();
                 zoomToScale.hide();
             }
         }

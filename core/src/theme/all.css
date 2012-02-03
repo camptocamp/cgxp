@@ -169,6 +169,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
     background: transparent url(img/magnifier--arrow.png) no-repeat;
     margin-right: 3px;
 }
+.gx-tree-layer-actions .showin3d {
+    background: transparent url(img/google_earth.png) no-repeat;
+    margin-right: 3px;
+}
 .x-tree-root-node li {
     padding: 4px 0;
     border-bottom: 1px solid #ddd;
