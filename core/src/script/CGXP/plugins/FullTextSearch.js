@@ -47,6 +47,13 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     emptyText: "Search...",
     loadingText: "Searching...",
 
+    /** api: config[tooltip]
+     *  ´´Boolean´´
+     *  Whether to display a tooltip above the search box.
+     *  Default is true.
+     */
+    tooltip: true,
+
     /** api: config[url]
      *  URL of the search service.
      */
@@ -226,14 +233,16 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
             },
             'render': function(component) {
-                new Ext.ToolTip({
-                    target: combo.getEl(),
-                    title: this.tooltipTitle,
-                    width: 500,
-                    contentEl: 'search-tip',
-                    trackMouse: true,
-                    dismissDelay: 15000
-                });
+                if (this.tooltip) {
+                    new Ext.ToolTip({
+                        target: combo.getEl(),
+                        title: this.tooltipTitle,
+                        width: 500,
+                        contentEl: 'search-tip',
+                        trackMouse: true,
+                        dismissDelay: 15000
+                    });
+                }
                 function stop(e) {
                     var event = e || window.event;
                     if (event.stopPropagation) {
