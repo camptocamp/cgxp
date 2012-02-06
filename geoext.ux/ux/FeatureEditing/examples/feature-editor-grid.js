@@ -95,6 +95,12 @@ function addEditorGrid(feature) {
         allowSave: true,
         allowCancel: true,
         allowDelete: true,
+        border: false,
+        hideHeaders: true,
+        viewConfig: {
+            forceFit: true,
+            scrollOffset: 2 // the grid will never have scrollbars
+        },
         listeners: {
             done: function(panel, e) {
                 closeEditing();
