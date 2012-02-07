@@ -259,6 +259,46 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         options = Ext.apply({
             mapPanel: this.target.mapPanel,
             map: this.target.mapPanel.map,
+            layer: new OpenLayers.Layer.Vector(null, {
+                displayInLayerSwitcher: false,
+                styleMap: new OpenLayers.StyleMap({
+                    "temporary": new OpenLayers.Style({
+                        fillColor: "#ffffff",
+                        fillOpacity: 1,
+                        strokeColor: "#66cccc",
+                        strokeOpacity: 1,
+                        strokeWidth: 2,
+                        pointRadius: 4,
+                        cursor: "${role}"
+                    }),
+                    "rotate": new OpenLayers.Style({
+                        externalGraphic: OpenLayers.Util.getImagesLocation() +
+                            "print-rotate.png",
+                        fillOpacity: 1.0,
+                        graphicXOffset: 8,
+                        graphicYOffset: 8,
+                        graphicWidth: 20,
+                        graphicHeight: 20,
+                        cursor: "pointer",
+                        display: "${display}",
+                        rotation: "${rotation}"
+                    }, {
+                        context: {
+                            display: function(f) {
+                                return f.attributes.role == "se-rotate" ? "" : "none";
+                            },
+                            rotation: function(f) {
+                                return printPanel.printPage.rotation;
+                            }
+                        }
+                    })
+                })
+            }),
+            printExtentOptions: {
+                transformFeatureOptions: {
+                    rotationHandleSymbolizer: "rotate"
+                }
+            },
             printOptions: {'legend': legendPanel},
             bodyStyle: 'padding: 10px',
             printProvider: printProvider,
