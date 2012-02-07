@@ -102,8 +102,43 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
                     this.googleEarthViewControl = new OpenLayers.Control.GoogleEarthView();
                     this.pluginReadyCallback = OpenLayers.Function.bind(function(gePlugin) {
+
+                        // The gxp.GoogleEarthPanel fits the 3D view to the 2D view as closely as possible.
+                        // We want some hot tilting action, so we set our own camera position here.
+                        // This callback is called after the gxp.GoogleEarthPanel sets its camera, so ours wins.
+
+                        var extent = this.map.getExtent();
+                        var mapProjection = this.map.getProjectionObject();
+
+                        var lookAt = gePlugin.createLookAt("");
+
+                        // Place the look at point top left of the center of the map
+                        var lookAtGeometry = new OpenLayers.Geometry.Point(
+                            0.6 * extent.left   + 0.4 * extent.right,
+                            0.4 * extent.bottom + 0.6 * extent.top);
+                        OpenLayers.Projection.transform(lookAtGeometry, mapProjection, this.geProjection);
+                        var latitude = lookAtGeometry.y;
+                        var longitude = lookAtGeometry.x;
+                        var altitude = 0;
+                        var altitudeMode = gePlugin.ALTITUDE_RELATIVE_TO_GROUND;
+
+                        // Place the camera bottom right of the center of the map
+                        var heading = -45;
+                        var tilt = 60;
+                        var cameraGeometry = new OpenLayers.Geometry.Point(
+                            0.4 * extent.left   + 0.6 * extent.right,
+                            0.6 * extent.bottom + 0.4 * extent.top);
+                        OpenLayers.Projection.transform(cameraGeometry, mapProjection, this.geProjection);
+                        var range = OpenLayers.Spherical.computeDistanceBetween(
+                            new OpenLayers.LonLat(cameraGeometry.x, cameraGeometry.y),
+                            new OpenLayers.LonLat(lookAtGeometry.x, lookAtGeometry.y));
+
+                        lookAt.set(latitude, longitude, altitude, altitudeMode, heading, tilt, range);
+                        gePlugin.getView().setAbstractView(lookAt);
+
                         this.setGEPlugin(gePlugin);
                         this.activate();
+
                     }, this.googleEarthViewControl);
                     this.googleEarthPanel.on("pluginready", this.pluginReadyCallback);
                     this.target.mapPanel.map.addControl(this.googleEarthViewControl);
