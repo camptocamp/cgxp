@@ -116,7 +116,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                         var lookAtGeometry = new OpenLayers.Geometry.Point(
                             0.6 * extent.left   + 0.4 * extent.right,
                             0.4 * extent.bottom + 0.6 * extent.top);
-                        OpenLayers.Projection.transform(lookAtGeometry, mapProjection, this.geProjection);
+                        lookAtGeometry.transform(mapProjection, this.geProjection);
                         var latitude = lookAtGeometry.y;
                         var longitude = lookAtGeometry.x;
                         var altitude = 0;
@@ -128,7 +128,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                         var cameraGeometry = new OpenLayers.Geometry.Point(
                             0.4 * extent.left   + 0.6 * extent.right,
                             0.6 * extent.bottom + 0.4 * extent.top);
-                        OpenLayers.Projection.transform(cameraGeometry, mapProjection, this.geProjection);
+                        cameraGeometry.transform(mapProjection, this.geProjection);
                         var range = OpenLayers.Spherical.computeDistanceBetween(
                             new OpenLayers.LonLat(cameraGeometry.x, cameraGeometry.y),
                             new OpenLayers.LonLat(lookAtGeometry.x, lookAtGeometry.y));
