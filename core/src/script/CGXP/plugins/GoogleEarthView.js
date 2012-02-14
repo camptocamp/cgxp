@@ -52,10 +52,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: null,
 
-    /** api: Configuration to build the intermediate container
-     */
-    containerConfig: null,
-
     /** api: Size of the GoogleEarthPanel in the outputTarget
      */
     size: "40%",
@@ -99,13 +95,13 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                         });
 
                     if (this.intermediateContainer === null) {
-                        this.intermediateContainer = this.outputTarget.add(Ext.apply({
+                        this.intermediateContainer = this.outputTarget.add({
                             autoDestroy: false,
                             layout: "fit",
                             region: "east",
                             split: true,
                             collapseMode: "mini"
-                        }, this.containerConfig));
+                        });
                         // mark as not rendered to force to render the new component.
                         this.outputTarget.layout.rendered = false;
                     }
