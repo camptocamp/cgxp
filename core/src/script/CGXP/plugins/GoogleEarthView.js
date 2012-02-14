@@ -52,13 +52,13 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: null,
 
-    /** api: Region of the outputTarget
-     */
-    region: "east",
-
     /** api: Size of the GoogleEarthPanel in the outputTarget
      */
     size: "40%",
+
+    /** private: Required intermediate container
+     */
+    intermediateContainer: null,
 
     init: function() {
         gxp.plugins.GoogleEarth.loader.loadScript({
@@ -81,6 +81,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         this.outputTarget = Ext.getCmp(this.outputTarget);
         var button = new Ext.Button({
             enableToggle: true,
+            toggleGroup: this.toggleGroup,
             iconCls: "cgxp-icon-googleearthview"
         });
         button.on({
@@ -93,11 +94,22 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                             control.deactivate();
                         });
 
+                    if (this.intermediateContainer === null) {
+                        this.intermediateContainer = this.outputTarget.add({
+                            autoDestroy: false,
+                            layout: "fit",
+                            region: "east",
+                            split: true,
+                            collapseMode: "mini"
+                        });
+                        // mark as not rendered to force to render the new component.
+                        this.outputTarget.layout.rendered = false;
+                    }
+
                     this.googleEarthPanel = new cgxp.GoogleEarthPanel({
                         flyToSpeed: null,
                         id: "googleearthpanel",
-                        mapPanel: this.target.mapPanel,
-                        region: this.region
+                        mapPanel: this.target.mapPanel
                     });
 
                     this.googleEarthViewControl = new OpenLayers.Control.GoogleEarthView();
@@ -143,10 +155,10 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     this.googleEarthPanel.on("pluginready", this.pluginReadyCallback);
                     this.target.mapPanel.map.addControl(this.googleEarthViewControl);
 
-                    this.outputTarget.add(this.googleEarthPanel);
-                    this.outputTarget.setSize(this.size, 0);
-                    this.outputTarget.setVisible(true);
-                    this.outputTarget.ownerCt.doLayout();
+                    this.intermediateContainer.add(this.googleEarthPanel);
+                    this.intermediateContainer.setSize(this.size, 0);
+                    this.intermediateContainer.setVisible(true);
+                    this.outputTarget.doLayout();
 
                 } else {
 
@@ -157,12 +169,11 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     this.googleEarthViewControl.destroy();
                     this.googleEarthViewControl = null;
 
-                    this.outputTarget.remove(this.googleEarthPanel);
                     this.googleEarthPanel.destroy();
                     this.googleEarthPanel = null;
 
-                    this.outputTarget.setVisible(false);
-                    this.outputTarget.ownerCt.doLayout();
+                    this.intermediateContainer.setVisible(false);
+                    this.outputTarget.doLayout();
 
                     Ext.each(
                         this.target.mapPanel.map.getControlsByClass("OpenLayers.Control.KeyboardDefaults"),
