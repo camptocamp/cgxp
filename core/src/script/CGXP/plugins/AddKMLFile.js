@@ -19,6 +19,7 @@
  * @requires plugins/Tool.js
  * @include CGXP/widgets/GoogleEarthPanel.js
  * @include Ext/examples/ux/fileuploadfield/FileUploadField.js
+ * @include Ext/ux/base64.js
  */
 
 /** api: (define)
@@ -80,8 +81,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
             success: Ext.util.Functions.createDelegate(function(form, action) {
 
                 var filename = action.result.filename;
-                // FIXME implement replacement for window.atob for IE
-                var kmlString = window.atob(action.result.data);
+                var kmlString = Ext.ux.base64.decode(action.result.data);
 
                 // Add KML file to map
                 var map = this.target.mapPanel.map;
