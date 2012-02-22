@@ -53,7 +53,6 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
 
-        this.outputTarget = Ext.getCmp(this.outputTarget);
         var button = new Ext.ux.form.FileUploadField({
             buttonOnly: true,
             buttonText: this.buttonText,
