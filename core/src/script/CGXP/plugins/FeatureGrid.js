@@ -32,7 +32,7 @@
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = FeatureGrild
+ *  class = FeatureGrid
  */
 
 /** api: (extends)
@@ -41,7 +41,7 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: FeatureGrild(config)
+ *  .. class:: FeatureGrid(config)
  *
  */   
 cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
