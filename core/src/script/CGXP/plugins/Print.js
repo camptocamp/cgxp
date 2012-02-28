@@ -92,8 +92,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config) {
         
-        this.legendPanel = this.target.tools[this.legendPanelId].legendPanel;
-        this.includeLegend = !!(this.legendPanel);
+        this.includeLegend = !!(this.legendPanelId);
 
         // create a print provider
         var printProvider = new GeoExt.data.PrintProvider({
@@ -208,7 +207,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
-            options.legend = this.includeLegend ? this.legendPanel : null;
+            options.legend = this.includeLegend ? 
+                             this.target.tools[this.legendPanelId].legendPanel : null;
 
             // need to define the table object even for page0 as java expects it
             pages[0].customParams = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
@@ -245,7 +245,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         }.createDelegate(this));
 
         printProvider.on('loadcapabilities', function(printProvider, capabilities) {
-            // if png if supported, add a button into the print panel
+            // if png is supported, add a button into the print panel
             if (Ext.pluck(capabilities.outputFormats, 'name').indexOf('png') != -1) {
                 if (this.printPanel) {
                     this.printPanel.addButton({
@@ -303,7 +303,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     rotationHandleSymbolizer: "rotate"
                 }
             },
-            printOptions: {'legend': legendPanel},
             bodyStyle: 'padding: 10px',
             printProvider: printProvider,
             title: this.printTitle,
