@@ -88,7 +88,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
         this.form.getForm().submit({
             url: this.echoUrl,
             waitMsg: this.waitMsgText,
-            success: Ext.util.Functions.createDelegate(function(form, action) {
+            success: (function(form, action) {
 
                 var filename = action.result.filename;
                 var kmlString = Ext.ux.base64.decode(action.result.data);
@@ -115,7 +115,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
 
                 form.reset();
 
-            }, this)
+            }).createDelegate(this)
         });
     }
 
