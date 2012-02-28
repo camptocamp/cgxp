@@ -76,6 +76,13 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     projectionCodes: [4326],
 
+    /** api: config[showCenter]
+     * ´´Boolean´´
+     * If true, center point is materialized when centering on coordinates
+     * (default is false).
+     */
+    showCenter: false,
+
     projections: null,
 
     /** private: method[constructor]
@@ -206,6 +213,16 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         // used to apply the position
         this.applyPosition = new Ext.util.DelayedTask(function () {
             map.setCenter(this.position, this.coordsRecenterZoom);
+
+            if (this.showCenter) {
+                // show a point feature to materialize the center
+                var feature = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(this.position.lon,
+                                                  this.position.lat)
+                );
+                this.vectorLayer.removeFeatures(this.vectorLayer.features);
+                this.vectorLayer.addFeatures([feature]);
+            }
         }, this);
         combo.on({
             'select': function(combo, record, index) {
