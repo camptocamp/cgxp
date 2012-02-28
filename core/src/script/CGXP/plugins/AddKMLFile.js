@@ -25,6 +25,17 @@
 /** api: (define)
  *  module = cgxp.plugins
  *  class = AddKMLFile
+ *
+ *  This plugin provides an "Add KML File" button that can be used to add a
+ *  local KML file to both the 2D map and 3D Google Earth Plugin view (if
+ *  present).  As most browsers do not permit Javascript to read local files,
+ *  this requires an "echo" service to be running on the server that reflects a
+ *  file back to the client.
+ *
+ *  TODO: Handle failures in the submit process.
+ *
+ *  TODO: Use the HTML5 File API when available to avoid sending the file to
+ *  the server and back.
  */
 
 /** api: (extends)
