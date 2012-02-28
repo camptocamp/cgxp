@@ -48,7 +48,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_googleearthview */
+    /** api: ptype = cgxp_addkmlfile */
     ptype: "cgxp_addkmlfile",
 
     /** api: Echo URL */
