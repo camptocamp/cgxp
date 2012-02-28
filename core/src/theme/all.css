@@ -199,6 +199,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
     vertical-align: middle;
     height: 10px;
 }
+/* Extjs fixes «top !important» for IE8, which is wrong here */
+.ext-strict .ext-ie8 .x-tree-node-icon-wms {
+    vertical-align: middle !important;
+}
 .gx-tree-node-loading {
     background: transparent url(img/loading.gif) no-repeat 75% 2px;
 }
