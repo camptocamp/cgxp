@@ -1,5 +1,10 @@
 GeoExt.Lang.add("en", {
     
+    "cgxp.plugins.AddKMLFile.prototype": {
+        buttonText: "Add KML File",
+        waitMsgText: "Loading..."
+    },
+
     "cgxp.plugins.Measure.prototype": {
         pointMenuText: "Point",
         pointTooltip: "Measure point",
