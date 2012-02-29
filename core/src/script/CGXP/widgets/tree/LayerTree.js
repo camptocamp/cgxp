@@ -467,10 +467,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     getOpacitySlider: function(theme) {
         var slider = new GeoExt.LayerOpacitySlider({
             layer: theme.layer,
-            width: 265,
             isFormField: true,
             hideLabel: true,
             aggressive: true,
+            anchor: '95%',
             plugins: new GeoExt.LayerOpacitySliderTip({
                 template: '<div>' + this.opacitylabelText + ' {opacity}%</div>'
             })
