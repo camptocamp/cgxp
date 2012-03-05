@@ -259,10 +259,6 @@ div.baseLayersOpacitySlider .opacityToolbar {
     background: transparent url(img/cog_go.png);
 }
 
-div.external-documents div.x-panel-body {
-    padding: 5px;
-}
-
 div.legend div.x-plain-tl {
     height: 15px;
 }
@@ -272,22 +268,6 @@ div.legend img {
 div.legend label {
     font-size: 1.2em;
     font-weight: bold;
-}
-
-.pdf-window .x-window-mc {
-    font-weight: normal;
-    text-align: center;
-}
-.pdf-window .x-window-mc .x-panel, .pdf-window .x-window-mc .x-panel-body {
-    border: 0;
-    background-color: transparent;
-}
-.pdf-window .x-window-mc .x-panel-body {
-    padding: 5px;
-}
-.pdf-window .x-window-mc table {
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* theme selector */
@@ -339,7 +319,6 @@ div.legend label {
 }
 
 /* search */
-
 .x-combo-list-group {
     background-color: #c9cffd;
     font-weight: bold;
@@ -358,7 +337,6 @@ div.legend label {
 }
 
 /* layertree legend */
-
 .legend_level_1 {
     margin-left: 52px;
 }
