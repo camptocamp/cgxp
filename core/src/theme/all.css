@@ -270,6 +270,15 @@ div.legend label {
     font-weight: bold;
 }
 
+/* accordion */
+/* plain same as panel */
+.x-plain-header {
+    padding: 5px 3px 4px 5px;
+    font-size: 11px;
+    border: 1px solid #D0D0D0;
+    border-top: 0 none;
+}
+
 /* theme selector */
 .themes .x-btn-mc em {
     text-align: left;
