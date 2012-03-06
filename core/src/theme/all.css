@@ -33,6 +33,10 @@ div#header-out {
     background: url('img/arrow_right.png') top left no-repeat;
 }
 
+.no-background {
+    background-color: transparent;
+}
+
 /* cgxp_disclaimer */
 .disclaimer-ct {
     position: absolute;
@@ -269,14 +273,11 @@ div.legend label {
     font-size: 1.2em;
     font-weight: bold;
 }
-
-/* accordion */
-/* plain same as panel */
-.x-plain-header {
-    padding: 5px 3px 4px 5px;
-    font-size: 11px;
-    border: 1px solid #D0D0D0;
-    border-top: 0 none;
+div.legend {
+    padding: 5px;
+}
+div.legend div.x-panel-body {
+    background: none;
 }
 
 /* theme selector */

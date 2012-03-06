@@ -16,9 +16,7 @@
  */
 
 /**
- * @requires plugins/Tool.js
- * @include CGXP/widgets/tool/Button.js
- * @include CGXP/widgets/tool/Window.js
+ * @requires CGXP/plugins/Panel.js
  * @include GeoExt/widgets/LegendPanel.js
  * @include GeoExt/widgets/WMSLegend.js
  */
@@ -29,7 +27,7 @@
  */
 
 /** api: (extends)
- *  plugins/Tool.js
+ *  cgxp/plugins/Panel.js
  */
 Ext.namespace("cgxp.plugins");
 
@@ -38,70 +36,37 @@ Ext.namespace("cgxp.plugins");
  *
  *    Provides an action that opens a legend panel.
  */
-cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.Legend = Ext.extend(cgxp.plugins.Panel, {
 
     /** api: ptype = cgxp_legend */
     ptype: "cgxp_legend",
 
-    /** api: config[toggleGroup]
-     *  The group this toggle button is member of.
+    buttonText: "Legend",
+    buttonTooltipText: "Display the map legend",
+    titleText: "Legend",
+    outputConfig: {
+        bodyCssClass: 'legend',
+        width: 300,
+        defaults: {
+            autoScroll: true
+        }
+    },
+
+    /** api: method[addOutput]
      */
-    toggleGroup: null,
-
-    legendPanel: null,
-    legendPanelAdded: false,
-
-    legendbuttonText: "Legend",
-    legendbuttonTooltip: "Display the map legend",
-    legendwindowTitle: "Legend",
-
-    /** api: method[addActions]
-     */
-    addActions: function() {
-        var legendWin = new cgxp.tool.Window({
-            width: 340,
-            bodyStyle: 'padding: 5px',
-            title: this.legendwindowTitle,
-            border: false,
-            layout: 'fit',
-            autoHeight: false,
-            height: 350,
-            closeAction: 'hide',
-            autoScroll: true,
-            cls: 'legend toolwindow'
-        }); 
-
-        this.legendPanel = new GeoExt.LegendPanel({
-            unstyled: true,
-            autoScroll: true,
-            defaults: {
-                baseParams: {
-                    FORMAT: 'image/png'
-                }   
-            }   
-        }); 
-
-        // _gx_legendpanel should be available only when window is open
-        legendWin.on({
-            'show': function() {
-                if (!this.legendPanelAdded) {
-                    legendWin.add(this.legendPanel);
-                    legendWin.doLayout();
-                }   
-            },
-            scope: this
-        });
-
-        var button = new cgxp.tool.Button({
-            text: this.legendbuttonText,
-            tooltip: this.legendbuttonTooltip,
-            enableToggle: true,
-            toggleGroup: this.toggleGroup,
-            window: legendWin
-        });
-        return cgxp.plugins.Legend.superclass.addActions.apply(this, [button]);
+    addOutput: function() {
+        return cgxp.plugins.Legend.superclass.addOutput.call(this, 
+            new GeoExt.LegendPanel({
+                unstyled: true,
+                autoScroll: true,
+                defaults: {
+                    baseParams: {
+                        FORMAT: 'image/png'
+                    }
+                } 
+            })
+        );
     }
-
 });
 
 Ext.preg(cgxp.plugins.Legend.prototype.ptype, cgxp.plugins.Legend);
