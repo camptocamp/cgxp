@@ -48,6 +48,19 @@ cgxp.plugins.Panel = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: null,
 
+    /** api: config[anchorTo]
+     *  The element to align the window to.
+     */
+    anchorTo: "map",
+    /** api: config[anchorPosition]
+     *  The position to align the window to (see Ext.Element.alignTo for more details).
+     */
+    anchorPosition: "tl-tl",
+    /** api: config[anchorTo]
+     *  Offset the window positioning by [x, y].
+     */
+    anchorOffset: [50, 50],
+
     /** api: config[buttonText]
      * Text visible on the toolbar button.
      */
@@ -116,7 +129,7 @@ cgxp.plugins.Panel = Ext.extend(gxp.plugins.Tool, {
             // To be display correctly the plan componement should be in a panel.
             // And should be plain for the tool window.
             return cgxp.plugins.Panel.superclass.addOutput.call(this, {
-                title: this.titleText,  
+                title: this.titleText,
                 items: [panel]
             });
         }
@@ -126,7 +139,25 @@ cgxp.plugins.Panel = Ext.extend(gxp.plugins.Tool, {
                 title: this.titleText,
                 closable: false
             }, this.outputConfig);
-            return cgxp.plugins.Panel.superclass.addOutput.call(this, panel);
+            var component = cgxp.plugins.Panel.superclass.addOutput.call(this, panel);
+
+            // anchor the window to
+            if (this.anchorTo && this.anchorPosition && component.ownerCt &&
+                    component.ownerCt.ownerCt instanceof Ext.Window) {
+                var win = component.ownerCt.ownerCt;
+                this.target.on("ready", function() {
+                    var anchorTo;
+                    if (this.anchorTo === "map") {
+                        anchorTo = this.target.mapPanel;
+                    }
+                    else {
+                        anchorTo = Ext.getCmp(this.anchorTo) || this.target.portal[this.anchorTo];
+                    }
+                    win.anchorTo(anchorTo.id, this.anchorPosition, this.anchorOffset);
+                }, this);
+            }
+
+            return component;
         }
     }
 });
