@@ -69,7 +69,7 @@ GeoExt.Lang.add("en", {
         authenticationFailureText: "Impossible to connect.",
         loggedAsText: "Logged in as ${user}",
         logoutText: "Logout",
-        loginText: "Login",
+        buttonText: "Login",
         usernameText: "Username",
         passwordText: "Password"
     },
@@ -79,7 +79,7 @@ GeoExt.Lang.add("en", {
     },
 
     "cgxp.plugins.Redlining.prototype": {
-        redliningText: "Redlining"
+        buttonText: "Redlining"
     },
 
     "cgxp.plugins.MapOpacitySlider.prototype": {
@@ -87,9 +87,9 @@ GeoExt.Lang.add("en", {
     },
 
     "cgxp.plugins.Legend.prototype": {
-        legendbuttonText: "Legend",
-        legendbuttonTooltip: "Display the map legend",
-        legendwindowTitle: "Legend"
+        buttonText: "Legend",
+        tooltipText: "Display the map legend",
+        titleText: "Legend"
     },
 
     "cgxp.plugins.ScaleChooser.prototype": {
