@@ -111,6 +111,12 @@ GeoExt.Lang.add("fr", {
         zoomtoscaleText: "Cette couche n'est pas visible à ce niveau de zoom.",
         opacitylabelText: "Opacité",
         showhidelegendText: "Afficher/masquer la légende"
+    },
+
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        windowTitleText: 'Résultats',
+        itemsText: "éléments",
+        itemText: "élément"
     }
 });
 
