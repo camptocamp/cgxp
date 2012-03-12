@@ -104,6 +104,12 @@ GeoExt.Lang.add("de", {
         zoomtoscaleText: "Der Layer ist nicht sichtbar in diesem Massstab.",
         opacitylabelText: "Transparenz",
         showhidelegendText: "Legende anzeigen/verstecken"
+    },
+
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        windowTitleText: 'Resultate',
+        itemsText: "elemente",
+        itemText: "element"
     }
 });
 

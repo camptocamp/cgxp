@@ -105,6 +105,12 @@ GeoExt.Lang.add("en", {
         zoomtoscaleText: "This layer is not visible at this zoom level.",
         opacitylabelText: "Opacity",
         showhidelegendText: "Show/hide legend"
+    },
+
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        windowTitleText: 'Results',
+        itemsText: "items",
+        itemText: "item"
     }
 });
 

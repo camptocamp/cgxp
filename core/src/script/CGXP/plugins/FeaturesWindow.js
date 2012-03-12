@@ -1,0 +1,254 @@
+/**
+ * Copyright (c) 2011 Camptocamp
+ *
+ * CGXP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CGXP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * @include GeoExt/data/FeatureStore.js
+ * @include GeoExt.ux/Ext.ux.grid.GridMouseEvents.js
+ */
+
+/** api: (define)
+ *  module = cgxp.plugins
+ *  class = FeatureWindow
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
+Ext.namespace("cgxp.plugins");
+
+/** api: constructor
+ *  .. class:: FeaturesWindow(config)
+ *
+ *  This plugin shows query results in a window (popup) using a grouping grid.
+ */   
+cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
+
+    /** api: ptype = cgxp_featureswindow*/
+    ptype: "cgxp_featureswindow",
+
+    /** private: attibute[vectorLayer]
+     * ``Object``
+     * The layer used to display the features.
+     */
+    vectorLayer: null,
+
+    /** private: attribute[featuresWindow]
+     * ``Ext.Window``
+     */
+    featuresWindow: null,
+
+    windowTitleText: "Results",
+    itemsText: "Items",
+    itemText: "Item",
+
+    init: function() {
+        cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
+        this.target.on('ready', this.viewerReady, this);
+    },
+
+    viewerReady: function() {
+        var map = this.target.mapPanel.map;
+
+        this.events.addEvents({
+            'querystarts': true,
+            'queryresults': true
+        });
+
+
+        // a ResultsPanel object has its own vector layer, which
+        // is added to the map once for good
+        this.vectorLayer = new OpenLayers.Layer.Vector(
+            OpenLayers.Util.createUniqueID("c2cgeoportal"), {
+                displayInLayerSwitcher: false,
+                alwaysInRange: true
+            }
+        );
+
+        this.events.on('queryopen', function() {
+        }, this);
+     
+        this.events.on('queryclose', function() {
+        }, this);
+       
+        this.events.on('querystarts', function() {
+            this.featuresWindow && this.featuresWindow.removeAll();
+        }, this);
+
+        this.events.on('queryresults', function(features) {
+            this.showWindow(features);
+        }, this);
+
+        map.addLayer(this.vectorLayer);
+    },
+
+    /** private: method[extendFeaturesAttributes]
+     *
+     * Store the `type` and `id` properties into attributes, because
+     * `FeatureStore` don't keep the type and id attribute.
+     * Also create a table for the feature `detail` to be shown on over in
+     * a tooltip.
+     */
+    extendFeaturesAttributes: function(features) {
+        Ext.each(features, function(feature) {
+            var detail = [],
+                attributes = feature.attributes;
+            detail.push('<table>');
+            for (var k in attributes) {
+                if (attributes.hasOwnProperty(k)) {
+                    detail = detail.concat([
+                        '<tr>',
+                        '<th>',
+                        OpenLayers.i18n(k),
+                        '</th>',
+                        '<td>',
+                        attributes[k],
+                        '</td>',
+                        '</tr>'
+                    ]);
+                }
+            }
+            detail.push('</table>');
+            feature.attributes.detail = detail.join('');
+            // FIXME: find a better alternative (GeoExt.FeatureReader) 
+            feature.attributes.type = OpenLayers.i18n(feature.type); 
+            feature.attributes.id = feature.id;
+        });
+    },
+
+    /** private: method[showWindow]
+     * Shows the window
+     */
+    showWindow: function(features) {
+        this.extendFeaturesAttributes(features);
+
+        var FeatureGroupingStore = Ext.extend(
+            Ext.data.GroupingStore,
+            GeoExt.data.FeatureStoreMixin()
+        );
+        var store = new FeatureGroupingStore({
+            features: features,
+            groupField: 'type',
+            fields: [
+                'id',
+                'type', // the layer 
+                'detail'
+            ]
+        });
+        function addTooltip(value, metadata, record) {
+            var detail = record.get('detail');
+            detail = detail.replace(/\"/g,"'");
+            metadata.attr = 'ext:qtip="' + detail + '" ext:anchor="left"';
+            return value;
+        }
+
+        var groupTextTpl = [
+            '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "',
+            this.itemsText,
+            '" : "',
+            this.itemText,
+            '"]})'
+        ].join('');
+        var grid = new Ext.grid.GridPanel({
+            border: false,
+            store: store,
+            columns: [{
+                dataIndex: 'type',
+                hidden: true
+            }, {
+                dataIndex: 'id',
+                renderer: addTooltip
+            }],
+            view: new Ext.grid.GroupingView({
+                forceFit: true,
+                showGroupName: false,
+                groupTextTpl: groupTextTpl
+            }),
+            listeners: {
+                rowmouseenter: function(grid, row) {
+                    var feature = grid.getStore().getAt(row).getFeature();
+                    this.vectorLayer.addFeatures(feature);
+                },
+                rowmouseleave: function(grid, row) {
+                    var feature = grid.getStore().getAt(row).getFeature();
+                    this.vectorLayer.removeFeatures(feature);
+                },
+                scope: this
+            },
+            plugins: [
+                Ext.ux.grid.GridMouseEvents
+            ],
+            hideHeaders: true
+        });
+        var first = false;
+        if (!this.featuresWindow) {
+            first = true;
+            this.featuresWindow = new Ext.Window({
+                layout: 'fit',
+                width: 300,
+                height: 280,
+                title: this.windowTitleText,
+                closeAction: 'hide',
+                items: [grid],
+                listeners : {
+                    hide: function(win) {
+                        win.removeAll();
+                    },
+                    scope: this
+                }
+            });
+        } else {
+            this.featuresWindow.removeAll();
+            this.featuresWindow.add(grid);
+            this.featuresWindow.doLayout();
+        }
+        this.featuresWindow.show();
+
+        if (first) {
+            this.featuresWindow.alignTo(
+                this.target.mapPanel.body,
+                "tr-tr",
+                [-5, 5],
+                true
+            );
+        }
+    }
+});
+Ext.preg(cgxp.plugins.FeaturesWindow.prototype.ptype, cgxp.plugins.FeaturesWindow);
+
+// The following code allows user to keep the tooltip shown when hovering it
+Ext.sequence(Ext.ToolTip.prototype, 'afterRender', function () {
+    this.mon(this.el, 'mouseover', function () {
+        this.clearTimer('hide');
+        this.clearTimer('dismiss');
+    }, this);
+    this.mon(this.el, 'mouseout', function () {
+        this.clearTimer('show');
+        if (this.autoHide !== false) {
+            this.delayHide();
+        }
+    }, this);
+});
+
+// The following code fixes a bug in ExtJS with which the 'ext:anchor' attribute
+// is not taken into account
+Ext.sequence(Ext.QuickTip.prototype, 'onTargetOver', function (e) {
+    var t = e.getTarget();
+    if(!t || t.nodeType !== 1 || t == document || t == document.body){
+        return;
+    }
+    this.origAnchor = this.anchor;
+});
