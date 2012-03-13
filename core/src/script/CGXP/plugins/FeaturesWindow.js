@@ -101,7 +101,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         this.vectorLayer = new OpenLayers.Layer.Vector(
             OpenLayers.Util.createUniqueID("c2cgeoportal"), {
                 displayInLayerSwitcher: false,
-                alwaysInRange: true
+                alwaysInRange: true,
+                styleMap: new OpenLayers.StyleMap({
+                    'default': OpenLayers.Util.applyDefaults({
+                        fillColor: 'red',
+                        strokeColor: 'red'
+                    }, OpenLayers.Feature.Vector.style['default'])
+                })
             }
         );
 
