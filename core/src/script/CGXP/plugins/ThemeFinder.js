@@ -166,7 +166,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                     var fillLayers = function(nodes) {
                         Ext.each(nodes, function(node) {
                             layers.push(node.name);
-                            if (node.chldren) {
+                            if (node.children) {
                                 fillLayers(node.children);
                             }
                         });
