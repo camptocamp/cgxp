@@ -40,6 +40,12 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_featureswindow*/
     ptype: "cgxp_featureswindow",
 
+    /** api: config[themes]
+     *  ``Object``
+     *  List of internal and external themes and layers.
+     */
+    themes: null,
+
     /** private: attibute[vectorLayer]
      * ``Object``
      * The layer used to display the features.
@@ -51,6 +57,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     featuresWindow: null,
 
+    /** private: attribute[layers]
+     * ``Array``
+     */
+    layers: null,
+
     windowTitleText: "Results",
     itemsText: "Items",
     itemText: "Item",
@@ -58,6 +69,21 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     init: function() {
         cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
+
+        var themes = Ext.apply(this.themes.local, this.themes.external);
+        var layers = {};
+        function browseThemes(node) {
+            for (var i = 0, len = node.length; i < len; i++) {
+                var child = node[i];
+                if (child.children) {
+                    browseThemes(child.children);
+                } else {
+                    layers[child.name] = child;
+                }
+            }
+        }
+        browseThemes(themes);
+        this.layers = layers;
     },
 
     viewerReady: function() {
@@ -125,8 +151,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             feature.attributes.detail = detail.join('');
             // FIXME: find a better alternative (GeoExt.FeatureReader) 
             feature.attributes.type = OpenLayers.i18n(feature.type); 
-            feature.attributes.id = feature.id;
-        });
+
+            // use the identifierAttribute field if set
+            var identifier = this.layers[feature.type].identifierAttribute;
+            feature.attributes.id = identifier ? feature.attributes[identifier] : feature.id;
+        }, this);
     },
 
     /** private: method[showWindow]
