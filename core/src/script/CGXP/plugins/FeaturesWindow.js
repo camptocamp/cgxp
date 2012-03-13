@@ -135,16 +135,18 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             detail.push('<table>');
             for (var k in attributes) {
                 if (attributes.hasOwnProperty(k)) {
-                    detail = detail.concat([
-                        '<tr>',
-                        '<th>',
-                        OpenLayers.i18n(k),
-                        '</th>',
-                        '<td>',
-                        attributes[k],
-                        '</td>',
-                        '</tr>'
-                    ]);
+                    if (attributes[k]) {
+                        detail = detail.concat([
+                            '<tr>',
+                            '<th>',
+                            OpenLayers.i18n(k),
+                            '</th>',
+                            '<td>',
+                            attributes[k],
+                            '</td>',
+                            '</tr>'
+                        ]);
+                    }
                 }
             }
             detail.push('</table>');
