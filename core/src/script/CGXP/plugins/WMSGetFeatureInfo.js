@@ -27,9 +27,6 @@
 /** api: (define)
  *  module = cgxp.plugins
  *  class = WMSGetFeatureInfo
- *
- *  To use this plugin all the layers should support the WFS, and should have 
- *  the same name for the geometrie. 
  */
 
 /** api: (extends)
@@ -38,7 +35,7 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: FeatureGrild(config)
+ *  .. class:: WMSGetFeatureInfo(config)
  * Map queries (with WMS GetFeatureInfo)
  *
  * Options:

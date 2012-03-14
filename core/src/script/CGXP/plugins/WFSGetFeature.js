@@ -27,6 +27,9 @@
 /** api: (define)
  *  module = cgxp.plugins
  *  class = WFSGetFeature
+ *
+ *  To use this plugin all the layers should support the WFS, and should have 
+ *  the same name for the geometry.
  */
 
 /** api: (extends)
@@ -35,8 +38,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: FeatureGrild(config)
- * Map queries (with WMS GetFeatureInfo)
+ *  .. class:: WFSGetFeature(config)
+ * Map queries (with WFS GetFeature)
  *
  * Options:
  * events - {Ext.util.Observable} The application events manager.

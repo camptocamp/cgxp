@@ -109,13 +109,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      * APIProperty: cameraStyle
      * {symbolizer}
      */
-    cameraStyle: {
-        externalGraphic: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAASCAQAAAAJOc1sAAAAAXNSR0IArs4c6QAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2QwDBAEgC9wc/QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAGDSURBVDjLdZQtktwwEIXf5gLREUzDzAPi2pBAH0FVqUpgzEJ1BKOQEB/BdJloyEYzJ9CC4brBF6C24pnxtIi7q1//vO72E7qXt29xyh/ippYud2k4fZoPXLl6RYEOHT6HJ/68Nt5AnSkd/YMgA+n7ATz97izHRAJgYCIQGBHCs7S6Zm7gy1rzjhT+y0wgkEh0iADMVp9nB19fapSFa9myeQoOkYFkbfmzwdOL24ETA9HgS2sysCAmAIoFCGckZEorWCzMeDI0Kh0gBvNJZo9nzV8q05sERGQwJoaWH7oGr16i5914kaSs024XijpJ0qq4s+bd9ypJGiU0X2r+ynlEeOLNtEcSYrTc3nIb8/6lqjWAw5HMZes8MyDWxo5w5Oc2d/9aTdH47sks9LaqBW/EFQvrSM9XWzd93Wac8QhHIAOFlaEFrIz3l/zxbufjj21N+oOzGdsQp0s5OhmE5of3ZrX9yZ8fXFw7nl/Tbt5bPZ6Fcuf7dPS72OT0tyS99eH9Q49/xBxZf91v2x4AAAAASUVORK5CYII=",
-        graphicHeight: 18,
-        graphicWidth: 31,
-        graphicYOffset: -3,
-        rotation: 0
-    },
+    cameraStyle: null,
 
     /**
      * APIProperty: lineStyle
@@ -220,6 +214,13 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         options.layerName =
             options.layerName || OpenLayers.i18n("Google Earth view control");
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
+        this.cameraStyle || (this.cameraStyle = {
+            externalGraphic: OpenLayers.Util.getImagesLocation() + "../googleearthview/eye.png",
+            graphicHeight: 18,
+            graphicWidth: 31,
+            graphicYOffset: -3,
+            rotation: 0
+        })
         this.geProjection = new OpenLayers.Projection("EPSG:4326");
         if (this.gePlugin) {
             this.setGEPlugin(this.gePlugin);

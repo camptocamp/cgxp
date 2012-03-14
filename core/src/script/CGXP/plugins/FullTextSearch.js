@@ -76,6 +76,19 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     projectionCodes: [4326],
 
+    /** api: config[showCenter]
+     * ´´Boolean´´
+     * If true, center point is materialized when centering on coordinates
+     * (default is false).
+     */
+    showCenter: false,
+
+    /** api: config[coordsRecenteringStyle]
+     * ´´Object´´
+     * Style configuration used when recentering on coordinates.
+     */
+    coordsRecenteringStyle: null,
+
     projections: null,
 
     /** private: method[constructor]
@@ -92,6 +105,12 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             }
             this.projections[code] = new OpenLayers.Projection(code);
         }
+
+        // style used when recentering on coordinates
+        this.coordsRecenteringStyle = this.coordsRecenteringStyle || {
+            pointRadius: "10",
+            externalGraphic: OpenLayers.Util.getImagesLocation() + "crosshair.png"
+        };
     },
 
     init: function() {
@@ -206,6 +225,19 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         // used to apply the position
         this.applyPosition = new Ext.util.DelayedTask(function () {
             map.setCenter(this.position, this.coordsRecenterZoom);
+
+            if (this.showCenter) {
+                // show a point feature to materialize the center
+                var feature = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(this.position.lon,
+                                                  this.position.lat)
+                );
+                if (this.coordsRecenteringStyle) {
+                    feature.style = this.coordsRecenteringStyle;
+                }
+                this.vectorLayer.removeFeatures(this.vectorLayer.features);
+                this.vectorLayer.addFeatures([feature]);
+            }
         }, this);
         combo.on({
             'select': function(combo, record, index) {

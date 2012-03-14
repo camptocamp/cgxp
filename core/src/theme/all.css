@@ -129,9 +129,6 @@ div.baseLayersOpacitySlider .opacityToolbar {
     background-color: transparent;
     background-image: none;
 }
-.layertree .x-tree-node .x-tree-node-over {
-    background-color: transparent;
-}
 .gx-tree-layer-actions {
     float: right;
 }
@@ -144,6 +141,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
     padding: 0;
     vertical-align: middle;
     width: 16px;
+    display: none;
+}
+.x-tree-node-over .gx-tree-layer-action {
+    display: inline-block;
 }
 .gx-tree-layer-actions .up {
     background: transparent url(img/bullet_arrow_up.png);
@@ -175,15 +176,27 @@ div.baseLayersOpacitySlider .opacityToolbar {
 }
 .x-tree-root-node li {
     padding: 4px 0;
-    border-bottom: 1px solid #ddd;
+    margin: 4px;
+    border-bottom: 1px solid #eee;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
 }
 .x-tree-root-node li li {
     padding: 0;
+    margin: 0;
     border-bottom: 0;
+    -moz-box-sizing: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 .x-tree-node-theme {
     padding-top: 2px;
     font-weight: bold;
+}
+.x-tree-node-el {
+    /* apparently mandatory for IE to correctly hide the components */
+    border-bottom: 1px solid transparent;
 }
 .x-tree-node-el .no-icon {
     width: 0;
@@ -194,6 +207,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
 .x-tree-node-leaf .x-tree-node-icon-wms {
     vertical-align: middle;
     height: 10px;
+}
+/* Extjs fixes «top !important» for IE8, which is wrong here */
+.ext-strict .ext-ie8 .x-tree-node-icon-wms {
+    vertical-align: middle !important;
 }
 .gx-tree-node-loading {
     background: transparent url(img/loading.gif) no-repeat 75% 2px;
@@ -215,6 +232,13 @@ div.baseLayersOpacitySlider .opacityToolbar {
     color: #777;
 }
 
+.ext-strict .ext-ie9 .x-tree-node-el {
+    /* prevents IE9 from setting a floating value for height (ie. 18.8px) */
+    line-height: 16px;
+}
+
+.ext-strict .ext-ie8 input.styledCheckbox,
+.ext-ie input.styledCheckbox,
 .styledCheckbox {
     height: 13px;
     width: 13px;
@@ -226,8 +250,6 @@ div.baseLayersOpacitySlider .opacityToolbar {
 .styledCheckboxWrap {
     position: relative;
     background: url('img/checkboxes.gif') no-repeat top left;
-    width: 13px;
-    height: 13px;
     margin: 3px;
 }
 
