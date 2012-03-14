@@ -237,6 +237,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         allItems: group.allLayers,
                         item: item.name,
                         param: 'LAYERS',
+                        editable: item.editable,
                         uiProvider: 'layer'
                     });
                 }

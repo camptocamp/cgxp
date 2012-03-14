@@ -38,6 +38,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_editing */
     ptype: "cgxp_editing",
 
+    /** api: config[layersURL]
+     * ``String`` URL to the layers web service
+     * ie. for the getFeatures requests
+     */
+    layersURL: null,
+
+    /** api: config[layerTreeId]
+     *  ``String``
+     *  Id of the layertree tool.
+     */
+    layerTreeId: null,
+
     /** private: property[currentLayer]
      *  ``Object`` The currently edited layer
      */
@@ -223,14 +235,29 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
+    /** private: method[getEditableLayers]
+     *  Returns the list of editable and visible layers
+     */
+    getEditableLayers: function() {
+        var tree = this.target.tools[this.layerTreeId].tree;
+        var layers = [];
+        tree.root.cascade(function(node) {
+            if (node.attributes.editable && node.attributes.checked) {
+                layers.push(node.attributes.item);
+            }
+        });
+        return layers;
+    },
+
     /** private: method[createGetFeatureControl]
      */
     createGetFeatureControl: function() {
         var self = this;
+        var baseURL = this.layersURL;
         var protocol = new OpenLayers.Protocol.HTTP({
-            url: '/countries',
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
+                options.url = baseURL + '/' + self.getEditableLayers().join(',');
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {

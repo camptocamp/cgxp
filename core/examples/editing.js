@@ -91,7 +91,9 @@ Ext.onReady(function() {
             items: []
         },
         tools: [{
-            ptype: 'cgxp_editing'
+            ptype: 'cgxp_editing',
+            layerTreeId: 'layertree',
+            layersURL: 'http://sitn-proto-c2cgeoportail.demo-camptocamp.com/elemoine/wsgi/layers'
         }, {
             ptype: 'cgxp_themeselector',
             outputTarget: 'left-panel',
