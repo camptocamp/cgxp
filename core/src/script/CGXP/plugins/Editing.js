@@ -340,7 +340,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     showAttributesEditingWindow: function(store) {
         this.editorGrid = new GeoExt.ux.FeatureEditorGrid({
-            nameField: "label",
             store: store,
             forceValidation: true,
             allowSave: true,
