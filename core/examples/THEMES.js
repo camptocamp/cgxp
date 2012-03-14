@@ -19,7 +19,6 @@ var THEMES = {
             "type": "internal WMS",
             "legend": true,
             "imageType": "image/jpeg",
-            "editable": true,
             "icon": "http://sitn-proto-c2cgeoportail-demo.dmz.lsn.camptocamp.com/elemoine/wsgi/proj/images/layers/pointsfixesaltimetriques.png"
         }],
         "name": "edit",
@@ -50,7 +49,6 @@ var THEMES = {
                         "type": "internal WMS",
                         "legend": true,
                         "imageType": "image/jpeg",
-                        "editable": true,
                         "icon": "http://sitn-proto-c2cgeoportail-demo.dmz.lsn.camptocamp.com/elemoine/wsgi/proj/images/layers/pointsfixes.png"
                     }, {
                         "name": "npa",

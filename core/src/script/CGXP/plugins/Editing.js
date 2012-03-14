@@ -393,6 +393,17 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
+    /** private: method[redrawWMSLayers]
+     */
+    redrawWMSLayers: function(id) {
+        var tree = this.target.tools[this.layerTreeId].tree;
+        tree.root.cascade(function(node) {
+            if (node.attributes.layer_id == id) {
+                node.layer.redraw(true);
+            }
+        });
+    },
+
     /** private: method[save]
      *  Saves the modifications or addition to the server
      */
@@ -404,8 +415,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         protocol.commit([feature], {
             callback: function() {
                 this.closeEditing();
-                // FIXME
-                this.map.layers[1].redraw(true);
+                this.redrawWMSLayers(feature.attributes.__layer_id__);
             },
             scope: this
         });
