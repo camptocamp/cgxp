@@ -70,6 +70,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     editorGrid: null,
 
+    /** private: property[attributeStores]
+     * stroes the attributes stors by layer id.
+     */
+    attributeStores: null,
+
     /** private: property[win]
      *  ``Ext.Window`` The main window. The one that include the button to
      *  digitize a new feature.
@@ -243,7 +248,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var layers = [];
         tree.root.cascade(function(node) {
             if (node.attributes.editable && node.attributes.checked) {
-                layers.push(node.attributes.item);
+                layers.push(node.attributes.layer_id);
             }
         });
         return layers;
@@ -294,25 +299,46 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             'featureselected': function(e) {
                 var f = e.feature;
                 this.editingLayer.addFeatures([f]);
-                this.showAttributesEditingWindow(f);
+                var store = this.getAttributesStore(f.attributes.__layer_id__, f, function(store) {
+                    this.showAttributesEditingWindow(store);
+                });
             },
             scope: this
         });
     },
 
+    /** private: method[getAttributesStore]
+     *  Calls the layers service to get metadata (attributes).
+     *  Triggers callback when response is received or immediately if data
+     *  already exists. 
+     */
+    getAttributesStore: function(id, feature, callback) {
+        if (!this.attributeStores) {
+            this.attributeStores = {};
+        }
+        var store = this.attributeStores[id];
+        if (!store) {
+            store = new GeoExt.data.AttributeStore({
+                url: this.layersURL + '/' + id + '/md.xsd',
+                feature: feature
+            });
+            store.on({
+                load: function() {
+                    callback.call(this, store);
+                },
+                scope: this
+            });
+            store.load();
+            this.attributeStores[id] = store;
+        } else {
+            store.feature = feature;
+            callback.call(this, store);
+        }
+    },
+
     /** private: method[showAttributesEditingWindow]
      */
-    showAttributesEditingWindow: function(feature) {
-        var store = new GeoExt.data.AttributeStore(Ext.apply({
-            feature: feature
-        }, {
-            fields: ["name", "type", "restriction", "label"],
-            data: [{
-                name: "name",
-                type: "text",
-                label: "Country Name"
-            }]
-        }));
+    showAttributesEditingWindow: function(store) {
         this.editorGrid = new GeoExt.ux.FeatureEditorGrid({
             nameField: "label",
             store: store,
@@ -372,7 +398,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     save: function(feature, callback) {
         var protocol = new OpenLayers.Protocol.HTTP({
-            url: '/countries',
+            url: this.layersURL + '/' + feature.attributes.__layer_id__,
             format: new OpenLayers.Format.GeoJSON()
         });
         protocol.commit([feature], {

@@ -53,14 +53,15 @@ var THEMES = {
                         "editable": true,
                         "icon": "http://sitn-proto-c2cgeoportail-demo.dmz.lsn.camptocamp.com/elemoine/wsgi/proj/images/layers/pointsfixes.png"
                     }, {
-                        "name": "mo4_pfa_1",
+                        "name": "npa",
+                        "id": 37,
                         "no2D": false,
                         "isChecked": true,
                         "isVisible": true,
                         "type": "internal WMS",
                         "legend": true,
                         "imageType": "image/jpeg",
-                        "icon": "http://sitn-proto-c2cgeoportail-demo.dmz.lsn.camptocamp.com/elemoine/wsgi/proj/images/layers/pointsfixesaltimetriques.png"
+                        "editable": true
                     }]
                 }]
             }]
