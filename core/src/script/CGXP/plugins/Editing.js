@@ -274,7 +274,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 function doRead(options) {
                     self.editorGrid && self.editorGrid.cancel();
                     self.closeEditing();
-                    Ext.example.msg('Querying the server', '');
                     OpenLayers.Protocol.HTTP.prototype.read.call(this, options);
                 }
                 if(self.editorGrid && self.editorGrid.dirty) {
