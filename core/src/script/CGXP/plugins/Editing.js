@@ -372,7 +372,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
 
         var first = false; // first time we show the popup
-        if (!attributePopup) {
+        if (!this.attributePopup) {
             first = true;
             this.attributePopup = new Ext.Window({
                 map: this.map,
