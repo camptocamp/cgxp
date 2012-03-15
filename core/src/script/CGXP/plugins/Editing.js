@@ -144,15 +144,17 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             menu.add('<b class="menu-title">' + OpenLayers.i18n('Choose a layer') + '</b>');
             var layers = this.getEditableLayers();
             for (var i in layers) {
-                menu.add(createMenuItem.call(this, layers[i]));
+                this.getAttributesStore(layers[i].attributes.layer_id, null, function(store, geometryType) {
+                    menu.add(createMenuItem.call(this, layers[i], geometryType));
+                });
             }
         }
-        function createMenuItem(layer) {
+        function createMenuItem(layer, geometryType) {
             // layer is the layer tree node
             var control = new OpenLayers.Control.DrawFeature(
                 this.editingLayer,
                 // FIXME
-                OpenLayers.Handler.Polygon,
+                OpenLayers.Handler[geometryType],
                 {
                     featureAdded: OpenLayers.Function.bind(function(f) {
                         control.deactivate();
@@ -161,10 +163,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         var store = this.getAttributesStore(layer.attributes.layer_id, f, function(store) {
                             this.showAttributesEditingWindow(store);
                         });
-                    }, this),
-                    handlerOptions: {
-                        multi: true
-                    }
+                    }, this)
                 }
             );
             this.map.addControls([control]);
@@ -310,20 +309,28 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[getAttributesStore]
      *  Calls the layers service to get metadata (attributes).
      *  Triggers callback when response is received or immediately if data
-     *  already exists. 
+     *  already exists. Callback is called with the store and the geometryType
+     *  as arguments.
      */
     getAttributesStore: function(id, feature, callback) {
         var store = new GeoExt.data.AttributeStore({
             autoDestroy: true,
             url: this.layersURL + '/' + id + '/md.xsd',
-            feature: feature,
-            ignore: {
-                type: /^gml:(Multi)?(Point|LineString|Polygon|Curve|Surface|Geometry)PropertyType$/
-            }
+            feature: feature
         });
         store.on({
             load: function() {
-                callback.call(this, store);
+                var geometryType;
+                var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
+                store.each(function(r) {
+                    var match = geomRegex.exec(r.get("type"));
+                    if (match) {
+                        geometryType = match[1];
+                        store.remove(r);
+                        return false;
+                    }
+                });
+                callback.call(this, store, geometryType);
             },
             scope: this
         });
