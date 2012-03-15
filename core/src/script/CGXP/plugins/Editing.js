@@ -308,9 +308,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
 
     /** private: method[getAttributesStore]
      *  Calls the layers service to get metadata (attributes).
-     *  Triggers callback when response is received or immediately if data
-     *  already exists. Callback is called with the store and the geometryType
-     *  as arguments.
+     *  Triggers callback when response is received. Callback is called with
+     *  the store and the geometryType as arguments.
      */
     getAttributesStore: function(id, feature, callback) {
         var store = new GeoExt.data.AttributeStore({
