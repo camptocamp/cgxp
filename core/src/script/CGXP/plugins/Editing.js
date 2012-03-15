@@ -272,7 +272,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 for (var i in self.getEditableLayers()) {
                     layerIds.push(i);
                 }
-                options.url = baseURL + '/' + layerIds.join(',');
+                options.url = baseURL + layerIds.join(',');
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
@@ -324,7 +324,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     getAttributesStore: function(id, feature, callback) {
         var store = new GeoExt.data.AttributeStore({
             autoDestroy: true,
-            url: this.layersURL + '/' + id + '/md.xsd',
+            url: this.layersURL + id + '/md.xsd',
             feature: feature
         });
         store.on({
@@ -418,7 +418,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     save: function(feature, callback) {
         var protocol = new OpenLayers.Protocol.HTTP({
-            url: this.layersURL + '/' + feature.attributes.__layer_id__,
+            url: this.layersURL + feature.attributes.__layer_id__,
             format: new OpenLayers.Format.GeoJSON()
         });
         protocol.commit([feature], {
