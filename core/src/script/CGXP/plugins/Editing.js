@@ -25,6 +25,7 @@
  * @include OpenLayers/Handler/Point.js
  * @include OpenLayers/Handler/Path.js
  * @include OpenLayers/Handler/Polygon.js
+ * @include OpenLayers/Format/QueryStringFilter.js
  * @include GeoExt/data/AttributeStore.js
  * @include GeoExt.ux/FeatureEditorGrid.js
  */
