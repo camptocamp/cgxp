@@ -65,11 +65,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     editorGrid: null,
 
-    /** private: property[attributeStores]
-     * stroes the attributes stors by layer id.
-     */
-    attributeStores: null,
-
     /** private: property[win]
      *  ``Ext.Window`` The main window. The one that include the button to
      *  digitize a new feature.
@@ -318,27 +313,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  already exists. 
      */
     getAttributesStore: function(id, feature, callback) {
-        if (!this.attributeStores) {
-            this.attributeStores = {};
-        }
-        var store = this.attributeStores[id];
-        if (!store) {
-            store = new GeoExt.data.AttributeStore({
-                url: this.layersURL + '/' + id + '/md.xsd',
-                feature: feature
-            });
-            store.on({
-                load: function() {
-                    callback.call(this, store);
-                },
-                scope: this
-            });
-            store.load();
-            this.attributeStores[id] = store;
-        } else {
-            store.feature = feature;
-            callback.call(this, store);
-        }
+        var store = new GeoExt.data.AttributeStore({
+            autoDestroy: true,
+            url: this.layersURL + '/' + id + '/md.xsd',
+            feature: feature
+        });
+        store.on({
+            load: function() {
+                callback.call(this, store);
+            },
+            scope: this
+        });
+        store.load();
     },
 
     /** private: method[showAttributesEditingWindow]
