@@ -50,11 +50,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
-    /** private: property[currentLayer]
-     *  ``Object`` The currently edited layer
-     */
-    currentLayer: null,
-
     /** private: property[editingLayer]
      * ``OpenLayers.Layer.Vector`` The vector editing layer
      */
@@ -136,29 +131,41 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[createNewFeatureBtn]
      */
     createNewFeatureBtn: function() {
-        var store = new Ext.data.ArrayStore({
-            fields: [
-                'id',
-                'displayText',
-                'handler',
-                'layer'
-            ],
-            data: [
-                 [1, 'countries', OpenLayers.Handler.Polygon, this.map.layers[1]]
-            ]
+        var portal = this.target;
+        portal.on({
+            ready: function() {
+                var tree = portal.tools[this.layerTreeId].tree;
+                tree.on({
+                    addgroup: manageMenuItems.createDelegate(this),
+                    removegroup: manageMenuItems.createDelegate(this)
+                });
+            },
+            scope: this
         });
-        var layerItems = [
-            '<b class="menu-title">' + OpenLayers.i18n('Choose a layer') + '</b>'
-        ];
-        store.each(function(r) {
+
+        var menu = new Ext.menu.Menu({});
+        function manageMenuItems() {
+            menu.removeAll();
+            menu.add('<b class="menu-title">' + OpenLayers.i18n('Choose a layer') + '</b>');
+            var layers = this.getEditableLayers();
+            for (var i in layers) {
+                menu.add(createMenuItem.call(this, layers[i]));
+            }
+        }
+        function createMenuItem(layer) {
+            // layer is the layer tree node
             var control = new OpenLayers.Control.DrawFeature(
-                this.editingLayer, 
-                r.get('handler'),
+                this.editingLayer,
+                // FIXME
+                OpenLayers.Handler.Polygon,
                 {
-                    featureAdded: OpenLayers.Function.bind(function(feature) {
+                    featureAdded: OpenLayers.Function.bind(function(f) {
                         control.deactivate();
                         newFeatureBtn.toggle(false);
-                        this.showAttributesEditingWindow(feature);
+                        f.attributes.__layer_id__ = layer.attributes.layer_id;
+                        var store = this.getAttributesStore(layer.attributes.layer_id, f, function(store) {
+                            this.showAttributesEditingWindow(store);
+                        });
                     }, this),
                     handlerOptions: {
                         multi: true
@@ -166,12 +173,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 }
             );
             this.map.addControls([control]);
-            layerItems.push(new Ext.menu.CheckItem({
-                text: r.get('displayText'),
+            return new Ext.menu.CheckItem({
+                text: layer.attributes.text,
                 group: 'digitize_layer',
                 enableToggle: true,
                 control: control,
-                destLayer: r.get('layer'), // set the destination layer
                 listeners: {
                     checkchange: function(item, checked) {
                         if (!checked) {
@@ -187,8 +193,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         }
                     }
                 }
-            }));
-        }, this);
+            });
+        }
 
         var prefix = OpenLayers.i18n('Digitize a new feature');
         var newFeatureBtn = new Ext.SplitButton({
@@ -207,9 +213,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         });
                     } else if (button.activeItem) {
                         this.closeEditing();
-                        // ensure that the destLayer is visible
-                        //button.activeItem.destLayer.setVisibility(true);
-                        this.currentLayer = button.activeItem.destLayer;
                         button.activeItem.control.activate();
                     } else {
                         button.toggle(false);
@@ -218,9 +221,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 },
                 scope: this
             },
-            menu: new Ext.menu.Menu({
-                items: layerItems
-            }),
+            menu: menu,
             scope: this
         });
         return newFeatureBtn;
@@ -244,11 +245,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  Returns the list of editable and visible layers
      */
     getEditableLayers: function() {
+        // FIXME use cache
         var tree = this.target.tools[this.layerTreeId].tree;
-        var layers = [];
+        var layers = {};
         tree.root.cascade(function(node) {
             if (node.attributes.editable && node.attributes.checked) {
-                layers.push(node.attributes.layer_id);
+                layers[node.attributes.layer_id] = node;
             }
         });
         return layers;
@@ -262,7 +264,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var protocol = new OpenLayers.Protocol.HTTP({
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
-                options.url = baseURL + '/' + self.getEditableLayers().join(',');
+                var layerIds = [];
+                for (var i in self.getEditableLayers()) {
+                    layerIds.push(i);
+                }
+                options.url = baseURL + '/' + layerIds.join(',');
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
