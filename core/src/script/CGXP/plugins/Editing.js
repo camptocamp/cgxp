@@ -17,6 +17,16 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include OpenLayers/Protocol/HTTP.js
+ * @include OpenLayers/Format/GeoJSON.js
+ * @include OpenLayers/Control/GetFeature.js
+ * @include OpenLayers/Control/ModifyFeature.js
+ * @include OpenLayers/Control/DrawFeature.js
+ * @include OpenLayers/Handler/Point.js
+ * @include OpenLayers/Handler/Path.js
+ * @include OpenLayers/Handler/Polygon.js
+ * @include GeoExt/data/AttributeStore.js
+ * @include GeoExt.ux/FeatureEditorGrid.js
  */
 
 /** api: (define)
