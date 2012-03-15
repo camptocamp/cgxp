@@ -316,7 +316,10 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var store = new GeoExt.data.AttributeStore({
             autoDestroy: true,
             url: this.layersURL + '/' + id + '/md.xsd',
-            feature: feature
+            feature: feature,
+            ignore: {
+                type: /^gml:(Multi)?(Point|LineString|Polygon|Curve|Surface|Geometry)PropertyType$/
+            }
         });
         store.on({
             load: function() {
