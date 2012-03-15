@@ -57,6 +57,7 @@ Ext.onReady(function() {
             projection: new OpenLayers.Projection("EPSG:21781"),
             units: "m",
             resolutions: [250,100,50,20,10,5,2.5,1,0.5,0.25,0.1,0.05],
+            tbar: ['something in the toolbar'],
             controls: [
                 new OpenLayers.Control.Navigation(),
                 new OpenLayers.Control.KeyboardDefaults(),

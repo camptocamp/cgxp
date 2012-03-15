@@ -104,7 +104,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.on({
             'render': function() {
                 win.show();
-                win.anchorTo.defer(100, win, [this.el, 'tl-tl', [55, 10]]);
+                win.anchorTo.defer(100, win, [this.body, 'tl-tl', [55, 10]]);
             }
         });
     },
