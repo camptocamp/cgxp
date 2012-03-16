@@ -89,6 +89,12 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     coordsRecenteringStyle: null,
 
+    /** api: config[width]
+     * ´´Integer´´
+     * Width in pixels of the search combobox.
+     */
+    width: 200,
+
     projections: null,
 
     /** private: method[constructor]
@@ -215,7 +221,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             triggerAction: 'all',
             trigger2Class: 'x-form-trigger-no-width x-hidden',
             trigger3Class: 'x-form-trigger-no-width x-hidden',
-            width: 200,
+            width: this.width,
             selectOnFocus: true
         });
         // used to close the loading panel
