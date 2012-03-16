@@ -145,6 +145,13 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
                         map.baseLayer.setVisibility(false);
                     }
                     map.setBaseLayer(record.getLayer());
+
+                    // make sure that the new base layer appears first
+                    // in the list of layers (used when updating the layers 
+                    // order)
+                    var layerIndex = map.getLayerIndex(map.baseLayer);
+                    map.layers.splice(layerIndex, 1);
+                    map.layers.unshift(map.baseLayer);
                 }
             }
         });
