@@ -101,6 +101,12 @@ GeoExt.Lang.add("en", {
         labelText: "Zoom to: "
     },
 
+    "cgxp.plugins.Editing.prototype": {
+        helpText: "Click on the map to <b>edit existing features</b>, or",
+        layerMenuText: "Choose a layer",
+        digitizeBtnText: "Digitize a new feature"
+    },
+
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Raise",
         movedownText: "Move down",

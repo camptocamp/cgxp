@@ -91,6 +91,25 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     win: null,
 
+    /** api: config[helpText]
+     *  ``String``
+     *  The text to the top of the editing window (i18n).
+     */
+    helpText: 'Click on the map to <b>edit existing features</b>, or',
+
+    /** api: config[layerMenuText]
+     *  ``String``
+     *  The text to the top of the layer menu (displayed when the
+     *  digitize button is pressed).
+     */
+    layerMenuText: 'Choose a layer',
+
+    /** api: config[digitizeBtnText]
+     *  ``String``
+     *  The text for the digitize button.
+     */
+    digitizeBtnText: 'Digitize a new feature',
+
     /** private: method[init]
      */
     init: function() {
@@ -108,7 +127,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             resizable: false,
             items: [{
                 xtype: 'box',
-                html: OpenLayers.i18n('Click on the map to <b>edit existing features</b>, or') + '<hr />'
+                html: this.helpText + '<hr />'
             }, this.createNewFeatureBtn()]
         });
         this.target.mapPanel.on({
@@ -161,7 +180,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var menu = new Ext.menu.Menu({});
         function manageMenuItems() {
             menu.removeAll();
-            menu.add('<b class="menu-title">' + OpenLayers.i18n('Choose a layer') + '</b>');
+            menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
             var layers = this.getEditableLayers();
             for (var i in layers) {
                 this.getAttributesStore(layers[i].attributes.layer_id, null, function(store, geometryType) {
@@ -210,9 +229,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             });
         }
 
-        var prefix = OpenLayers.i18n('Digitize a new feature');
+        var prefix = this.digitizeBtnText;
         var newFeatureBtn = new Ext.SplitButton({
-            text: prefix, 
+            text: prefix,
             enableToggle: true,
             allowDepress: true,
             activeItem: null, // the currently active menu item
