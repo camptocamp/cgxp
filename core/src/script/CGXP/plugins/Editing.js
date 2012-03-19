@@ -32,7 +32,7 @@
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = Disclaimer
+ *  class = Editing
  */
 
 /** api: (extends)
@@ -41,7 +41,12 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: Disclaimer(config)
+ *  .. class:: Editing(config)
+ *
+ *    Add an editing tool to the map.
+ *
+ *    This plugin works with the c2cgeoportal "layers" web service. It
+ *    requires a :class:`cgxp.plugins.LayerTree` plugin in the viewer.
  *
  */
 cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
@@ -50,8 +55,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_editing",
 
     /** api: config[layersURL]
-     * ``String`` URL to the layers web service
-     * ie. for the getFeatures requests
+     *  ``String``
+     *  URL to the layers web service.
      */
     layersURL: null,
 
@@ -62,23 +67,27 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     layerTreeId: null,
 
     /** private: property[editingLayer]
-     * ``OpenLayers.Layer.Vector`` The vector editing layer
+     *  ``OpenLayers.Layer.Vector``
+     *  The vector editing layer
      */
     editingLayer: null,
 
     /** private: property[attributePopup]
-     * ``Ext.Window`` The attributes editing popup
+     *  ``Ext.Window``
+     *  The attributes editing popup
      */
     attributePopup: null,
 
     /** private: property[editorGrid]
-     * ``GeoExt.ux.FeatureEditorGrid`` The feature editor grid.
+     *  ``GeoExt.ux.FeatureEditorGrid``
+     *  The feature editor grid.
      */
     editorGrid: null,
 
     /** private: property[win]
-     *  ``Ext.Window`` The main window. The one that include the button to
-     *  digitize a new feature.
+     *  ``Ext.Window``
+     *  The main window. The one that include the button to  digitize
+     *  a new feature.
      */
     win: null,
 
@@ -232,6 +241,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         return newFeatureBtn;
     },
 
+    /** private: method[closeEditing]
+     */
     closeEditing: function() {
         // avoid reentrance
         if(!arguments.callee._in) {
