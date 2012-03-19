@@ -18,6 +18,7 @@
 /*
  * @requires GeoExt/widgets/tree/LayerNode.js
  * @requires GeoExt/data/LayerRecord.js
+ * @include OpenLayers/Layer/WMS.js
  * @include GeoExt/widgets/tree/LayerParamNode.js
  * @include GeoExt/widgets/tree/TreeNodeUIEventMixin.js
  * @include GeoExt/plugins/TreeNodeActions.js
