@@ -238,6 +238,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         allItems: group.allLayers,
                         item: item.name,
                         param: 'LAYERS',
+                        layer_id: item.id, // layer_id is the id of the layer in database
+                        editable: item.editable,
                         uiProvider: 'layer'
                     });
                 }
