@@ -89,11 +89,17 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     coordsRecenteringStyle: null,
 
-    /** api: config[width]
+    /** api: config[comboWidth]
      * ´´Integer´´
      * Width in pixels of the search combobox.
      */
-    width: 200,
+    comboWidth: 200,
+
+    /** api: config[comboConfig]
+     * ´´Object´´
+     * Optional configuration of the ComboBox.
+     */
+    comboConfig: null,
 
     projections: null,
 
@@ -210,7 +216,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             '{label}',
             '</div></tpl>'
         );
-        var combo = new Ext.ux.form.TwinTriggerComboBox({
+        var combo = new Ext.ux.form.TwinTriggerComboBox(Ext.apply({
             store: this.createStore(),
             tpl: tpl,
             minChars: 1,
@@ -221,9 +227,9 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             triggerAction: 'all',
             trigger2Class: 'x-form-trigger-no-width x-hidden',
             trigger3Class: 'x-form-trigger-no-width x-hidden',
-            width: this.width,
+            width: this.comboWidth,
             selectOnFocus: true
-        });
+        }, this.comboConfig));
         // used to close the loading panel
         this.closeLoading = new Ext.util.DelayedTask(function () {
             combo.list.hide();
