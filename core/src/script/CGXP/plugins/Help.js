@@ -45,6 +45,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
     url: null,
 
     helpactiontooltipText: "Help",
+    helpactionText: null,
 
     /** api: config[options]
      *  ``Object``
@@ -58,6 +59,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
         var action = new GeoExt.Action(Ext.apply({
             iconCls: "help",
             tooltip: this.helpactiontooltipText,
+            text: this.helpactionText,
             handler: function() {
                 window.open(this.url);
             },
