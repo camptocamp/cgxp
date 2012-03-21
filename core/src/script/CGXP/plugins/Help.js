@@ -40,16 +40,27 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_help",
 
     /** api: config[url]
+     *  ``String``
      *  URL of help page to open.
      */
     url: null,
 
+    /** api: config[helpactiontooltipText]
+     *  ``String``
+     *  The tooltip for the help button. (i18n).
+     */
     helpactiontooltipText: "Help",
+
+    /** api: config[helpactionText]
+     *  ``String``
+     *  Text for the help button. Default is ``null`` (no text).
+     */
     helpactionText: null,
 
     /** api: config[options]
      *  ``Object``
-     *  Optional parameters for the tool.
+     *  Config options for the ``Ext.Action`` created by this plugin.
+     *  Default is ``null``.
      */
     options: null,
 
