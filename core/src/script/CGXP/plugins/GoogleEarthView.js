@@ -83,10 +83,10 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.outputTarget = Ext.getCmp(this.outputTarget);
-        var button = new Ext.Button(Ext.apply({}, this.buttonConfig, {
+        var button = new Ext.Button(Ext.apply({
             enableToggle: true,
             iconCls: "cgxp-icon-googleearthview"
-        }));
+        }, this.buttonConfig));
         button.on({
             "toggle": function(button) {
                 if (button.pressed) {
