@@ -165,6 +165,17 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[createNewFeatureBtn]
      */
     createNewFeatureBtn: function() {
+        function manageMenuItems() {
+            menu.removeAll();
+            menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
+            var layers = this.getEditableLayers();
+            for (var i in layers) {
+                this.getAttributesStore(layers[i].attributes.layer_id, null, function(store, geometryType) {
+                    menu.add(this.createMenuItem(layers[i], geometryType));
+                });
+            }
+        }
+
         var portal = this.target;
         portal.on({
             ready: function() {
@@ -178,60 +189,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
 
         var menu = new Ext.menu.Menu({});
-        function manageMenuItems() {
-            menu.removeAll();
-            menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
-            var layers = this.getEditableLayers();
-            for (var i in layers) {
-                this.getAttributesStore(layers[i].attributes.layer_id, null, function(store, geometryType) {
-                    menu.add(createMenuItem.call(this, layers[i], geometryType));
-                });
-            }
-        }
-        function createMenuItem(layer, geometryType) {
-            // layer is the layer tree node
-            var control = new OpenLayers.Control.DrawFeature(
-                this.editingLayer,
-                // FIXME
-                OpenLayers.Handler[geometryType],
-                {
-                    featureAdded: OpenLayers.Function.bind(function(f) {
-                        control.deactivate();
-                        newFeatureBtn.toggle(false);
-                        f.attributes.__layer_id__ = layer.attributes.layer_id;
-                        var store = this.getAttributesStore(layer.attributes.layer_id, f, function(store) {
-                            this.showAttributesEditingWindow(store);
-                        });
-                    }, this)
-                }
-            );
-            this.map.addControls([control]);
-            return new Ext.menu.CheckItem({
-                text: layer.attributes.text,
-                group: 'digitize_layer',
-                enableToggle: true,
-                control: control,
-                listeners: {
-                    checkchange: function(item, checked) {
-                        if (!checked) {
-                            item.control.deactivate();
-                        } else {
-                            var btn = item.ownerCt.ownerCt;
-                            btn.activeItem = item;
-                            btn.toggle(true);
-                            item.ownerCt.ownerCt.setText(prefix + ' in <b>' + item.text + '</b>');
-                            if (btn.pressed) {
-                                item.control.activate();
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        var prefix = this.digitizeBtnText;
         var newFeatureBtn = new Ext.SplitButton({
-            text: prefix,
+            text: this.digitizeBtnText,
             enableToggle: true,
             allowDepress: true,
             activeItem: null, // the currently active menu item
@@ -258,6 +217,62 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
         return newFeatureBtn;
+    },
+
+    /** private: method[createMenuItem]
+     */
+    createMenuItem: function(layer, geometryType) {
+        // layer is the layer tree node
+        var simpleType = geometryType.replace("Multi", "");
+        var Handler = {
+            "Point": OpenLayers.Handler.Point,
+            "Line": OpenLayers.Handler.Path,
+            "Curve": OpenLayers.Handler.Path,
+            "Polygon": OpenLayers.Handler.Polygon,
+            "Surface": OpenLayers.Handler.Polygon
+        }[simpleType];
+        var control = new OpenLayers.Control.DrawFeature(
+            this.editingLayer, Handler, {
+                featureAdded: OpenLayers.Function.bind(function(f) {
+                    control.deactivate();
+                    newFeatureBtn.toggle(false);
+                    f.attributes.__layer_id__ =
+                        layer.attributes.layer_id;
+                    var store = this.getAttributesStore(
+                        layer.attributes.layer_id, f,
+                        function(store) {
+                            this.showAttributesEditingWindow(store);
+                        }
+                    );
+                }, this),
+                handlerOptions: {
+                    multi: geometryType != simpleType
+                }
+            }
+        );
+        this.map.addControls([control]);
+        var prefix = this.digitizeBtnText;
+        return new Ext.menu.CheckItem({
+            text: layer.attributes.text,
+            group: 'digitize_layer',
+            enableToggle: true,
+            control: control,
+            listeners: {
+                checkchange: function(item, checked) {
+                    if (!checked) {
+                        item.control.deactivate();
+                    } else {
+                        var btn = item.ownerCt.ownerCt;
+                        btn.activeItem = item;
+                        btn.toggle(true);
+                        item.ownerCt.ownerCt.setText(prefix + ' in <b>' + item.text + '</b>');
+                        if (btn.pressed) {
+                            item.control.activate();
+                        }
+                    }
+                }
+            }
+        });
     },
 
     /** private: method[closeEditing]
@@ -375,6 +390,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
         store.load();
+        return store;
     },
 
     /** private: method[showAttributesEditingWindow]
