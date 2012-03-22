@@ -106,8 +106,7 @@ cgxp.plugins.Disclaimer = Ext.extend(gxp.plugins.Tool, {
      */
     onAdd: function(store, records) {
         Ext.each(records, function(record) {
-            var layername = record.data.layer.name;
-            if (this.target.mapPanel.map.getLayersByName(layername).length > 0) {
+            if (this.target.mapPanel.map.getLayersBy('id', record.id).length > 0) {
                 // no need to display the disclaimer again if the layer is
                 // already available and simply moved in the layertree.
                 return;
