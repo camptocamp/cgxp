@@ -104,7 +104,7 @@ GeoExt.Lang.add("en", {
     "cgxp.plugins.Editing.prototype": {
         helpText: "Click on the map to <b>edit existing features</b>, or",
         layerMenuText: "Choose a layer",
-        digitizeBtnText: "Digitize a new feature"
+        createBtnText: "Create a new feature"
     },
 
     "cgxp.tree.LayerTree.prototype": {

@@ -98,7 +98,7 @@ GeoExt.Lang.add("fr", {
     "cgxp.plugins.Editing.prototype": {
         helpText: "Cliquer sur la carte pour <b>éditer des objets</b>, ou",
         layerMenuText: "Choisir une couche",
-        digitizeBtnText: "Créer un nouvel objet"
+        createBtnText: "Créer un nouvel objet"
     },
 
     "cgxp.tree.LayerTree.prototype": {

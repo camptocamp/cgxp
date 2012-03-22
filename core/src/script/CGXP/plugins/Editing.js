@@ -86,7 +86,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
 
     /** private: property[win]
      *  ``Ext.Window``
-     *  The main window. The one that include the button to  digitize
+     *  The main window. The one that include the button to create
      *  a new feature.
      */
     win: null,
@@ -100,15 +100,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** api: config[layerMenuText]
      *  ``String``
      *  The text to the top of the layer menu (displayed when the
-     *  digitize button is pressed).
+     *  create button is pressed).
      */
     layerMenuText: 'Choose a layer',
 
-    /** api: config[digitizeBtnText]
+    /** api: config[createBtnText]
      *  ``String``
-     *  The text for the digitize button.
+     *  The text for the create button.
      */
-    digitizeBtnText: 'Digitize a new feature',
+    createBtnText: 'Create a new feature',
 
     /** private: method[init]
      */
@@ -190,7 +190,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
 
         var menu = new Ext.menu.Menu({});
         var newFeatureBtn = new Ext.SplitButton({
-            text: this.digitizeBtnText,
+            text: this.createBtnText,
             enableToggle: true,
             allowDepress: true,
             activeItem: null, // the currently active menu item
@@ -251,10 +251,10 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }
         );
         this.map.addControls([control]);
-        var prefix = this.digitizeBtnText;
+        var prefix = this.createBtnText;
         return new Ext.menu.CheckItem({
             text: layer.attributes.text,
-            group: 'digitize_layer',
+            group: 'create_layer',
             enableToggle: true,
             control: control,
             listeners: {
