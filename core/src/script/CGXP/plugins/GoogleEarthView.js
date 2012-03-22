@@ -48,7 +48,9 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     apiKey: null,
 
-    /** api: Action config
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
      */
     actionConfig: null,
 
