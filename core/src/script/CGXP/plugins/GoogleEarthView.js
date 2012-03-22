@@ -48,6 +48,12 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     apiKey: null,
 
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     /** api: Component in which to create the GoogleEarthPanel
      */
     outputTarget: null,
@@ -79,11 +85,11 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.outputTarget = Ext.getCmp(this.outputTarget);
-        var button = new Ext.Button({
+        var button = new Ext.Button(Ext.apply({
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             iconCls: "cgxp-icon-googleearthview"
-        });
+        }, this.actionConfig));
         button.on({
             "toggle": function(button) {
                 if (button.pressed) {
