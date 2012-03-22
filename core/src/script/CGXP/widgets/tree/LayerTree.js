@@ -19,7 +19,7 @@
  * @requires GeoExt/widgets/tree/LayerNode.js
  * @requires GeoExt/data/LayerRecord.js
  * @include OpenLayers/Layer/WMS.js
- * @include GeoExt/widgets/tree/LayerParamNode.js
+ * @requires GeoExt/widgets/tree/LayerParamNode.js
  * @include GeoExt/widgets/tree/TreeNodeUIEventMixin.js
  * @include GeoExt/plugins/TreeNodeActions.js
  * @include GeoExt/plugins/TreeNodeComponent.js
@@ -30,6 +30,17 @@
  */
 
 Ext.namespace("cgxp.tree");
+
+cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
+    createParams: function(items) {
+        var items2 = items.slice(0);
+        // reverse the items list order so that mapserver layers are drawn
+        // on the map in the same order than in the layertree
+        items2.reverse();
+        return cgxp.tree.LayerParamNode.superclass.createParams.apply(this, [items2]);
+    }
+});
+Ext.tree.TreePanel.nodeTypes.cgxp_layerparam = cgxp.tree.LayerParamNode;
 
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     
@@ -232,7 +243,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.addLegend(item, nodeConfig, level);
                     this.addScaleAction(item, nodeConfig);
                     Ext.apply(nodeConfig, {
-                        nodeType: 'gx_layerparam',
+                        nodeType: 'cgxp_layerparam',
                         leaf: true,
                         layer: item.layer,
                         allItems: group.allLayers,
