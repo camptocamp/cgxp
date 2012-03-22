@@ -79,6 +79,7 @@ describe('plugins.Disclaimer', function() {
             beforeEach(function() {
                 d.disclaimers = {};
                 records = [{
+                    id: 'bar',
                     data: {layer: {name: 'foo'}},
                     get: function() {
                         return {'discl 1': true};
@@ -140,6 +141,7 @@ describe('plugins.Disclaimer', function() {
             describe('when two disclaimers', function() {
                 beforeEach(function() {
                     records = [{
+                        id: 'bar',
                         data: {layer: {name: 'foo'}},
                         get: function() {
                             return {'discl 1': true, 'discl 2': true};
@@ -164,6 +166,7 @@ describe('plugins.Disclaimer', function() {
             var record;
             beforeEach(function() {
                 record = {
+                    id: 'bar',
                     data: {layer: {name: 'foo'}},
                     get: function() {
                         return {'discl 1': true};
@@ -205,6 +208,7 @@ describe('plugins.Disclaimer', function() {
             describe('when two disclaimers', function() {
                 beforeEach(function() {
                     record = {
+                        id: 'bar',
                         data: {layer: {name: 'foo'}},
                         get: function() {
                             return {'discl 1': true, 'discl 2': true};
