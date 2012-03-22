@@ -317,6 +317,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.fireEvent('addgroup');
         groupNode.expand(true, false);
         groupNode.collapse(true, false);
+        if (group.isExpanded) {
+            groupNode.expand(false, false); 
+        }
         groupNode.cascade(this.checkInRange);
     },
 
