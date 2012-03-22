@@ -279,7 +279,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 }.createDelegate(this));
                 this.tabpan.doLayout();
             }
-        }.createDelegate(this));
+        }, this);
 
         this.events.on('queryresults', function(features) {
             // if no feature do nothing
