@@ -1,7 +1,51 @@
 describe('plugins.Editing', function() {
-    var xsd1 = '<xsd:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><xsd:complexType name="npa"><xsd:complexContent><xsd:extension base="gml:AbstractFeatureType"><xsd:sequence><xsd:element minOccurs="0" name="localite" nillable="true"><xsd:simpleType><xsd:restriction base="xsd:string"><xsd:maxLength value="100" /></xsd:restriction></xsd:simpleType></xsd:element><xsd:element minOccurs="0" name="npa" nillable="true" type="xsd:integer" /><xsd:element minOccurs="0" name="npa_comp" nillable="true" type="xsd:integer" /><xsd:element minOccurs="0" name="geom" nillable="true" type="gml:PolygonPropertyType" /></xsd:sequence></xsd:extension></xsd:complexContent></xsd:complexType></xsd:schema>';
 
-    var xsd2 = '<xsd:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><xsd:complexType name="npa"><xsd:complexContent><xsd:extension base="gml:AbstractFeatureType"><xsd:sequence><xsd:element minOccurs="0" name="localite" nillable="true"><xsd:simpleType><xsd:restriction base="xsd:string"><xsd:maxLength value="100" /></xsd:restriction></xsd:simpleType></xsd:element><xsd:element minOccurs="0" name="npa" nillable="true" type="xsd:integer" /><xsd:element minOccurs="0" name="npa_comp" nillable="true" type="xsd:integer" /><xsd:element minOccurs="0" name="geom" nillable="true" type="gml:MultiPolygonPropertyType" /></xsd:sequence></xsd:extension></xsd:complexContent></xsd:complexType></xsd:schema>';
+    var xsd1 =
+'<?xml version="1.0"?>' +
+'<xsd:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema">' +
+  '<xsd:complexType name="npa">' +
+    '<xsd:complexContent>' +
+      '<xsd:extension base="gml:AbstractFeatureType">' +
+        '<xsd:sequence>' +
+          '<xsd:element minOccurs="0" name="localite" nillable="true">' +
+            '<xsd:simpleType>' +
+              '<xsd:restriction base="xsd:string">' +
+                '<xsd:maxLength value="100"/>' +
+              '</xsd:restriction>' +
+            '</xsd:simpleType>' +
+          '</xsd:element>' +
+          '<xsd:element minOccurs="0" name="npa" nillable="true" type="xsd:integer"/>' +
+          '<xsd:element minOccurs="0" name="npa_comp" nillable="true" type="xsd:integer"/>' +
+          '<xsd:element minOccurs="0" name="geom" nillable="true" type="gml:PolygonPropertyType"/>' +
+        '</xsd:sequence>' +
+      '</xsd:extension>' +
+    '</xsd:complexContent>' +
+  '</xsd:complexType>' +
+'</xsd:schema>';
+
+    var xsd2 =
+'<?xml version="1.0"?>' +
+'<xsd:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema">' +
+  '<xsd:complexType name="npa">' +
+    '<xsd:complexContent>' +
+      '<xsd:extension base="gml:AbstractFeatureType">' +
+        '<xsd:sequence>' +
+          '<xsd:element minOccurs="0" name="localite" nillable="true">' +
+            '<xsd:simpleType>' +
+              '<xsd:restriction base="xsd:string">' +
+                '<xsd:maxLength value="100"/>' +
+              '</xsd:restriction>' +
+            '</xsd:simpleType>' +
+          '</xsd:element>' +
+          '<xsd:element minOccurs="0" name="npa" nillable="true" type="xsd:integer"/>' +
+          '<xsd:element minOccurs="0" name="npa_comp" nillable="true" type="xsd:integer"/>' +
+          '<xsd:element minOccurs="0" name="geom" nillable="true" type="gml:MultiPolygonPropertyType"/>' +
+        '</xsd:sequence>' +
+      '</xsd:extension>' +
+    '</xsd:complexContent>' +
+  '</xsd:complexType>' +
+'</xsd:schema>';
+
     var e;
     describe('when calling constructor', function() {
         beforeEach(function() {
@@ -64,4 +108,3 @@ describe('plugins.Editing', function() {
         });
     });
 });
-
