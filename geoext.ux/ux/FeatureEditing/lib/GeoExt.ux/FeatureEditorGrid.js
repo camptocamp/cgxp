@@ -115,6 +115,12 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     modifyControl: undefined,
 
+    /**
+     * public: property[modifyControlOptions]
+     * ``Object`` options to be passed to the ModifyFeature control
+     */
+    modifyControlOptions: null,
+
     /** private: property[featureInfo]
      *  ``Object`` Where we store the original state (in a broad sense) of
      *   the feature, so we can undo changes if necessary.
@@ -141,6 +147,9 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      *  whether the feature is modified. Read-only.
      */
     dirty: false,
+
+    // private config overrides
+    clicksToEdit: 1,
 
     /** private: method[initComponent]
      */
@@ -192,21 +201,22 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             });
         }
 
-        delete this.feature;
+        var feature = this.store.feature;
 
         // create bottom bar
         this.deleteButton = new Ext.Button({
             text: this.deleteButtonText,
             tooltip: this.deleteButtonTooltip,
-            iconCls: "delete",
+            cls: 'x-delete-btn',
             hidden: !this.allowDelete,
             handler: this.deleteHandler,
+            disabled: feature.state == OpenLayers.State.INSERT,
             scope: this
         });
         this.cancelButton = new Ext.Button({
             text: this.cancelButtonText,
             tooltip: this.cancelButtonTooltip,
-            iconCls: "cancel",
+            cls: 'x-cancel-btn',
             hidden: !this.allowCancel,
             handler: this.cancelHandler,
             scope: this
@@ -214,19 +224,21 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.saveButton = new Ext.Button({
             text: this.saveButtonText,
             tooltip: this.saveButtonTooltip,
-            iconCls: "save",
+            cls: 'x-save-btn',
             hidden: !this.allowSave,
             handler: this.saveHandler,
+            disabled: feature.state != OpenLayers.State.INSERT,
             scope: this
         });
         this.bbar = new Ext.Toolbar({
             items: [
-                '->',
                 this.deleteButton,
-                this.saveButton,
-                this.cancelButton
+                '->',
+                this.cancelButton,
+                this.saveButton
             ]
         });
+        this.dirty = feature.state == OpenLayers.State.INSERT;
 
         // create column model
         var columns = [
@@ -248,8 +260,6 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         // call parent to finish the initialization of the component
         GeoExt.ux.FeatureEditorGrid.superclass.initComponent.call(this);
 
-        var feature = this.store.feature;
-
         // store the initial state of the feature
         this.featureInfo = {
             geometry: feature.geometry.clone(),
@@ -260,7 +270,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         // create modify feature control
         this.modifyControl = new OpenLayers.Control.ModifyFeature(
             feature.layer,
-            {standalone: true}
+            Ext.apply({standalone: true}, this.modifyControlOptions)
         );
         feature.layer.map.addControl(this.modifyControl);
         this.modifyControl.activate();
@@ -277,8 +287,15 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.on({
             "afteredit": function() {
                 this.setFeatureState(this.getDirtyState());
+                this.saveButton.setDisabled(!this.getDirtyState());
             }
         });
+        this.mon(this.selModel, 'beforecellselect', function(sm, rowIndex, colIndex){
+            if(colIndex === 0){
+                this.startEditing.defer(200, this, [rowIndex, 1]);
+                return false;
+            }
+        }, this);
     },
 
     /** private: method[onFeaturemodified]
@@ -289,6 +306,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     onFeaturemodified: function(e) {
         if(e.feature === this.store.feature) {
             this.dirty = true;
+            this.saveButton.setDisabled();
         }
     },
 
