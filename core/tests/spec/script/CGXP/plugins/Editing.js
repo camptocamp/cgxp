@@ -107,4 +107,92 @@ describe('plugins.Editing', function() {
             expect(item.control.handler.multi).toBeTruthy();
         });
     });
+    describe('when calling init', function() {
+        beforeEach(function() {
+            var map = new OpenLayers.Map();
+            e = new cgxp.plugins.Editing({
+                layersURL: '/layers/',
+                map: map
+            });
+            e.init({
+                tools: {},
+                on: function() {},
+                mapPanel: {
+                    on: function() {},
+                    map: map
+                }
+            });
+        });
+        it('sets the editing plugin window to disabled', function() {
+            expect(e.win.disabled).toBeTruthy();
+        });
+    });
+    describe('when list of editable layers changes', function() {
+        var server,
+            clock,
+            map = new OpenLayers.Map();
+        beforeEach(function() {
+            server = sinon.fakeServer.create();
+            clock = sinon.useFakeTimers();
+            e = new cgxp.plugins.Editing({
+                layersURL: '/layers/',
+                map: map
+            });
+            e.init({
+                tools: {},
+                on: function() {},
+                mapPanel: {
+                    on: function() {},
+                    map: map
+                }
+            });
+            e.getEditableLayers = function() {
+                return layers;
+            };
+            e.getAttributesStore = function() {};
+        });
+        afterEach(function() {
+            server.restore();
+            clock.restore();
+        });
+        var layers;
+        it('sets the editing plugin window to enabled', function() {
+            layers = {
+                'l3': {
+                    attributes: 'bar'
+                }
+            };
+            e.manageLayers();
+            expect(e.win.disabled).toBeFalsy();
+        });
+
+        it('sends requests with getFeature control', function() {
+            var oldRead = OpenLayers.Protocol.HTTP.prototype.read;
+            var foo = false;
+            OpenLayers.Protocol.HTTP.prototype.read = function() {
+                foo = true;
+            };
+
+            map.getControlsByClass('OpenLayers.Control.GetFeature')[0].request();
+            OpenLayers.Protocol.HTTP.prototype.read = oldRead;
+            expect(foo).toBeTruthy();
+        });
+
+        it('sets the editing plugin window to disabled', function() {
+            layers = {};
+            e.manageLayers();
+            expect(e.win.disabled).toBeTruthy();
+        });
+        it('prevents requests with getFeature control to be sent', function() {
+            var oldRead = OpenLayers.Protocol.HTTP.prototype.read;
+            var foo = false;
+            OpenLayers.Protocol.HTTP.prototype.read = function() {
+                foo = true;
+            };
+
+            map.getControlsByClass('OpenLayers.Control.GetFeature')[0].request();
+            OpenLayers.Protocol.HTTP.prototype.read = oldRead;
+            expect(foo).toBeFalsy();
+        });
+    });
 });
