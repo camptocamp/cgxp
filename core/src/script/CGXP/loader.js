@@ -30,6 +30,7 @@
         "plugins/Disclaimer.js",
         "plugins/ScaleChooser.js",
         "plugins/GoogleEarthView.js",
+        "plugins/Editing.js",
         "locale/en.js",
         "locale/fr.js",
         "locale/de.js",
