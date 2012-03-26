@@ -141,10 +141,9 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
             mode: 'local',
             listeners: {
                 'select': function(combo, record, index) {
-                    if (map.baseLayer) {
-                        map.baseLayer.setVisibility(false);
-                    }
-                    map.setBaseLayer(record.getLayer());
+                    map.layers[0].setVisibility(false);
+                    map.setLayerIndex(record.getLayer(), 0);
+                    map.layers[0].setVisibility(true);
                 }
             }
         });
