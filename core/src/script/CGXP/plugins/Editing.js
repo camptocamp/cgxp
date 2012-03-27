@@ -169,12 +169,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var menu = this.newFeatureBtn.menu;
         menu.removeAll();
         menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
-        Ext.each(layers, function(layer) {
+        for (var i in layers) {
             size++;
-            this.getAttributesStore(layer.attributes.layer_id, null, function(store, geometryType) {
+            this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
                 menu.add(this.createMenuItem(layer, geometryType));
-            });
-        });
+            }).createDelegate(this, [layers[i]], true));
+        }
         this.win.setDisabled(size === 0);
         if (size === 0) {
             this.newFeatureBtn.toggle(false);
