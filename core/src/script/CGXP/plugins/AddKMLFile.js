@@ -73,7 +73,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
             }
         });
         this.form = new Ext.form.FormPanel({
-            border: false,
+            unstyled: true,
             fileUpload: true,
             hideLabels: true,
             items: button,

@@ -32,6 +32,10 @@ div#header-out {
 .x-toolbar .mapHistoryNext {
     background: url('img/arrow_right.png') top left no-repeat;
 }
+/* fix button position for ie */
+.x-form-file-wrap table.x-form-file-btn {
+    top: 0;
+}
 
 /* cgxp_disclaimer */
 .disclaimer-ct {
