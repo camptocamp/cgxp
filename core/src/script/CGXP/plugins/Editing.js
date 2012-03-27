@@ -116,6 +116,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     createBtnText: 'Create a new feature',
 
+    /** private: config[pendingRequests]
+     *  ``GeoExt.data.AttributeStore``
+     *  The list of pendingRequests (actually the attribute stores)
+     */
+    pendingRequests: null,
+
     /** private: method[init]
      */
     init: function() {
@@ -124,6 +130,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.map = this.target.mapPanel.map;
         this.addEditingLayer();
         this.createGetFeatureControl();
+        this.pendingRequests = [];
 
         this.newFeatureBtn = this.createNewFeatureBtn();
         var win = this.win = new Ext.Window({
@@ -170,6 +177,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var size = 0;
         var menu = this.newFeatureBtn.menu;
         menu.removeAll();
+        this.abortPendingRequests();
         menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
         for (var i in layers) {
             size++;
@@ -414,10 +422,25 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 });
                 callback.call(this, store, geometryType);
             },
+            beforeload: function(store) {
+                this.pendingRequests.push(store);
+            },
             scope: this
         });
         store.load();
         return store;
+    },
+
+    /** private: method[abortPendingRequests]
+     *  This method aborts xsd request if required.
+     */
+    abortPendingRequests: function() {
+        Ext.each(this.pendingRequests, function(store) {
+            // destroying the store will destroy the corresponding proxy, and
+            // the corresponding active requests
+            store.destroy();
+        });
+        this.pendingRequests = [];
     },
 
     /** private: method[showAttributesEditingWindow]
