@@ -151,6 +151,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 var tree = portal.tools[this.layerTreeId].tree;
                 tree.on({
                     checkchange: this.manageLayers,
+                    addgroup: this.manageLayers,
+                    removegroup: this.manageLayers,
                     scope: this
                 });
             },
