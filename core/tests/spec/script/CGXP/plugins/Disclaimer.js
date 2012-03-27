@@ -60,9 +60,9 @@ describe('plugins.Disclaimer', function() {
         beforeEach(function() {
             d.target = {
                 mapPanel: {
-                    map: {
-                        Z_INDEX_BASE: {
-                            Control: 1000 }}}};
+                    map: new OpenLayers.Map('map')
+                }
+            };
             output = d.addOutput();
         });
         it('creates a container', function() {
@@ -79,6 +79,7 @@ describe('plugins.Disclaimer', function() {
             beforeEach(function() {
                 d.disclaimers = {};
                 records = [{
+                    id: 'bar',
                     get: function() {
                         return {'discl 1': true};
                     }
@@ -139,6 +140,7 @@ describe('plugins.Disclaimer', function() {
             describe('when two disclaimers', function() {
                 beforeEach(function() {
                     records = [{
+                        id: 'bar',
                         get: function() {
                             return {'discl 1': true, 'discl 2': true};
                         }
@@ -162,6 +164,7 @@ describe('plugins.Disclaimer', function() {
             var record;
             beforeEach(function() {
                 record = {
+                    id: 'bar',
                     get: function() {
                         return {'discl 1': true};
                     }
@@ -202,6 +205,7 @@ describe('plugins.Disclaimer', function() {
             describe('when two disclaimers', function() {
                 beforeEach(function() {
                     record = {
+                        id: 'bar',
                         get: function() {
                             return {'discl 1': true, 'discl 2': true};
                         }
