@@ -192,7 +192,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         for (var i in layers) {
             size++;
             // only add an item for new editable layers
-            if (alreadyAvailableItems.indexOf(i) == -1) {
+            if (alreadyAvailableItems.indexOf(parseInt(i)) == -1) {
                 this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
                     menu.add(this.createMenuItem(layer, geometryType));
                 }).createDelegate(this, [layers[i]], true));
@@ -243,14 +243,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         newFeatureBtn.setText(newFeatureBtn.initialConfig.text);
                     }
                     if (this.editorGrid &&
-                        this.editorGrid.store.feature.attributes.__layer_id__.toString() == item.layerId) {
+                        this.editorGrid.store.feature.attributes.__layer_id__ == item.layerId) {
                         this.closeEditing();
                     }
                 },
                 scope: this
             }
         });
-        window.menu = menu;
         var newFeatureBtn = new Ext.SplitButton({
             text: this.createBtnText,
             enableToggle: true,
@@ -318,7 +317,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             text: layer.attributes.text,
             group: 'create_layer',
             enableToggle: true,
-            layerId: layer.attributes.layer_id.toString(),
+            layerId: layer.attributes.layer_id,
             control: control,
             listeners: {
                 checkchange: function(item, checked) {
