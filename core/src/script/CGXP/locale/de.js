@@ -68,7 +68,7 @@ GeoExt.Lang.add("de", {
         authenticationFailureText: "Benutzername oder Passwort fehlerhaft. Bitte geben Sie Ihre Daten erneut ein.",
         loggedAsText: "Angemeldet als <b>${user}</b>",
         logoutText: "Abmelden",
-        loginText: "Anmelden",
+        buttonText: "Anmelden",
         usernameText: "Benutzername",
         passwordText: "Passwort"
     },
@@ -78,7 +78,7 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Redlining.prototype": {
-        redliningText: "Zeichnen"
+        buttonText: "Zeichnen"
     },
 
     "cgxp.plugins.MapOpacitySlider.prototype": {
@@ -86,9 +86,9 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Legend.prototype": {
-        legendbuttonText: "Legende",
-        legendbuttonTooltip: "Legende anzeigen",
-        legendwindowTitle: "Legende"
+        buttonText: "Legende",
+        tooltipText: "Legende anzeigen",
+        titleText: "Legende"
     },
 
     "cgxp.plugins.ScaleChooser.prototype": {

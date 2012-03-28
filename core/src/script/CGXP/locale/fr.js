@@ -68,7 +68,7 @@ GeoExt.Lang.add("fr", {
         authenticationFailureText: "Impossible de se connecter.",
         loggedAsText: "Connecté en tant que ${user}",
         logoutText: "Déconnexion",
-        loginText: "Connexion",
+        buttonText: "Connexion",
         usernameText: "Nom d'utilisateur",
         passwordText: "Mot de passe"
     },
@@ -78,7 +78,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Redlining.prototype": {
-        redliningText: "Surlignage"
+        buttonText: "Surlignage"
     },
 
     "cgxp.plugins.MapOpacitySlider.prototype": {
@@ -86,9 +86,9 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Legend.prototype": {
-        legendbuttonText: "Légende",
-        legendbuttonTooltip: "Afficher la légende de la carte",
-        legendwindowTitle: "Légende"
+        buttonText: "Légende",
+        tooltipText: "Afficher la légende de la carte",
+        titleText: "Légende"
     },
 
     "cgxp.plugins.ScaleChooser.prototype": {

@@ -16,9 +16,7 @@
  */
 
 /**
- * @requires plugins/Tool.js
- * @include CGXP/widgets/tool/Button.js
- * @include CGXP/widgets/tool/Window.js
+ * @requires CGXP/plugins/Panel.js
  */
 
 /** api: (define)
@@ -27,7 +25,7 @@
  */
 
 /** api: (extends)
- *  plugins/Tool.js
+ *  cgxp/plugins/Panel.js
  */
 Ext.namespace("cgxp.plugins");
 
@@ -36,15 +34,10 @@ Ext.namespace("cgxp.plugins");
  *
  *    Provides an action that opens a login form panel.
  */
-cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.Login = Ext.extend(cgxp.plugins.Panel, {
 
     /** api: ptype = cgxp_login */
     ptype: "cgxp_login",
-
-    /** api: config[toggleGroup]
-     *  The group this toggle button is member of.
-     */
-    toggleGroup: null,
 
     /** api: config[loginURL]
      *  URL of the login service.
@@ -64,33 +57,25 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     button: null,
     loginForm: null,
 
+    buttonText: "Login",
+    buttonTooltipText: undefined,
+    titleText: undefined,
+
     authenticationFailureText: "Impossible to connect.",
     loggedAsText: "Logged in as ${user}",
     logoutText: "Logout",
-    loginText: "Login",
     usernameText: "Username",
     passwordText: "Password",
+
+    outputConfig: {
+        width: 250
+    },
 
     /** api: method[addActions]
      */
     addActions: function() {
-        this.button = new Ext.Button({
-            text: this.loginText,
-            formBind: true,
-            handler: this.submitForm,
-            scope: this
-        });
-        this.loginForm = this.createLoginForm();
-
-        var loginWindow = new cgxp.tool.Window({
-            width: 250,
-            items: this.loginForm
-        });
-        loginWindow.render(Ext.getBody());
-
-        var loginButton;
         if (this.username) {
-            loginButton = [
+            return cgxp.plugins.Login.superclass.addActions.apply(this, [[
                 new Ext.Toolbar.TextItem({
                     text: OpenLayers.String.format(this.loggedAsText, {user : this.username})
                 }),
@@ -106,17 +91,25 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                     },
                     scope: this
                 })
-            ];
-        } else {
-            loginButton = new cgxp.tool.Button({
-                text: this.loginText,
-                enableToggle: true,
-                toggleGroup: this.toggleGroup,
-                window: loginWindow
-            });
+            ]]);
+        } 
+        else {
+            return cgxp.plugins.Login.superclass.addActions.apply(this, arguments);
         }
+    },
 
-        return cgxp.plugins.Login.superclass.addActions.apply(this, [loginButton]);
+    /** api: method[addOutput]
+     */
+    addOutput: function() {
+        this.button = new Ext.Button({
+            text: this.buttonText,
+            formBind: true,
+            handler: this.submitForm,
+            scope: this
+        });
+
+        this.loginForm = this.createLoginForm();
+        return cgxp.plugins.Login.superclass.addOutput.call(this, this.loginForm);
     },
 
     createLoginForm: function() {
@@ -127,6 +120,9 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             url: this.loginURL,
             defaultType: 'textfield',
             monitorValid: true,
+            autoScroll: false,
+            autoHeight: true,
+            ctCls: 'no-background',
             defaults: {
                 enableKeyEvents: true,
                 listeners: {

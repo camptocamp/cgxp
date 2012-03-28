@@ -1,0 +1,169 @@
+<html>
+<head>
+    <title>Panel example</title>
+
+    <link rel="stylesheet" type="text/css" href="../../ext/Ext/resources/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="../../ext/Ext/resources/css/xtheme-gray.css" />
+    <link rel="stylesheet" type="text/css" href="../../openlayers/theme/default/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../geoext/resources/css/gxtheme-gray.css" />
+    <link rel="stylesheet" type="text/css" href="../../geoext.ux/ux/Measure/resources/css/measure.css" />
+    <link rel="stylesheet" type="text/css" href="../../sandbox/FeatureEditing/resources/css/feature-editing.css" />
+    <link rel="stylesheet" type="text/css" href="../../styler/theme/css/styler.css" />
+    <link rel="stylesheet" type="text/css" href="../../gxp/src/theme/all.css" />
+    <link rel="stylesheet" type="text/css" href="../../core/src/theme/all.css" />
+
+    <script type="text/javascript" src="../../ext/Ext/adapter/ext/ext-base-debug.js"></script>
+    <script type="text/javascript" src="../../ext/Ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../geoext/lib/GeoExt/Lang.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/SingleFile.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Console.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes/Class.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes/Pixel.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes/Bounds.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes/LonLat.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes/Element.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/BaseTypes/Size.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Util.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Lang.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Renderer.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Renderer/Elements.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Renderer/VML.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Animation.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Tween.js"></script>
+    <script type="text/javascript" src="../../gxp/src/script/widgets/Viewer.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Events.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Map.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Projection.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Layer.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Layer/HTTPRequest.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Tile.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Tile/Image.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Layer/Grid.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Handler.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Handler/Click.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Handler/Drag.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Handler/Box.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Handler/MouseWheel.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Control.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Control/ZoomBox.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Control/DragPan.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Control/Navigation.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Control/Attribution.js"></script>
+    <script type="text/javascript" src="../../gxp/src/script/plugins/LayerSource.js"></script>
+    <script type="text/javascript" src="../../gxp/src/script/plugins/OLSource.js"></script>
+    <script type="text/javascript" src="../../ext/Ext/src/locale/ext-lang-en.js"></script>
+    <script type="text/javascript" src="../../gxp/src/script/util.js"></script>
+    <script type="text/javascript" src="../../geoext/lib/GeoExt/state/PermalinkProvider.js"></script>
+    <script type="text/javascript" src="../../geoext/lib/GeoExt/widgets/MapPanel.js"></script>
+    <script type="text/javascript" src="../../geoext/lib/GeoExt/data/LayerStore.js"></script>
+    <script type="text/javascript" src="../../geoext/lib/GeoExt/data/LayerReader.js"></script>
+    <script type="text/javascript" src="../../geoext/lib/GeoExt/data/LayerRecord.js"></script>
+    <script type="text/javascript" src="../../gxp/src/script/plugins/Tool.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Layer/XYZ.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Layer/OSM.js"></script>
+    <script type="text/javascript" src="../../openlayers/lib/OpenLayers/Renderer/SVG.js"></script>
+    <script type="text/javascript" src="../src/script/CGXP/plugins/Panel.js"></script>
+    <script type="text/javascript" src="../src/script/CGXP/plugins/MenuShortcut.js"></script>
+
+<script>
+Ext.namespace("cgxp.plugins");
+cgxp.plugins.Ex = Ext.extend(cgxp.plugins.Panel, {
+    ptype: "cgxp_ex",
+
+    buttonText: "By button",
+    buttonTooltipText: "Example tootltip",
+    titleText: "My title",
+
+
+    outputConfig: {
+        bodyCssClass: 'ex'
+    },
+
+    /** api: method[addOutput]
+     */
+    addOutput: function() {
+        return cgxp.plugins.Ex.superclass.addOutput.call(this, {
+            ctCls: 'no-background',
+            bodyCssClass: 'no-background',
+            border: false,
+            html: "Example panel that place in defferant places"
+        });
+    }
+});
+
+Ext.preg(cgxp.plugins.Ex.prototype.ptype, cgxp.plugins.Ex);
+
+app = new gxp.Viewer({
+    portalConfig: {
+        layout: "border",
+        items: ["app-map",
+        {
+            id: "featuregrid-container",
+            xtype: "panel",
+            layout: "fit",
+            region: "south",
+            height: 160,
+            split: true,
+            collapseMode: "mini",
+            hidden: true,
+            bodyStyle: 'background-color: transparent;'
+        }, {
+            layout: "accordion",
+            id: "left-panel",
+            region: "west",
+            width: 300,
+            minWidth: 300,
+            split: true,
+            collapseMode: "mini",
+            border: false,
+            defaults: {
+                width: 300
+            },
+            items: []
+        }]
+    },
+
+    // configuration of all tool plugins for this application
+    tools: [{
+        ptype: "cgxp_ex",
+        outputTarget: "left-panel"
+    }, {
+        ptype: "cgxp_ex",
+        anchorPosition: "tl-tl",
+        anchorTp: "map",
+        anchorOffset: [10, 40]
+    }, {
+        ptype: "cgxp_menushortcut",
+        type: '->'
+    }, {
+        ptype: "cgxp_ex",
+        actionTarget: "map.tbar"
+    }],
+
+    // layer sources
+    sources: {
+        "olsource": {
+            ptype: "gxp_olsource"
+        }
+    },
+
+    // map and layers
+    map: {
+        id: "app-map",
+        layers: [{
+            source: "olsource",
+            type: "OpenLayers.Layer.OSM"
+        }],
+        controls: [
+            new OpenLayers.Control.Navigation({zoomWheelOptions: {interval: 250}}),
+            new OpenLayers.Control.Attribution()
+        ]
+    }
+});
+
+</script>
+</head>
+<body>
+</body>
+</html>
