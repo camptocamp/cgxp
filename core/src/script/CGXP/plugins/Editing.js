@@ -242,7 +242,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         newFeatureBtn.activeItem = null;
                         newFeatureBtn.setText(newFeatureBtn.initialConfig.text);
                     }
-                }
+                    if (this.editorGrid &&
+                        this.editorGrid.store.feature.attributes.__layer_id__.toString() == item.layerId) {
+                        this.closeEditing();
+                    }
+                },
+                scope: this
             }
         });
         window.menu = menu;
