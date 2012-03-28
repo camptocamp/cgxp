@@ -91,6 +91,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     win: null,
 
+    /** private: property[newFeatureBtn]
+     *  ``Ext.form.SplitButton``
+     *  The 'create an new feature' button.
+     */
+    newFeatureBtn: null,
+
     /** api: config[helpText]
      *  ``String``
      *  The text to the top of the editing window (i18n).
@@ -110,6 +116,19 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     createBtnText: 'Create a new feature',
 
+    /** private: config[pendingRequests]
+     *  ``GeoExt.data.AttributeStore``
+     *  The list of pendingRequests (actually the attribute stores)
+     */
+    pendingRequests: null,
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        cgxp.plugins.Editing.superclass.constructor.apply(this, arguments);
+        this.pendingRequests = [];
+    },
+
     /** private: method[init]
      */
     init: function() {
@@ -119,16 +138,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.addEditingLayer();
         this.createGetFeatureControl();
 
+        this.newFeatureBtn = this.createNewFeatureBtn();
         var win = this.win = new Ext.Window({
             width: 300,
             border: false,
             closable: false,
             plain: true,
             resizable: false,
+            disabled: true,
             items: [{
                 xtype: 'box',
                 html: this.helpText + '<hr />'
-            }, this.createNewFeatureBtn()]
+            }, this.newFeatureBtn]
         });
         this.target.mapPanel.on({
             'render': function() {
@@ -136,6 +157,59 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 win.anchorTo.defer(100, win, [this.body, 'tl-tl', [55, 10]]);
             }
         });
+
+        var portal = this.target;
+        portal.on({
+            ready: function() {
+                var tree = portal.tools[this.layerTreeId].tree;
+                tree.on({
+                    checkchange: this.manageLayers,
+                    addgroup: this.manageLayers,
+                    removegroup: this.manageLayers,
+                    scope: this
+                });
+            },
+            scope: this
+        });
+    },
+
+    /** private: manageLayers
+     *  Checks if there are editable layers, enables or disables the editing
+     *  window and updates the editable layers list in the create new feature
+     *  button.
+     */
+    manageLayers: function() {
+        var layers = this.getEditableLayers();
+        var size = 0;
+        var menu = this.newFeatureBtn.menu;
+        this.abortPendingRequests();
+        var alreadyAvailableItems = [];
+        menu.items.each(function(item) {
+            if (!item.layerId) {
+                return;
+            }
+            // remove items that are not in the layers list anymore
+            if (!layers[item.layerId]) {
+                menu.remove(item);
+            } else {
+                alreadyAvailableItems.push(item.layerId);
+            }
+        });
+        for (var i in layers) {
+            size++;
+            // only add an item for new editable layers
+            if (alreadyAvailableItems.indexOf(parseInt(i)) == -1) {
+                this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
+                    menu.add(this.createMenuItem(layer, geometryType));
+                }).createDelegate(this, [layers[i]], true));
+            }
+        }
+        this.win.setDisabled(size === 0);
+        if (size === 0) {
+            this.newFeatureBtn.toggle(false);
+            this.newFeatureBtn.setText(this.createBtnText);
+            this.closeEditing();
+        }
     },
 
     /** private: method[addEditingLayer]
@@ -165,30 +239,23 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[createNewFeatureBtn]
      */
     createNewFeatureBtn: function() {
-        function manageMenuItems() {
-            menu.removeAll();
-            menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
-            var layers = this.getEditableLayers();
-            for (var i in layers) {
-                this.getAttributesStore(layers[i].attributes.layer_id, null, function(store, geometryType) {
-                    menu.add(this.createMenuItem(layers[i], geometryType));
-                });
+        var menu = new Ext.menu.Menu({
+            items: ['<b class="menu-title">' + this.layerMenuText + '</b>'],
+            listeners: {
+                beforeremove: function(menu, item) {
+                    if (newFeatureBtn.activeItem == item) {
+                        newFeatureBtn.toggle(false);
+                        newFeatureBtn.activeItem = null;
+                        newFeatureBtn.setText(newFeatureBtn.initialConfig.text);
+                    }
+                    if (this.editorGrid &&
+                        this.editorGrid.store.feature.attributes.__layer_id__ == item.layerId) {
+                        this.closeEditing();
+                    }
+                },
+                scope: this
             }
-        }
-
-        var portal = this.target;
-        portal.on({
-            ready: function() {
-                var tree = portal.tools[this.layerTreeId].tree;
-                tree.on({
-                    addgroup: manageMenuItems.createDelegate(this),
-                    removegroup: manageMenuItems.createDelegate(this)
-                });
-            },
-            scope: this
         });
-
-        var menu = new Ext.menu.Menu({});
         var newFeatureBtn = new Ext.SplitButton({
             text: this.createBtnText,
             enableToggle: true,
@@ -235,7 +302,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             this.editingLayer, Handler, {
                 featureAdded: OpenLayers.Function.bind(function(f) {
                     control.deactivate();
-                    newFeatureBtn.toggle(false);
+                    this.newFeatureBtn.toggle(false);
                     f.attributes.__layer_id__ =
                         layer.attributes.layer_id;
                     var store = this.getAttributesStore(
@@ -256,6 +323,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             text: layer.attributes.text,
             group: 'create_layer',
             enableToggle: true,
+            layerId: layer.attributes.layer_id,
             control: control,
             listeners: {
                 checkchange: function(item, checked) {
@@ -317,6 +385,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 var layerIds = [];
                 for (var i in self.getEditableLayers()) {
                     layerIds.push(i);
+                }
+                if (layerIds.length === 0) {
+                    return;
                 }
                 options.url = baseURL + layerIds.join(',');
                 // ensure that there's no unsaved modification before sending
@@ -387,10 +458,25 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 });
                 callback.call(this, store, geometryType);
             },
+            beforeload: function(store) {
+                this.pendingRequests.push(store);
+            },
             scope: this
         });
         store.load();
         return store;
+    },
+
+    /** private: method[abortPendingRequests]
+     *  Aborts any pending xsd request.
+     */
+    abortPendingRequests: function() {
+        Ext.each(this.pendingRequests, function(store) {
+            // destroying the store will destroy the corresponding proxy, and
+            // the corresponding active requests
+            store.destroy();
+        });
+        this.pendingRequests = [];
     },
 
     /** private: method[showAttributesEditingWindow]
