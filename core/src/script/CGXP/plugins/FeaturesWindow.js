@@ -18,6 +18,7 @@
 /*
  * @include GeoExt/data/FeatureStore.js
  * @include GeoExt.ux/Ext.ux.grid.GridMouseEvents.js
+ * @include Ext/examples/ux/RowExpander.js
  */
 
 /** api: (define)
@@ -132,7 +133,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         Ext.each(features, function(feature) {
             var detail = [],
                 attributes = feature.attributes;
-            detail.push('<table>');
+            detail.push('<table class="detail">');
             for (var k in attributes) {
                 if (attributes.hasOwnProperty(k)) {
                     if (attributes[k]) {
@@ -179,12 +180,9 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 'detail'
             ]
         });
-        function addTooltip(value, metadata, record) {
-            var detail = record.get('detail');
-            detail = detail.replace(/\"/g,"'");
-            metadata.attr = 'ext:qtip="' + detail + '" ext:anchor="left"';
-            return value;
-        }
+        var rowexpander = new Ext.ux.grid.RowExpander({
+            tpl: new Ext.Template('{detail}')
+        });
 
         var groupTextTpl = [
             '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "',
@@ -196,12 +194,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         var grid = new Ext.grid.GridPanel({
             border: false,
             store: store,
-            columns: [{
+            columns: [
+                rowexpander,
+            {
                 dataIndex: 'type',
                 hidden: true
             }, {
-                dataIndex: 'id',
-                renderer: addTooltip
+                dataIndex: 'id'
             }],
             view: new Ext.grid.GroupingView({
                 forceFit: true,
@@ -220,8 +219,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             },
             plugins: [
-                Ext.ux.grid.GridMouseEvents
+                Ext.ux.grid.GridMouseEvents,
+                rowexpander
             ],
+            disableSelection: true,
             hideHeaders: true
         });
         var first = false;
@@ -259,27 +260,3 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     }
 });
 Ext.preg(cgxp.plugins.FeaturesWindow.prototype.ptype, cgxp.plugins.FeaturesWindow);
-
-// The following code allows user to keep the tooltip shown when hovering it
-Ext.sequence(Ext.ToolTip.prototype, 'afterRender', function () {
-    this.mon(this.el, 'mouseover', function () {
-        this.clearTimer('hide');
-        this.clearTimer('dismiss');
-    }, this);
-    this.mon(this.el, 'mouseout', function () {
-        this.clearTimer('show');
-        if (this.autoHide !== false) {
-            this.delayHide();
-        }
-    }, this);
-});
-
-// The following code fixes a bug in ExtJS with which the 'ext:anchor' attribute
-// is not taken into account
-Ext.sequence(Ext.QuickTip.prototype, 'onTargetOver', function (e) {
-    var t = e.getTarget();
-    if(!t || t.nodeType !== 1 || t == document || t == document.body){
-        return;
-    }
-    this.origAnchor = this.anchor;
-});
