@@ -122,6 +122,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     pendingRequests: null,
 
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        cgxp.plugins.Editing.superclass.constructor.apply(this, arguments);
+        this.pendingRequests = [];
+    },
+
     /** private: method[init]
      */
     init: function() {
@@ -130,7 +137,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.map = this.target.mapPanel.map;
         this.addEditingLayer();
         this.createGetFeatureControl();
-        this.pendingRequests = [];
 
         this.newFeatureBtn = this.createNewFeatureBtn();
         var win = this.win = new Ext.Window({
