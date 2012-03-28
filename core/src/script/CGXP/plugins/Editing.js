@@ -176,14 +176,27 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var layers = this.getEditableLayers();
         var size = 0;
         var menu = this.newFeatureBtn.menu;
-        menu.removeAll();
         this.abortPendingRequests();
-        menu.add('<b class="menu-title">' + this.layerMenuText + '</b>');
+        var alreadyAvailableItems = [];
+        menu.items.each(function(item) {
+            if (!item.layerId) {
+                return;
+            }
+            // remove items that are not in the layers list anymore
+            if (!layers[item.layerId]) {
+                menu.remove(item);
+            } else {
+                alreadyAvailableItems.push(item.layerId);
+            }
+        });
         for (var i in layers) {
             size++;
-            this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
-                menu.add(this.createMenuItem(layer, geometryType));
-            }).createDelegate(this, [layers[i]], true));
+            // only add an item for new editable layers
+            if (alreadyAvailableItems.indexOf(i) == -1) {
+                this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
+                    menu.add(this.createMenuItem(layer, geometryType));
+                }).createDelegate(this, [layers[i]], true));
+            }
         }
         this.win.setDisabled(size === 0);
         if (size === 0) {
@@ -220,7 +233,19 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[createNewFeatureBtn]
      */
     createNewFeatureBtn: function() {
-        var menu = new Ext.menu.Menu({});
+        var menu = new Ext.menu.Menu({
+            items: ['<b class="menu-title">' + this.layerMenuText + '</b>'],
+            listeners: {
+                beforeremove: function(menu, item) {
+                    if (newFeatureBtn.activeItem == item) {
+                        newFeatureBtn.toggle(false);
+                        newFeatureBtn.activeItem = null;
+                        newFeatureBtn.setText(newFeatureBtn.initialConfig.text);
+                    }
+                }
+            }
+        });
+        window.menu = menu;
         var newFeatureBtn = new Ext.SplitButton({
             text: this.createBtnText,
             enableToggle: true,
@@ -288,6 +313,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             text: layer.attributes.text,
             group: 'create_layer',
             enableToggle: true,
+            layerId: layer.attributes.layer_id.toString(),
             control: control,
             listeners: {
                 checkchange: function(item, checked) {
