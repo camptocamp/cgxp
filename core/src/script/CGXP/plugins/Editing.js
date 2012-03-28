@@ -462,7 +462,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[abortPendingRequests]
-     *  This method aborts xsd request if required.
+     *  Aborts any pending xsd request.
      */
     abortPendingRequests: function() {
         Ext.each(this.pendingRequests, function(store) {
