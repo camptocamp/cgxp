@@ -116,6 +116,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     createBtnText: 'Create a new feature',
 
+    /** api: config[forbiddenText]
+     *  ``String``
+     *  The text displayed when not allowed action is done.
+     */
+    forbiddenText: 'You are not allowed to do this action!',
+
     /** private: config[pendingRequests]
      *  ``GeoExt.data.AttributeStore``
      *  The list of pendingRequests (actually the attribute stores)
@@ -500,7 +506,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 done: function(panel, e) {
                     var feature = e.feature;
-                    this.save(feature, this.closeEditing);
+                    this.save(feature);
                 },
                 cancel: function(panel, e) {
                     var feature = e.feature, modified = e.modified;
@@ -549,15 +555,36 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[save]
      *  Saves the modifications or addition to the server
      */
-    save: function(feature, callback) {
+    save: function(feature) {
         var protocol = new OpenLayers.Protocol.HTTP({
             url: this.layersURL + feature.attributes.__layer_id__,
             format: new OpenLayers.Format.GeoJSON()
         });
+        var self = this;
+        function callback(response) {
+            if (response.priv.status == 403) {
+                Ext.MessageBox.show({
+                    msg: self.forbiddenText,
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR
+                });
+            }
+        }
         protocol.commit([feature], {
-            callback: function() {
-                this.closeEditing();
-                this.redrawWMSLayers(feature.attributes.__layer_id__);
+            create: {
+                callback: callback
+            },
+            update: {
+                callback: callback
+            },
+            'delete': {
+                callback: callback
+            },
+            callback: function(response) {
+                if (response.code === 1) {
+                    this.closeEditing();
+                    this.redrawWMSLayers(feature.attributes.__layer_id__);
+                }
             },
             scope: this
         });
