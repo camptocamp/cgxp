@@ -26,9 +26,6 @@
  *  class = FeatureWindow
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
@@ -48,20 +45,20 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     themes: null,
 
     /** private: attibute[vectorLayer]
-     * ``OpenLayers.Layer.Vector``
-     * The vector layer used to display the features.
+     *  ``OpenLayers.Layer.Vector``
+     *  The vector layer used to display the features.
      */
     vectorLayer: null,
 
     /** private: attribute[featuresWindow]
-     * ``Ext.Window``
-     * The window (popup) in which the results are shown.
+     *  ``Ext.Window``
+     *  The window (popup) in which the results are shown.
      */
     featuresWindow: null,
 
     /** private: attribute[layers]
-     * ``Array``
-     * The list of layers.
+     *  ``Array``
+     *  The list of layers.
      */
     layers: null,
 
@@ -141,10 +138,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
     /** private: method[extendFeaturesAttributes]
      *
-     * Store the `type` and `id` properties into attributes, because
-     * `FeatureStore` don't keep the type and id attribute.
-     * Also create a table for the feature `detail` to be shown on over in
-     * a tooltip.
+     *  Store the `type` and `id` properties into attributes, because
+     *  `FeatureStore` don't keep the type and id attribute.
+     *  Also create a table for the feature `detail` to be shown on over in
+     *  a tooltip.
      */
     extendFeaturesAttributes: function(features) {
         Ext.each(features, function(feature) {
@@ -178,7 +175,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[showWindow]
-     * Shows the window
+     *  Shows the window
      */
     showWindow: function(features) {
         this.extendFeaturesAttributes(features);
