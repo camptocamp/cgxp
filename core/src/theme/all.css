@@ -372,6 +372,9 @@ div.legend label {
 /* cgxp featureswindow */
 .x-grid3-row-body table.detail th {
     font-weight: bold;
+    padding-right: 4px;
+    text-align: right;
+    vertical-align: top;
 }
 .x-grid3-row-body table.detail,
 .x-grid3-row-body table.detail a:link {
