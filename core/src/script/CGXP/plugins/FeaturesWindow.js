@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Camptocamp
+ * Copyright (c) 2012 Camptocamp
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,18 +48,20 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     themes: null,
 
     /** private: attibute[vectorLayer]
-     * ``Object``
-     * The layer used to display the features.
+     * ``OpenLayers.Layer.Vector``
+     * The vector layer used to display the features.
      */
     vectorLayer: null,
 
     /** private: attribute[featuresWindow]
      * ``Ext.Window``
+     * The window (popup) in which the results are shown.
      */
     featuresWindow: null,
 
     /** private: attribute[layers]
      * ``Array``
+     * The list of layers.
      */
     layers: null,
 
@@ -108,8 +110,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             'queryresults': true
         });
 
-
-        // a ResultsPanel object has its own vector layer, which
+        // a FeaturesWindow instance has its own vector layer, which
         // is added to the map once for good
         this.vectorLayer = new OpenLayers.Layer.Vector(
             OpenLayers.Util.createUniqueID("c2cgeoportal"), {
@@ -168,7 +169,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             }
             detail.push('</table>');
             feature.attributes.detail = detail.join('');
-            // FIXME: find a better alternative (GeoExt.FeatureReader) 
             feature.attributes.type = OpenLayers.i18n(feature.type); 
 
             // use the identifierAttribute field if set
@@ -265,6 +265,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         }
         this.featuresWindow.show();
 
+        // position the attributes window the first time
+        // then it should appear at the last position the user chose
         if (first) {
             this.featuresWindow.alignTo(
                 this.target.mapPanel.body,
