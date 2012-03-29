@@ -29,17 +29,15 @@
  *  class = WMSGetFeatureInfo
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: WMSGetFeatureInfo(config)
- * Map queries (with WMS GetFeatureInfo)
  *
- * Options:
- * events - {Ext.util.Observable} The application events manager.
+ *    Map queries (with WMS GetFeatureInfo)
+ *
+ *    Options:
+ *    * events - ``Ext.util.Observable`` The application events manager.
  */
 cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
@@ -47,14 +45,14 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_wmsgetfeatureinfo",
 
     /** api: config[options]
-     * ´´Object´´
-     * Actions options
+     *  ``Object``
+     *  Actions options
      */
     options: {},
 
     /** api: config[events]
-     * ´´Object´´
-     * An Observer used to receive events.
+     *  ``Object``
+     *  An Observer used to receive events.
      */
     events: null,
 

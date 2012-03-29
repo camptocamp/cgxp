@@ -25,9 +25,6 @@
  *  class = Zoom
  */
 
-/** api: (extends)
- *  plugins/Zoom.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor

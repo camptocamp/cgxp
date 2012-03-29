@@ -28,9 +28,6 @@
  *  class = FullTextSearch
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
@@ -48,7 +45,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     loadingText: "Searching...",
 
     /** api: config[tooltip]
-     *  ´´Boolean´´
+     *  ``Boolean``
      *  Whether to display a tooltip above the search box.
      *  Default is true.
      */
@@ -70,34 +67,34 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     coordsRecenterZoom: null,
 
     /** api: config[projectionCodes]
-     * ´´Array´´
+     *  ``Array``
      *  List of EPSG codes of projections that should be used when trying to 
      *  recenter on coordinates. Leftmost projections are used preferably.
      */
     projectionCodes: [4326],
 
     /** api: config[showCenter]
-     * ´´Boolean´´
+     *  ``Boolean``
      * If true, center point is materialized when centering on coordinates
      * (default is false).
      */
     showCenter: false,
 
     /** api: config[coordsRecenteringStyle]
-     * ´´Object´´
-     * Style configuration used when recentering on coordinates.
+     *  ``Object``
+     *  Style configuration used when recentering on coordinates.
      */
     coordsRecenteringStyle: null,
 
     /** api: config[comboWidth]
-     * ´´Integer´´
-     * Width in pixels of the search combobox.
+     *  ``Integer``
+     *  Width in pixels of the search combobox.
      */
     comboWidth: 200,
 
     /** api: config[comboConfig]
-     * ´´Object´´
-     * Optional configuration of the ComboBox.
+     *  ``Object``
+     *  Optional configuration of the ComboBox.
      */
     comboConfig: null,
 
