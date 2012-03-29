@@ -32,17 +32,15 @@
  *  the same name for the geometry.
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: WFSGetFeature(config)
- * Map queries (with WFS GetFeature)
  *
- * Options:
- * events - {Ext.util.Observable} The application events manager.
+ *    Map queries (with WFS GetFeature)
+ *
+ *    Options:
+ *    * events - ``Ext.util.Observable`` The application events manager.
  */
 cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
 
@@ -100,48 +98,48 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /** api: config[options]
-     * ´´Object´´
-     * Actions options
+     *  ``Object``
+     *  Actions options
      */
     options: {},
 
     /** api: config[events]
-     * ´´Object´´
-     * An Observer used to send events.
+     *  ``Object``
+     *  An Observer used to send events.
      */
     events: null,
 
     /** api: config[geometryName]
-     * ´´String´´
-     * The geometry name
+     *  ``String``
+     *  The geometry name.
      */
     geometryName: 'geom',
 
     /** api: config[clickTolerance]
-     * ´´Integer´´
-     * Buffer around clicked point, in pixels
+     *  ``Integer``
+     *  Buffer around clicked point, in pixels.
      */
     clickTolerance: 8,
 
     /** api: config[enableWMTSLayers]
-     * ´´Boolean´´
-     * If true, WMTS layers will be queried as well.
+     *  ``Boolean``
+     *  If true, WMTS layers will be queried as well.
      */
     enableWMTSLayers: false,
 
     /** api: config[WFSTypes]
-     * ´´Array´´
-     * The queryable type on the internal server
+     *  ``Array``
+     *  The queryable type on the internal server.
      */
 
     /** api: config[externalWFSTypes]
-     * ´´Array´´
-     * The queryable type on the parent server
+     *  ``Array``
+     *  The queryable type on the parent server.
      */
 
     /** api: config[WFSURL]
-     * ´´String´´
-     * The mapserver proxy URL
+     *  ``String``
+     *  The mapserver proxy URL
      */
 
     /** api: method[addActions]

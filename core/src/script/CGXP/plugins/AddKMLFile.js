@@ -38,9 +38,6 @@
  *  the server and back.
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor

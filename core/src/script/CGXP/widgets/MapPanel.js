@@ -19,6 +19,14 @@
  * @requires GeoExt/widgets/MapPanel.js
  */
 
+/** api: (define)
+ *  module = cgxp
+ *  class = MapPanel
+ *
+ *  A specific ``GeoExt.MapPanel`` that overrides the ``getState`` method
+ *  to remove visibility- and opacity-related states from the global
+ *  state.
+ */
 Ext.namespace("cgxp");
 
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {

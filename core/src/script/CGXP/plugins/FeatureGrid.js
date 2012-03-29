@@ -35,9 +35,6 @@
  *  class = FeatureGrid
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
@@ -56,59 +53,59 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
     /** private: attibute[currentGrid]
      *  ``Object``
-     * The visible grid.
+     *  The visible grid.
      */
     currentGrid: null,
 
     /** private: attibute[vectorLayer]
-     * ´´Object´´
-     * The layer used to display the features.
+     *  ``Object``
+     *  The layer used to display the features.
      */
     vectorLayer: null,
 
     /** private: attibute[gridByType]
-     * ``Object``
-     * Stores grid by type.
+     *  ``Object``
+     *  Stores grid by type.
      */
     gridByType: {},
 
     /** private: attibute[textItem]
-     * ``Object``
-     * Component used as a status bar.
+     *  ``Object``
+     *  Component used as a status bar.
      */
     textItem: null,
 
     /** private: attibute[control]
-     * ´´Object´´
-     * The OpenLayers control used to select the features.
+     *  ``Object``
+     *  The OpenLayers control used to select the features.
      */
     control: null,
 
     /** api: config[comma]
      *  ``String``
-     * symbol used to separates the cells in csv export.
+     *  Symbol used to separates the cells in csv export.
      */
     comma: ',',
 
     /** api: config[quote]
      *  ``String``
-     * symbol used to quote the text in csv export.
+     *  Symbol used to quote the text in csv export.
      */
     quote: '"',
 
     /** api: config[events]
-     * ´´Object´´
-     * An Observer used to receive events.
-     * queryopen: sent on open query tool.
-     * queryclose: sent on closequery tool.
-     * querystarts: sent when the query button is pressed
-     * queryresults(features): sent when the result is received
+     *  ``Object``
+     *  An Observer used to receive events.
+     *  * queryopen: sent on open query tool.
+     *  * queryclose: sent on closequery tool.
+     *  * querystarts: sent when the query button is pressed
+     *  * queryresults(features): sent when the result is received
      */
     events: null,
 
     /** api: config[dummy_form]
-     * ´´Object´´
-     * fake form used for csv export
+     *  ``Object``
+     *  Fake form used for csv export.
      */
     dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
 
@@ -134,8 +131,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** public: method[csvExport]
-     * Export as a SCV by default using the rfc4180 recomantation.
-     * http://tools.ietf.org/html/rfc4180
+     *  Export as a SCV by default using the rfc4180 recomantation.
+     *  http://tools.ietf.org/html/rfc4180
      */
     csvExport: function() {
         if (this.tabpan.activeTab) {
@@ -177,12 +174,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** 
-     * public method[printExport]
-     * Export for print.
-     * Columns titles will be stored on 'col1', 'col2', ... of the page.
-     * The dataset name is 'table '.
-     * The columns names will be 'col1', 'col2', ....
+    /** public method[printExport]
+     *  Export for print.
+     *  Columns titles will be stored on 'col1', 'col2', ... of the page.
+     *  The dataset name is 'table '.
+     *  The columns names will be 'col1', 'col2', ....
      */
     printExport: function() {
         var results = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
@@ -224,8 +220,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         return results;
     },
     
-    /* private: method[getCount]
-     * Gets the result count.
+    /** private: method[getCount]
+     *  Gets the result count.
      */
     getCount: function() {
         if (!this.currentGrid) {

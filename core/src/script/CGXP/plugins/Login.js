@@ -26,9 +26,6 @@
  *  class = Login
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
