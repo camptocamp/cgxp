@@ -63,11 +63,24 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     layers: null,
 
+    /** api: config[highlightStyle]
+     *  ``Object``
+     *  A style properties object to be used to show features on the map when
+     *  hovering the row in the grid.
+     */
+    highlightStyle: null,
+
     windowTitleText: "Results",
     itemsText: "Items",
     itemText: "Item",
 
-    init: function() {
+    init: function(config) {
+        this.highlightStyle = OpenLayers.Util.applyDefaults(
+            this.highlightStyle || {
+                fillColor: 'red',
+                strokeColor: 'red'
+            }, OpenLayers.Feature.Vector.style['default']
+        );
         cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
 
@@ -103,10 +116,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 displayInLayerSwitcher: false,
                 alwaysInRange: true,
                 styleMap: new OpenLayers.StyleMap({
-                    'default': OpenLayers.Util.applyDefaults({
-                        fillColor: 'red',
-                        strokeColor: 'red'
-                    }, OpenLayers.Feature.Vector.style['default'])
+                    'default': this.highlightStyle
                 })
             }
         );
