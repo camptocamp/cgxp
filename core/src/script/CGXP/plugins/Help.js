@@ -24,9 +24,6 @@
  *  class = Help
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor

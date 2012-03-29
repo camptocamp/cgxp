@@ -1,1 +1,5 @@
 *.un~
+/core/src/doc/distribute-*.tar.gz
+/core/src/doc/env/
+/core/src/doc/lib/plugins/
+/core/src/doc/lib/widgets/

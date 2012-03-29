@@ -42,6 +42,10 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
 });
 Ext.tree.TreePanel.nodeTypes.cgxp_layerparam = cgxp.tree.LayerParamNode;
 
+/** api: (define)
+ *  module = cgxp.tree
+ *  class = LayerTree
+ */
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     
     baseCls: 'layertree',
