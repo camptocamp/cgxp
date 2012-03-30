@@ -95,6 +95,13 @@ GeoExt.Lang.add("de", {
         labelText: "Massstab: "
     },
 
+    "cgxp.plugins.Editing.prototype": {
+        helpText: "Klicken Sie auf die Karten um <b>ein bestehendes Element zu editieren</b>, oder",
+        layerMenuText: "Wählen Sie eine Ebene",
+        createBtnText: "Erstellen Sie ein neues Element",
+        forbiddenText: "Diese Aktion ist nicht erlaubt !"
+    },
+
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Nach oben",
         movedownText: "Nach unten",
