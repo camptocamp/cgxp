@@ -1,17 +1,5 @@
 describe('plugins.FeaturesWindow', function() {
     var fw;
-    afterEach(function() {
-        // clean up the DOM, which must be Ext-free
-        // after each run
-        var cmp = fw && fw.output && fw.output[0];
-        while(cmp && cmp.ownerCt) {
-            cmp = cmp.ownerCt;
-        }
-        if(cmp) {
-            cmp.destroy();
-        }
-        fw = null;
-    });
     describe('when calling constructor', function() {
         beforeEach(function() {
             fw = new cgxp.plugins.FeaturesWindow();

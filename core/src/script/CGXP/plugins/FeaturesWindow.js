@@ -16,6 +16,7 @@
  */
 
 /*
+ * @requires plugins/Tool.js
  * @include GeoExt/data/FeatureStore.js
  * @include GeoExt.ux/Ext.ux.grid.GridMouseEvents.js
  * @include Ext/examples/ux/RowExpander.js
@@ -31,7 +32,7 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: FeaturesWindow(config)
  *
- *  This plugin shows query results in a window (popup) using a grouping grid.
+ *      This plugin shows query results in a window (popup) using a grouping grid.
  */   
 cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
@@ -62,10 +63,16 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     layers: null,
 
+    /** private: attribute[featureGroupingStoreClass]
+     *  ``Object``
+     *  The object class to use the store.
+     */
+    featureGroupingStoreClass: null,
+
     /** api: config[highlightStyle]
      *  ``Object``
      *  A style properties object to be used to show features on the map when
-     *  hovering the row in the grid.
+     *  hovering the row in the grid (optional).
      */
     highlightStyle: null,
 
@@ -73,7 +80,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     itemsText: "Items",
     itemText: "Item",
 
-    init: function(config) {
+    init: function(target) {
         this.highlightStyle = OpenLayers.Util.applyDefaults(
             this.highlightStyle || {
                 fillColor: 'red',
@@ -86,7 +93,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         var themes = Ext.apply(this.themes.local, this.themes.external);
         var layers = {};
         function browseThemes(node) {
-            for (var i = 0, len = node.length; i < len; i++) {
+            for (var i=0, len=node.length; i<len; i++) {
                 var child = node[i];
                 if (child.children) {
                     browseThemes(child.children);
@@ -102,11 +109,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     viewerReady: function() {
         var map = this.target.mapPanel.map;
 
-        this.events.addEvents({
-            'querystarts': true,
-            'queryresults': true
-        });
-
         // a FeaturesWindow instance has its own vector layer, which
         // is added to the map once for good
         this.vectorLayer = new OpenLayers.Layer.Vector(
@@ -119,14 +121,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             }
         );
 
-        this.events.on('queryopen', function() {
-        }, this);
-     
-        this.events.on('queryclose', function() {
-        }, this);
-       
         this.events.on('querystarts', function() {
-            this.featuresWindow && this.featuresWindow.removeAll();
+            if (this.featuresWindow) {
+                this.featuresWindow.removeAll();
+            }
         }, this);
 
         this.events.on('queryresults', function(features) {
@@ -149,19 +147,17 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 attributes = feature.attributes;
             detail.push('<table class="detail">');
             for (var k in attributes) {
-                if (attributes.hasOwnProperty(k)) {
-                    if (attributes[k]) {
-                        detail = detail.concat([
-                            '<tr>',
-                            '<th>',
-                            OpenLayers.i18n(k),
-                            '</th>',
-                            '<td>',
-                            attributes[k],
-                            '</td>',
-                            '</tr>'
-                        ]);
-                    }
+                if (attributes.hasOwnProperty(k) && attributes[k]) {
+                    detail = detail.concat([
+                        '<tr>',
+                        '<th>',
+                        OpenLayers.i18n(k),
+                        '</th>',
+                        '<td>',
+                        attributes[k],
+                        '</td>',
+                        '</tr>'
+                    ]);
                 }
             }
             detail.push('</table>');
@@ -170,7 +166,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
             // use the identifierAttribute field if set
             var identifier = this.layers[feature.type].identifierAttribute;
-            feature.attributes.id = identifier ? feature.attributes[identifier] : feature.id;
+            feature.attributes.id = identifier ?
+                feature.attributes[identifier] : feature.id;
         }, this);
     },
 
@@ -179,12 +176,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     showWindow: function(features) {
         this.extendFeaturesAttributes(features);
-
-        var FeatureGroupingStore = Ext.extend(
-            Ext.data.GroupingStore,
-            GeoExt.data.FeatureStoreMixin()
-        );
-        var store = new FeatureGroupingStore({
+        if (!this.featureGroupingStoreClass) {
+            this.featureGroupingStoreClass = Ext.extend(
+                Ext.data.GroupingStore,
+                GeoExt.data.FeatureStoreMixin()
+            );
+        }
+        var store = new this.featureGroupingStoreClass({
             features: features,
             groupField: 'type',
             fields: [
