@@ -41,10 +41,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_googleearthview */
     ptype: "cgxp_googleearthview",
 
-    /** api: Google Earth API key
-     */
-    apiKey: null,
-
     /** api[config]: actionConfig
      *  ``Object``
      *  Config object for the action created by this plugin.
@@ -65,7 +61,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
     init: function() {
         gxp.plugins.GoogleEarth.loader.loadScript({
-            apiKey: this.apiKey,
             callback: Ext.emptyFn,
             errback: Ext.emptyFn,
             failure: Ext.emptyFn,
