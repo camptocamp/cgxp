@@ -58,6 +58,12 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     username: null,
 
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     button: null,
     loginForm: null,
 
@@ -91,7 +97,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 new Ext.Toolbar.TextItem({
                     text: OpenLayers.String.format(this.loggedAsText, {user : this.username})
                 }),
-                new Ext.Button({
+                new Ext.Button(Ext.apply({
                     text: this.logoutText,
                     handler: function() {
                         Ext.Ajax.request({
@@ -102,15 +108,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                         });
                     },
                     scope: this
-                })
+                }, this.actionConfig))
             ];
         } else {
-            loginButton = new cgxp.tool.Button({
+            loginButton = new cgxp.tool.Button(Ext.apply({
                 text: this.loginText,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
                 window: loginWindow
-            });
+            }, this.actionConfig));
         }
 
         return cgxp.plugins.Login.superclass.addActions.apply(this, [loginButton]);
