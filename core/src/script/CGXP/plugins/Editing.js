@@ -409,6 +409,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         fn: function(button) {
                             if(button === "yes") {
                                 doRead.call(this, options);
+                            } else {
+                                // we need to reset the cursor manually
+                                OpenLayers.Element.removeClass(self.map.viewPortDiv, "olCursorWait");
                             }
                         },
                         scope: this
