@@ -45,6 +45,12 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
      */
     toggleGroup: null,
 
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     legendPanel: null,
     legendPanelAdded: false,
 
@@ -89,13 +95,13 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
 
-        var button = new cgxp.tool.Button({
+        var button = new cgxp.tool.Button(Ext.apply({
             text: this.legendbuttonText,
             tooltip: this.legendbuttonTooltip,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             window: legendWin
-        });
+        }, this.actionConfig));
         return cgxp.plugins.Legend.superclass.addActions.apply(this, [button]);
     }
 
