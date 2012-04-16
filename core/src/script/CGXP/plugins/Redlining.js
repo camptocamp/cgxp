@@ -48,6 +48,12 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     toggleGroup: null,
 
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     redliningPanel: null,
 
     redliningWindow: null,
@@ -110,12 +116,12 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
         }); 
 
         var button = new cgxp.tool.Button(
-            new Ext.Action({
+            new Ext.Action(Ext.apply({
                 text: this.redliningText,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
                 window: this.redliningWindow
-            })  
+            }, this.actionConfig))
         );  
         button.on({
             'toggle': function(button) {
