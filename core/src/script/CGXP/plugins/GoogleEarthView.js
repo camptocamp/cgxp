@@ -55,6 +55,30 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      */
     size: "40%",
 
+    /** api[config]: showBordersLayer
+     */
+    showBordersLayer: null,
+
+    /** api[config]: showBuildingsLayer
+     */
+    showBuildingsLayer: null,
+
+    /** api[config]: showBuildingsLowResolutionLayer
+     */
+    showBuildingsLowResolutionLayer: null,
+
+    /** api[config]: showRoadsLayer
+     */
+    showRoadsLayer: null,
+
+    /** api[config]: showTerrainLayer
+     */
+    showTerrainLayer: null,
+
+    /** api[config]: showTreesLayer
+     */
+    showTreesLayer: null,
+
     /** private: Required intermediate container
      */
     intermediateContainer: null,
@@ -111,6 +135,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     });
 
                     this.googleEarthViewControl = new OpenLayers.Control.GoogleEarthView();
+                    var googleEarthView = this;
                     this.pluginReadyCallback = OpenLayers.Function.bind(function(gePlugin) {
 
                         // The gxp.GoogleEarthPanel fits the 3D view to the 2D view as closely as possible.
@@ -145,6 +170,26 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
                         lookAt.set(latitude, longitude, altitude, altitudeMode, heading, tilt, range);
                         gePlugin.getView().setAbstractView(lookAt);
+
+                        var layerRoot = gePlugin.getLayerRoot();
+                        if (googleEarthView.showBordersLayer !== null) {
+                            layerRoot.enableLayerById(gePlugin.LAYER_BORDERS, googleEarthView.showBordersLayer);
+                        }
+                        if (googleEarthView.showBuildingsLayer !== null) {
+                            layerRoot.enableLayerById(gePlugin.LAYER_BUILDINGS, googleEarthView.showBuildingsLayer);
+                        }
+                        if (googleEarthView.showBuildingsLowResolutionLayer !== null) {
+                            layerRoot.enableLayerById(gePlugin.LAYER_BUILDINGS_LOW_RESOLUTION, googleEarthView.showBuildingsLowResolutionLayer);
+                        }
+                        if (googleEarthView.showRoadsLayer !== null) {
+                            layerRoot.enableLayerById(gePlugin.LAYER_ROADS, googleEarthView.showRoadsLayer);
+                        }
+                        if (googleEarthView.showTerrainLayer !== null) {
+                            layerRoot.enableLayerById(gePlugin.LAYER_TERRAIN, googleEarthView.showTerrainLayer);
+                        }
+                        if (googleEarthView.showTreesLayer !== null) {
+                            layerRoot.enableLayerById(gePlugin.LAYER_TREES, googleEarthView.showTreesLayer);
+                        }
 
                         this.setGEPlugin(gePlugin);
                         this.activate();
