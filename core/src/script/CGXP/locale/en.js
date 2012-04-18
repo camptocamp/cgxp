@@ -1,3 +1,7 @@
+/*
+ * @requires GeoExt/Lang.js
+ */
+
 GeoExt.Lang.add("en", {
     
     "cgxp.plugins.AddKMLFile.prototype": {

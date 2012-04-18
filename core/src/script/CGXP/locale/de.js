@@ -1,3 +1,7 @@
+/*
+ * @requires GeoExt/Lang.js
+ */
+
 GeoExt.Lang.add("de", {
     "cgxp.plugins.Measure.prototype": {
         pointMenuText: "Punkt",
