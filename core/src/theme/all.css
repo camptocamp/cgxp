@@ -394,3 +394,19 @@ div.legend label {
 .legend_level_3 {
     margin-left: 80px;
 }
+
+/* cgxp featureswindow */
+.x-grid3-row-body table.detail th {
+    font-weight: bold;
+    padding-right: 4px;
+    text-align: right;
+    vertical-align: top;
+}
+.x-grid3-row-body table.detail,
+.x-grid3-row-body table.detail a:link {
+    color: #5f5f5f;
+}
+
+.x-grid3-row-body table.detail a:link {
+    text-decoration: underline;
+}
