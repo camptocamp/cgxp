@@ -120,10 +120,18 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      */
     createBaselayerCombo: function(map) {
 
+        var layers = map.getLayersBy('group', 'background');
+
+        if (layers.length == 1) {
+            return new Ext.BoxComponent({
+                html: '<span class="tools-baselayer-label">' + layers[0].name + '</span>'
+            });
+        }
+
         // base layer store
         var store = new GeoExt.data.LayerStore({
         //    layers: map.getLayersBy("isBaseLayer", true)
-           layers: map.getLayersBy('group', 'background')
+           layers: layers
         });
 
         var combo = new Ext.form.ComboBox({
