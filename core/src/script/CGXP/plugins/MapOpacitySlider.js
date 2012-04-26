@@ -146,11 +146,9 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
             mode: 'local',
             listeners: {
                 'select': function(combo, record, index) {
-                    if (map.baseLayer) {
-                        map.baseLayer.setVisibility(false);
-                    }
-                    map.setBaseLayer(record.getLayer());
-                }
+                    this.updateBaseLayer(map, record.getLayer());
+                },
+                scope: this
             }
         });
 
@@ -161,6 +159,16 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
         });
 
         return combo;
+    },
+
+    updateBaseLayer: function(map, newBaseLayer) {
+        if (map.allOverlays) {
+            map.layers[0].setVisibility(false);
+            map.setLayerIndex(newBaseLayer, 0);
+            map.layers[0].setVisibility(true);
+        } else {
+            map.setBaseLayer(newBaseLayer);
+        }
     },
 
     /** public: method[addActions]
@@ -177,8 +185,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
             );
             var baseLayer = map.getLayersBy('ref', this.defaultBaseLayerRef)[0];
             if (baseLayer) {
-                baseLayer.setVisibility(true);
-                map.setBaseLayer(baseLayer);
+                this.updateBaseLayer(map, baseLayer);
             }
             var mapbar = this.createMapBar(map);
             var container = Ext.DomHelper.append(mapPanel.bwrap, {
