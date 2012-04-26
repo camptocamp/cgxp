@@ -167,7 +167,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addActions: function(config) {
-        var task = new Ext.util.DelayedTask(function() {
+        this.target.addListener('ready', function() {
             var mapPanel = this.target.mapPanel;
             var map = mapPanel.map;
             Ext.each(map.getLayersBy('group', 'background'),
@@ -194,7 +194,6 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
             container.setWidth(totalWidth);
             container.setStyle({'marginLeft': (-totalWidth / 2) + 'px'});
         }, this);
-        task.delay(2000);
     }
 });
 
