@@ -99,7 +99,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      *  recenter on coordinates. Leftmost projections are used preferably.
      *  Default is ``[4326]``.
      */
-    projectionCodes: [4326],
+    projectionCodes: null,
 
     /** api: config[showCenter]
      *  ``Boolean``
@@ -128,31 +128,15 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     projections: null,
 
-    /** private: method[constructor]
-     */
-    constructor: function(config) {
-        cgxp.plugins.FullTextSearch.superclass.constructor.apply(this, arguments);
-
-        // define projections that may be used for coordinates recentering
-        this.projections = {};
-        for (var i = 0, len = this.projectionCodes.length, code; i < len; i++) {
-            code = String(this.projectionCodes[i]).toUpperCase();
-            if (code.substr(0, 5) != "EPSG:") {
-                code = "EPSG:" + code;
-            }
-            this.projections[code] = new OpenLayers.Projection(code);
-        }
-
+    init: function() {
+        cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
+        
         // style used when recentering on coordinates
         this.coordsRecenteringStyle = this.coordsRecenteringStyle || {
             pointRadius: "10",
             externalGraphic: OpenLayers.Util.getImagesLocation() + "crosshair.png"
         };
-    },
 
-    init: function() {
-        cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
-        
         // a Search object has its own vector layer, which is added
         // to the map once for good
         this.vectorLayer = new OpenLayers.Layer.Vector(
@@ -166,6 +150,19 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     viewerReady: function() {
         this.target.mapPanel.map.addLayer(this.vectorLayer);
+
+        // define projections that may be used for coordinates recentering
+        this.projections = {};
+        if (!this.projectionCodes) {
+            this.projectionCodes = [this.target.mapPanel.map.getProjection()];
+        }
+        for (var i = 0, len = this.projectionCodes.length, code; i < len; i++) {
+            code = String(this.projectionCodes[i]).toUpperCase();
+            if (code.substr(0, 5) != "EPSG:") {
+                code = "EPSG:" + code;
+            }
+            this.projections[code] = new OpenLayers.Projection(code);
+        }
     },
 
     /** private: method[addActions]
@@ -218,12 +215,15 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
                 
-                // close the loading twin box.
-                this.closeLoading.delay(10);
-                // apply the position
-                this.applyPosition.delay(1000);
+                if (this.position) {
+                    // close the loading twin box.
+                    this.closeLoading.delay(10);
+                    // apply the position
+                    this.applyPosition.delay(1000);
+                    return false;
+                }
             }
-            return !coords;
+            return true;
         }, this);
         return store;
     },
