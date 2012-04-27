@@ -580,15 +580,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             case 'zoomtoscale':
                     var n = node,
                     map = n.layer.map,
-                    res = map.getResolution(),
+                    pixelDiagonal = Math.sqrt(2),
+                    resolutionHint = pixelDiagonal * map.getResolution(),
                     zoom,
                     center = map.getCenter(),
                     minResolutionHint = n.attributes.minResolutionHint,
                     maxResolutionHint = n.attributes.maxResolutionHint;
-                if (maxResolutionHint && maxResolutionHint < res) {
-                    zoom = map.getZoomForResolution(maxResolutionHint) + 1;
-                } else if (minResolutionHint && minResolutionHint > res) {
-                    zoom = map.getZoomForResolution(minResolutionHint);
+                if (maxResolutionHint && maxResolutionHint < resolutionHint) {
+                    zoom = map.getZoomForResolution(maxResolutionHint / pixelDiagonal) + 1;
+                } else if (minResolutionHint && minResolutionHint > resolutionHint) {
+                    zoom = map.getZoomForResolution(minResolutionHint / pixelDiagonal);
                 }
                 map.setCenter(center, zoom);
                 break;
@@ -875,7 +876,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         var n = node,
             map = n.layer.map,
-            resolution = map.getResolution(),
+            pixelDiagonal = Math.sqrt(2),
+            resolutionHint = pixelDiagonal * map.getResolution(),
             minResolutionHint = n.attributes.minResolutionHint,
             maxResolutionHint = n.attributes.maxResolutionHint;
         if (n.getUI().rendered) {
@@ -884,7 +886,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var zoomToScale = Ext.select(".gx-tree-layer-actions img.zoomtoscale", true, n.getUI().elNode);
             zoomToScale.setVisibilityMode(Ext.Element.DISPLAY);
 
-            if ((minResolutionHint && minResolutionHint > resolution) || (maxResolutionHint && maxResolutionHint < resolution)) {
+            if ((minResolutionHint && minResolutionHint > resolutionHint) ||
+                (maxResolutionHint && maxResolutionHint < resolutionHint)) {
                 n.getUI().addClass("gx-tree-layer-outofrange");
                 legend.hide();
                 zoomToScale.show();
