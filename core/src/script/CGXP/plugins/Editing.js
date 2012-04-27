@@ -37,10 +37,34 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add an Editing plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_editing',
+ *              layerTreeId: 'layertree',
+ *              layersURL: "$${request.route_url('layers_root')}"
+ *          }, {
+ *              ptype: "cgxp_layertree",
+ *              id: "layertree",
+ *              outputConfig: {
+ *                  ...
+ *              },
+ *              outputTarget: 'left-panel'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Editing(config)
  *
- *    Add an editing tool to the map.
+ *    Plugin to add an editing tool to the map.
  *
  *    This plugin works with the c2cgeoportal "layers" web service. It
  *    requires a :class:`cgxp.plugins.LayerTree` plugin in the viewer.
@@ -52,8 +76,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_editing",
 
     /** api: config[layersURL]
-     *  ``String``
-     *  URL to the layers web service.
+     *  ``String`` URL to the layers web service. Typically set to
+     *  ``"${request.route_url('layers_root')}"``.
      */
     layersURL: null,
 
@@ -103,19 +127,19 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** api: config[layerMenuText]
      *  ``String``
      *  The text to the top of the layer menu (displayed when the
-     *  create button is pressed).
+     *  create button is pressed) (i18n).
      */
     layerMenuText: 'Choose a layer',
 
     /** api: config[createBtnText]
      *  ``String``
-     *  The text for the create button.
+     *  The text for the create button (i18n).
      */
     createBtnText: 'Create a new feature',
 
     /** api: config[forbiddenText]
      *  ``String``
-     *  The text displayed when not allowed action is done.
+     *  The text displayed when not allowed action is done (i18n).
      */
     forbiddenText: 'You are not allowed to do this action!',
 

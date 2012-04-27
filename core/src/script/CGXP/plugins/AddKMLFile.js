@@ -25,36 +25,45 @@
 /** api: (define)
  *  module = cgxp.plugins
  *  class = AddKMLFile
- *
- *  This plugin provides an "Add KML File" button that can be used to add a
- *  local KML file to both the 2D map and 3D Google Earth Plugin view (if
- *  present).  As most browsers do not permit Javascript to read local files,
- *  this requires an "echo" service to be running on the server that reflects a
- *  file back to the client.
- *
- *  TODO: Handle failures in the submit process.
- *
- *  TODO: Use the HTML5 File API when available to avoid sending the file to
- *  the server and back.
  */
 
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: AddKMLFile(config)
+ *
+ *  This plugin provides an "Add KML File" button that can be used to add a
+ *  local KML file to both the 2D map and 3D Google Earth Plugin view (if
+ *  present).  As most browsers do not permit Javascript to read local files,
+ *  this requires an "echo" service to be running on the server that reflects a
+ *  file back to the client.
  */
+
+/*
+ *  TODO: Handle failures in the submit process.
+ *
+ *  TODO: Use the HTML5 File API when available to avoid sending the file to
+ *  the server and back.
+ */
+
 cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_addkmlfile */
     ptype: "cgxp_addkmlfile",
 
-    /** api: Echo URL */
+    /** api: config[echoUrl]
+     *  ``String`` The "echo" service URL.
+     **/
     echoUrl: null,
 
-    /** api: button text */
+    /** api: config[buttonText]
+     *  ``String`` The "add kml" button text (i18n).
+     */
     buttonText: "Add KML File",
 
-    /** api: wait message text */
+    /** api: config[waitMsgText]
+     *  ``String`` The "wait while loading" message text (i18n).
+     */
     waitMsgText: "Loading...",
 
     /** private: method[addActions]

@@ -3,10 +3,10 @@
 API Reference
 =============
 
-CGXP stands for Camptocamp GXP.
-
-CGXP includes high-level plugins and widgets for Camptocamp Geoportal
-applications.
+CGXP stands for Camptocamp GXP.  CGXP includes high-level plugins and widgets
+for Camptocamp Geoportal (`c2cgeoportal
+<http://docs.camptocamp.net/c2cgeoportal/>`_) applications. It is based on `GXP
+<http://gxp.opengeo.org/master/doc/>`_.
 
 .. toctree::
    :hidden:
@@ -23,11 +23,11 @@ See the :ref:`build_doc` section to know how to build this doc.
 
 .. toctree::
     :maxdepth: 2
-    
-    lib/widgets
+
+    lib/plugins
 
 .. toctree::
     :maxdepth: 2
-
-    lib/plugins
+    
+    lib/widgets
     

@@ -26,8 +26,27 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a Disclaimer plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_disclaimer',
+ *              outputTarget: 'map'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Disclaimer(config)
+ *
+ *      Plugin to add a disclaimers for the layers in the map. Should
+ *      be used with an ``outputTarget``.
  *
  */
 cgxp.plugins.Disclaimer = Ext.extend(gxp.plugins.Tool, {
