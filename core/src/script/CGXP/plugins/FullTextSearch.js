@@ -97,7 +97,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      *  ``Array``
      *  List of EPSG codes of projections that should be used when trying to 
      *  recenter on coordinates. Leftmost projections are used preferably.
-     *  Default is ``[4326]``.
+     *  Default is current map projection.
      */
     projectionCodes: null,
 
