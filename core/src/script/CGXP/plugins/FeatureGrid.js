@@ -37,8 +37,43 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a FeatureGrid plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *
+ *      var obs = new Ext.util.Observable();
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: "cgxp_featuregrid",
+ *              id: "featureGrid",
+ *              csvURL: "$${request.route_url('csvecho')}",
+ *              maxFeatures: 200,
+ *              outputTarget: "featuregrid-container",
+ *              events: obs
+ *          }, {
+ *              ptype: "cgxp_wmsgetfeatureinfo",
+ *              actionTarget: "center.tbar",
+ *              toggleGroup: "maptools",
+ *              events: obs
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: FeatureGrid(config)
+ *
+ *      A plugin that adds a grid panel for displaying feature information (one
+ *      feature per row).
+ *
+ *      This plugin is used to display results from query plugins such as
+ *      :class:`cgxp.plugins.WMSGetFeatureInfo`, and
+ *      :class:`cgxp.plugins.QueryBuilder`.
  *
  */   
 cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
@@ -58,7 +93,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     currentGrid: null,
 
     /** private: attibute[vectorLayer]
-     *  ``Object``
+     *  ``OpenLayers.Layer.Vector``
      *  The layer used to display the features.
      */
     vectorLayer: null,
@@ -76,49 +111,82 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     textItem: null,
 
     /** private: attibute[control]
-     *  ``Object``
+     *  ``OpenLayers.Control.SelectFeature``
      *  The OpenLayers control used to select the features.
      */
     control: null,
 
     /** api: config[comma]
-     *  ``String``
-     *  Symbol used to separates the cells in csv export.
+     *  ``String`` Specifies the separator character for the exported
+     *  CSV docs. Default is ',' (comma).
      */
     comma: ',',
 
     /** api: config[quote]
-     *  ``String``
-     *  Symbol used to quote the text in csv export.
+     *  ``String`` Specifies the character to delimit strings in the
+     *  exported CSV docs. Default is '"' (double quote).
      */
     quote: '"',
 
     /** api: config[events]
-     *  ``Object``
-     *  An Observer used to receive events.
-     *  * queryopen: sent on open query tool.
-     *  * queryclose: sent on closequery tool.
-     *  * querystarts: sent when the query button is pressed
-     *  * queryresults(features): sent when the result is received
+     *  ``Ext.util.Observable``  An ``Ext.util.Observable`` instance used
+     *  to receive events from other plugins.
+     *
+     *  * ``queryopen``: sent on open query tool.
+     *  * ``queryclose``: sent on closequery tool.
+     *  * ``querystarts``: sent when the query button is pressed
+     *  * ``queryresults(features)``: sent when the result is received
      */
     events: null,
 
-    /** api: config[dummy_form]
-     *  ``Object``
-     *  Fake form used for csv export.
+    /** private: private[dummy_form]
+     *  ``Object`` Fake form used for csv export.
      */
     dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
 
+    /** api: config[clearAllText]
+     *  ``String`` Text for the "clear all results" button (i18n).
+     */
     clearAllText: "Clear all",
+    /** api: config[selectText]
+     *  ``String`` Text for the "select results" button (i18n).
+     */
     selectText: "Select",
+    /** api: config[selectAllText]
+     *  ``String`` Text for the "select all results" menu item (i18n).
+     */
     selectAllText: "All",
+    /** api: config[selectNoneText]
+     *  ``String`` Text for the "select none" menu item (i18n).
+     */
     selectNoneText: "None",
+    /** api: config[selectToggleText]
+     *  ``String`` Text for the "toggle selection" menu item (i18n).
+     */
     selectToggleText: "Toggle",
+    /** api: config[actionsText]
+     *  ``String`` Text for the "actions on selected results" button (i18n).
+     */
     actionsText: "Actions on selected results",
+    /** api: config[zoomToSelectionText]
+     *  ``String`` Text for the "zoom to selection" menu item (i18n).
+     */
     zoomToSelectionText: "Zoom on selection",
+    /** api: config[csvSelectionExportText]
+     *  ``String`` Text for the "export as csv" menu item (i18n).
+     */
     csvSelectionExportText: "Export as CSV",
+    /** api: config[maxFeaturesText]
+     *  ``String`` Text for the "reached max number of features" label (i18n).
+     */
     maxFeaturesText: "Maximum of results",
+    /** api: config[resultText]
+     *  ``String`` Text for the "number of result" label (singular) (i18n).
+     */
     resultText: "Result",
+    /** api: config[resultsText]
+     *  ``String`` Text for the "number of result" label (plural) (i18n).
+     */
     resultsText: "Results",
 
     init: function() {
@@ -130,7 +198,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.addLayer(this.vectorLayer);
     },
 
-    /** public: method[csvExport]
+    /** private: method[csvExport]
      *  Export as a SCV by default using the rfc4180 recomantation.
      *  http://tools.ietf.org/html/rfc4180
      */
@@ -174,7 +242,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** public method[printExport]
+    /** private: method[printExport]
      *  Export for print.
      *  Columns titles will be stored on 'col1', 'col2', ... of the page.
      *  The dataset name is 'table '.
