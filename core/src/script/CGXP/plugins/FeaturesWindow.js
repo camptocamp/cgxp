@@ -29,19 +29,61 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a FeaturesWindow plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *
+ *      var obs = new Ext.util.Observable();
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: "cgxp_featureswindow",
+ *              themes: themes,
+ *              events: obs
+ *          }, {
+ *              ptype: "cgxp_wmsgetfeatureinfo",
+ *              actionTarget: "center.tbar",
+ *              toggleGroup: "maptools",
+ *              events: obs
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: FeaturesWindow(config)
  *
- *      This plugin shows query results in a window (popup) using a grouping grid.
+ *      This plugin shows query results in a window (popup) using a
+ *      grouping grid.
+ *
+ *      This plugin should receive the list of themes in its config.
+ *      This is to read the "identifier attribute" from the layer
+ *      spec.
+ *
  */   
 cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_featureswindow*/
     ptype: "cgxp_featureswindow",
 
+    /** api: config[events]
+     *  ``Ext.util.Observable``  An ``Ext.util.Observable`` instance used
+     *  to receive events from other plugins.
+     *
+     *  * ``queryopen``: sent on open query tool.
+     *  * ``queryclose``: sent on closequery tool.
+     *  * ``querystarts``: sent when the query button is pressed
+     *  * ``queryresults(features)``: sent when the result is received
+     */
+    events: null,
+
     /** api: config[themes]
-     *  ``Object``
-     *  List of internal and external themes and layers.
+     *  ``Object`` List of internal and external themes and layers. (The
+     *  same object as that passed to the :class:`cgxp.plugins.LayerTree`).
      */
     themes: null,
 
@@ -70,14 +112,22 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     featureGroupingStoreClass: null,
 
     /** api: config[highlightStyle]
-     *  ``Object``
-     *  A style properties object to be used to show features on the map when
-     *  hovering the row in the grid (optional).
+     *  ``Object``  A style properties object to be used to show features
+     *  on the map when hovering the row in the grid (optional).
      */
     highlightStyle: null,
 
+    /** api: config[windowTitleText]
+     *  ``String`` Text for the window title (i18n).
+     */
     windowTitleText: "Results",
+    /** api: config[itemsText]
+     *  ``String`` Text for the "number of items" label (plural) (i18n).
+     */
     itemsText: "Items",
+    /** api: config[itemText]
+     *  ``String`` Text for the "number of items" label (singular) (i18n).
+     */
     itemText: "Item",
 
     init: function(target) {

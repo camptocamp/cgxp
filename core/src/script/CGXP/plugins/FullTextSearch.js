@@ -30,39 +30,66 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a FullTextSearch plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: "cgxp_fulltextsearch",
+ *              url: "$${request.route_url('fulltextsearch', path='')}",
+ *              actionTarget: "center.tbar"
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: FullTextSearch(config)
  *
- *  Used to add a full text search tool.
+ *  Plugin to add a text search field.
  */
 cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_fulltextsearch */
     ptype: "cgxp_fulltextsearch",
 
+    /** api: config[tooltipTitle]
+     *  ``String`` Text for the tooltip title (i18n). Only applies if
+     *  :attr:`tooltip` is ``true``.
+     */
     tooltipTitle: "Search",
+    /** api: config[emptyText]
+     *  ``String`` Text to use when the field is empty (i18n).
+     */
     emptyText: "Search...",
+    /** api: config[loadingText]
+     *  ``String`` Text to display while loading results (i18n).
+     */
     loadingText: "Searching...",
 
     /** api: config[tooltip]
-     *  ``Boolean``
-     *  Whether to display a tooltip above the search box.
-     *  Default is true.
+     *  ``Boolean`` Whether to display a tooltip above the search box.
+     *  Default is ``true``.
      */
     tooltip: true,
 
     /** api: config[url]
-     *  URL of the search service.
+     *  ``String`` URL of the text search service. Typically set to
+     *  ``"${request.route_url('fulltextsearch', path='')}"``.
      */
     url: null,
 
     /** api: config[pointRecenterZoom]
-     *  Zoom level to use when recentering on point items (optional).
+     *  ``Number`` Zoom level to use when recentering on point items (optional).
      */
     pointRecenterZoom: null,
 
     /** api: config[coordsRecenterZoom]
-     *  Zoom level to use when recentering on coordinates (optional).
+     *  ``Number`` Zoom level to use when recentering on coordinates (optional).
      */
     coordsRecenterZoom: null,
 
@@ -70,6 +97,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      *  ``Array``
      *  List of EPSG codes of projections that should be used when trying to 
      *  recenter on coordinates. Leftmost projections are used preferably.
+     *  Default is ``[4326]``.
      */
     projectionCodes: [4326],
 
@@ -140,7 +168,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.addLayer(this.vectorLayer);
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var combo = this.createCombo();
