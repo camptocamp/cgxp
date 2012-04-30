@@ -53,6 +53,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     rootVisible: false,
     useArrows: true,
 
+    /** api: config[uniqueTheme]
+     * ``Boolean``
+     * True to have only one theme on the layer tree, default to false.
+     */
+    uniqueTheme: false,
+
     /**
      * Property: mapPanel
      */
@@ -679,6 +685,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * theme {Object} the theme config
      */
     loadTheme: function(theme) {
+        if (this.uniqueTheme) {
+            for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
+                node = this.root.childNodes[i];
+                node.remove();
+                node.layer.destroy();
+                this.fireEvent('removegroup');
+            }
+        }
+
         // reverse to have the first layer in the list at the top
         Ext.each(theme.children.concat().reverse(), function(group) {
             this.loadGroup(group);
