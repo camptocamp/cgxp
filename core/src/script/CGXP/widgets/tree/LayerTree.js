@@ -240,6 +240,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             Ext.each(children, function(item) {
                 var nodeConfig = {
                     text: item.displayName,
+                    name: item.name,
                     iconCls: 'no-icon',
                     loaded: true,
                     checked: checkedNodes.indexOf(item.name) != -1,
@@ -711,51 +712,65 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * visibility {Boolean} the OL layer visibility. optional
      */
     loadGroup: function(group, layers, opacity, visibility) {
-        var params = {
-            layers: [],
-            format: 'image/png',
-            transparent: true
-        };
+        existingGroup = this.root.findChild('groupId', group.name);
+        if (!existingGroup) {
 
-        var isExternalgroup = function(name, themes) {
-            for (var i = 0, len = themes.external.length; i < len; i++) {
-                for (var j = 0, len2 = themes.external[i].children.length; j<len2; j++) {
-                    if (themes.external[i].children[j].name == name) {
-                        return true;
+            var params = {
+                layers: [],
+                format: 'image/png',
+                transparent: true
+            };
+
+            var isExternalgroup = function(name, themes) {
+                for (var i = 0, len = themes.external.length; i < len; i++) {
+                    for (var j = 0, len2 = themes.external[i].children.length; j<len2; j++) {
+                        if (themes.external[i].children[j].name == name) {
+                            return true;
+                        }
                     }
                 }
+                return false;
+            };
+            if (this.themes.external != undefined &&
+                isExternalgroup(group.name, this.themes)) {
+                params.external = true;
             }
-            return false;
-        };
-        if (this.themes.external != undefined &&
-            isExternalgroup(group.name, this.themes)) {
-            params.external = true;
+
+            var layer = new OpenLayers.Layer.WMS(
+                group.displayName,
+                this.wmsURL, params, {
+                    ref: group.name,
+                    singleTile: true,
+                    isBaseLayer: false
+                }
+            );
+
+            var result = {
+                allLayers: [],
+                checkedLayers: [],
+                disclaimer: {}
+            };
+            this.parseChildren(group, layer, result);
+            group.layer = layer;
+            group.allLayers = result.allLayers;
+            layer.params.LAYERS = layers || result.checkedLayers;
+            this.mapPanel.layers.add(
+                new this.recordType({
+                    disclaimer: result.disclaimer,
+                    layer: layer
+                }, layer.id));
+            this.addGroup(group);
+        }
+        else {
+            layer = existingGroup.attributes.layer;
+            if (layers) {
+                Ext.each(layers, function(l) {
+                    node = existingGroup.findChild('name', l, true);
+                    this.fireEvent('checkchange', node, true);
+                }, this);
+            }
         }
 
-        var layer = new OpenLayers.Layer.WMS(
-            group.displayName,
-            this.wmsURL, params, {
-                ref: group.name,
-                singleTile: true,
-                isBaseLayer: false
-            }
-        );
-
-        var result = {
-            allLayers: [],
-            checkedLayers: [],
-            disclaimer: {}
-        };
-        this.parseChildren(group, layer, result);
-        group.layer = layer;
-        group.allLayers = result.allLayers;
-        layer.params.LAYERS = layers || result.checkedLayers;
-        this.mapPanel.layers.add(
-            new this.recordType({
-                disclaimer: result.disclaimer,
-                layer: layer
-            }, layer.id));
-        this.addGroup(group);
         layer.setOpacity(opacity || 1);
         layer.setVisibility(visibility !== 'false');
     },
