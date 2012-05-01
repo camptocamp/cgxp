@@ -712,7 +712,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * visibility {Boolean} the OL layer visibility. optional
      */
     loadGroup: function(group, layers, opacity, visibility) {
-        existingGroup = this.root.findChild('groupId', group.name);
+        var existingGroup = this.root.findChild('groupId', group.name);
         if (!existingGroup) {
 
             var params = {
