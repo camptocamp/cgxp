@@ -740,6 +740,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.displayName,
                 this.wmsURL, params, {
                     ref: group.name,
+                    visibility: false,
                     singleTile: true,
                     isBaseLayer: false
                 }
@@ -772,7 +773,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         layer.setOpacity(opacity || 1);
-        layer.setVisibility(visibility !== 'false');
+        if (layer.params.LAYERS.length > 0) {
+            layer.setVisibility(visibility !== false);
+        }
     },
 
     checkGroupIsAllowed: function(group) {
