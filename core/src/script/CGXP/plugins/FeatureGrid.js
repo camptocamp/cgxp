@@ -116,11 +116,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     control: null,
 
-    /** api: config[comma]
+    /** api: config[csvSeparator]
      *  ``String`` Specifies the separator character for the exported
      *  CSV docs. Default is ',' (comma).
      */
-    comma: ',',
+    csvSeparator: ',',
 
     /** api: config[quote]
      *  ``String`` Specifies the character to delimit strings in the
@@ -226,7 +226,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         }
                     }
                 }
-                csv.push(properties.join(this.comma));
+                csv.push(properties.join(this.csvSeparator));
             }, this);
 
             Ext.Ajax.request({
