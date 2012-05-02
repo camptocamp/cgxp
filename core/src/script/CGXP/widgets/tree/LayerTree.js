@@ -897,6 +897,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 legendCmp.show();
                 zoomToScale.hide();
             }
+
+            Ext.select('img', false, n.getUI().elNode).each(function(image) {
+                image = image.dom;
+                if (image.src.indexOf('GetLegendGraphic') != -1) {
+                    var url = image.src.split('?');
+                    var params = Ext.urlDecode(url[1]);
+                    params.scale = n.layer.map.getScale();
+                    image.src = url[0] + '?' + Ext.urlEncode(params);
+                }
+            });
         }
     },
 
