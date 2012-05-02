@@ -916,16 +916,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             legend.setVisibilityMode(Ext.Element.DISPLAY);
             var zoomToScale = Ext.select(".gx-tree-layer-actions img.zoomtoscale", true, n.getUI().elNode);
             zoomToScale.setVisibilityMode(Ext.Element.DISPLAY);
+            var legendCmp = Ext.select(".legend-component", null, n.getUI().elNode);
+            legendCmp.setVisibilityMode(Ext.Element.DISPLAY);
 
             if ((minResolutionHint && minResolutionHint > resolution) || (maxResolutionHint && maxResolutionHint < resolution)) {
                 n.getUI().addClass("gx-tree-layer-outofrange");
                 legend.hide();
+                legendCmp.hide();
                 zoomToScale.show();
             } else if (minResolutionHint || maxResolutionHint) {
                 n.getUI().removeClass("gx-tree-layer-outofrange");
                 legend.show();
+                legendCmp.show();
                 zoomToScale.hide();
             }
+
+            Ext.select('img', false, n.getUI().elNode).each(function(image) {
+                image = image.dom;
+                if (image.src.indexOf('GetLegendGraphic') != -1) {
+                    var url = image.src.split('?');
+                    var params = Ext.urlDecode(url[1]);
+                    params.scale = n.layer.map.getScale();
+                    image.src = url[0] + '?' + Ext.urlEncode(params);
+                }
+            });
         }
     },
 
