@@ -21,18 +21,16 @@
  */
 
 /** api: (define)
- *  module = cgxp.widgets
+ *  module = cgxp
  *  class = MapOpacitySlider
  */
 
-Ext.namespace("cgxp.widgets");
+Ext.namespace("cgxp");
 
 /** api: constructor
  *  .. class:: MapOpacitySlider(config)
  */   
-cgxp.widgets.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
-    /** api: xtype = cgxp_mapopacityslider */
-    xtype: "cgxp_mapopacityslider",
+cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
 
     /** api: config[orthoRef]
      *  ``String``
@@ -46,7 +44,7 @@ cgxp.widgets.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     defaultBaseLayerRef: 'plan',
 
-    orthoText: "Orthophoto",
+    orthoText: 'Orthophoto',
 
     /** api: config[stateId]
      * ``String``
@@ -230,4 +228,5 @@ cgxp.widgets.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     }
 });
 
-Ext.reg(cgxp.widgets.MapOpacitySlider.prototype.ptype, cgxp.widgets.MapOpacitySlider);
+/** api: xtype = cgxp_mapopacityslider */
+Ext.reg("cgxp_mapopacityslider", cgxp.MapOpacitySlider);

@@ -61,7 +61,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
         this.target.addListener('ready', function() {
             var mapPanel = this.target.mapPanel;
             var map = mapPanel.map;
-            var mapbar = new cgxp.widgets.MapOpacitySlider({
+            var mapbar = new cgxp.MapOpacitySlider({
                 cls: 'opacityToolbar',
                 orthoRef: this.orthoRef,
                 defaultBaseLayerRef: this.defaultBaseLayerRef,
