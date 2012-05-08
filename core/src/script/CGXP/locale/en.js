@@ -91,7 +91,7 @@ GeoExt.Lang.add("en", {
         redliningText: "Redlining"
     },
 
-    "cgxp.plugins.MapOpacitySlider.prototype": {
+    "cgxp.MapOpacitySlider.prototype": {
         orthoText: "Orthophoto"
     },
 
