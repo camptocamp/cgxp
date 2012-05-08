@@ -819,7 +819,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var opacity = this.initialState['group_opacity_' + t] ? 
                 this.initialState['group_opacity_' + t] : 1;
             var layers = this.initialState['group_layers_' + t] ? 
-                this.initialState['group_layers_' + t] : '';
+                this.initialState['group_layers_' + t] : [];
             var visibility = layers != '' ? true : false;
             var group = this.findGroupByName(t);            
             this.loadGroup(group, layers, opacity, visibility);
