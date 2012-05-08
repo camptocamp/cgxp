@@ -67,6 +67,12 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     options: null,
 
+    /** api: config[timeout]
+     * ``Integer``
+     * The timeout delay for the print in milliseconds. Default to 2 minutes.
+     */
+    timeout: 120000,
+
     printTitle: "Printing",
     titlefieldText: "Title",
     titlefieldvalueText: "Map title",
@@ -94,6 +100,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         // create a print provider
         var printProvider = new GeoExt.data.PrintProvider({
             url: this.printURL,
+            timeout: this.timeout,
             baseParams: {
                 url: this.printURL
             },
