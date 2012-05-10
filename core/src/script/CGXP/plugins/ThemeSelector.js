@@ -50,6 +50,12 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
     localTitle: "Local layers",
     externalTitle: "External layers",
     toolTitle: "Themes",
+    
+    /** api: config[maxHeight]
+     *  ``Integer``
+     *  Maximum height in pixels of the themeSelector panel.
+     */
+    maxHeight: null,
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -80,7 +86,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             overClass: 'x-view-over',
             itemSelector:'div.thumb-wrap',
             singleSelect: true,
-            width: 560,
+            autoScroll: true,
             cls: 'theme-selector',
             listeners: {
                 selectionchange: function(view, nodes) {
@@ -91,36 +97,45 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                     }   
                     themeSelector.menu.hide();
                 },
+                afterrender: function(view) {
+                    if (this.maxHeight && view.getHeight() > this.maxHeight) {
+                        view.setHeight(this.maxHeight);
+                    }
+                },
                 scope: this
             }   
-        };  
-        var localView = new Ext.DataView(Ext.apply({
-            title: this.localTitle,
-            store: localStore
-        }, tabconfig));
-        var externalView = new Ext.DataView(Ext.apply({
-            title: this.externalTitle,
-            store: externalStore
-        }, tabconfig));
+        };
 
-        var items = [localView];
         if (this.themes.external) {
-            items.push(externalView);
-        }
-        var tabs = new Ext.TabPanel({
-            width: 530,
-            activeTab: 0,
-            plain: true,
-            border: false,
-            tabPosition: 'bottom',
-            items: items,
-            deferredRender: false,
-            listeners: {
-                tabchange: function(cmp) {
-                    cmp.ownerCt.doLayout();
+            var localView = new Ext.DataView(Ext.apply({
+                title: this.localTitle,
+                store: localStore
+            }, tabconfig));
+            var externalView = new Ext.DataView(Ext.apply({
+                title: this.externalTitle,
+                store: externalStore
+            }, tabconfig));
+    
+            var themepanel = new Ext.TabPanel({
+                width: 560,
+                activeTab: 0,
+                plain: true,
+                border: false,
+                tabPosition: 'bottom',
+                items: [localView, externalView],
+                deferredRender: false,
+                listeners: {
+                    tabchange: function(cmp) {
+                        cmp.ownerCt.doLayout();
+                    }
                 }
-            }
-        });        
+            });
+        } else {
+            var themepanel = new Ext.DataView(Ext.apply({
+                width: 560,
+                store: localStore
+            }, tabconfig));
+        }
 
         config = Ext.apply({
             xtype: "button",
@@ -129,7 +144,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             iconCls: 'themes',
             scale: 'large',
             width: '100%',
-            menu: [tabs]
+            menu: [themepanel]
         }, config || {});
         
         var themeSelector = cgxp.plugins.ThemeSelector.superclass.addOutput.call(this, config);
