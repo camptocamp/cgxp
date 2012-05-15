@@ -310,7 +310,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
-        var groupNode = this.root.insertBefore({
+        var groupNodeConfig = {
             text: group.displayName,
             groupId: group.name,
             nodeType: 'cgxp_layer',
@@ -336,7 +336,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 action: "delete",
                 qtip: this.deleteText
             }]
-        }, this.root.firstChild);
+        };
+        if (group.metadataURL) {
+            groupNodeConfig.metadataUrl = group.metadataURL;
+            groupNodeConfig.actions.unshift({
+                action: "metadata",
+                qtip: this.moreinfoText
+            });
+        }
+        var groupNode = this.root.insertBefore(groupNodeConfig,
+                                               this.root.firstChild);
         addNodes.call(this, group.children, groupNode, 1);
         this.fireEvent('addgroup');
         groupNode.expand(true, false);
