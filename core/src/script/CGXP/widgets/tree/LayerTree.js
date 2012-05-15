@@ -337,13 +337,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 qtip: this.deleteText
             }]
         };
-        if (group.metadataURL) {
-            groupNodeConfig.metadataUrl = group.metadataURL;
-            groupNodeConfig.actions.unshift({
-                action: "metadata",
-                qtip: this.moreinfoText
-            });
-        }
+        this.addMetadata(group, groupNodeConfig, true);
         var groupNode = this.root.insertBefore(groupNodeConfig,
                                                this.root.firstChild);
         addNodes.call(this, group.children, groupNode, 1);
@@ -445,7 +439,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Method: addMetadata
      * Adds the action for the metadata
      */
-    addMetadata: function(item, nodeConfig) {
+    addMetadata: function(item, nodeConfig, prepend) {
         var metadataUrl;
         if (Ext.isString(item.metadataURL)) {
             metadataUrl = item.metadataURL;
@@ -455,10 +449,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         if (metadataUrl) {
             nodeConfig.actions = nodeConfig.actions || [];
-            nodeConfig.actions.push({
+            var metadataAction = {
                 action: "metadata",
                 qtip: this.moreinfoText
-            });
+            };
+            if (prepend) {
+                nodeConfig.actions.unshift(metadataAction);
+            } else {
+                nodeConfig.actions.push(metadataAction);
+            }
             nodeConfig.metadataUrl = metadataUrl;
         }
     },
