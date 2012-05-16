@@ -54,7 +54,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
         });
     } else {
         var colorpicker = new Ext.ux.form.ColorPickerField({
-            value: '#FF0000',
+            value: feature.style.fillColor || '#ff0000',
             fieldLabel: OpenLayers.i18n('Color'),
             width: 100
         });
