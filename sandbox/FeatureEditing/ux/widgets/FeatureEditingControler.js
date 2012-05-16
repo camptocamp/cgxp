@@ -410,7 +410,6 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                 options, action, iconCls, actionOptions, tooltip;
 
         geometryTypes = [];
-        options = {};
 
         if (OpenLayers.i18n(layer.geometryType)) {
             geometryTypes.push(OpenLayers.i18n(layer.geometryType));
@@ -422,6 +421,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         }
 
         for (var i = 0; i < geometryTypes.length; i++) {
+            options = {};
             geometryType = geometryTypes[i];
 
             switch (geometryType) {
