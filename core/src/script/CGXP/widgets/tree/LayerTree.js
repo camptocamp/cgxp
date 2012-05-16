@@ -90,6 +90,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     zoomtoscaleText: "This layer is not visible at this zoom level.",
     opacitylabelText: "Opacity",
     showhidelegendText: "Show/hide legend",
+    themealreadyloadedText: "This theme is already loaded",
 
     /** private: property[stateEvents]
      *  ``Array(String)`` Array of state events
@@ -778,6 +779,29 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.fireEvent('checkchange', node, true);
                 }, this);
             }
+
+            var html = [ 
+                '<div class="layertree-msg">',
+                    this.themealreadyloadedText,
+                '</div>'
+            ].join('');
+            var msg = Ext.DomHelper.append(
+                this.body,
+                {
+                    html: html,
+                    xtype: 'container'
+                },
+                true
+            ).fadeIn();
+            new Ext.util.DelayedTask(function() {
+                var duration = 3;
+                msg.fadeOut('t', { duration: duration });
+                new Ext.util.DelayedTask(function() {
+                    // make sure that the message is actually removed
+                    // ("remove" option of fadeOut() doesn't seem to work)
+                    msg.remove();
+                }).delay(duration * 1000);
+            }).delay(3000);
         }
 
         layer.setOpacity(opacity || 1);
