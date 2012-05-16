@@ -19,6 +19,7 @@
  * @requires GeoExt/widgets/tree/LayerNode.js
  * @requires GeoExt/data/LayerRecord.js
  * @include OpenLayers/Layer/WMS.js
+ * @include OpenLayers/Format/WMTSCapabilities/v1_0_0.js
  * @requires GeoExt/widgets/tree/LayerParamNode.js
  * @include GeoExt/widgets/tree/TreeNodeUIEventMixin.js
  * @include GeoExt/plugins/TreeNodeActions.js
@@ -238,12 +239,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Parameters:
      * {Object} The group config object
      */
-    addGroup: function(group) {
+    addGroup: function(group, internalWMS) {
         function addNodes(children, parentNode, level) {
             if (!level) {
                 level = 1;
             }
-            var checkedNodes = group.layer.params.LAYERS;
+            var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
             Ext.each(children, function(item) {
                 var nodeConfig = {
                     text: item.displayName,
@@ -317,6 +318,24 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
+        actions = internalWMS ? [{
+            action: "opacity",
+            qtip: this.opacityText
+        }] : [];
+        actions.push({
+            action: "up",
+            qtip: this.moveupText,
+            update: updateMoveUp
+        });
+        actions.push({
+            action: "down",
+            qtip: this.movedownText,
+            update: updateMoveDown
+        });
+        actions.push({
+            action: "delete",
+            qtip: this.deleteText
+        });
         var groupNodeConfig = {
             text: group.displayName,
             groupId: group.name,
@@ -327,22 +346,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             uiProvider: 'layer', 
             checked: false,
             layer: group.layer,
-            component: this.getOpacitySlider(group),
-            actions: [{
-                action: "opacity",
-                qtip: this.opacityText
-            }, {
-                action: "up",
-                qtip: this.moveupText,
-                update: updateMoveUp
-            }, {
-                action: "down",
-                qtip: this.movedownText,
-                update: updateMoveDown
-            }, {
-                action: "delete",
-                qtip: this.deleteText
-            }]
+            allOlLayers: group.allOlLayers,
+            component: internalWMS ? this.getOpacitySlider(group) : null,
+            actions: actions
         };
         this.addMetadata(group, groupNodeConfig, true);
         var groupNode = this.root.insertBefore(groupNodeConfig,
@@ -354,6 +360,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (group.isExpanded) {
             groupNode.expand(false, false); 
         }
+        groupNode.ui.show();
         groupNode.cascade(this.checkInRange);
     },
 
@@ -369,16 +376,19 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         nodeConfig.actions = nodeConfig.actions || [];
         if (item.icon) {
             config.icon = item.icon;
+        } 
+        else if (item.legendRule) {
+            // there is only one class in the mapfile layer
+            // we use a rule so that legend shows the icon only (no label)
+            config.icon = this.getLegendGraphicUrl(item.layer, item.name, item.legendRule);
         }
-        if (item.legend) {
-            if (item.legendRule) { // there is only one class in the mapfile layer
-                // we use a rule so that legend shows the icon only (no label) 
-                config.icon = this.getLegendGraphicUrl(item.layer, item.name, item.legendRule);
-            } else  {
-                var src = (item.legendImage) ?
-                    item.legendImage :
-                    this.getLegendGraphicUrl(item.layer, item.name); 
 
+        if (item.legend) {
+            var src = (item.legendImage) ?
+                item.legendImage :
+                this.getLegendGraphicUrl(item.layer, item.name); 
+
+            if (src) {
                 config.legend = new Ext.Container({
                     items: [{
                         xtype: 'box',
@@ -410,6 +420,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Helper to build the getLegendGraphic request URL
      */
     getLegendGraphicUrl: function(layer, layerName, rule) {
+        if (!layer) {
+            return false;
+        }
         var layerNames = [layer.params.LAYERS].join(",").split(",");
 
         var styleNames = layer.params.STYLES &&
@@ -550,7 +563,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             case 'delete':
                 var tree = node.getOwnerTree();
                 node.remove();
-                node.layer.destroy();
+                if (node.attributes.layer) {
+                    node.layer.destroy();
+                }
+                else {
+                    Ext.each(node.attributes.allOlLayers, function(layer) {
+                        layer.destroy();
+                    });
+                }
                 tree.fireEvent('removegroup');
                 break;
             case 'opacity':
@@ -665,22 +685,26 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     /**
      * Method: parseChildren
-     * Parses recursively the children of a theme node.
+     * Parses recursively the children of a group node.
      * 
      * Parameters:
      * child {Object} the node to parse
-     * layer {<OpenLayers.Layer.WMS>} The reference to the OL Layer
+     * layer {<OpenLayers.Layer.WMS>} The reference to the OL Layer, 
+     *      present only for internal WMS.
      * result {Object} The result object of the parsed children, it contains
      *     - allLayers {Array(String)} The list of WMS subLayers for this layer.
      *     - checkedLayers {Array(String)} The list of checked subLayers.
      *     - disclaimer {Object} The list layers disclaimers.
+     *     - allOlLayers {Array(OpenLayers.Layer)} The list of children layers (for non internal WMS).
+     *  index {int} index there to add the layers on non internal WMS (to have the right order).
      */
-    parseChildren: function(child, layer, result) {
+    parseChildren: function(child, layer, result, index) {
         if (child.children) {
-            for (var j = 0; j < child.children.length; j++) {
-                this.parseChildren(child.children[j], layer, result);
+            for (var j = 0, jj = child.children.length; j < jj; j++) {
+                this.parseChildren(child.children[j], layer, result, index);
             }
-        } else {
+        }
+        else {
             if (child.disclaimer) {
                 result.disclaimer[child.disclaimer] = true;
             }
@@ -693,7 +717,77 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 result.checkedLayers.push(child.name);
             }
             // put a reference to ol layer in the config object
-            child.layer = layer;
+            if (layer) {
+                child.layer = layer;
+            }
+            else {
+                if (child.type == "external WMS") {
+                    child.layer = new OpenLayers.Layer.WMS(
+                        child.name, child.url, {
+                            STYLE: child.style,
+                            LAYER: child.name,
+                            format: child.imageType,
+                            transparent: child.imageType == 'image/png'
+                        }, {
+                            ref: child.name,
+                            visibility: child.isChecked,
+                            singleTile: true,
+                            isBaseLayer: false
+                        }
+                    );
+                    result.allOlLayers.push(child.layer);
+                    this.mapPanel.layers.insert(index, [
+                        new this.recordType({
+                            disclaimer: child.disclaimer,
+                            legendURL: child.legendImage,
+                            layer: child.layer
+                        }, child.layer.id)]);
+                }
+                else if (child.type == "WMTS") {
+                    format = new OpenLayers.Format.WMTSCapabilities();
+                    OpenLayers.Request.GET({
+                        url: child.url,
+                        scope: this,
+                        success: function(request) {
+                            var doc = request.responseXML;
+                            if (!doc || !doc.documentElement) {
+                                doc = request.responseText;
+                            }
+                            var capabilities = format.read(doc);
+                            var capabilities_layers = capabilities.contents.layers
+                            var capabilities_layer = null;
+                            for (i = 0, ii = capabilities_layers.length;
+                                    i < ii ; i++) {
+                                if (capabilities_layers[i].identifier == child.name) {
+                                    capabilities_layer = capabilities_layers[i];
+                                }
+                            }
+                            capabilities_layer.b
+                            child.layer = format.createLayer(capabilities, {
+                                ref: child.name,
+                                layer: child.name,
+                                maxExtent: capabilities_layer.bounds.transform(
+                                        "EPSG:4326", 
+                                        this.mapPanel.map.getProjectionObject()),
+                                style: child.style,
+                                matrixSet: child.matrixSet,
+                                dimension: child.dimension,
+                                visibility: child.isChecked,
+                                isBaseLayer: false,
+                                mapserverURL: child.mapserverURL,
+                                mapserverLayers: child.mapserverLayers
+                            });
+                            result.allOlLayers.push(child.layer);
+                            this.mapPanel.layers.insert(index, [
+                                new this.recordType({
+                                    disclaimer: child.disclaimer,
+                                    legendURL: child.legendImage,
+                                    layer: child.layer
+                                }, child.layer.id)]);
+                        }
+                    });
+                }
+            }
         }
     },
 
@@ -733,55 +827,67 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     loadGroup: function(group, layers, opacity, visibility) {
         var existingGroup = this.root.findChild('groupId', group.name);
         if (!existingGroup) {
+            if (group.isInternalWMS !== false) {
+                var params = {
+                    layers: [],
+                    format: 'image/png',
+                    transparent: true
+                };
 
-            var params = {
-                layers: [],
-                format: 'image/png',
-                transparent: true
-            };
-
-            var isExternalgroup = function(name, themes) {
-                for (var i = 0, len = themes.external.length; i < len; i++) {
-                    for (var j = 0, len2 = themes.external[i].children.length; j<len2; j++) {
-                        if (themes.external[i].children[j].name == name) {
-                            return true;
+                var isExternalgroup = function(name, themes) {
+                    for (var i = 0, len = themes.external.length; i < len; i++) {
+                        for (var j = 0, len2 = themes.external[i].children.length; j<len2; j++) {
+                            if (themes.external[i].children[j].name == name) {
+                                return true;
+                            }
                         }
                     }
+                    return false;
+                };
+                if (this.themes.external != undefined &&
+                    isExternalgroup(group.name, this.themes)) {
+                    params.external = true;
                 }
-                return false;
-            };
-            if (this.themes.external != undefined &&
-                isExternalgroup(group.name, this.themes)) {
-                params.external = true;
+
+                var layer = new OpenLayers.Layer.WMS(
+                    group.displayName,
+                    this.wmsURL, params, Ext.apply({
+                        ref: group.name,
+                        visibility: false,
+                        singleTile: true,
+                        isBaseLayer: false
+                    }, this.wmsConfig || {})
+                );
+
+                var result = {
+                    allLayers: [],
+                    checkedLayers: [],
+                    disclaimer: {}
+                };
+                this.parseChildren(group, layer, result);
+                group.layer = layer;
+                group.allLayers = result.allLayers;
+                layer.params.LAYERS = layers || result.checkedLayers;
+                this.mapPanel.layers.add(
+                    new this.recordType({
+                        disclaimer: result.disclaimer,
+                        layer: layer
+                    }, layer.id));
+                this.addGroup(group, true);
             }
-
-            var layer = new OpenLayers.Layer.WMS(
-                group.displayName,
-                this.wmsURL, params, Ext.apply({
-                    ref: group.name,
-                    visibility: false,
-                    singleTile: true,
-                    isBaseLayer: false
-                }, this.wmsOptions)
-            );
-
-            var result = {
-                allLayers: [],
-                checkedLayers: [],
-                disclaimer: {},
-                childLayers: null
-            };
-            this.parseChildren(group, layer, result);
-            group.layer = layer;
-            group.allLayers = result.allLayers;
-            layer.params.LAYERS = layers || result.checkedLayers;
-            this.mapPanel.layers.add(
-                new this.recordType({
-                    disclaimer: result.disclaimer,
-                    childLayers: result.childLayers,
-                    layer: layer
-                }, layer.id));
-            this.addGroup(group);
+            else {
+                var result = {
+                    allLayers: [],
+                    checkedLayers: [],
+                    disclaimer: {},
+                    allOlLayers: []
+                };
+                this.parseChildren(group, null, result, this.mapPanel.layers.getCount());
+                group.layers = result.checkedLayers;
+                group.allLayers = result.allLayers;
+                group.allOlLayers = result.allOlLayers;
+                this.addGroup(group, false);
+            }
         }
         else {
             layer = existingGroup.attributes.layer;
@@ -816,9 +922,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }).delay(3000);
         }
 
-        layer.setOpacity(opacity || 1);
-        if (layer.params.LAYERS.length > 0) {
-            layer.setVisibility(visibility !== false);
+        if (layer) {
+            layer.setOpacity(opacity || 1);
+            if (layer.params.LAYERS.length > 0) {
+                layer.setVisibility(visibility !== false);
+            }
         }
     },
 
@@ -878,11 +986,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var id = group.attributes.groupId;
             groups.push(id);
             var layer = group.layer;
-            if (layer.opacity !== null && layer.opacity != 1) {
-                state['group_opacity_' + id] = layer.opacity;
+            if (layer) {
+                if (layer.opacity !== null && layer.opacity != 1) {
+                    state['group_opacity_' + id] = layer.opacity;
+                }
+                if (layer.params.LAYERS.length > 0) {
+                    state['group_layers_' + id] = [layer.params.LAYERS].join(',');
+                }
             }
-            if (layer.params.LAYERS.length > 0) {
-                state['group_layers_' + id] = [layer.params.LAYERS].join(',');
+            else {
+                // TODO
             }
         }, this);
         state.groups = groups.join(',');
