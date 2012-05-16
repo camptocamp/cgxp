@@ -160,8 +160,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      *   OpenLayers.Feature.Vector.style['default'] if no style was specified.
      */
     defaultStyle: {
-        fillColor: "red",
-        strokeColor: "red"
+        fillColor: "#ff0000",
+        strokeColor: "#ff0000"
     },
 
     /** api: config[layerOptions]
