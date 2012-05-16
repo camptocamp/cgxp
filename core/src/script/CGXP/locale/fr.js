@@ -114,7 +114,8 @@ GeoExt.Lang.add("fr", {
         opacityText: "Modifier l'opacité de la couche",
         zoomtoscaleText: "Cette couche n'est pas visible à ce niveau de zoom.",
         opacitylabelText: "Opacité",
-        showhidelegendText: "Afficher/masquer la légende"
+        showhidelegendText: "Afficher/masquer la légende",
+        themealreadyloadedText: "Ce thème est déjà chargé."
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
