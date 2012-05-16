@@ -20,6 +20,8 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "myOption": "meine Option",
     'Edit Feature': 'Das Objekt editieren',
     "Point": "Punkt",
+    "Circle": "Kreis",
+    "Box": "Rechteck",
     "LineString": "Linie",
     "Polygon": "Fläche",
     "Label": "Text",
@@ -28,6 +30,8 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "MultiPolygon": "mehrere Flächen",
     "Create point": "Punkt zeichnen",
     "Create line": "Linie zeichnen",
+    "Create circle": "Kreis zeichnen",
+    "Create box": "Rechteck zeichnen",
     "Create polygon": "Fläche zeichnen",
     "Create label": "Text erstellen",
 

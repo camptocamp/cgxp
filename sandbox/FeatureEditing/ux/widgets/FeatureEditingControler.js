@@ -14,6 +14,7 @@ Ext.namespace("GeoExt.ux");
  * @include OpenLayers/Handler/Path.js
  * @include OpenLayers/Handler/Point.js
  * @include OpenLayers/Handler/Polygon.js
+ * @include OpenLayers/Handler/RegularPolygon.js
  * @include OpenLayers/Lang.js
  * @include GeoExt/widgets/Action.js
  * @include GeoExt/widgets/MapPanel.js
@@ -415,8 +416,10 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             geometryTypes.push(OpenLayers.i18n(layer.geometryType));
         } else {
             geometryTypes.push(OpenLayers.i18n("Point"));
+            geometryTypes.push(OpenLayers.i18n("Circle"));
             geometryTypes.push(OpenLayers.i18n("LineString"));
             geometryTypes.push(OpenLayers.i18n("Polygon"));
+            geometryTypes.push(OpenLayers.i18n("Box"));
             geometryTypes.push(OpenLayers.i18n("Label"));
         }
 
@@ -437,11 +440,29 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     iconCls = "gx-featureediting-draw-point";
                     tooltip = OpenLayers.i18n("Create point");
                     break;
+                case OpenLayers.i18n("Circle"):
+                    handler = OpenLayers.Handler.RegularPolygon;
+                    options.handlerOptions = {
+                        sides: 64,
+                        irregular: false
+                    };
+                    iconCls = "gx-featureediting-draw-circle";
+                    tooltip = OpenLayers.i18n("Create circle");
+                    break;
                 case OpenLayers.i18n("Polygon"):
                 case OpenLayers.i18n("MultiPolygon"):
                     handler = OpenLayers.Handler.Polygon;
                     iconCls = "gx-featureediting-draw-polygon";
                     tooltip = OpenLayers.i18n("Create polygon");
+                    break;
+                case OpenLayers.i18n("Box"):
+                    handler = OpenLayers.Handler.RegularPolygon;
+                    options.handlerOptions = {
+                        sides: 4,
+                        irregular: true
+                    };
+                    iconCls = "gx-featureediting-draw-box";
+                    tooltip = OpenLayers.i18n("Create box");
                     break;
                 case OpenLayers.i18n("Label"):
                     handler = OpenLayers.Handler.Point;
