@@ -58,7 +58,6 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             fieldLabel: OpenLayers.i18n('Color'),
             width: 100
         });
-        var feature = this.features[0];
         colorpicker.on('change', function(cm, color) {
             feature.style.fillColor = color;
             feature.style.strokeColor = color;
