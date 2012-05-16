@@ -64,7 +64,6 @@ Ext.ux.ColorField = Ext.extend(Ext.form.TriggerField, {
             });
         }
         this.onFocus();
-        this.menu.picker.setValue(this.getValue() || '#FFFFFF');
         this.menu.show(this.el, "tl-bl?");
         this.menuEvents('on');
     },
@@ -86,7 +85,7 @@ Ext.ux.ColorField = Ext.extend(Ext.form.TriggerField, {
     // private
     // Detects whether the font color should be white or black, according to the
     // current color of the background
-    detectFontColor: function(){
+    detectFontColor: function() {
         if (!this.menu || !this.menu.picker.rawValue) {
             if (!this.value) {
                 value = 'FFFFFF';
@@ -140,14 +139,14 @@ Ext.ux.ColorMenu = Ext.extend(Ext.menu.Menu, {
        }
    },
 
-   doLayout: function(shallow, force){
+   doLayout: function(shallow, force) {
        Ext.ux.ColorMenu.superclass.doLayout.call(this, shallow, force);
        this.getEl().setZIndex(30000);
    }
 
 });
 
-Ext.ux.ColorPicker = function(config){
+Ext.ux.ColorPicker = function(config) {
     Ext.ux.ColorPicker.superclass.constructor.call(this, config);
     this.addEvents(
         /**
@@ -159,34 +158,12 @@ Ext.ux.ColorPicker = function(config){
         'select'
     );
 
-    if (!this.value) {
-        this.value = this.defaultValue;
-    }
     if (this.handler) {
         this.on("select", this.handler, this.scope, true);
     }
 };
 
 Ext.extend(Ext.ux.ColorPicker, Ext.ColorPalette, {
-
-    itemCls: 'x-color-palette',
-
-    defaultValue: "#0000FF",
-
-    width: 200,
-
-    // private
-    onRender: function(container, position) {
-        if (!this.value) {
-            this.value = this.defaultValue;
-        }
-        var el = document.createElement("div");
-        el.className = this.itemCls;
-        container.dom.insertBefore(el, position);
-        Ext.get(el).setWidth(this.width);
-
-        Ext.ux.ColorPicker.superclass.onRender.call(this, container, position);
-    },
 
     select: function(e, t) {
         this.value = e;

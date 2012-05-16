@@ -18,7 +18,7 @@
 /**
  * @requires FeatureEditing/ux/widgets/form/FeaturePanel.js
  * @include CGXP/plugins/Redlining.js
- * @include Ext/ux/form/ColorPickerField.js
+ * @include CGXP/widgets/Ext.ux.ColorField.js
  */
 
 // some more redlining patch
@@ -53,12 +53,12 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             value: feature.attributes['name']
         });
     } else {
-        var colorpicker = new Ext.ux.form.ColorPickerField({
+        var colorpicker = new Ext.ux.ColorField({
             value: feature.style.fillColor || '#ff0000',
             fieldLabel: OpenLayers.i18n('Color'),
             width: 100
         });
-        colorpicker.on('change', function(cm, color) {
+        colorpicker.on('select', function(cm, color) {
             feature.style.fillColor = color;
             feature.style.strokeColor = color;
             feature.layer.drawFeature(feature);
