@@ -410,3 +410,12 @@ div.legend label {
 .x-grid3-row-body table.detail a:link {
     text-decoration: underline;
 }
+
+/* cgxp layertree message */
+.layertree-msg {
+    color: white;
+    font-weight: bold;
+    background-color: #FFA500;
+    margin: 10px 5px 0 5px;
+    padding: 10px;
+}
