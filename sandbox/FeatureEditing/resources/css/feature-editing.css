@@ -2,11 +2,19 @@
   background-image: url("../images/silk/bullet_red_add.png") !important;
 }
 
+.gx-featureediting-draw-circle {
+  background-image: url("../images/silk/bullet_red_add.png") !important;
+}
+
 .gx-featureediting-draw-line {
   background-image: url("../images/geosilk/line_red_add.png") !important;
 }
 
 .gx-featureediting-draw-polygon {
+  background-image: url("../images/geosilk/shape_square_red_add.png") !important;
+}
+
+.gx-featureediting-draw-box {
   background-image: url("../images/geosilk/shape_square_red_add.png") !important;
 }
 
