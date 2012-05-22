@@ -115,7 +115,7 @@ GeoExt.Lang.add("de", {
         zoomtoscaleText: "Der Layer ist nicht sichtbar in diesem Massstab.",
         opacitylabelText: "Transparenz",
         showhidelegendText: "Legende anzeigen/verstecken",
-        themealreadyloadedText: "Dieses Thema wird schon geladen."
+        themealreadyloadedText: "Dieses Thema ist schon geladen."
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
