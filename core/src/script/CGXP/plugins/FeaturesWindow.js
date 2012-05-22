@@ -214,10 +214,14 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             feature.attributes.detail = detail.join('');
             feature.attributes.type = OpenLayers.i18n(feature.type); 
 
-            // use the identifierAttribute field if set
-            var identifier = this.layers[feature.type].identifierAttribute;
-            feature.attributes.id = identifier ?
-                feature.attributes[identifier] : feature.id;
+            if (this.layers[feature.type] &&
+                this.layers[feature.type].identifierAttribute) {
+                // use the identifierAttribute field if set
+                var identifier = this.layers[feature.type].identifierAttribute;
+                feature.attributes.id = feature.attributes[identifier];
+            } else {
+                feature.attributes.id = feature.id;
+            }
         }, this);
     },
 
