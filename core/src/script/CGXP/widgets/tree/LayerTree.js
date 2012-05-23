@@ -749,6 +749,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.displayName,
                 this.wmsURL, params, {
                     ref: group.name,
+                    transitionEffect: 'resize',
                     visibility: false,
                     singleTile: true,
                     isBaseLayer: false
