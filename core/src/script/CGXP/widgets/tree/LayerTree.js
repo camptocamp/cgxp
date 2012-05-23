@@ -785,7 +785,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.themealreadyloadedText,
                 '</div>'
             ].join('');
-            var msg = Ext.DomHelper.append(
+            var msg = Ext.DomHelper.insertBefore(
                 this.body,
                 {
                     html: html,
@@ -794,8 +794,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 true
             ).fadeIn();
             new Ext.util.DelayedTask(function() {
-                var duration = 3;
-                msg.fadeOut('t', { duration: duration });
+                var duration = 1;
+                msg.fadeOut({ duration: duration });
                 new Ext.util.DelayedTask(function() {
                     // make sure that the message is actually removed
                     // ("remove" option of fadeOut() doesn't seem to work)
