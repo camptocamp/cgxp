@@ -226,7 +226,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 var identifier = this.layers[feature.type].identifierAttribute;
                 feature.attributes.id = feature.attributes[identifier];
             } else {
-                feature.attributes.id = OpenLayers.i18n(feature.type) + ' ' + ++i;
+                feature.attributes.id = feature.attributes.type + ' ' + ++i;
             }
         }, this);
     },
