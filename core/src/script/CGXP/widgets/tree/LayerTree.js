@@ -758,7 +758,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     visibility: false,
                     singleTile: true,
                     isBaseLayer: false
-                }, this.wmsOptions || {})
+                }, this.wmsOptions)
             );
 
             var result = {
