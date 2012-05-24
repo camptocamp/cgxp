@@ -82,6 +82,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     wmsURL: null,
 
+    /**
+     * Property: wmsOptions
+     * Optional global configuration for WMS layers
+     */
+    wmsOptions: null,
+
     moveupText: "Raise",
     movedownText: "Move down",
     moreinfoText: "More information",
@@ -747,12 +753,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
             var layer = new OpenLayers.Layer.WMS(
                 group.displayName,
-                this.wmsURL, params, {
+                this.wmsURL, params, Ext.apply({
                     ref: group.name,
                     visibility: false,
                     singleTile: true,
                     isBaseLayer: false
-                }
+                }, this.wmsOptions)
             );
 
             var result = {
