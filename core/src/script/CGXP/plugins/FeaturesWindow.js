@@ -192,6 +192,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  a tooltip.
      */
     extendFeaturesAttributes: function(features) {
+        var i, previousLayer;
         Ext.each(features, function(feature) {
             var detail = [],
                 attributes = feature.attributes;
@@ -214,13 +215,18 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             feature.attributes.detail = detail.join('');
             feature.attributes.type = OpenLayers.i18n(feature.type); 
 
+            if (feature.type != previousLayer) {
+                previousLayer = feature.type;
+                i = 0;
+            }
+
             if (this.layers[feature.type] &&
                 this.layers[feature.type].identifierAttribute) {
                 // use the identifierAttribute field if set
                 var identifier = this.layers[feature.type].identifierAttribute;
                 feature.attributes.id = feature.attributes[identifier];
             } else {
-                feature.attributes.id = feature.id;
+                feature.attributes.id = OpenLayers.i18n(feature.type) + ' ' + ++i;
             }
         }, this);
     },
