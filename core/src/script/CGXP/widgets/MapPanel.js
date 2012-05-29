@@ -106,7 +106,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      */
     getVectorLayer: function() {
         if (!this.vectorLayer) {
-            this.vectorLayer = new OpenLayers.Layer.Vector('marker', {
+            this.vectorLayer = new OpenLayers.Layer.Vector('cgxp_marker', {
                 displayInLayerSwitcher: false
             });
             this.map.addLayer(this.vectorLayer);
