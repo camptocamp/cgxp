@@ -81,7 +81,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     applyState: function(state) {
         cgxp.MapPanel.superclass.applyState.apply(this, arguments);
         if (state.tooltip) {
-            var popup = new GeoExt.Popup({
+            new GeoExt.Popup({
                 location: this.center,
                 map: this.map,
                 unpinnable: false,
@@ -89,10 +89,13 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
             });
         }
         if (state.crosshair && state.x && state.y) {
-            var layer = this.getVectorLayer();
-            layer.addFeatures(new OpenLayers.Feature.Vector(
-                new OpenLayers.Geometry.Point(state.x, state.y)
-            ));
+            this.getVectorLayer().addFeatures([
+                new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(
+                        state.x, state.y
+                    )
+                )
+            ]);
         }
     },
 
