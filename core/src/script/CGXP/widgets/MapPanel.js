@@ -17,6 +17,10 @@
 
 /*
  * @requires GeoExt/widgets/MapPanel.js
+ * @include GeoExt/widgets/Popup.js
+ * @include OpenLayers/Layer/Vector.js
+ * @include OpenLayers/Feature/Vector.js
+ * @include OpenLayers/Geometry/Point.js
  */
 
 /** api: (define)
@@ -31,6 +35,11 @@ Ext.namespace("cgxp");
 
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
+    /** api: property[vectorLayer]
+     *  :class:`OpenLayers.Layer.Vector` 
+     */
+    vectorLayer: null,
+    
     /** private: method[getState]
      *  :return:  ``Object`` The state.
      *
@@ -62,6 +71,43 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         // OVERRIDE / REMOVED !
 
         return state;
+    },
+
+    /** private: method[applyState]
+     *
+     *  Override the GeoExt.MapPanel applyState to handle extra parameters
+     *  such as map_tooltip and map_crosshair
+     */
+    applyState: function(state) {
+        cgxp.MapPanel.superclass.applyState.apply(this, arguments);
+        if (state.tooltip) {
+            var popup = new GeoExt.Popup({
+                location: this.center,
+                map: this.map,
+                unpinnable: false,
+                html: state.tooltip
+            });
+        }
+        if (state.crosshair && state.x && state.y) {
+            var layer = this.getVectorLayer();
+            layer.addFeatures(new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(state.x, state.y)
+            ));
+        }
+    },
+
+    /** private: method[getVectorLayer]
+     *
+     * Creates a layer to display features if not already existing.
+     */
+    getVectorLayer: function() {
+        if (!this.vectorLayer) {
+            this.vectorLayer = new OpenLayers.Layer.Vector('marker', {
+                displayInLayerSwitcher: false
+            });
+            this.map.addLayer(this.vectorLayer);
+        }
+        return this.vectorLayer;
     }
 });
 
