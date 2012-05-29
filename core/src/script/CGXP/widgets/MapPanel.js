@@ -74,6 +74,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     },
 
     /** private: method[applyState]
+     *  :param state: ``Object`` The state to apply.
      *
      *  Override the GeoExt.MapPanel applyState to handle extra parameters
      *  such as map_tooltip and map_crosshair
