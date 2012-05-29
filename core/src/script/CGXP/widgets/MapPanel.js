@@ -97,6 +97,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     },
 
     /** private: method[getVectorLayer]
+     *  :return:  ``OpenLayers.Layer.Vector`` The vector layer.
      *
      * Creates a layer to display features if not already existing.
      */
