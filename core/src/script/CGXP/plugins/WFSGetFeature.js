@@ -169,12 +169,20 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
         var protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
             geometryName: this.geometryName,
-            srsName: this.target.mapPanel.map.getProjection()
+            srsName: this.target.mapPanel.map.getProjection(),
+            formatOptions: {
+                featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+                autoconfig: false
+            }
         });
         var externalProtocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL + "?EXTERNAL=true",
             geometryName: this.geometryName,
-            srsName: this.target.mapPanel.map.getProjection()
+            srsName: this.target.mapPanel.map.getProjection(),
+            formatOptions: {
+                featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+                autoconfig: false
+            }
         });
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
