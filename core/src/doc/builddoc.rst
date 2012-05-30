@@ -18,9 +18,9 @@ Build this doc
 
 * Install Jinga, JSTools, and Sphinx::
 
-  $ pip install 'Jinga2==2.6'
+  $ pip install 'Jinja2==2.6'
   $ pip install 'JSTools==0.6'
-  $ pip install 'Sphinx==1.1.2'
+  $ pip install 'Sphinx==1.1.3'
 
 * Build the doc::
 
