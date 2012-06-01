@@ -139,7 +139,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         this.actionsPlugin = new GeoExt.plugins.TreeNodeActions({
             listeners: {
-                action: this.onAction
+                action: this.onAction,
+                scope: this
             }
         });
         this.plugins = [
@@ -557,8 +558,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Called when a action image is clicked
      */
     onAction: function(node, action, evt) {
-        var layer = node.layer,
-            key;
+        var key;
         if (action.indexOf('legend') != -1) {
             action = 'legend';
         }
@@ -607,7 +607,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 break;
             case 'down':
-                layer.map.raiseLayer(layer, -1);
+                var next;
+                var current = false;
+                this.getRootNode().eachChild(function(n) {
+                    if (n == node) {
+                        current = true;
+                    }
+                    else if (current) {
+                        next = n;
+                        current = false;
+                    }
+                });
+                var index = -next.attributes.allOlLayers.length;
+                var layers = [].concat(node.attributes.allOlLayers);
+                Ext.each(layers.reverse(), function(layer) {
+                    layer.map.raiseLayer(layer, index);
+                });
                 node.parentNode.insertBefore(node, node.nextSibling.nextSibling);
                 node.ownerTree.actionsPlugin.updateActions(node);
                 node.ui.removeClass('x-tree-node-over');
@@ -617,7 +632,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 node.getOwnerTree().fireEvent('ordergroup');
                 break;
             case 'up':
-                layer.map.raiseLayer(layer, +1);
+                var previous;
+                var find = false;
+                this.getRootNode().eachChild(function(n) {
+                    if (n == node) {
+                        find = true;
+                    }
+                    else if (!find) {
+                        previous = n;
+                    }
+                });
+                var index = previous.attributes.allOlLayers.length;
+                Ext.each(node.attributes.allOlLayers, function(layer) {
+                    layer.map.raiseLayer(layer, index);
+                });
                 node.parentNode.insertBefore(node, node.previousSibling);
                 node.ownerTree.actionsPlugin.updateActions(node);
                 node.ui.removeClass('x-tree-node-over');
@@ -878,6 +906,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.parseChildren(group, layer, result);
                 group.layer = layer;
                 group.allLayers = result.allLayers;
+                group.allOlLayers = [layer];
                 layer.params.LAYERS = layers || result.checkedLayers;
                 this.mapPanel.layers.add(
                     new this.recordType({
