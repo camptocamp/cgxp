@@ -246,6 +246,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
             var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
             Ext.each(children, function(item) {
+                var actions = !internalWMS ? [{
+                    action: "opacity",
+                    qtip: this.opacityText
+                }] : [];
                 var nodeConfig = {
                     text: item.displayName,
                     name: item.name,
@@ -253,6 +257,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     loaded: true,
                     checked: checkedNodes.indexOf(item.name) != -1,
                     uiProvider: 'default',
+                    component: !internalWMS ? this.getOpacitySlider(item, '90%') : null,
+                    actions: actions,
                     minResolutionHint: item.minResolutionHint,
                     maxResolutionHint: item.maxResolutionHint
                 };
@@ -318,7 +324,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
-        actions = internalWMS ? [{
+        var actions = internalWMS ? [{
             action: "opacity",
             qtip: this.opacityText
         }] : [];
@@ -520,23 +526,23 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Parameters:
      * theme {Object}
      */
-    getOpacitySlider: function(theme) {
-        var slider = new GeoExt.LayerOpacitySlider({
+    getOpacitySlider: function(theme, anchor) {
+        theme.slider = new GeoExt.LayerOpacitySlider({
             layer: theme.layer,
             isFormField: true,
             hideLabel: true,
             aggressive: true,
-            anchor: '95%',
+            anchor: anchor || '95%',
             plugins: new GeoExt.LayerOpacitySliderTip({
                 template: '<div>' + this.opacitylabelText + ' {opacity}%</div>'
             })
         });
-        slider.on('changecomplete', function() {
+        theme.slider.on('changecomplete', function() {
             this.fireEvent('themeopacitychange');
         }, this);
         return new Ext.Container({
             layout: 'form',
-            items: [slider],
+            items: [theme.slider],
             listeners: {
                 render: function(cmp) {
                     cmp.getEl().setVisibilityMode(Ext.Element.DISPLAY);
@@ -577,6 +583,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 var slider = node.component;
                 if (!slider.getEl().isVisible()) {
                     slider.el.setVisibilityMode(Ext.Element.DISPLAY);
+                    // calculate the size
+                    slider.el.show();
+                    slider.doLayout();
+                    slider.el.hide();
                     slider.el.slideIn('t', {
                         useDisplay: true,
                         duration: 0.2,
@@ -784,6 +794,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                     legendURL: child.legendImage,
                                     layer: child.layer
                                 }, child.layer.id)]);
+                            child.slider.setLayer(child.layer);
                         }
                     });
                 }
