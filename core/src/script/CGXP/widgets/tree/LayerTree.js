@@ -783,6 +783,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 else if (child.type == "WMTS") {
                     format = new OpenLayers.Format.WMTSCapabilities();
+                    allOlLayerIndex = result.allOlLayers.length;
                     OpenLayers.Request.GET({
                         url: child.url,
                         scope: this,
@@ -815,7 +816,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 mapserverURL: child.mapserverURL,
                                 mapserverLayers: child.mapserverLayers
                             });
-                            result.allOlLayers.push(child.layer);
+                            result.allOlLayers.splice(allOlLayerIndex, 0, child.layer);
                             this.mapPanel.layers.insert(index, [
                                 new this.recordType({
                                     disclaimer: child.disclaimer,
@@ -866,6 +867,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     loadGroup: function(group, layers, opacity, visibility) {
         var existingGroup = this.root.findChild('groupId', group.name);
         if (!existingGroup) {
+            var index = this.mapPanel.layers.getCount();
+            while (this.mapPanel.map.layers[index-1] instanceof OpenLayers.Layer.Vector && index > 0) { index-- }
             if (group.isInternalWMS !== false) {
                 var params = {
                     layers: [],
@@ -908,7 +911,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.allLayers = result.allLayers;
                 group.allOlLayers = [layer];
                 layer.params.LAYERS = layers || result.checkedLayers;
-                this.mapPanel.layers.add(
+                this.mapPanel.layers.insert(index,
                     new this.recordType({
                         disclaimer: result.disclaimer,
                         layer: layer
@@ -922,7 +925,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.parseChildren(group, null, result, this.mapPanel.layers.getCount());
+                this.parseChildren(group, null, result, index);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
