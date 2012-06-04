@@ -21,6 +21,7 @@
  * @include CGXP/widgets/tool/Window.js
  * @include GeoExt/widgets/LegendPanel.js
  * @include GeoExt/widgets/WMSLegend.js
+ * @include GeoExt/widgets/UrlLegend.js
  */
 
 /** api: (define)
