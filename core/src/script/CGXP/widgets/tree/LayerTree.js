@@ -280,9 +280,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         uiProvider: 'layer'
                     });
                 }
-                var node = parentNode.appendChild(nodeConfig);
+                item.node = parentNode.appendChild(nodeConfig);
                 if (item.children) {
-                    addNodes.call(this, item.children, node, level+1);
+                    addNodes.call(this, item.children, item.node, level+1);
                 }
             }, this);
         }
@@ -346,7 +346,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var groupNodeConfig = {
             text: group.displayName,
             groupId: group.name,
-            nodeType: 'cgxp_layer',
+            internalWMS: internalWMS,
             iconCls: 'no-icon',
             cls: 'x-tree-node-theme',
             loaded: true,
@@ -357,6 +357,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             component: internalWMS ? this.getOpacitySlider(group) : null,
             actions: actions
         };
+        if (internalWMS) {
+            groupNodeConfig.nodeType = 'cgxp_layer';
+        }
         this.addMetadata(group, groupNodeConfig, true);
         var groupNode = this.root.insertBefore(groupNodeConfig,
                                                this.root.firstChild);
@@ -801,8 +804,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                     capabilities_layer = capabilities_layers[i];
                                 }
                             }
-                            capabilities_layer.b
-                            child.layer = format.createLayer(capabilities, {
+                            var layer = format.createLayer(capabilities, {
                                 ref: child.name,
                                 layer: child.name,
                                 maxExtent: capabilities_layer.bounds.transform(
@@ -816,14 +818,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 mapserverURL: child.mapserverURL,
                                 mapserverLayers: child.mapserverLayers
                             });
-                            result.allOlLayers.splice(allOlLayerIndex, 0, child.layer);
+                            child.node.attributes.layer = layer;
+                            name = child.name;
+                            if (('opacity_' + name) in this.initialState) {
+                                layer.setOpacity(this.initialState['opacity_' + name]);
+                            }
+                            layer.setVisibility(child.node.attributes.checked);
+                            result.allOlLayers.splice(allOlLayerIndex, 0, layer);
                             this.mapPanel.layers.insert(index, [
                                 new this.recordType({
                                     disclaimer: child.disclaimer,
                                     legendURL: child.legendImage,
-                                    layer: child.layer
-                                }, child.layer.id)]);
-                            child.slider.setLayer(child.layer);
+                                    layer: layer
+                                }, layer.id)]);
+                            child.slider.setLayer(layer);
                         }
                     });
                 }
@@ -1019,6 +1027,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var group = this.findGroupByName(t);            
             this.loadGroup(group, layers, opacity, visibility);
         }, this);
+        this.root.cascade(function(node) {
+            var layer = node.attributes.layer;
+            var name = node.attributes.name;
+            if (layer && ('opacity_' + name) in this.initialState) {
+                layer.setOpacity(this.initialState['opacity_' + name]);
+            }
+            if (name && ('enable_' + name) in this.initialState) {
+                node.getUI().toggleCheck(this.initialState['enable_' + name] != 'false');
+            }
+        }, this);
     },
 
     getState: function() {
@@ -1029,7 +1047,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var id = group.attributes.groupId;
             groups.push(id);
             var layer = group.layer;
-            if (layer) {
+            if (group.attributes.internalWMS) {
                 if (layer.opacity !== null && layer.opacity != 1) {
                     state['group_opacity_' + id] = layer.opacity;
                 }
@@ -1038,7 +1056,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }
             else {
-                // TODO
+                group.cascade(function(node) {
+                    var layer = node.attributes.layer;
+                    if (layer && layer.opacity !== null && layer.opacity != 1) {
+                        state['opacity_' + node.attributes.name] = layer.opacity;
+                    }
+                    if (layer) {
+                        state['enable_' + node.attributes.name] = layer.visibility;
+                    }
+                });
             }
         }, this);
         state.groups = groups.join(',');
