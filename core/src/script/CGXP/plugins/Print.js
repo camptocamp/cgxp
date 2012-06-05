@@ -73,6 +73,15 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     timeout: 120000,
 
+    /** api: config[encodeLayer]
+     * ``Object``
+     * Additional attribute used on encode layer.
+     * Default to { useNativeAngle: true }
+     */
+    encodeLayer: {
+        useNativeAngle: true
+    },
+
     printTitle: "Printing",
     titlefieldText: "Title",
     titlefieldvalueText: "Map title",
@@ -205,7 +214,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 delete encodedLayer.customParams;
             }
             if (encodedLayer) {
-                encodedLayer.useNativeAngle = true;
+                Ext.apply(encodedLayer, this.encodeLayer);
             }
         }.createDelegate(this));
 
