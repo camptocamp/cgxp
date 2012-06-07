@@ -242,9 +242,9 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                                         // check if layer is visible at current resolution
                                         var currentRes = this.map.getResolution();
                                         var  visible = true;
-                                        if ((layerGroup[k].hasOwnProperty('minResolutionHint') && 
+                                        if ((layerGroup[k].minResolutionHint && 
                                              currentRes < layerGroup[k].minResolutionHint) || 
-                                            (layerGroup[k].hasOwnProperty('maxResolutionHint') && 
+                                            (layerGroup[k].maxResolutionHint && 
                                              currentRes > layerGroup[k].maxResolutionHint)) {
                                             visible = false;
                                         }
