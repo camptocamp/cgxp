@@ -110,7 +110,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  ``GeoExt.data.LayerRecord`` Custom record type based on
      *      GeoExt.data.LayerRecord
      */
-    recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer"}]),
+    recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer", name: "childLayers"}]),
 
     /**
      * Property: actionsPlugin
@@ -685,6 +685,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 result.disclaimer[child.disclaimer] = true;
             }
             result.allLayers.push(child.name);
+            if (child.childLayers) {
+                result.childLayers[child.name] = child.childLayers;
+            }
             if (child.isChecked) {
                 result.checkedLayers.push(child.name);
             }
@@ -764,7 +767,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var result = {
                 allLayers: [],
                 checkedLayers: [],
-                disclaimer: {}
+                disclaimer: {},
+                childLayers: Object
             };
             this.parseChildren(group, layer, result);
             group.layer = layer;
@@ -773,6 +777,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             this.mapPanel.layers.add(
                 new this.recordType({
                     disclaimer: result.disclaimer,
+                    childLayers: result.childLayers,
                     layer: layer
                 }, layer.id));
             this.addGroup(group);

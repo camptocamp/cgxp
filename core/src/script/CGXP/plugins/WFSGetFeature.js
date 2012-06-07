@@ -187,6 +187,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
         return new OpenLayers.Control.GetFeature({
+            target: this.target,
             internalProtocol: protocol,
             externalProtocol: externalProtocol,
             box: true, 
@@ -227,15 +228,48 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                             layers = layers.join(',');
                         }
                         layers = layers.split(',');
-                        for (var j = 0, lenj = layers.length ; j < lenj ; j++) {
+                        
+                        // replacing layerGroups by child layers and filtering by 
+                        // min/maxResolutionHint
+                        var filteredLayers = [];
+                        var layerGroupsData = this.target.mapPanel.layers.getById(layer.id).data.childLayers;
+                        if (layerGroupsData) {
+                            for (var j = 0, lenj = layers.length; j < lenj; j++) {
+                                if (layerGroupsData[layers[j]]) {
+                                    // layer is a layergroup
+                                    var layerGroup = layerGroupsData[layers[j]]
+                                    for (var k = 0, lenk = layerGroup.length; k < lenk; k++) {
+                                        // check if layer is visible at current resolution
+                                        var currentRes = this.map.getResolution();
+                                        var  visible = true;
+                                        if ((layerGroup[k].minResolutionHint && 
+                                             currentRes < layerGroup[k].minResolutionHint) || 
+                                            (layerGroup[k].maxResolutionHint && 
+                                             currentRes > layerGroup[k].maxResolutionHint)) {
+                                            visible = false;
+                                        }
+                                        if (visible) {
+                                            filteredLayers.push(layerGroup[k].name);
+                                        }
+                                    }
+                                } else {
+                                    // layer is not a layergroup
+                                    filteredLayers.push(layers[j]);
+                                }
+                            }
+                        } else {
+                            filteredLayers = layers;
+                        }
+
+                        for (var j = 0, lenj = filteredLayers.length ; j < lenj ; j++) {
                             for (var i = 0, leni = this.WFSTypes.length ; i < leni ; i++) {
-                                if (this.WFSTypes[i] === layers[j]) {
+                                if (this.WFSTypes[i] === filteredLayers[j]) {
                                     internalLayers.push(this.WFSTypes[i]);
                                     break;
                                 }
                             }
                             for (var k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
-                                if (this.externalWFSTypes[k] === layers[j]) {
+                                if (this.externalWFSTypes[k] === filteredLayers[j]) {
                                     externalLayers.push(this.externalWFSTypes[k]);
                                     break;
                                 }
