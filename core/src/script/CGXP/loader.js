@@ -32,6 +32,7 @@
         "plugins/GoogleEarthView.js",
         "plugins/Editing.js",
         "plugins/FeaturesWindow.js",
+        "plugins/WFSGetFeature.js",
         "../../../../geoext.ux/ux/FeatureSelectionModel/lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js",
         "../../../../ext/Ext/examples/ux/RowExpander.js",
         "locale/en.js",
