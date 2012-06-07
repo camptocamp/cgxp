@@ -229,12 +229,13 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                         }
                         layers = layers.split(',');
                         
-                        // replacing layerGroups by child layers and filtering by min/maxResolutionHint
-                        filteredLayers = [];
-                        var layerGroupsData = this.target.mapPanel.layers.getById(layer.id).data.allChildLayers;
+                        // replacing layerGroups by child layers and filtering by 
+                        // min/maxResolutionHint
+                        var filteredLayers = [];
+                        var layerGroupsData = this.target.mapPanel.layers.getById(layer.id).data.childLayers;
                         if (layerGroupsData) {
                             for (var j = 0, lenj = layers.length; j < lenj; j++) {
-                                if (layerGroupsData.hasOwnProperty(layers[j])) {
+                                if (layerGroupsData[layers[j]]) {
                                     // layer is a layergroup
                                     var layerGroup = layerGroupsData[layers[j]]
                                     for (var k = 0, lenk = layerGroup.length; k < lenk; k++) {
