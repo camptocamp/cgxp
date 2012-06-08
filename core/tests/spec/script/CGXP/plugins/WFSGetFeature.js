@@ -7,8 +7,8 @@ describe('plugins.WFSGetFeature', function() {
 
             var plugin = new cgxp.plugins.WFSGetFeature({
                 WFSURL: 'wfs_url',
-                WFSTypes: ['layer11', 'layer32'],
-                externalWFSTypes: ['layer22', 'layer41'],
+                WFSTypes: ['layer11', 'layer42', 'layer21', 'layer3'],
+                externalWFSTypes: ['layer41', 'layer12', 'layer51', 'layer6'],
                 events: observable
             });
 
@@ -16,13 +16,13 @@ describe('plugins.WFSGetFeature', function() {
 
             var layer1 = new OpenLayers.Layer.WMS(
                 'olayer1', 'wms',
-                {layers: 'group1,group2'},
+                {layers: 'group1,group2,layer3,group7'},
                 {singleTile: true, isBaseLayer: false}
             );
 
             var layer2 = new OpenLayers.Layer.WMS(
                 'ollayer2', 'wms',
-                {layers: 'group3,group4'},
+                {layers: 'group4,group5,layer6,group8'},
                 {singleTile: true, isBaseLayer: false}
             );
 
@@ -58,15 +58,15 @@ describe('plugins.WFSGetFeature', function() {
                 new recordType({
                     layer: layer2,
                     childLayers: {
-                        'group3': [{
-                            name: 'layer31'
-                        }, {
-                            name: 'layer32'
-                        }],
                         'group4': [{
                             name: 'layer41'
                         }, {
                             name: 'layer42'
+                        }],
+                        'group5': [{
+                            name: 'layer51'
+                        }, {
+                            name: 'layer52'
                         }]
                     }
                 }, layer2.id)
@@ -94,9 +94,9 @@ describe('plugins.WFSGetFeature', function() {
         it('uses expected feature types in the requests', function() {
             control.request();
             expect(control.internalProtocol.format.featureType).toEqual(
-                ['layer11', 'layer32']);
+                ['layer11', 'layer21', 'layer3', 'layer42']);
             expect(control.externalProtocol.format.featureType).toEqual(
-                ['layer22', 'layer41']);
+                ['layer12', 'layer41', 'layer51', 'layer6']);
         });
     });
 });
