@@ -686,6 +686,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
             result.allLayers.push(child.name);
             if (child.childLayers) {
+                result.childLayers = result.childLayers || {};
                 result.childLayers[child.name] = child.childLayers;
             }
             if (child.isChecked) {
@@ -768,7 +769,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 allLayers: [],
                 checkedLayers: [],
                 disclaimer: {},
-                childLayers: Object
+                childLayers: null
             };
             this.parseChildren(group, layer, result);
             group.layer = layer;
