@@ -235,7 +235,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                         var layerGroupsData = this.target.mapPanel.layers.getById(layer.id).data.childLayers;
                         if (layerGroupsData) {
                             for (var j = 0, lenj = layers.length; j < lenj; j++) {
-                                if (layerGroupsData[layers[j]]) {
+                                if (layerGroupsData[layers[j]] && layerGroupsData[layers[j]].length > 0) {
                                     // layer is a layergroup
                                     var layerGroup = layerGroupsData[layers[j]]
                                     for (var k = 0, lenk = layerGroup.length; k < lenk; k++) {
