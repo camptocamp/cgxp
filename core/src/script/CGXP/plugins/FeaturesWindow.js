@@ -24,7 +24,7 @@
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = FeatureWindow
+ *  class = FeaturesWindow
  */
 
 Ext.namespace("cgxp.plugins");
