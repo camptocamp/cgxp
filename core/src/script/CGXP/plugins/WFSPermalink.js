@@ -108,6 +108,12 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
      */
     srsName: null,
 
+    /** api: config[pointRecenterZoom]
+     *  ``Integer``
+     *  Zoomlevel to use when result is a single point feature.
+     */
+    pointRecenterZoom: null,
+
     /** api: config[target]
      *  ``gxp.Viewer``
      *  Reference to the viewer.
@@ -219,7 +225,7 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
                     maxExtent.extend(geometry.getBounds());
                 }
 
-                // FIXME: hack: type should already be available
+                // FIXME: workaround: type should already be available
                 // in the WFS response
                 if (!features[i].type) {
                     features[i].type = this.layername;
@@ -227,6 +233,11 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
             }
             if (maxExtent) {
                 this.target.mapPanel.map.zoomToExtent(maxExtent);
+            }
+
+            if (this.pointRecenterZoom && features.length == 1 &&
+                features[0].geometry instanceof OpenLayers.Geometry.Point) {
+                this.target.mapPanel.map.zoomTo(this.pointRecenterZoom);
             }
 
             this.events.fireEvent('queryresults', features);
