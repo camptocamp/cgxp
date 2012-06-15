@@ -42,6 +42,10 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_wfspermalink */
     ptype: "cgxp_wfspermalink",
 
+    /** api: config[componentConfig]
+     *  ``Object``
+     *  Parameters of the WFS query tool.
+     */
     componentConfig: null,
 
     init: function() {
@@ -68,19 +72,56 @@ Ext.namespace("cgxp");
  */
 cgxp.WFSPermalink = Ext.extend(Ext.Component, {
 
-    stateId: 'search',
+    /** api: config[stateId]
+     *  ``String``
+     * Prefix of the permalink parameters.
+     */
+    stateId: 'wfs',
 
+    /** api: config[WFSTypes]
+     *  ``Array``
+     *  The queryable type on the internal server.
+     */
     WFSTypes: null,
+    
+    /** api: config[WFSURL]
+     *  ``String``
+     *  The mapserver proxy URL
+     */
     WFSURL: null,
-    geometryName: 'geom',
+    
+    /** api: config[maxFeatures]
+     *  ``Integer``
+     *  Maximum number of features returned.
+     */
     maxFeatures: 100,
+    
+    /** api: config[events]
+     *  ``Object``
+     *  An Observer used to send events.
+     */
     events: null,
-    target: null,
+    
+    /** api: config[srsName]
+     *  ``String``
+     *  Projection code.
+     */
     srsName: null,
 
-    layername: null,
+    /** api: config[target]
+     *  ``gxp.Viewer``
+     *  Reference to the viewer.
+     */
+    target: null,
+
+    /** private: property[filters]
+     *  ``Object``
+     *  List of search criteria.
+     */
     filters: null,
 
+    /** private: method[initComponent]
+     */
     initComponent: function() {
         cgxp.WFSPermalink.superclass.initComponent.apply(this, arguments);
 
@@ -90,19 +131,22 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         }
     },
     
+    /** private: method[applyState]
+     *  :param state: ``Object`` The state to apply.
+     */
     applyState: function(state) {
         if (!state.layer || this.WFSTypes.indexOf(state.layer) == -1) {
             // layername is missing or unknown => do nothing
             return;
         }
-        this.layername = state.layer;
+        var layername = state.layer;
         delete state.layer;
         this.filters = state;
 
         var protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
-            geometryName: this.geometryName,
-            featureType: this.layername,
+            featureType: layername,
+            // FIXME: not sure projection from map object is available at that time
             srsName: this.srsName || this.target.mapPanel.map.getProjection(),
             formatOptions: {
                 featureNS: 'http://mapserver.gis.umn.edu/mapserver',
@@ -119,6 +163,10 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         });
     },
 
+    /** private: method[createFilter]
+     *
+     *  Build a WFS filter according to the permalink parameters.
+     */
     createFilter: function() {
         if (!this.filters) {
             return null;
@@ -146,6 +194,11 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         });
     },
 
+    /** private: method[handleResult]
+     *  :param result: ``Object`` Response to the WFS request.
+     *
+     *  Callback of the WFS request.
+     */
     handleResult: function(result) {
         if (result.success() && result.features.length) {
             var features = result.features;
