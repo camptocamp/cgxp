@@ -120,6 +120,12 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
      */
     filters: null,
 
+    /** private: property[layername]
+     *  ``String``
+     *  Name of layer requested (type).
+     */
+    layername: null,
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -139,13 +145,13 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
             // layername is missing or unknown => do nothing
             return;
         }
-        var layername = state.layer;
+        this.layername = state.layer;
         delete state.layer;
         this.filters = state;
 
         var protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
-            featureType: layername,
+            featureType: this.layername,
             // FIXME: not sure projection from map object is available at that time
             srsName: this.srsName || this.target.mapPanel.map.getProjection(),
             formatOptions: {
@@ -202,7 +208,6 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
     handleResult: function(result) {
         if (result.success() && result.features.length) {
             var features = result.features;
-            console.log(features)
             if (!(OpenLayers.Util.isArray(features))) {
                 features = [features];
             }
@@ -215,6 +220,12 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
                         maxExtent = new OpenLayers.Bounds();
                     }
                     maxExtent.extend(geometry.getBounds());
+                }
+
+                // FIXME: hack: type should already be available
+                // in the WFS response
+                if (!features[i].type) {
+                    features[i].type = this.layername;
                 }
             }
             if (maxExtent) {
