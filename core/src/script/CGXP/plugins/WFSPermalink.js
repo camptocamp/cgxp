@@ -18,7 +18,7 @@
 /*
  * @requires plugins/Tool.js
  * @include OpenLayers/Control/GetFeature.js
- * @include OpenLayers/Protocol/WFS/v1_0_0.js
+ * @include OpenLayers/Protocol/WFS/v1_1_0.js
  * @include OpenLayers/Format/GML.js
  * @include OpenLayers/Filter/Comparison.js
  * @include OpenLayers/Filter/Logical.js
@@ -152,12 +152,9 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         var protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
             featureType: this.layername,
-            // FIXME: not sure projection from map object is available at that time
-            srsName: this.srsName || this.target.mapPanel.map.getProjection(),
-            formatOptions: {
-                featureNS: 'http://mapserver.gis.umn.edu/mapserver',
-                autoconfig: false
-            }
+            srsName: this.srsName,
+            featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+            version: "1.1.0"
         });
 
         this.events.fireEvent('querystarts');
