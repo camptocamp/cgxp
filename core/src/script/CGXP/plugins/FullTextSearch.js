@@ -126,6 +126,13 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     comboConfig: null,
 
+    /** api: config[layerTreeId]
+     *  ``String``
+     *  Id of the layertree tool.
+     *  If set, automaticaly load the corresponding layerGroup in the layer tree.
+     */
+    layerTreeId: null,
+
     projections: null,
 
     init: function() {
@@ -282,11 +289,6 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 var feature = record.getFeature();
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
                 this.vectorLayer.addFeatures([feature]);
-                // make sure the layer this feature belongs to is displayed
-                var layer = map.getLayersBy('ref', record.get('layer_name'));
-                if (layer && layer.length > 0) {
-                    layer[0].setVisibility(true);
-                }
                 
                 // zoom onto the feature
                 if (this.pointRecenterZoom &&
@@ -296,6 +298,21 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                                   this.pointRecenterZoom);
                 } else {
                     map.zoomToExtent(feature.bounds);
+                }
+
+                // load related group or layer
+                if (this.layerTreeId) {
+                    var tree = this.target.tools[this.layerTreeId].tree;
+                    var layer = tree.findGroupByLayerName(record.get('layer_name'));
+                    if (layer) {
+                        tree.loadGroup(layer, [record.get('layer_name')], null, null, true);
+                    }
+                } else {
+                    // try to load layer directly
+                    var layer = map.getLayersBy('ref', record.get('layer_name'));
+                    if (layer && layer.length > 0) {
+                        layer[0].setVisibility(true);
+                    }
                 }
             },
             'clear': function(combo) {
