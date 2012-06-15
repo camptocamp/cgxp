@@ -34,7 +34,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_print */
+    /** api: ptype = cgxp_permalink */
     ptype: "cgxp_permalink",
 
     /** api: config[options]
