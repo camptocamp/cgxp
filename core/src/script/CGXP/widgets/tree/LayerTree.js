@@ -853,6 +853,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 }
                             });
                             child.slider.setLayer(layer);
+                            child.node.layer = layer;
+                            layer.events.on({
+                                "visibilitychanged": child.node.onLayerVisibilityChanged,
+                                scope: child.node
+                            });
+                            child.node.on({
+                                "checkchange": child.node.onCheckChange,
+                                scope: child.node
+                            }); 
+
                         }
                     });
                 }
