@@ -113,10 +113,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer", name: "childLayers"}]),
 
+    /** private: property[indexToAdd]
+     *  ``Array`` of ``Object`` with one 'index' attribute.
+     */
+
     /**
      * Property: actionsPlugin
      */
     initComponent: function() {
+        this.indexToAdd = [];
+
         // fill displaynames one time for everybody
         function fillDisplayNames(nodes) {
             Ext.each(nodes, function(node) {
@@ -783,10 +789,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             legendURL: child.legendImage,
                             layer: child.layer
                         }, child.layer.id)]);
+                    Ext.each(this.indexToAdd, function(idx) {
+                        if (idx.index >= index) {
+                            idx.index++;
+                        }
+                    });
                 }
                 else if (child.type == "WMTS") {
-                    format = new OpenLayers.Format.WMTSCapabilities();
-                    allOlLayerIndex = result.allOlLayers.length;
+                    var format = new OpenLayers.Format.WMTSCapabilities();
+                    var allOlLayerIndex = result.allOlLayers.length;
+                    var indexToAdd = {index: index}
+                    this.indexToAdd.push(indexToAdd);
+                    result.allOlLayers.push(null);
                     OpenLayers.Request.GET({
                         url: child.url,
                         scope: this,
@@ -824,13 +838,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 layer.setOpacity(this.initialState['opacity_' + name]);
                             }
                             layer.setVisibility(child.node.attributes.checked);
-                            result.allOlLayers.splice(allOlLayerIndex, 0, layer);
-                            this.mapPanel.layers.insert(index, [
+                            result.allOlLayers[allOlLayerIndex] = layer;
+                            this.mapPanel.layers.insert(indexToAdd.index, [
                                 new this.recordType({
                                     disclaimer: child.disclaimer,
                                     legendURL: child.legendImage,
                                     layer: layer
                                 }, layer.id)]);
+                            Ext.each(this.indexToAdd, function(idx) {
+                                if (idx.index >= index) {
+                                    idx.index++;
+                                }
+                            });
                             child.slider.setLayer(layer);
                         }
                     });
@@ -924,6 +943,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         disclaimer: result.disclaimer,
                         layer: layer
                     }, layer.id));
+                Ext.each(this.indexToAdd, function(idx) {
+                    if (idx.index >= index) {
+                        idx.index++;
+                    }
+                });
                 this.addGroup(group, true);
             }
             else {
