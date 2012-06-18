@@ -773,8 +773,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         child.name, child.url, {
                             STYLE: child.style,
                             LAYER: child.name,
-                            format: child.imageType,
-                            transparent: child.imageType == 'image/png'
+                            FORMAT: child.imageType,
+                            TRANSPARENT: child.imageType == 'image/png'
                         }, {
                             ref: child.name,
                             visibility: child.isChecked,
@@ -821,9 +821,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             var layer = format.createLayer(capabilities, {
                                 ref: child.name,
                                 layer: child.name,
-                                maxExtent: capabilities_layer.bounds.transform(
+                                maxExtent: capabilities_layer.bounds ? 
+                                    capabilities_layer.bounds.transform(
                                         "EPSG:4326", 
-                                        this.mapPanel.map.getProjectionObject()),
+                                        this.mapPanel.map.getProjectionObject()) : 
+                                    undefined,
                                 style: child.style,
                                 matrixSet: child.matrixSet,
                                 dimension: child.dimension,
@@ -834,7 +836,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             });
                             child.node.attributes.layer = layer;
                             name = child.name;
-                            if (('opacity_' + name) in this.initialState) {
+                            if (this.initialState && this.initialState['opacity_' + name]) {
                                 layer.setOpacity(this.initialState['opacity_' + name]);
                             }
                             layer.setVisibility(child.node.attributes.checked);
