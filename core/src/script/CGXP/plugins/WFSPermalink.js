@@ -197,6 +197,10 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
             return null;
         }
 
+        if (filters.length == 1) {
+            return filters[0];
+        }
+
         return new OpenLayers.Filter.Logical({
             type: OpenLayers.Filter.Logical.AND,
             filters: filters
