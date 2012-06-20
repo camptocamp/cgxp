@@ -1,0 +1,36 @@
+$ svn export http://svn.geoext.org/sandbox/mapgears/geoext.ux/ux/WMSBrowser/
+A    WMSBrowser
+A    WMSBrowser/tests
+A    WMSBrowser/lib
+A    WMSBrowser/lib/GeoExt.ux
+A    WMSBrowser/lib/GeoExt.ux/plugins
+A    WMSBrowser/lib/GeoExt.ux/plugins/WMSBrowserAlerts.js
+A    WMSBrowser/lib/GeoExt.ux/WMSBrowser.js
+A    WMSBrowser/lib/GeoExt.ux/widgets
+A    WMSBrowser/lib/GeoExt.ux/widgets/tree
+A    WMSBrowser/lib/GeoExt.ux/widgets/tree/WMSBrowserRootNode.js
+A    WMSBrowser/lib/GeoExt.ux/widgets/tree/WMSBrowserTreePanel.js
+A    WMSBrowser/lib/GeoExt.ux/widgets/WMSBrowser.js
+A    WMSBrowser/lib/GeoExt.ux/widgets/grid
+A    WMSBrowser/lib/GeoExt.ux/widgets/grid/WMSBrowserGridPanel.js
+A    WMSBrowser/lib/GeoExt.ux/widgets/WMSBrowserStatusBar.js
+A    WMSBrowser/lib/GeoExt.ux/data
+A    WMSBrowser/lib/GeoExt.ux/data/WMSBrowserWMSCapabilitiesStore.js
+A    WMSBrowser/lib/GeoExt.ux/data/Store.js
+A    WMSBrowser/resources
+A    WMSBrowser/resources/lang
+A    WMSBrowser/resources/lang/fr.js
+A    WMSBrowser/resources/images
+A    WMSBrowser/resources/css
+A    WMSBrowser/resources/css/WMSBrowser.css
+A    WMSBrowser/examples
+A    WMSBrowser/examples/WMSBrowserProxy.php
+A    WMSBrowser/examples/WMSBrowser.js
+A    WMSBrowser/examples/data
+A    WMSBrowser/examples/data/dev4g.mapgears.com_cgi-bin_mswms_gmap_incompatible_srs.xml
+A    WMSBrowser/examples/data/dev4g.mapgears.com_cgi-bin_mswms_gmap_1.3.0.xml
+A    WMSBrowser/examples/data/dev4g.mapgears.com_cgi-bin_mswms_gmap.xml
+A    WMSBrowser/examples/data/wmscap.xml
+A    WMSBrowser/examples/data/dev4g.mapgears.com_cgi-bin_mswms_bdga.xml
+A    WMSBrowser/examples/WMSBrowser.html
+Exporté à la révision 2881.
