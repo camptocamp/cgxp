@@ -138,7 +138,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         this.actionsPlugin = new GeoExt.plugins.TreeNodeActions({
             listeners: {
-                action: this.onAction
+                action: this.onAction,
+                scope: this
             }
         });
         this.plugins = [
@@ -534,6 +535,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     /**
+     * Method: onMetadataAction
+     * Handles a click on the metadata icon
+     *
+     * Parameters:
+     * node {Object}
+     */
+    onMetadataAction: function(node) {
+        window.open(node.attributes.metadataUrl);
+    },
+
+    /**
      * Method: onAction
      * Called when a action image is clicked
      */
@@ -545,7 +557,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         switch (action) {
             case 'metadata':
-                window.open(node.attributes.metadataUrl);
+                this.onMetadataAction(node);
                 break;
             case 'delete':
                 var tree = node.getOwnerTree();
