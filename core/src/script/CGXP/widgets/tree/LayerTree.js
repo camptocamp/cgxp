@@ -900,37 +900,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * name {String}
      */
     findGroupByLayerName: function(name) {
-        var result = false;
-        var parseChildren = function(node, group) {
-            group = group || node;
-            if (result) {
-                return false;
-            }
-            if (node.name == name) {
-                result = group;
-                return false;
-            }
-            if (node.children && node.children.length > 0) {
-                Ext.each(node.children, function(n) {
-                    parseChildren(n, group)
-                }, this);
-            }
-        }
-        Ext.each(['local', 'external'], function(location) {
+       var result = null;
+       var parseChildren = function(node, group) {
+           group = group || node;
+           if (node.name && node.name == name) {
+               result = group;
+               return false;
+           }
+           if (node.children) {
+               Ext.each(node.children, function(n) {
+                   return parseChildren(n, group);
+               });
+           }
+           return true;
+       }
+       Ext.each(['local', 'external'], function(location) {
             Ext.each(this.themes[location], function(t) {
                 Ext.each(t.children, function(n) {
                     // recurse on all children
-                    parseChildren(n);
-                    if (result) {
-                        return false;
-                    }
-                }, this);
-            }, this);
-            if (result) {
-                return false;
-            }
-        }, this);
-        return result;
+                    return parseChildren(n);
+                });
+            });
+           return !result;
+       }, this);
+       return result;
     },
 
     /**
