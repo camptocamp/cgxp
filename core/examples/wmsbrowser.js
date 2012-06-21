@@ -31,6 +31,10 @@ Ext.onReady(function() {
         },
         map: {
             id: "mymap",
+            projection: "EPSG:900913",
+            units: "m",
+            maxResolution: 156543.0339,
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             center: [0, 0],
             zoom: 2,
             layers: [{
