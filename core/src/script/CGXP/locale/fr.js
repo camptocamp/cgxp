@@ -122,6 +122,11 @@ GeoExt.Lang.add("fr", {
         windowTitleText: 'Résultats',
         itemsText: "éléments",
         itemText: "élément"
+    },
+
+    "cgxp.plugins.WMSBrowser.prototype": {
+        buttonText: "+ WMS",
+        windowTitleText: "Ajouter des couches WMS"
     }
 });
 

@@ -138,7 +138,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         this.actionsPlugin = new GeoExt.plugins.TreeNodeActions({
             listeners: {
-                action: this.onAction
+                action: this.onAction,
+                scope: this
             }
         });
         this.plugins = [
@@ -534,6 +535,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     /**
+     * Method: onMetadataAction
+     * Handles a click on the metadata icon
+     *
+     * Parameters:
+     * node {Object}
+     */
+    onMetadataAction: function(node) {
+        window.open(node.attributes.metadataUrl);
+    },
+
+    /**
      * Method: onAction
      * Called when a action image is clicked
      */
@@ -545,7 +557,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         switch (action) {
             case 'metadata':
-                window.open(node.attributes.metadataUrl);
+                this.onMetadataAction(node);
                 break;
             case 'delete':
                 var tree = node.getOwnerTree();
@@ -730,8 +742,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * opacity {Float} the OL layer opacity. optional
      * visibility {Boolean} the OL layer visibility. optional
      */
-    loadGroup: function(group, layers, opacity, visibility) {
+    loadGroup: function(group, layers, opacity, visibility, nowarning) {
         var existingGroup = this.root.findChild('groupId', group.name);
+        nowarning = nowarning || false;
         if (!existingGroup) {
 
             var params = {
@@ -791,29 +804,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.fireEvent('checkchange', node, true);
                 }, this);
             }
-
-            var html = [ 
-                '<div class="layertree-msg">',
-                    this.themealreadyloadedText,
-                '</div>'
-            ].join('');
-            var msg = Ext.DomHelper.insertBefore(
-                this.body,
-                {
-                    html: html,
-                    xtype: 'container'
-                },
-                true
-            ).fadeIn();
-            new Ext.util.DelayedTask(function() {
-                var duration = 1;
-                msg.fadeOut({ duration: duration });
+            if(!nowarning) {
+                var html = [ 
+                    '<div class="layertree-msg">',
+                        this.themealreadyloadedText,
+                    '</div>'
+                ].join('');
+                var msg = Ext.DomHelper.insertBefore(
+                    this.body,
+                    {
+                        html: html,
+                        xtype: 'container'
+                    },
+                    true
+                ).fadeIn();
                 new Ext.util.DelayedTask(function() {
-                    // make sure that the message is actually removed
-                    // ("remove" option of fadeOut() doesn't seem to work)
-                    msg.remove();
-                }).delay(duration * 1000);
-            }).delay(3000);
+                    var duration = 1;
+                    msg.fadeOut({ duration: duration });
+                    new Ext.util.DelayedTask(function() {
+                        // make sure that the message is actually removed
+                        // ("remove" option of fadeOut() doesn't seem to work)
+                        msg.remove();
+                    }).delay(duration * 1000);
+                }).delay(3000);
+            }
         }
 
         layer.setOpacity(opacity || 1);
@@ -888,6 +902,40 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         state.groups = groups.join(',');
 
         return state;
+    },
+
+    /**
+     * Method: findGroupByLayerName
+     * Finds the group config for a specific layer using its name
+     *
+     * Parameters:
+     * name {String}
+     */
+    findGroupByLayerName: function(name) {
+       var result = null;
+       var parseChildren = function(node, group) {
+           group = group || node;
+           if (node.name && node.name == name) {
+               result = group;
+               return false;
+           }
+           if (node.children) {
+               Ext.each(node.children, function(n) {
+                   return parseChildren(n, group);
+               });
+           }
+           return true;
+       }
+       Ext.each(['local', 'external'], function(location) {
+            Ext.each(this.themes[location], function(t) {
+                Ext.each(t.children, function(n) {
+                    // recurse on all children
+                    return parseChildren(n);
+                });
+            });
+           return !result;
+       }, this);
+       return result;
     },
 
     /**
