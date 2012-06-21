@@ -50,7 +50,7 @@ cgxp.plugins.SwitchableWMTSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (Ext.isArray(config.args)) {
             config.args = config.args[0];
         }
-        var layer = new cgxp.layers.WMTS(config.args);
+        var layer = new cgxp.layers.SwitchableWMTS(config.args);
 
         // apply properties that may have come from saved config
         if ("visibility" in config) {
@@ -101,15 +101,15 @@ Ext.preg(cgxp.plugins.SwitchableWMTSSource.prototype.ptype, cgxp.plugins.Switcha
 
 /** api: (define)
  *  module = cgxp.layers
- *  class = WMTS
+ *  class = SwitchableWMTS
  */
 Ext.namespace("cgxp.layers");
 
 /** api: constructor
- *  .. class:: WMTS(config)
+ *  .. class:: SwitchableWMTS(config)
  *
  */
-cgxp.layers.WMTS = OpenLayers.Class(OpenLayers.Layer.WMTS, {
+cgxp.layers.SwitchableWMTS = OpenLayers.Class(OpenLayers.Layer.WMTS, {
 
     /** 
      * APIProperty: url
