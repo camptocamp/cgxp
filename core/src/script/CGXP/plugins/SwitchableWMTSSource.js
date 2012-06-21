@@ -22,7 +22,7 @@
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = WMTSSource
+ *  class = SwitchableWMTSSource
  */
 
 /** api: (extends)
@@ -31,13 +31,13 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
- *  .. class:: WMTSSource(config)
+ *  .. class:: SwitchableWMTSSource(config)
  *
  */
-cgxp.plugins.WMTSSource = Ext.extend(gxp.plugins.LayerSource, {
+cgxp.plugins.SwitchableWMTSSource = Ext.extend(gxp.plugins.LayerSource, {
 
-    /** api: ptype = cgxp_wmtssource */
-    ptype: "cgxp_wmtssource",
+    /** api: ptype = cgxp_switchablewmtssource */
+    ptype: "cgxp_switchablewmtssource",
 
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
@@ -88,7 +88,7 @@ cgxp.plugins.WMTSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     getConfigForRecord: function(record) {
         // get general config
-        var config = cgxp.plugins.WMTSSource.superclass.getConfigForRecord.apply(this, arguments);
+        var config = cgxp.plugins.SwitchableWMTSSource.superclass.getConfigForRecord.apply(this, arguments);
         // add config specific to this source
         var layer = record.getLayer();
         return Ext.apply(config, {
@@ -97,7 +97,7 @@ cgxp.plugins.WMTSSource = Ext.extend(gxp.plugins.LayerSource, {
     }
 });
 
-Ext.preg(cgxp.plugins.WMTSSource.prototype.ptype, cgxp.plugins.WMTSSource);
+Ext.preg(cgxp.plugins.SwitchableWMTSSource.prototype.ptype, cgxp.plugins.SwitchableWMTSSource);
 
 /** api: (define)
  *  module = cgxp.layers
