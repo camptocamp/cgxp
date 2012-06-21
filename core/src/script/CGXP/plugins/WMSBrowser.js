@@ -83,7 +83,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     createWMSBrowser: function() {
         return new GeoExt.ux.WMSBrowser({
             border: false,
-            zoomOnLayerAdded: false,
+            zoomOnLayerAdded: true,
             closeOnLayerAdded: false,
             mapPanelPreviewOptions: {
                 height: 170,
