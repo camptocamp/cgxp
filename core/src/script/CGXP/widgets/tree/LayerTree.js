@@ -59,6 +59,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     uniqueTheme: false,
 
+    /** api: config[frienlyUrl]
+     * ``Boolean``
+     * True to enable friendly url support (HTML5 browers only), default to true.
+     */
+    frienlyUrl: true,
+
     /**
      * Property: mapPanel
      */
@@ -730,6 +736,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         Ext.each(theme.children.concat().reverse(), function(group) {
             this.loadGroup(group);
         }, this);
+
+        if (this.uniqueTheme && this.frienlyUrl && history.replaceState) {
+            // replace anything after theme/ and final / or end
+            var re = /^(.*\/theme\/).*$/;
+            var results = re.exec(String(location.href));
+            var query = location.search != '' ? '/' + location.search : '';
+            var newUrl = results[1] + theme.name + query;
+            history.replaceState({}, OpenLayers.i18n(theme.name), newUrl);
+        }
     },
 
     /**
