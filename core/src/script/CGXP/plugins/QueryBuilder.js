@@ -41,7 +41,7 @@ Ext.namespace("cgxp.plugins");
  */   
 cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = cgxp_print */
+    /** api: ptype = cgxp_querier */
     ptype: "cgxp_querier",
 
     /** api: config[options]

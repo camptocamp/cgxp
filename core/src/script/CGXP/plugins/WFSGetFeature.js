@@ -44,7 +44,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_wmsgetfeatureinfo */
+    /** api: ptype = cgxp_wfsgetfeature */
     ptype: "cgxp_wfsgetfeature",
 
     /** api: config[toggleGroup]
