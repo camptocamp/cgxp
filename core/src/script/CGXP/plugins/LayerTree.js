@@ -27,6 +27,103 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add les LayerTree, ThemeChooser 
+ *  and ThemeSelector plugins to a Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          portalConfig: {
+ *              layout: "border",
+ *              // by configuring items here, we don't need to configure portalItems
+ *              // and save a wrapping container
+ *              items: [{
+ *                  region: "north",
+ *                  contentEl: 'header-out'
+ *              },
+ *              {
+ *                  region: 'center',
+ *                  layout: 'border',
+ *                  id: 'center',
+ *                  tbar: [],
+ *                  items: [
+ *                      "app-map"
+ *                  ]
+ *              },
+ *              {
+ *                  id: "featuregrid-container",
+ *                  xtype: "panel",
+ *                  layout: "fit",
+ *                  region: "south",
+ *                  height: 160,
+ *                  split: true,
+ *                  collapseMode: "mini",
+ *                  hidden: true,
+ *                  bodyStyle: 'background-color: transparent;'
+ *              }, 
+ *              {
+ *                  layout: "accordion",
+ *                  id: "left-panel",
+ *                  region: "west",
+ *                  width: 300,
+ *                  minWidth: 300,
+ *                  split: true,
+ *                  collapseMode: "mini",
+ *                  border: false,
+ *                  defaults: {width: 300},
+ *                  items: [{
+ *                      xtype: "panel",
+ *                      title: OpenLayers.i18n("layertree"),
+ *                      id: 'layerpanel',
+ *                      layout: "vbox",
+ *                      layoutConfig: {
+ *                          align: "stretch"
+ *                      }
+ *                  }]
+ *              }]
+ *          },
+ *          tools: [{
+ *              ptype: "cgxp_themeselector",
+ *              outputTarget: "layerpanel",
+ *              layerTreeId: "layertree",
+ *              themes: THEMES,
+ *              outputConfig: {
+ *                  layout: "fit",
+ *                  style: "padding: 3px 0 3px 3px;"
+ *              }
+ *          }, 
+ *          {
+ *              ptype: "cgxp_themefinder",
+ *              outputTarget: "layerpanel",
+ *              layerTreeId: "layertree",
+ *              themes: THEMES,
+ *              outputConfig: {
+ *                  layout: "fit",
+ *                  style: "padding: 3px;"
+ *              }                             
+ *          },
+ *          {
+ *              ptype: "cgxp_layertree",
+ *              id: "layertree",
+ *              outputConfig: {
+ *                  header: false,
+ *                  flex: 1,
+ *                  layout: "fit",
+ *                  autoScroll: true,
+ *                  themes: THEMES,
+ *                  // default themes works only with theme groups
+ *                  defaultThemes: ["default_theme_to_load"],
+ *                  wmsURL: "${request.route_url('mapserverproxy', path='')}"
+ *              },
+ *              outputTarget: "layerpanel"
+ *          }, 
+ *          ...
+ *          ]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: LayerTree(config)
  *

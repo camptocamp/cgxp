@@ -26,6 +26,23 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a Help plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: "cgxp_help",
+ *              actionTarget: "center.tbar",
+ *              url: "http://example.com/help.html"
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Help(config)
  *

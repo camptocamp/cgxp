@@ -30,6 +30,24 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a Measure plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_legend',
+ *              id: "legendPanel",
+ *              actionTarget: 'center.tbar',
+ *              toggleGroup: 'maptools'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Legend(config)
  *

@@ -27,6 +27,21 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a MapOpacitySlider plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_mapopacityslider'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: MapOpacitySlider(config)
  *

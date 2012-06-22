@@ -33,6 +33,23 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a Redligning plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_redligning',
+ *              actionTarget: 'center.tbar',
+ *              toggleGroup: 'maptools'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Redlining(config)
  *

@@ -26,6 +26,10 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  See example in LayerTree.
+ */
+
 /** api: constructor
  *  .. class:: ThemeFinder(config)
  *

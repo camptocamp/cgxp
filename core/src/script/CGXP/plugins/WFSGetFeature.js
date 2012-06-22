@@ -34,6 +34,23 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a AddKml plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_addkmlfile',
+ *              outputTarget: 'center.bbar',
+ *              echoURL: "${request.route_url('echo')}",
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: WFSGetFeature(config)
  *

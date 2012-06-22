@@ -28,6 +28,28 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a Login plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_login',
+ *              actionTarget: 'center.tbar',
+ *              toggleGroup: 'maptools',
+ *      % if user:
+ *              username: "${user.username}",
+ *      % endif
+ *              loginURL: "${request.route_url('login', path='')}",
+ *              logoutURL: "${request.route_url('logout', path='')}"
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Login(config)
  *

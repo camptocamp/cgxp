@@ -26,6 +26,23 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a MenuShortcut plugin to a
+ *  Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_menushortcut',
+ *              actionTarget: 'center.tbar',
+ *              type: '->'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: MenuShortcut(config)
  *

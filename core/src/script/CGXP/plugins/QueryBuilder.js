@@ -35,6 +35,32 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a Querybuilder plugin to a
+ *  Viewer, only got loged users:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [
+ *      % if user:
+ *          {
+ *              ptype: 'cgxp_querier',
+ *              outputTarget: "left-panel",
+ *              events: EVENTS,
+ *              mapserverproxyURL: "${request.route_url('mapserverproxy', path='')}",
+ *              // don't work with actual version of mapserver, the proxy will limit to 200
+ *              // it is intended to be reactivated this once mapserver is fixed
+ *              srsName: 'EPSG:21781',
+ *              featureType: 'The_layer_to_query"
+ *          }
+ *      % endif
+ *          ]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: QueryBuilder(config)
  *
