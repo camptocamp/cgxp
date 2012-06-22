@@ -30,6 +30,35 @@
  */
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a switchable WMTS layer to a Viewer:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          sources: {
+ *              ...
+ *              "switchablewmtssource": {
+ *                  ptype: "cgxp_switchablewmtssource"
+ *              }
+ *          },
+ *          ...
+ *          layers: [{
+ *              source: "switchablewmtssource",
+ *              group: 'background',
+ *              args: [{
+ *                  name: 'foo',
+ *                  layer: 'bar',
+ *                  url: '...',
+ *                  secondaryUrl: '...',
+ *                  zoomThreshold: 10
+ *              }]
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: SwitchableWMTSSource(config)
  *
