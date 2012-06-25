@@ -27,7 +27,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  See example in LayerTree.
+ *  Sample code showing on to add a ThemeFinder plugin to a
+ *  Viewer can be see in the `LayerTree <LayerTree.html>`_.
  */
 
 /** api: constructor

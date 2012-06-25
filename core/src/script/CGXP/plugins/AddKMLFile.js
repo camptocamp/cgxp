@@ -29,6 +29,11 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a AddKMLFile plugin to a
+ *  Viewer can be see in the `GoogleEarthView <GoogleEarthView.html>`_.
+ */
+
 /** api: constructor
  *  .. class:: AddKMLFile(config)
  *
