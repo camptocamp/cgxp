@@ -79,6 +79,10 @@ div#header-out {
 .x-toolbar .help {
     background: url('img/help.png') top left no-repeat;
 }
+
+div.olControlOverviewMapElement {
+    border-radius: 0.4em 0 0 0;
+}
 div.olControlScaleLine, div.olControlMousePosition, div.baseLayersOpacitySlider, div.olControlOverviewMapElement {
     background-color: #000000;
     color: #ffffff;
