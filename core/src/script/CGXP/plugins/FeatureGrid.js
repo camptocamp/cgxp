@@ -354,6 +354,16 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             var currentType = {}, feature;
             for (var i = 0, len = features.length ; i < len ; i++) {
                 feature = features[i];
+                var hasAttributes = false;
+                for (var attribute in feature.attributes) {
+                    hasAttributes = true;
+                    break;
+                }
+                // don't use feature without attributes
+                if (!hasAttributes) {
+                    continue;
+                }
+
                 if (!feature.geometry && feature.bounds) {
                     feature.geometry = feature.bounds.toGeometry();
                 }
@@ -438,13 +448,13 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     }, this);
                     this.gridByType[feature.type] = grid;
                     this.tabpan.add(grid);
+                    this.vectorLayer.addFeatures(feature);
                 }
                 else {
                     var grid = this.gridByType[feature.type];
                     this.tabpan.unhideTabStripItem(grid);
                 }
             }
-            this.vectorLayer.addFeatures(features);
             for (type in currentType) {
                 this.gridByType[type].getStore().filterBy(function(record) {
                     return record.getFeature().type === type && record.getFeature().layer;
