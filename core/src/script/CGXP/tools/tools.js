@@ -27,14 +27,14 @@ Ext.namespace("cgxp.tools");
 */
 cgxp.tools.openInfoWindow = function(url, title, width, height) {
     var content = {
-            xtype: 'box',
-            autoEl: {
-                tag: 'iframe',
-                src: url,
-                align: 'left',
-                scrolling: 'auto',
-                frameborder: '0'
-            }
+        xtype: 'box',
+        autoEl: {
+            tag: 'iframe',
+            src: url,
+            align: 'left',
+            scrolling: 'auto',
+            frameborder: '0'
+        }
     };
     cgxp.tools.openWindow(content, title, width, height);
 };
