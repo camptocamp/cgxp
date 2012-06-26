@@ -36,8 +36,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing on to add a Querybuilder plugin to a
- *  Viewer, only got loged users:
+ *  Sample code showing how to add a Querybuilder plugin to a
+ *  `gxp.Viewer`, only for logged users:
  *
  *  .. code-block:: javascript
  *

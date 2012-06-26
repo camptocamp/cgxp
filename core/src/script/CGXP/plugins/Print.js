@@ -37,8 +37,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing on to add a Print plugin to a
- *  Viewer:
+ *  Sample code showing how to add a Print plugin to a
+ *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
  *

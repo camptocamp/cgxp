@@ -27,8 +27,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing on to add a MapQuery plugin to a
- *  Viewer:
+ *  Sample code showing how to add a Measure plugin to a
+ *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
  *

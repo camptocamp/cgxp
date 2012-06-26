@@ -28,8 +28,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing on to add a Permalink plugin to a
- *  Viewer:
+ *  Sample code showing how to add a Zoom plugin to a
+ *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
  *

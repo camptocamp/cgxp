@@ -32,8 +32,8 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing on to add a ScaleChooser plugin to a
- *  Viewer:
+ *  Sample code showing how to add a ScaleChooser plugin to a
+ *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
  *
