@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Camptocamp
+ * Copyright (c) 2012 Camptocamp
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Ext.namespace("cgxp.tools");
 
 /** 
 * Open an external url in a Ext windows
-* This is a replacement the usual 'window.open(...)'
+* This is a replacement for the usual 'window.open(...)'
 */
 cgxp.tools.openInfoWindow = function(url, title, width, height) {
     var content = {
