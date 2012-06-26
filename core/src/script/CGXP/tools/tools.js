@@ -36,13 +36,13 @@ cgxp.tools.openInfoWindow = function(url, title, width, height) {
                 frameborder: '0'
             }
     };
-    cgxp.tools.openWindow(title, content, width, height);
+    cgxp.tools.openWindow(content, title, width, height);
 };
 
 /** 
 * Generic Ext windows handler
 */
-cgxp.tools.openWindow = function(title, content, width, height) {
+cgxp.tools.openWindow = function(content, title, width, height) {
     if (cgxp.tools.popupWindow) {
         cgxp.tools.popupWindow.destroy();
     }
