@@ -345,7 +345,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }
         }, this);
 
-        this.events.on('queryresults', function(features) {
+        this.events.on('queryresults', function(features, selectAll) {
+
             // if no feature do nothing
             if (!features || features.length == 0) {
                 return;
@@ -395,7 +396,6 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         layer: this.vectorLayer,
                         fields: fields
                     });
-
                 
                     var grid = new Ext.grid.GridPanel({
                         store: store,
@@ -437,7 +437,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     var task = new Ext.util.DelayedTask(function() {
                         var sm = this.currentGrid.getSelectionModel();
                         sm.clearSelections();
-                        sm.selectFirstRow();
+                        if (selectAll) {
+                            sm.selectAll();
+                        } else {
+                            sm.selectFirstRow();
+                        }
                     }, this);
                     grid.on('render', function(renderGrid) {
                         if (this.currentGrid != null) {
@@ -448,12 +452,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     }, this);
                     this.gridByType[feature.type] = grid;
                     this.tabpan.add(grid);
-                    this.vectorLayer.addFeatures(feature);
-                }
-                else {
+                } else {
                     var grid = this.gridByType[feature.type];
                     this.tabpan.unhideTabStripItem(grid);
                 }
+                this.vectorLayer.addFeatures(feature);
             }
             for (type in currentType) {
                 this.gridByType[type].getStore().filterBy(function(record) {
