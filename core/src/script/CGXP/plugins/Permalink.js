@@ -26,6 +26,22 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a Permalink plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_permalink',
+ *              actionTarget: 'center.tbar'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Permalink(config)
  *

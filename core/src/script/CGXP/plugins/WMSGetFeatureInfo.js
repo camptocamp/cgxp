@@ -31,6 +31,25 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing on to add a WMSGetFeatureInfo plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_wmsgetfeatureinfo',
+ *              actionTarget: 'center.tbar',
+ *              toggleGroup: 'maptools',
+ *              featureManager: 'featuremanager',
+ *              events: EVENTS
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: WMSGetFeatureInfo(config)
  *

@@ -27,6 +27,23 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a Zoom plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_zoom',
+ *              actionTarget: 'center.tbar',
+ *              toggleGroup: 'maptools'
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: Zoom(config)
  *
