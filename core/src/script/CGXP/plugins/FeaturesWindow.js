@@ -30,7 +30,7 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing on how add a FeaturesWindow plugin to a
+ *  Sample code showing how to add a FeaturesWindow plugin to a
  *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
