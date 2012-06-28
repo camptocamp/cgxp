@@ -29,6 +29,88 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add the GoogleEarth plugins to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          portalConfig: {
+ *              layout: "border",
+ *              // by configuring items here, we don't need to configure portalItems
+ *              // and save a wrapping container
+ *              items: [{
+ *                  region: "north",
+ *                  contentEl: 'header-out'
+ *              },
+ *              {
+ *                  region: 'center',
+ *                  layout: 'border',
+ *                  id: 'center',
+ *                  tbar: [],
+ *                  items: [
+ *                      "app-map"
+ *                  ]
+ *              },
+ *              {
+ *                  id: "featuregrid-container",
+ *                  xtype: "panel",
+ *                  layout: "fit",
+ *                  region: "south",
+ *                  height: 160,
+ *                  split: true,
+ *                  collapseMode: "mini",
+ *                  hidden: true,
+ *                  bodyStyle: 'background-color: transparent;'
+ *              }, 
+ *              {
+ *                  layout: "accordion",
+ *                  id: "left-panel",
+ *                  region: "west",
+ *                  width: 300,
+ *                  minWidth: 300,
+ *                  split: true,
+ *                  collapseMode: "mini",
+ *                  border: false,
+ *                  defaults: {width: 300},
+ *                  items: [{
+ *                      xtype: "panel",
+ *                      title: OpenLayers.i18n("layertree"),
+ *                      id: 'layerpanel',
+ *                      layout: "vbox",
+ *                      layoutConfig: {
+ *                          align: "stretch"
+ *                      }
+ *                  }]
+ *              }]
+ *          },
+ *          tools: [{
+ *              ptype: "cgxp_googleearthview",
+ *              showRoadsLayer: true,
+ *              showBuildingsLayer: true,
+ *              showBordersLayer: true,
+ *              showTerrainLayer: true,
+ *              showTreesLayer: true,
+ *              toggleGroup: "maptools",
+ *              outputTarget: "center",
+ *              actionTarget: "center.tbar"
+ *          },
+ *          ...
+ *          {
+ *              ptype: "cgxp_menushortcut",
+ *              actionTarget: "center.bbar",
+ *              type: '->'
+ *          }, 
+ *          {
+ *              ptype: "cgxp_addkmlfile",
+ *              echoUrl: "${request.route_url('echo', path='')}",
+ *              actionTarget: "center.bbar"
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: GoogleEarthView(config)
  *

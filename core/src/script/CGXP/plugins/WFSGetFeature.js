@@ -34,6 +34,23 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a WFSGetFeature plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_addkmlfile',
+ *              outputTarget: 'center.bbar',
+ *              echoURL: "${request.route_url('echo')}",
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: WFSGetFeature(config)
  *
@@ -44,7 +61,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_wmsgetfeatureinfo */
+    /** api: ptype = cgxp_wfsgetfeature */
     ptype: "cgxp_wfsgetfeature",
 
     /** api: config[toggleGroup]

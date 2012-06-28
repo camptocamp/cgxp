@@ -32,6 +32,29 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a WFSPermalink plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: "cgxp_wfspermalink",
+ *              componentConfig: {
+ *                  WFSURL: "$${request.route_url('mapserverproxy', path='')}",
+ *                  WFSGetFeatureId: "wfsgetfeature",
+ *                  maxFeatures: 10,
+ *                  pointRecenterZoom: 13,
+ *                  srsName: 'EPSG:21781',
+ *                  events: EVENTS
+ *              }
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: WFSPermalink(config)
  *
@@ -244,7 +267,7 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
                 this.target.mapPanel.map.zoomTo(this.pointRecenterZoom);
             }
 
-            this.events.fireEvent('queryresults', features);
+            this.events.fireEvent('queryresults', features, true);
         }
     }
 });

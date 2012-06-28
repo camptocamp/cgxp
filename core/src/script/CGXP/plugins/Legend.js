@@ -21,6 +21,7 @@
  * @include CGXP/widgets/tool/Window.js
  * @include GeoExt/widgets/LegendPanel.js
  * @include GeoExt/widgets/WMSLegend.js
+ * @include GeoExt/widgets/UrlLegend.js
  */
 
 /** api: (define)
@@ -29,6 +30,24 @@
  */
 
 Ext.namespace("cgxp.plugins");
+
+/** api: example
+ *  Sample code showing how to add a Legend plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_legend',
+ *              id: "legendPanel",
+ *              actionTarget: 'center.tbar',
+ *              toggleGroup: 'maptools'
+ *          }]
+ *          ...
+ *      });
+ */
 
 /** api: constructor
  *  .. class:: Legend(config)

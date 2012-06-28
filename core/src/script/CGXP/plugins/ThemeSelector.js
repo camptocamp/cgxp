@@ -26,6 +26,11 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a ThemeSelector plugin to a
+ *  `gxp.Viewer` can be see in the `LayerTree <LayerTree.html>`_.
+ */
+
 /** api: constructor
  *  .. class:: ThemeSelector(config)
  *
