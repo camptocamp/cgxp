@@ -24,6 +24,7 @@
  * @include GeoExt/plugins/TreeNodeActions.js
  * @include GeoExt/plugins/TreeNodeComponent.js
  * @include GeoExt/widgets/LayerOpacitySlider.js
+ * @include GeoExt/widgets/MapPanel.js
  * @include CGXP/widgets/tree/TreeNodeLoading.js
  * @include CGXP/widgets/tree/TreeNodeComponent.js
  * @include CGXP/widgets/tree/TreeNodeTriStateUI.js
@@ -60,30 +61,32 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     uniqueTheme: false,
 
     /**
-     * Property: mapPanel
+     * APIProperty: mapPanel
+     * If not specified, we'll try to find one automagically
      */
     mapPanel: null,
 
     /**
-     * Property: themes
+     * APIProperty: themes
      * The initialConfig of themes
+     * FIXME: needs more documentation, or at least an example
      */
     themes: null,
 
     /**
-     * Property: defaultThemes
+     * APIProperty: defaultThemes
      * The themes to load on start up 
      */
     defaultThemes: null,
 
     /**
-     * Property: wmsURL
+     * APIProperty: wmsURL
      * The url to the WMS service
      */
     wmsURL: null,
 
     /**
-     * Property: wmsOptions
+     * APIProperty: wmsOptions
      * Optional global configuration for WMS layers
      */
     wmsOptions: null,
@@ -217,7 +220,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.on('click', function(node) {
             node.getUI().toggleCheck(!node.getUI().isChecked());
         });
-
+        
+        if (!this.mapPanel) {
+            this.mapPanel = GeoExt.MapPanel.guess();
+        }
         this.mapPanel.map.events.on({
             'zoomend': function() {
                 this.getRootNode().cascade(this.checkInRange);
@@ -767,7 +773,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 isExternalgroup(group.name, this.themes)) {
                 params.external = true;
             }
-
+            
             var layer = new OpenLayers.Layer.WMS(
                 group.displayName,
                 this.wmsURL, params, Ext.apply({
