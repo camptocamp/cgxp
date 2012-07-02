@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include OpenLayers/Util.js
  * @include GeoExt.ux/data/Store.js
  * @include GeoExt.ux/data/WMSBrowserWMSCapabilitiesStore.js
  * @include GeoExt.ux/plugins/WMSBrowserAlerts.js
