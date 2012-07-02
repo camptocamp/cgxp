@@ -56,7 +56,8 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     windowTitleText: "Add WMS layers",
 
     /** api: config[layerTreeId]
-     *  ``String`` Id of the layertree tool.
+     *  ``String`` Id of the layertree tool (optional).
+     *   If specified, layers are added to the layertree in a dedicated group
      */
     layerTreeId: null,
     
@@ -92,7 +93,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
 
     createWMSBrowser: function() {
         if (!this.wmsBrowser) {
-            this.wmsBrowser = new GeoExt.ux.WMSBrowser({
+            var config = {
                 border: false,
                 zoomOnLayerAdded: true,
                 closeOnLayerAdded: false,
@@ -105,7 +106,14 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
                     "layeradded": this.onLayerAdded,
                     scope: this.target.tools[this.layerTreeId].tree
                 }
-            });
+            };
+            if (this.layerTreeId && this.target.tools[this.layerTreeId]) {
+                config.listeners = {
+                    "layeradded": this.onLayerAdded,
+                    scope: this.target.tools[this.layerTreeId].tree
+                };
+            }
+            this.wmsBrowser = new GeoExt.ux.WMSBrowser(config);
         }
         return this.wmsBrowser;
     },
