@@ -128,7 +128,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     initComponent: function() {
         this.indexToAdd = [];
-
+        this.themes = this.themes || {};
+    
         // fill displaynames one time for everybody
         function fillDisplayNames(nodes) {
             Ext.each(nodes, function(node) {
