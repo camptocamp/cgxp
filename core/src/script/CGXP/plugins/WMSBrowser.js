@@ -146,9 +146,9 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             isExpanded: true,
             name: groupName,
             allOlLayers: [layer],
-            layers: layer.params.LAYERS, 
+            layer: layer,
             children: children
-        }, false);
+        }, true);
     }
     
 });
