@@ -62,7 +62,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     /** api: config[frienlyUrl]
      * ``Boolean``
-     * True to enable friendly url support (HTML5 browers only), default to true.
+     * True to enable friendly URL support (HTML5 browers only), default to true.
      */
     frienlyUrl: true,
 
@@ -71,26 +71,26 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     mapPanel: null,
 
-    /**
-     * Property: themes
+    /**  api: config[themes]
+     * ``Object``
      * The initialConfig of themes
      */
     themes: null,
 
-    /**
-     * Property: defaultThemes
+    /** api: config[defaultThemes]
+     * ``Array of strings``
      * The themes to load on start up 
      */
     defaultThemes: null,
 
-    /**
-     * Property: wmsURL
-     * The url to the WMS service
+    /** api: config[wmsURL]
+     * ``String``
+     * The URL of the WMS service
      */
     wmsURL: null,
 
-    /**
-     * Property: wmsOptions
+    /** api: config[wmsOptions]
+     * ``Object``
      * Optional global configuration for WMS layers
      */
     wmsOptions: null,
@@ -110,7 +110,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     stateEvents: ["addgroup", "ordergroup", "removegroup", "themeopacitychange", "layervisibilitychange"],
 
-    // used for the permalink
+    /** api: config[stateId]
+     * ``String``
+     * Prefix of parameters in the permalinks
+     */
     stateId: 'tree',
 
     /** private: property[recordType]
