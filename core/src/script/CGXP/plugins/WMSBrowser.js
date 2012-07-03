@@ -124,10 +124,11 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         // with a single OpenLayers layer
         var layer = o.layer,
             layerNames = layer.params.LAYERS,
+            layerTitles = layer.name.split(','),
             children = [], urlObj, groupName;
-        Ext.each(layerNames, function(layerName) {
+        Ext.each(layerNames, function(layerName, idx) {
             children.push({
-                displayName: layerName,
+                displayName: layerTitles[idx],
                 name: layerName,
                 layer: layer,
                 editable: false
