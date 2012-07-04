@@ -102,11 +102,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
                     height: 170,
                     collapsed: false
                 },
-                layerStore: this.target.mapPanel.layers,
-                listeners: {
-                    "layeradded": this.onLayerAdded,
-                    scope: this.target.tools[this.layerTreeId].tree
-                }
+                layerStore: this.target.mapPanel.layers
             };
             if (this.layerTreeId && this.target.tools[this.layerTreeId]) {
                 config.listeners = {
