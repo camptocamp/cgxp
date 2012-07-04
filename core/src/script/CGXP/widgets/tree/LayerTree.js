@@ -55,14 +55,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     useArrows: true,
 
     /** api: config[uniqueTheme]
-     * ``Boolean``
-     * True to have only one theme on the layer tree, default to false.
+     *  ``Boolean``
+     *  True to have only one theme on the layer tree, default to false.
      */
     uniqueTheme: false,
 
     /** api: config[frienlyUrl]
-     * ``Boolean``
-     * True to enable friendly url support (HTML5 browers only), default to true.
+     *  ``Boolean``
+     *  True to enable friendly URL support (HTML5 browsers only), default to true.
      */
     frienlyUrl: true,
 
@@ -71,27 +71,27 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     mapPanel: null,
 
-    /**
-     * Property: themes
-     * The initialConfig of themes
+    /** api: config[themes]
+     *  ``Object``
+     *  The initialConfig of themes
      */
     themes: null,
 
-    /**
-     * Property: defaultThemes
-     * The themes to load on start up 
+    /** api: config[defaultThemes]
+     *  ``Array of strings``
+     *  The themes to load on start up 
      */
     defaultThemes: null,
 
-    /**
-     * Property: wmsURL
-     * The url to the WMS service
+    /** api: config[wmsURL]
+     *  ``String``
+     *  The URL of the WMS service
      */
     wmsURL: null,
 
-    /**
-     * Property: wmsOptions
-     * Optional global configuration for WMS layers
+    /** api: config[wmsOptions]
+     *  ``Object``
+     *  Optional global configuration for WMS layers
      */
     wmsOptions: null,
 
@@ -110,7 +110,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     stateEvents: ["addgroup", "ordergroup", "removegroup", "themeopacitychange", "layervisibilitychange"],
 
-    // used for the permalink
+    /** api: config[stateId]
+     *  ``String``
+     *  Prefix of parameters in the permalinks
+     */
     stateId: 'tree',
 
     /** private: property[recordType]
@@ -978,7 +981,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         visibility: false,
                         singleTile: true,
                         isBaseLayer: false
-                    }, this.wmsConfig || {})
+                    }, this.wmsOptions || {})
                 );
 
                 var result = {
