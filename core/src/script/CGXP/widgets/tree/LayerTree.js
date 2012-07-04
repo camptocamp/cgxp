@@ -55,14 +55,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     useArrows: true,
 
     /** api: config[uniqueTheme]
-     * ``Boolean``
-     * True to have only one theme on the layer tree, default to false.
+     *  ``Boolean``
+     *  True to have only one theme on the layer tree, default to false.
      */
     uniqueTheme: false,
 
     /** api: config[frienlyUrl]
-     * ``Boolean``
-     * True to enable friendly URL support (HTML5 browers only), default to true.
+     *  ``Boolean``
+     *  True to enable friendly URL support (HTML5 browsers only), default to true.
      */
     frienlyUrl: true,
 
@@ -71,27 +71,27 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     mapPanel: null,
 
-    /**  api: config[themes]
-     * ``Object``
-     * The initialConfig of themes
+    /** api: config[themes]
+     *  ``Object``
+     *  The initialConfig of themes
      */
     themes: null,
 
     /** api: config[defaultThemes]
-     * ``Array of strings``
-     * The themes to load on start up 
+     *  ``Array of strings``
+     *  The themes to load on start up 
      */
     defaultThemes: null,
 
     /** api: config[wmsURL]
-     * ``String``
-     * The URL of the WMS service
+     *  ``String``
+     *  The URL of the WMS service
      */
     wmsURL: null,
 
     /** api: config[wmsOptions]
-     * ``Object``
-     * Optional global configuration for WMS layers
+     *  ``Object``
+     *  Optional global configuration for WMS layers
      */
     wmsOptions: null,
 
@@ -111,8 +111,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     stateEvents: ["addgroup", "ordergroup", "removegroup", "themeopacitychange", "layervisibilitychange"],
 
     /** api: config[stateId]
-     * ``String``
-     * Prefix of parameters in the permalinks
+     *  ``String``
+     *  Prefix of parameters in the permalinks
      */
     stateId: 'tree',
 
