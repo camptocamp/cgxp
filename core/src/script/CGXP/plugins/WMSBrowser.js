@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include OpenLayers/Util.js
  * @include GeoExt.ux/data/Store.js
  * @include GeoExt.ux/data/WMSBrowserWMSCapabilitiesStore.js
  * @include GeoExt.ux/plugins/WMSBrowserAlerts.js
@@ -55,6 +56,17 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
      */
     windowTitleText: "Add WMS layers",
 
+    /** api: config[layerTreeId]
+     *  ``String`` Id of the layertree tool (optional).
+     *   If specified, layers are added to the layertree in a dedicated group
+     */
+    layerTreeId: null,
+    
+    /** private: property[wmsBrowser]
+     *  :class:`GeoExt.ux.WMSBrowser` a ref to the WMSBrowser instance.
+     */
+    wmsBrowser: null,
+
     /** private: method[addActions]
      */
     addActions: function() {
@@ -81,17 +93,60 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     },
 
     createWMSBrowser: function() {
-        return new GeoExt.ux.WMSBrowser({
-            border: false,
-            zoomOnLayerAdded: true,
-            closeOnLayerAdded: false,
-            mapPanelPreviewOptions: {
-                height: 170,
-                collapsed: false
-            },
-            layerStore: this.target.mapPanel.layers
+        if (!this.wmsBrowser) {
+            var config = {
+                border: false,
+                zoomOnLayerAdded: true,
+                closeOnLayerAdded: false,
+                mapPanelPreviewOptions: {
+                    height: 170,
+                    collapsed: false
+                },
+                layerStore: this.target.mapPanel.layers
+            };
+            if (this.layerTreeId && this.target.tools[this.layerTreeId]) {
+                config.listeners = {
+                    "layeradded": this.onLayerAdded,
+                    scope: this.target.tools[this.layerTreeId].tree
+                };
+            }
+            this.wmsBrowser = new GeoExt.ux.WMSBrowser(config);
+        }
+        return this.wmsBrowser;
+    },
+    
+    onLayerAdded: function(o) {
+        // instruct the layertree to add new layers in a single group
+        // with a single OpenLayers layer
+        var layer = o.layer,
+            layerNames = layer.params.LAYERS,
+            layerTitles = layer.name.split(','),
+            children = [], urlObj, groupName;
+        Ext.each(layerNames, function(layerName, idx) {
+            children.push({
+                displayName: layerTitles[idx],
+                name: layerName,
+                layer: layer,
+                editable: false
+            });
         });
+
+        // create a human readable group name
+        urlObj = OpenLayers.Util.createUrlObject(layer.url, {
+            ignorePort80: true
+        });
+        groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
+        
+        this.addGroup({
+            displayName: groupName,
+            isExpanded: true,
+            name: groupName,
+            allOlLayers: [layer],
+            layer: layer,
+            children: children
+        }, true);
     }
+    
 });
 
 Ext.preg(cgxp.plugins.WMSBrowser.prototype.ptype, cgxp.plugins.WMSBrowser);
