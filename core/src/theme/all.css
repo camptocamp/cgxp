@@ -423,3 +423,14 @@ div.legend label {
     margin: 10px 5px 0 5px;
     padding: 10px;
 }
+
+/* cgxp profile */
+.dygraph-legend {
+    font-size: 12px !important;
+}
+.dygraph-legend,
+.dygraph-axis-label-x,
+.dygraph-axis-label-y {
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 12px;
+}

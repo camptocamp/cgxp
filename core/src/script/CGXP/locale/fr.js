@@ -127,6 +127,11 @@ GeoExt.Lang.add("fr", {
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "+ WMS",
         windowTitleText: "Ajouter des couches WMS"
+    },
+
+    "cgxp.plugins.Profile.prototype": {
+        helpText: "<h1>Profil altimétrique</h1>Cliquez sur la carte pour dessiner une ligne. Double-cliquez pour terminer et afficher le profil.",
+        waitMsgText: "Loading profile..."
     }
 });
 
