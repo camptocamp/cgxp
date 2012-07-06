@@ -130,7 +130,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Profile.prototype": {
-        helpText: "<h1>Profil altimétrique</h1>Cliquez sur la carte pour dessiner une ligne. Double-cliquez pour terminer et afficher le profil.",
+        helpText: "<h1>Profil altimétrique</h1>Dessinez une ligne sur la carte. Double-cliquez pour terminer et afficher le profil.",
         waitMsgText: "Loading profile..."
     }
 });

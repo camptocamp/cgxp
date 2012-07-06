@@ -85,6 +85,18 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     waitMsgText: null,
 
+    /** api: config[xLabelText]
+     *  ``String``
+     *  The translated x label text.
+     */
+    xLabelText: null,
+
+    /** api: config[yLabelText]
+     *  ``String``
+     *  The translated y label text.
+     */
+    yLabelText: null,
+
     /** private: property[control]
      *  ``cgxp.plugins.Profile.Control``
      *  The Profile control
@@ -252,6 +264,20 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 return ret;
             },
             {
+                ylabel: this.yLabelText,
+                xlabel: this.xLabelText,
+                axes: {
+                    x: {
+                        valueFormatter: function(d) {
+                            return d + 'm';
+                        }
+                    },
+                    y: {
+                        valueFormatter: function(d) {
+                            return d + 'm';
+                        }
+                    }
+                },
                 legend: 'always',
                 highlightCallback: (function(e, x, pts, row) {
                     for (var i = 0; i < data.length; i++) {

@@ -429,6 +429,8 @@ div.legend label {
     font-size: 12px !important;
 }
 .dygraph-legend,
+.dygraph-xlabel,
+.dygraph-ylabel,
 .dygraph-axis-label-x,
 .dygraph-axis-label-y {
     font-family: tahoma,arial,verdana,sans-serif;

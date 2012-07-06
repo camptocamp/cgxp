@@ -125,7 +125,7 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Profile.prototype": {
-        helpText: "<h1>Elevaltion profile</h1>Click on the map to draw a line. Double-click to terminate and show the profile.",
+        helpText: "<h1>Elevation profile</h1>Draw a line on the map. Double-click to terminate and show the profile.",
         waitMsgText: "Loading profile..."
     }
 });
