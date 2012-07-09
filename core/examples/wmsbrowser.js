@@ -8,21 +8,50 @@ Ext.onReady(function() {
         portalConfig: {
             renderTo: document.body,
             layout: "border",
-            width: 650,
-            height: 465,
+            width: 1024,
+            height: 768,
             items: ["mymap", {
                 id: "east",
                 xtype: "panel",
                 layout: "fit",
                 region: "east",
-                width: 200
+                width: 300
+            }, {
+                layout: "accordion",
+                region: "west",
+                width: 300,
+                minWidth: 300,
+                split: true,
+                collapseMode: "mini",
+                border: false,
+                defaults: {width: 300},
+                items: [{
+                    xtype: "panel",
+                    title: "layertree",
+                    id: 'west',
+                    layout: "vbox",
+                    layoutConfig: {
+                        align: "stretch"
+                    }
+                }]
             }]
         },
         tools: [{
-            ptype: "cgxp_wmsbrowser"
+            ptype: "cgxp_wmsbrowser",
+            layerTreeId: "layertree"
         }, {
             ptype: "gxp_layermanager",
             outputTarget: "east"
+        }, {
+            ptype: "cgxp_layertree",
+            id: "layertree",
+            outputConfig: {
+                header: false,
+                flex: 1,
+                layout: "fit",
+                autoScroll: true
+            },
+            outputTarget: "west"
         }],
         sources: {
             osm: {
