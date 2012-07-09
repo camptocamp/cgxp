@@ -110,45 +110,38 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      */
     matchCase: false,
 
-    /**
-     * Property: panel
-     * {Ext.Panel} The panel included in accordion panel with a card layout
+    /** private: property[panel]
+     *  ``Ext.Panel`` The panel included in accordion panel with a card layout
      */
     panel: null,
     
-    /**
-     * Property: querierPanel
-     * {Ext.Panel} The querier panel (child of panel)
+    /** private: property[querierPanel]
+     *  ``Ext.Panel`` The querier panel (child of panel)
      */
     querierPanel: null,
     
-    /**
-     * Property: store
-     * {GeoExt.data.AttributeStore} The store containing the properties of the queried layer
+    /** private: property[store]
+     *  ``GeoExt.data.AttributeStore`` The store containing the properties of the queried layer
      */
     store: null,
     
-    /**
-     * Property: geometryName
-     * {String} The name of the geom field
+    /** private: property[geometryName]
+     *  ``String`` The name of the geom field
      */
     geometryName: null,
     
-    /**
-     * Property: protocol
-     * {OpenLayers.Protocol.WFS}
+    /** private: property[protocol]
+     *  ``OpenLayers.Protocol.WFS``
      */
     protocol: null,
        
-    /**
-     * Property: drawingLayer
-     * {OpenLayers.Layer.Vector}
+    /** private: property[drawingLayer]
+     *  ``OpenLayers.Layer.Vector``
      */
     drawingLayer: null,
     
-    /**
-     * Property: mask
-     * {Ext.LoadMask}
+    /** private: property[mask]
+     *  ``Ext.LoadMask``
      */
     mask: null,
 
