@@ -408,20 +408,6 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
     serviceUrl: null,
 
     /**
-     * APIProperty: nbPoints
-     * Number of profile points to get
-     */
-    nbPoints: 200,
-
-    /**
-     * APIProperty: layers
-     * List of profile layers to show
-     */
-    layers: ['MNS','MNT'],
-
-    layer: null,
-
-    /**
      * Constructor: App.Profile
      *
      * Parameters:
