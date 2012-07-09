@@ -37,7 +37,7 @@ Ext.namespace("cgxp.tree");
  *  class = LayerTree
  */
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
-    
+
     baseCls: 'layertree',
     enableDD: false,
     rootVisible: false,
@@ -68,7 +68,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     /** api: config[defaultThemes]
      *  ``Array of strings``
-     *  The themes to load on start up 
+     *  The themes to load on start up
      */
     defaultThemes: null,
 
@@ -121,7 +121,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     initComponent: function() {
         this.indexToAdd = [];
         this.themes = this.themes || {};
-    
+
         // fill displaynames one time for everybody
         function fillDisplayNames(nodes) {
             Ext.each(nodes, function(node) {
@@ -176,10 +176,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 return false;
             }
         });
-        
+
         this.addEvents(
             /** private: event[addgroup]
-             *  Fires after a theme is added. 
+             *  Fires after a theme is added.
              */
             "addgroup",
 
@@ -194,7 +194,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             "layervisibilitychange",
 
             /** private: event[themeopacitychange]
-             *  Fires after the theme opacity changes. 
+             *  Fires after the theme opacity changes.
              */
             "themeopacitychange",
 
@@ -292,8 +292,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }, this);
         }
-        
-        function updateMoveUp(el) { 
+
+        function updateMoveUp(el) {
             var isFirst = this.isFirst();
             if (isFirst && !this._updating &&
             this.nextSibling &&
@@ -308,11 +308,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (isFirst) {
                 el.addClass('disabled');
             } else {
-                el.removeClass('disabled'); 
+                el.removeClass('disabled');
             }
         }
 
-        function updateMoveDown(el) { 
+        function updateMoveDown(el) {
             var isLast = this.isLast();
             if (isLast && !this._updating &&
             this.previousSibling &&
@@ -325,9 +325,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 delete this._updating;
             }
             if (isLast) {
-                el.addClass('disabled'); 
+                el.addClass('disabled');
             } else {
-                el.removeClass('disabled'); 
+                el.removeClass('disabled');
             }
         }
 
@@ -356,7 +356,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             iconCls: 'no-icon',
             cls: 'x-tree-node-theme',
             loaded: true,
-            uiProvider: 'layer', 
+            uiProvider: 'layer',
             checked: false,
             layer: group.layer,
             allOlLayers: group.allOlLayers,
@@ -374,7 +374,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         groupNode.expand(true, false);
         groupNode.collapse(true, false);
         if (group.isExpanded) {
-            groupNode.expand(false, false); 
+            groupNode.expand(false, false);
         }
         groupNode.ui.show();
         groupNode.cascade(this.checkInRange);
@@ -392,7 +392,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         nodeConfig.actions = nodeConfig.actions || [];
         if (item.icon) {
             config.icon = item.icon;
-        } 
+        }
         else if (item.legendRule) {
             // there is only one class in the mapfile layer
             // we use a rule so that legend shows the icon only (no label)
@@ -402,7 +402,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (item.legend) {
             var src = (item.legendImage) ?
                 item.legendImage :
-                this.getLegendGraphicUrl(item.layer, item.name); 
+                this.getLegendGraphicUrl(item.layer, item.name);
 
             if (src) {
                 config.legend = new Ext.Container({
@@ -469,7 +469,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var scale = layer.map.getScale();
             url = Ext.urlAppend(url, "SCALE=" + scale);
         }
-        
+
         return url;
     },
 
@@ -653,7 +653,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 node.ownerTree.actionsPlugin.updateActions(node);
                 node.ui.removeClass('x-tree-node-over');
                 if(Ext.enableFx){
-                    node.ui.highlight(); 
+                    node.ui.highlight();
                 }
                 node.getOwnerTree().fireEvent('ordergroup');
                 break;
@@ -676,7 +676,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 node.ownerTree.actionsPlugin.updateActions(node);
                 node.ui.removeClass('x-tree-node-over');
                 if(Ext.enableFx){
-                    node.ui.highlight(); 
+                    node.ui.highlight();
                 }
                 node.getOwnerTree().fireEvent('ordergroup');
                 break;
@@ -708,7 +708,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         if (key) {
             var actionImg = evt.getTarget('.' + action, 10, true);
-            var cls = action + "-on"; 
+            var cls = action + "-on";
             if (!node[key].getEl().isVisible()) {
                 actionImg.addClass(cls);
                 node[key].el.setVisibilityMode(Ext.Element.DISPLAY);
@@ -837,10 +837,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             var layer = format.createLayer(capabilities, {
                                 ref: child.name,
                                 layer: child.name,
-                                maxExtent: capabilities_layer.bounds ? 
+                                maxExtent: capabilities_layer.bounds ?
                                     capabilities_layer.bounds.transform(
-                                        "EPSG:4326", 
-                                        this.mapPanel.map.getProjectionObject()) : 
+                                        "EPSG:4326",
+                                        this.mapPanel.map.getProjectionObject()) :
                                     undefined,
                                 style: child.style,
                                 matrixSet: child.matrixSet,
@@ -877,7 +877,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             child.node.on({
                                 "checkchange": child.node.onCheckChange,
                                 scope: child.node
-                            }); 
+                            });
 
                         }
                     });
@@ -1108,7 +1108,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg state: ``Object``
      */
     applyState: function(state) {
-        // actual state is loaded later in delayedApplyState to prevent 
+        // actual state is loaded later in delayedApplyState to prevent
         // the layer from being displayed under the baselayers
         this.initialState = state;
     },
@@ -1128,12 +1128,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (!this.checkGroupIsAllowed(t)) {
                 return;
             }
-            var opacity = this.initialState['group_opacity_' + t] ? 
+            var opacity = this.initialState['group_opacity_' + t] ?
                 this.initialState['group_opacity_' + t] : 1;
-            var layers = this.initialState['group_layers_' + t] ? 
+            var layers = this.initialState['group_layers_' + t] ?
                 this.initialState['group_layers_' + t] : [];
             var visibility = layers != '' ? true : false;
-            var group = this.findGroupByName(t);            
+            var group = this.findGroupByName(t);
             this.loadGroup(group, layers, opacity, visibility);
         }, this);
         this.root.cascade(function(node) {
