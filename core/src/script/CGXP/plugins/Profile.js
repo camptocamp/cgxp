@@ -108,6 +108,18 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     style: null,
 
+    /** api: config[rasterLayers]
+     *  ``Array(String)``
+     *  The list of raster layers.
+     */
+    rasterLayers: null,
+
+    /** api: config[nbPoints]
+     *  ``Integer``
+     *  The number of points to show in the charts.
+     */
+    nbPoints: 100,
+
     /** api: config[markerStyle]
      *  ``Object``
      *  The style to be applied to the marker when hovering the chart.
@@ -217,12 +229,16 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                     cmp.getEl().mask(this.waitMsgText);
 
                     var format = new OpenLayers.Format.GeoJSON();
-                    var geojson = format.write(obj.feature);
+                    var geometry = format.write(obj.feature.geometry);
 
                     Ext.Ajax.request({
                         url: this.serviceUrl,
                         method: 'POST',
-                        jsonData: geojson,
+                        params: {
+                            layers: this.rasterLayers,
+                            geom: geometry,
+                            nbPoints: this.nbPoints
+                        },
                         success: function(result) {
                             var data = new OpenLayers.Format.JSON().read(result.responseText);
                             this.drawProfile(data.profile);
@@ -284,18 +300,14 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         });
         this.output[0].getLayout().setActiveItem(cmp);
 
-        // guess the y series from the data
-        var yKeys = [];
-        for (var key in data[0][this.valuesProperty]) {
-            yKeys.push(key);
-        }
-
         var values = [];
+        var layers = this.rasterLayers;
         for (var i=0; i < data.length; i++) {
             var datum = data[i];
             var value = [parseFloat(datum.dist)];
-            for (var j in datum[this.valuesProperty]) {
-                value.push(parseFloat(datum[this.valuesProperty][j]));
+            for (var j=0; j < layers.length; j++) {
+                var layer = layers[j];
+                value.push(parseFloat(datum[this.valuesProperty][layer]));
             }
             values.push(value);
         }
@@ -304,7 +316,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         var g = new Dygraph(
             cmp.el.dom,
             function() {
-                var ret = "X," + yKeys.join(',') + "\n";
+                var ret = "X," + layers.join(',') + "\n";
                 for (var i = 0; i < values.length; i++) {
                     ret += values[i].join(',') + "\n";
                 }
