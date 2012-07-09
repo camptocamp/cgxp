@@ -105,6 +105,11 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      */
     featureType: null,
 
+    /** api: config[matchCase]
+     *  ``Boolean`` the matchCase WFS/GetFeature query argument.
+     */
+    matchCase: false,
+
     /**
      * Property: panel
      * {Ext.Panel} The panel included in accordion panel with a card layout
@@ -175,7 +180,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     alert(OpenLayers.i18n("QueryBuilder.incomplete_form"));
                     return false;
                 } else if (f.CLASS_NAME == "OpenLayers.Filter.Comparison") {
-                    f.matchCase = false;
+                    f.matchCase = this.matchCase;
                 }
             }
             return true;
