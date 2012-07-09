@@ -96,6 +96,47 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  The translated y label text.
      */
     yLabelText: null,
+    
+    /** api: config[style]
+     *  ``Object``
+     *  The style to be applied to the control vector layer
+     */
+    style: {
+        "default": new OpenLayers.Style(null, {
+            rules: [new OpenLayers.Rule({
+                symbolizer: {
+                    "Point": {
+                        pointRadius: 4,
+                        graphicName: "square",
+                        fillColor: "white",
+                        fillOpacity: 1,
+                        strokeWidth: 1,
+                        strokeOpacity: 1,
+                        strokeColor: "#333333"
+                    },
+                    "Line": {
+                        strokeWidth: 3,
+                        strokeOpacity: 1,
+                        strokeColor: "#666666"
+                    }
+                }
+            })]
+        })
+    },
+
+    /** api: config[markerStyle]
+     *  ``Object``
+     *  The style to be applied to the marker when hovering the chart.
+     */
+    markerStyle: {
+        pointRadius: 4,
+        graphicName: "square",
+        fillColor: "yellow",
+        fillOpacity: 1,
+        strokeWidth: 1,
+        strokeOpacity: 1,
+        strokeColor: "#333333"
+    },
 
     /** private: property[control]
      *  ``cgxp.plugins.Profile.Control``
@@ -164,6 +205,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     createControl: function() {
         var cmp;
         return new cgxp.plugins.Profile.Control({
+            style: this.style,
             eventListeners: {
                 featureadded: function(obj) {
                     this.showOutput(cmp);
@@ -284,7 +326,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         var datum = data[i];
                         if (x == datum.dist) {
                             var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
-                            marker = new OpenLayers.Feature.Vector(point);
+                            marker = new OpenLayers.Feature.Vector(point, null, this.markerStyle);
                             this.control.layer.addFeatures([marker]);
                             break;
                         }
@@ -346,28 +388,6 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
 
     layer: null,
 
-    style: {
-        strokeColor: "#FFFF00",
-        strokeOpacity: 0.85,
-        strokeWidth: 3,
-        strokeLinecap: "round",
-        strokeDashstyle: "solid",
-        pointRadius: 0,
-        pointerEvents: "visiblePainted",
-        cursor: "inherit"
-    },
-
-    styleMarker: {
-        strokeColor: "#FFFF00",
-        strokeOpacity: 0.85,
-        strokeWidth: 3,
-        strokeLinecap: "round",
-        strokeDashstyle: "solid",
-        pointRadius: 5,
-        pointerEvents: "visiblePainted",
-        cursor: "inherit"
-    },
-
     /**
      * Constructor: App.Profile
      *
@@ -378,7 +398,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
         var layer = new OpenLayers.Layer.Vector("Profile", {
             alwaysInRange: true,
             displayInLayerSwitcher: false,
-            styleMap: new OpenLayers.StyleMap(this.style)
+            styleMap: new OpenLayers.StyleMap(options.style)
         });
 
         options = OpenLayers.Util.extend(options, {
@@ -389,7 +409,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
             },
             handlerOptions: {
                 layerOptions: {
-                    style: this.style
+                    style: options.style
                 }
             }
         });
