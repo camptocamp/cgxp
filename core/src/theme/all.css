@@ -427,7 +427,7 @@ div.legend label {
 /* cgxp profile */
 .dygraph-legend {
     font-size: 12px !important;
-    text-align: right;
+    text-align: right !important;
 }
 .dygraph-legend,
 .dygraph-xlabel,
