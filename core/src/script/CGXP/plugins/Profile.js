@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires CGXP/dygraph-combined.js
  * @requires OpenLayers/Control/DrawFeature.js
  * @include OpenLayers/Handler/Point.js
  * @include OpenLayers/Handler/Path.js
