@@ -18,6 +18,11 @@
 /**
  * @requires plugins/Tool.js
  * @requires OpenLayers/Control/DrawFeature.js
+ * @include OpenLayers/Handler/Point.js
+ * @include OpenLayers/Handler/Path.js
+ * @include OpenLayers/StyleMap.js
+ * @include OpenLayers/Style.js
+ * @include OpenLayers/Rule.js
  */
 
 /** api: (define)
@@ -101,28 +106,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  ``Object``
      *  The style to be applied to the control vector layer
      */
-    style: {
-        "default": new OpenLayers.Style(null, {
-            rules: [new OpenLayers.Rule({
-                symbolizer: {
-                    "Point": {
-                        pointRadius: 4,
-                        graphicName: "square",
-                        fillColor: "white",
-                        fillOpacity: 1,
-                        strokeWidth: 1,
-                        strokeOpacity: 1,
-                        strokeColor: "#333333"
-                    },
-                    "Line": {
-                        strokeWidth: 3,
-                        strokeOpacity: 1,
-                        strokeColor: "#666666"
-                    }
-                }
-            })]
-        })
-    },
+    style: null,
 
     /** api: config[markerStyle]
      *  ``Object``
@@ -205,7 +189,28 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     createControl: function() {
         var cmp;
         return new cgxp.plugins.Profile.Control({
-            style: this.style,
+            style: this.style || {
+                "default": new OpenLayers.Style(null, {
+                    rules: [new OpenLayers.Rule({
+                        symbolizer: {
+                            "Point": {
+                                pointRadius: 4,
+                                graphicName: "square",
+                                fillColor: "white",
+                                fillOpacity: 1,
+                                strokeWidth: 1,
+                                strokeOpacity: 1,
+                                strokeColor: "#333333"
+                            },
+                            "Line": {
+                                strokeWidth: 3,
+                                strokeOpacity: 1,
+                                strokeColor: "#666666"
+                            }
+                        }
+                    })]
+                })
+            },
             eventListeners: {
                 featureadded: function(obj) {
                     this.showOutput(cmp);
