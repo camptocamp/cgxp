@@ -141,6 +141,13 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     control: null,
 
+    /** private: property[firstShow]
+     *  ``Booolean``
+     *  Tells whether the window has already been displayed.
+     *  Useful to get it positionned top left.
+     */
+    firstShow: true,
+
     /** private: method[addActions]
      */
     addActions: function() {
@@ -270,11 +277,16 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         if (cmp.ownerCt && cmp.ownerCt.ownerCt &&
             cmp.ownerCt.ownerCt instanceof Ext.Window) {
                 cmp.ownerCt.ownerCt.show();
+                if (this.firstShow) {
+                    cmp.ownerCt.ownerCt.alignTo(
+                        this.target.mapPanel.getEl(), 'tl-tl', [30, 5]);
+                }
         } else if (this.outputTarget) {
             var container = this.getContainer(this.outputTarget); 
             container.show();
             container.ownerCt.doLayout();
         }
+        this.firstShow = false;
     },
 
     /** private: method[hideOutput]
