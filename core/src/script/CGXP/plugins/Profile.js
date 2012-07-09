@@ -236,7 +236,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         url: this.serviceUrl,
                         method: 'POST',
                         params: {
-                            layers: this.rasterLayers,
+                            layers: this.rasterLayers.join(','),
                             geom: geometry,
                             nbPoints: this.nbPoints
                         },
