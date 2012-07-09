@@ -279,7 +279,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 cmp.ownerCt.ownerCt.show();
                 if (this.firstShow) {
                     cmp.ownerCt.ownerCt.alignTo(
-                        this.target.mapPanel.getEl(), 'tl-tl', [30, 5]);
+                        this.target.mapPanel.body, 'tl-tl', [30, 5]);
                 }
         } else if (this.outputTarget) {
             var container = this.getContainer(this.outputTarget); 
