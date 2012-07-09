@@ -18,8 +18,8 @@ Ext.onReady(function() {
             serviceUrl: "profile.json",
             valuesProperty: "alts",
             outputConfig: {
-                width: 800,
-                height: 380
+                width: 400,
+                height: 180
             }
         }],
         sources: {
