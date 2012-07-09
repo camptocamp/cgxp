@@ -111,7 +111,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer", name: "childLayers"}]),
 
-    /** private: property[indexToAdd]
+    /** private: property[indexesToAdd]
      *  ``Array`` of ``Object`` with one 'index' attribute.
      */
 
@@ -119,7 +119,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * Property: actionsPlugin
      */
     initComponent: function() {
-        this.indexToAdd = [];
         this.themes = this.themes || {};
 
         // fill displaynames one time for everybody
@@ -645,14 +644,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 });
                 var index = -next.attributes.allOlLayers.length;
-                var layers = [].concat(node.attributes.allOlLayers);
-                Ext.each(layers.reverse(), function(layer) {
+                Ext.each(node.attributes.allOlLayers, function(layer) {
                     layer.map.raiseLayer(layer, index);
                 });
                 node.parentNode.insertBefore(node, node.nextSibling.nextSibling);
                 node.ownerTree.actionsPlugin.updateActions(node);
                 node.ui.removeClass('x-tree-node-over');
-                if(Ext.enableFx){
+                if (Ext.enableFx){
                     node.ui.highlight();
                 }
                 node.getOwnerTree().fireEvent('ordergroup');
@@ -669,7 +667,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 });
                 var index = previous.attributes.allOlLayers.length;
-                Ext.each(node.attributes.allOlLayers, function(layer) {
+                var layers = [].concat(node.attributes.allOlLayers);
+                Ext.each(layers.reverse(), function(layer) {
                     layer.map.raiseLayer(layer, index);
                 });
                 node.parentNode.insertBefore(node, node.previousSibling);
@@ -759,12 +758,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *     - checkedLayers ``Array(String)`` The list of checked subLayers.
      *     - disclaimer ``Object`` The list layers disclaimers.
      *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
-     *  :arg index: ``int`` index there to add the layers on non internal WMS (to have the right order).
+     *  :arg currentIndex: ``int`` index there to add the layers on non 
+     *          internal WMS (to have the right order).
+     *  :arg realIndex: ``int`` the deference with ``currentIndex`` is that is 
+     *          current index is where the layer should be added in the actual 
+     *          configuration, the ``realIndex`` is the position where the 
+     *          layer should be in the final configuration.
      */
-    parseChildren: function(child, layer, result, index) {
+    parseChildren: function(child, layer, result, currentIndex, realIndex) {
         if (child.children) {
-            for (var j = 0, jj = child.children.length; j < jj; j++) {
-                this.parseChildren(child.children[j], layer, result, index);
+            for (var j = child.children.length - 1; j >= 0; j--) {
+                currentIndex += this.parseChildren(child.children[j], layer, result, currentIndex, realIndex);
+                realIndex++;
             }
         }
         else {
@@ -779,6 +784,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (child.isChecked) {
                 result.checkedLayers.push(child.name);
             }
+
             // put a reference to ol layer in the config object
             if (layer) {
                 child.layer = layer;
@@ -799,23 +805,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         }
                     );
                     result.allOlLayers.push(child.layer);
-                    this.mapPanel.layers.insert(index, [
+                    this.mapPanel.layers.insert(currentIndex, [
                         new this.recordType({
                             disclaimer: child.disclaimer,
                             legendURL: child.legendImage,
                             layer: child.layer
                         }, child.layer.id)]);
-                    Ext.each(this.indexToAdd, function(idx) {
-                        if (idx.index >= index) {
-                            idx.index++;
-                        }
-                    });
+                    return 1;
                 }
                 else if (child.type == "WMTS") {
                     var format = new OpenLayers.Format.WMTSCapabilities();
                     var allOlLayerIndex = result.allOlLayers.length;
-                    var indexToAdd = {index: index}
-                    this.indexToAdd.push(indexToAdd);
+                    var indexToAdd = {
+                        currentIndex: currentIndex,
+                        realIndex: realIndex
+                    };
+                    this.indexesToAdd.push(indexToAdd);
                     result.allOlLayers.push(null);
                     OpenLayers.Request.GET({
                         url: child.url,
@@ -857,15 +862,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             }
                             layer.setVisibility(child.node.attributes.checked);
                             result.allOlLayers[allOlLayerIndex] = layer;
-                            this.mapPanel.layers.insert(indexToAdd.index, [
+                            this.mapPanel.layers.insert(indexToAdd.currentIndex, [
                                 new this.recordType({
                                     disclaimer: child.disclaimer,
                                     legendURL: child.legendImage,
                                     layer: layer
                                 }, layer.id)]);
-                            Ext.each(this.indexToAdd, function(idx) {
-                                if (idx.index >= index) {
-                                    idx.index++;
+                            Ext.each(this.indexesToAdd, function(idx) {
+                                if (indexToAdd.realIndex < idx.realIndex) {
+                                    idx.currentIndex++;
                                 }
                             });
                             child.slider.setLayer(layer);
@@ -884,6 +889,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }
         }
+        return 0;
     },
 
     /** private :method[loadTheme]
@@ -1008,11 +1014,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         disclaimer: result.disclaimer,
                         layer: layer
                     }, layer.id));
-                Ext.each(this.indexToAdd, function(idx) {
-                    if (idx.index >= index) {
-                        idx.index++;
-                    }
-                });
                 groupNode = this.addGroup(group, true);
             }
             else {
@@ -1022,7 +1023,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.parseChildren(group, null, result, index);
+                this.indexesToAdd = [];
+                this.parseChildren(group, null, result, index, index);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
