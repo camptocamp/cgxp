@@ -16,6 +16,7 @@ Ext.onReady(function() {
             ptype: "cgxp_profile",
             buttonText: "Draw a profile",
             serviceUrl: "profile.json",
+            rasterLayers: ["MNT", "MNS"],
             valuesProperty: "alts",
             outputConfig: {
                 width: 400,
@@ -69,6 +70,7 @@ Ext.onReady(function() {
             ptype: "cgxp_profile",
             buttonText: "Draw a profile",
             serviceUrl: "profile.json",
+            rasterLayers: ["MNT", "MNS"],
             valuesProperty: "alts",
             outputTarget: "south"
         }],
