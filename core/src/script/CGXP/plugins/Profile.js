@@ -59,7 +59,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_wmsbrowser */
+    /** api: ptype = cgxp_profile*/
     ptype: "cgxp_profile",
 
     /** api: config[events]
@@ -256,7 +256,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         scope: this
                     });
                 },
-                startdrawing: this.removeProfile,
+                startdrawing: this.clearProfile,
                 activate: function() {
                     if (cmp) {
                         this.showOutput(cmp);
@@ -303,7 +303,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             container.hide();
             container.ownerCt.doLayout();
         }
-        this.removeProfile();
+        this.clearProfile();
     },
 
     /** private: method[drawProfile]
@@ -377,10 +377,10 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         });
     },
 
-    /** private: method[removeProfile]
+    /** private: method[clearProfile]
      *  Removes the chart.
      */
-    removeProfile: function() {
+    clearProfile: function() {
         this.output[0].getLayout().setActiveItem(0);
         this.output[0].remove(1);
     }
