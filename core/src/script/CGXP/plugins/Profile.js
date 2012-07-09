@@ -343,6 +343,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         var datum = data[i];
                         if (x == datum.dist) {
                             var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
+                            marker && marker.destroy();
                             marker = new OpenLayers.Feature.Vector(point, null, this.markerStyle);
                             this.control.layer.addFeatures([marker]);
                             break;
