@@ -104,6 +104,12 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  The translated y label text.
      */
     yLabelText: null,
+
+    /** api: config[errorMsg]
+     *  ``String``
+     *  The translated error message.
+     */
+    errorMsg: null,
     
     /** api: config[style]
      *  ``Object``
@@ -253,6 +259,9 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                             var data = new OpenLayers.Format.JSON().read(result.responseText);
                             this.drawProfile(data.profile);
                         },
+                        failure: function() {
+                            this.showError();
+                        },
                         scope: this
                     });
                 },
@@ -304,6 +313,18 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             container.ownerCt.doLayout();
         }
         this.clearProfile();
+    },
+
+    /** private: method[showError]
+     *  Shows an error message
+     */
+    showError: function() {
+        var cmp = this.output[0].add({
+            xtype: 'box',
+            html: this.errorMsg
+        });
+        this.output[0].getLayout().setActiveItem(cmp);
+        this.output[0].getEl().unmask();
     },
 
     /** private: method[drawProfile]

@@ -133,7 +133,8 @@ GeoExt.Lang.add("fr", {
         helpText: "<h1>Profil altimétrique</h1>Dessinez une ligne sur la carte. Double-cliquez pour terminer et afficher le profil.",
         waitMsgText: "Loading profile...",
         xLabelText: "Distance (m)",
-        yLabelText: "Elevation (m)"
+        yLabelText: "Elevation (m)",
+        errorMsg: "Une erreur s'est produite. Veuillez recommencer."
     }
 });
 

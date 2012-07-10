@@ -128,7 +128,8 @@ GeoExt.Lang.add("de", {
         helpText: "TODO (to be translated)<h1>Elevation profile</h1>Draw a line on the map. Double-click to terminate and show the profile.",
         waitMsgText: "TODO (to be translated)Loading profile...",
         xLabelText: "Abstand (m)",
-        yLabelText: "Höhe (m)"
+        yLabelText: "Höhe (m)",
+        errorMsg: "TODO (to be translated). An error occured. Please try again."
     }
 });
 
