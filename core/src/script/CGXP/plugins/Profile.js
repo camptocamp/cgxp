@@ -133,15 +133,20 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  ``Object``
      *  The style to be applied to the marker when hovering the chart.
      */
-    markerStyle: {
+    markerStyle: OpenLayers.Util.applyDefaults({
         pointRadius: 4,
         graphicName: "square",
         fillColor: "yellow",
         fillOpacity: 1,
         strokeWidth: 1,
         strokeOpacity: 1,
-        strokeColor: "#333333"
-    },
+        strokeColor: "#333333",
+        label: "toto est ici",
+        fontSize: 12,
+        fontColor: '#FF0000',
+        labelAlign: 'lb',
+        labelYOffset: -5
+    }, OpenLayers.Feature.Vector.style['default']),
 
     /** private: property[control]
      *  ``cgxp.plugins.Profile.Control``
@@ -338,7 +343,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
         var values = [];
         var layers = this.rasterLayers;
-        for (var i=0; i < data.length; i++) {
+        var i;
+        for (i=0; i < data.length; i++) {
             var datum = data[i];
             var value = [parseFloat(datum.dist)];
             for (var j=0; j < layers.length; j++) {
@@ -380,7 +386,16 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         if (x == datum.dist) {
                             var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
                             marker && marker.destroy();
-                            marker = new OpenLayers.Feature.Vector(point, null, this.markerStyle);
+
+                            var label = [datum.dist + " m"];
+                            for (i=0; i < layers.length; i++) {
+                                label.push(layers[i] + " : " + datum[this.valuesProperty][layers[i]] + " m");
+                            }
+                            var style = OpenLayers.Util.extend({
+                                label: label.join(', ')
+                            }, this.markerStyle);
+
+                            marker = new OpenLayers.Feature.Vector(point, datum, style);
                             this.control.layer.addFeatures([marker]);
                             break;
                         }
