@@ -87,7 +87,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
                 map: this.map,
                 unpinnable: false,
                 html: state.tooltip
-            });
+            }).show();
         }
         if (state.crosshair && state.x && state.y) {
             this.getVectorLayer().addFeatures([
