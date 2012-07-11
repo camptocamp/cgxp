@@ -76,6 +76,9 @@ div#header-out {
 .x-toolbar .info {
     background: url('img/information.png') top left no-repeat;
 }
+.x-toolbar .infotooltip {
+    background: url('img/information.png') top left no-repeat;
+}
 .x-toolbar .help {
     background: url('img/help.png') top left no-repeat;
 }
