@@ -155,6 +155,24 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     control: null,
 
+    /** private: property[chart]
+     *  ``Object``
+     *  The DyGraph chart
+     */
+    chart: null,
+
+    /** private: property[data]
+     *  ``Object``
+     *  The data as retrieved from the profile service.
+     */
+    data: null,
+
+    /** private: property[marker]
+     *  ``OpenLayers.Feature.Vector``
+     *  The marker to be shown over the polyline.
+     */
+    marker: null,
+
     /** private: property[firstShow]
      *  ``Booolean``
      *  Tells whether the window has already been displayed.
@@ -271,7 +289,9 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         scope: this
                     });
                 },
-                startdrawing: this.clearProfile,
+                startdrawing: function() {
+                    this.clearProfile();
+                },
                 activate: function() {
                     if (cmp) {
                         this.showOutput(cmp);
@@ -281,6 +301,9 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 },
                 deactivate: function() {
                     this.hideOutput(cmp);
+                },
+                distance: function(distance) {
+                    this.showSelection(distance);
                 },
                 scope: this
             }
@@ -337,6 +360,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  Draws the profile using the DyGraph library
      */
     drawProfile: function(data) {
+        this.data = data;
         var cmp = this.output[0].add({
             xtype: 'box'
         });
@@ -355,8 +379,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             values.push(value);
         }
 
-        var marker;
-        var g = new Dygraph(
+        this.chart = new Dygraph(
             cmp.el.dom,
             function() {
                 var ret = "X," + layers.join(',') + "\n";
@@ -382,36 +405,62 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 },
                 legend: 'always',
                 highlightCallback: (function(e, x, pts, row) {
-                    for (var i = 0; i < data.length; i++) {
-                        var datum = data[i];
-                        if (x == datum.dist) {
-                            var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
-                            marker && marker.destroy();
-
-                            var label = [datum.dist + " m"];
-                            for (i=0; i < layers.length; i++) {
-                                label.push(layers[i] + " : " + datum[this.valuesProperty][layers[i]] + " m");
-                            }
-                            var style = OpenLayers.Util.extend({
-                                label: label.join(', ')
-                            }, this.markerStyle);
-
-                            marker = new OpenLayers.Feature.Vector(point, datum, style);
-                            this.control.layer.addFeatures([marker]);
-                            break;
-                        }
-                    }
+                    this.showMarker(row);
                 }).createDelegate(this),
-                unhighlightCallback: function(e, x, pts, row) {
-                    marker && marker.destroy();
-                }
+                unhighlightCallback: (function(e, x, pts, row) {
+                    this.marker && this.marker.destroy();
+                }).createDelegate(this)
             }
         );
         this.output[0].getEl().unmask();
 
-        this.output[0].on('resize', function() {
-            g.resize();
-        });
+        this.output[0].on('resize', (function() {
+            this.chart && this.chart.resize();
+        }).createDelegate(this));
+    },
+
+    /** private: showSelection
+     *  Highlight the chart for a given distance.
+     */
+    showSelection: function(x) {
+        if (!this.chart) {
+            return;
+        }
+        if (x) {
+            for (var i = 0; i < this.data.length; i++) {
+                var datum = this.data[i];
+                if (datum.dist >= x) {
+                    // choose the closest
+                    i = (Math.abs(datum.dist-x) < Math.abs(this.data[i-1].dist-x)) ?
+                        i : i - 1;
+                    this.showMarker(i);
+                    this.chart.setSelection(i);
+                    return;
+                }
+            }
+        } else {
+            this.chart.clearSelection();
+            this.marker && this.marker.destroy();
+        }
+    },
+
+    showMarker: function(row) {
+        var layers = this.rasterLayers;
+        var datum = this.data[row];
+        var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
+        this.marker && this.marker.destroy();
+
+        var label = [datum.dist + " m"];
+        for (var i=0; i < layers.length; i++) {
+            var l = layers[i];
+            label.push(l + " : " + datum[this.valuesProperty][l] + " m");
+        }
+        var style = OpenLayers.Util.extend({
+            label: label.join(', ')
+        }, this.markerStyle);
+
+        this.marker = new OpenLayers.Feature.Vector(point, datum, style);
+        this.control.layer.addFeatures([this.marker]);
     },
 
     /** private: method[clearProfile]
@@ -420,6 +469,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     clearProfile: function() {
         this.output[0].getLayout().setActiveItem(0);
         this.output[0].remove(1);
+        this.chart = null;
+        this.data = null;
     }
 });
 
@@ -428,10 +479,11 @@ Ext.preg(cgxp.plugins.Profile.prototype.ptype, cgxp.plugins.Profile);
 /*
  * @include OpenLayers/Control.js
  * @include OpenLayers/Handler/Path.js
+ * @include OpenLayers/Control/Snapping.js
  */
 
 /**
- * Class: App.Profile
+ * Class: cgxp.plugins.Profile.Control
  * Let the user draw a polyline and draws the altitude profile out of it.
  *
  * Inherits from:
@@ -443,6 +495,24 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
      * URL to access the profile service
      */
     serviceUrl: null,
+
+    /**
+     * Property: hoverHandler
+     * Hover handler
+     */
+    hoverHandler: null,
+
+    /**
+     * Property: snapping
+     * Snapping control
+     */
+    snapping: null,
+
+    /**
+     * Property: feature
+     * The Drawn feature
+     */
+    feature: null,
 
     /**
      * Constructor: App.Profile
@@ -476,6 +546,24 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
 
         OpenLayers.Control.DrawFeature.prototype.initialize.call(
                 this, layer, OpenLayers.Handler.Path, options);
+
+        this.snapping = new OpenLayers.Control.Snapping({
+            layer: layer,
+            precedence: ['edge']
+        });
+
+        this.snapping.events.on({
+            'snap': function(obj) {
+                this.events.triggerEvent('distance',
+                    this.computeDistance(obj.point)
+                );
+            },
+            'unsnap': function(obj) {
+                this.events.triggerEvent('distance', false);
+            },
+            scope: this
+        });
+        this.hoverHandler = new cgxp.plugins.Profile.HoverHandler(this, layer);
     },
 
     /**
@@ -483,6 +571,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
     activate: function() {
         if (OpenLayers.Control.DrawFeature.prototype.activate.call(this)) {
             this.map.addLayer(this.layer);
+            this.map.addControl(this.snapping);
         }
     },
 
@@ -492,20 +581,89 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
         if (OpenLayers.Control.DrawFeature.prototype.deactivate.call(this)) {
             this.layer.destroyFeatures();
             this.map.removeLayer(this.layer);
+            this.map.removeControl(this.snapping);
         }
     }, 
+
+    setMap: function(map) {
+        this.hoverHandler.setMap(map);
+        OpenLayers.Control.DrawFeature.prototype.setMap.apply(this, arguments);
+    },
 
     startDrawing: function() {
         this.layer.destroyFeatures();
         this.events.triggerEvent("startdrawing");
+        this.snapping.deactivate();
+        this.hoverHandler.deactivate();
+        this.feature = null;
+    },
+
+    drawFeature: function(geometry) {
+        OpenLayers.Control.DrawFeature.prototype.drawFeature.apply(this, [geometry]);
+        this.snapping.activate();
+        this.hoverHandler.activate();
+        this.feature = this.layer.features[0];
     },
 
     destroy: function() {
         this.layer.destroyFeatures();
         this.layer.map.removeLayer(this.layer);
         this.layer.destroy();
+        this.hoverHandler.destroy();
         OpenLayers.Control.DrawFeature.prototype.destroy.call(this);
     },
 
+    computeDistance: function(point) {
+        var cmps = this.feature.geometry.components;
+        var segmentIndex;
+        var i;
+        for (i=1; i < cmps.length; i++) {
+            var components = [cmps[i - 1], cmps[i]];
+            var segment = new OpenLayers.Geometry.LineString([
+                cmps[i - 1].clone(),
+                cmps[i].clone()
+            ]);
+            if (point.distanceTo(segment) < 0.001) {
+                segmentIndex = i - 1;
+                continue;
+            }
+        }
+        var distance = 0;
+        for (i=0; i <= segmentIndex; i++) {
+            if (i == segmentIndex) {
+                distance += point.distanceTo(cmps[i]);
+            } else {
+                distance += cmps[i].distanceTo(cmps[i + 1]);
+            }
+        }
+        return distance;
+    },
+
     CLASS_NAME: "cgxp.plugins.Profile.Control"
+});
+
+/*
+ * @include OpenLayers/Handler.js
+ */
+
+/**
+ * Class: cgxp.plugins.Profile.HoverHandler
+ * Handler which allows to use snapping. Useful to detect hover by taking
+ * a tolerance into account.
+ *
+ * Inherits from:
+ *  - <OpenLayers.Handler>
+ */
+cgxp.plugins.Profile.HoverHandler = OpenLayers.Class(OpenLayers.Handler, {
+    initialize: function(control, layer, callbacks, options) {
+        OpenLayers.Handler.prototype.initialize.apply(this, [control, callbacks, options]);
+        this.layer = layer;
+    },
+    mousemove: function(evt) {
+        var loc = this.layer.map.getLonLatFromViewPortPx(evt.xy);
+        var vertex = new OpenLayers.Geometry.Point(loc.lon, loc.lat);
+        this.layer.events.triggerEvent(
+            "sketchstarted", {vertex: vertex}
+        );
+    }
 });
