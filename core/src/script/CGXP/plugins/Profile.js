@@ -142,7 +142,6 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         strokeWidth: 1,
         strokeOpacity: 1,
         strokeColor: "#333333",
-        label: "toto est ici",
         fontSize: 12,
         fontColor: '#FF0000',
         labelAlign: 'lt',
