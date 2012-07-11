@@ -400,7 +400,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                             break;
                         }
                     }
-                }).bind(this),
+                }).createDelegate(this),
                 unhighlightCallback: function(e, x, pts, row) {
                     marker && marker.destroy();
                 }
