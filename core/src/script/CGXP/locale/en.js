@@ -132,7 +132,7 @@ GeoExt.Lang.add("en", {
 
     "cgxp.plugins.Profile.prototype": {
         helpText: "<h1>Elevation profile</h1>Draw a line on the map. Double-click to terminate and show the profile.",
-        waitMsgText: "Loading profile...",
+        waitMsgText: "Loading elevation profile...",
         xLabelText: "Distance (m)",
         yLabelText: "Elevation (m)",
         errorMsg: "An error occured. Please try again."

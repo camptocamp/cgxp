@@ -125,11 +125,11 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Profile.prototype": {
-        helpText: "TODO (to be translated)<h1>Elevation profile</h1>Draw a line on the map. Double-click to terminate and show the profile.",
-        waitMsgText: "TODO (to be translated)Loading profile...",
+        helpText: "<h1>Höhenprofil</h1>Zeichnen Sie eine Linie auf der Karte. Doppelklicken Sie um die Linie zu beenden und das Höhenprofil anzuzeigen.",
+        waitMsgText: "Höhenprofil wird geladen...",
         xLabelText: "Abstand (m)",
         yLabelText: "Höhe (m)",
-        errorMsg: "TODO (to be translated). An error occured. Please try again."
+        errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     }
 });
 
