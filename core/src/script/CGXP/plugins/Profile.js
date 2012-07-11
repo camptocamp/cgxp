@@ -145,8 +145,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         label: "toto est ici",
         fontSize: 12,
         fontColor: '#FF0000',
-        labelAlign: 'lb',
-        labelYOffset: -5
+        labelAlign: 'lt',
+        labelYOffset: 5
     }, OpenLayers.Feature.Vector.style['default']),
 
     /** private: property[control]
@@ -239,7 +239,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                             "Line": {
                                 strokeWidth: 3,
                                 strokeOpacity: 1,
-                                strokeColor: "#666666"
+                                strokeColor: "#660000"
                             }
                         }
                     })]
