@@ -55,9 +55,7 @@ Ext.namespace("cgxp.plugins");
  *                  labelAlign: 'top',
  *                  defaults: {
  *                      anchor: '100%'
- *                  }
- *              },
- *              outputConfig: {
+ *                  },
  *                  autoFit: true
  *              }
  *          }]
