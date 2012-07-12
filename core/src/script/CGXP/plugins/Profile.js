@@ -17,11 +17,8 @@
 
 /**
  * @requires plugins/Tool.js
- * @requires CGXP/dygraph-combined.js
- * @requires CGXP/excanvas.js
- * @requires OpenLayers/Control/DrawFeature.js
- * @include OpenLayers/Handler/Point.js
- * @include OpenLayers/Handler/Path.js
+ * @include CGXP/dygraph-combined.js
+ * @include CGXP/excanvas.js
  * @include OpenLayers/StyleMap.js
  * @include OpenLayers/Style.js
  * @include OpenLayers/Rule.js
@@ -476,8 +473,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 Ext.preg(cgxp.plugins.Profile.prototype.ptype, cgxp.plugins.Profile);
 
 /*
- * @include OpenLayers/Control.js
- * @include OpenLayers/Handler/Path.js
+ * @requires OpenLayers/Control/DrawFeature.js
+ * @requires OpenLayers/Handler/Path.js
  * @include OpenLayers/Control/Snapping.js
  */
 
@@ -642,7 +639,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
 });
 
 /*
- * @include OpenLayers/Handler.js
+ * @requires OpenLayers/Handler.js
  */
 
 /**
