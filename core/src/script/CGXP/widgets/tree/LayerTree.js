@@ -39,7 +39,10 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
         // on the map in the same order than in the layertree
         items2.reverse();
         return cgxp.tree.LayerParamNode.superclass.createParams.apply(this, [items2]);
-    }
+    },
+
+    // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
+    onLayerVisibilityChanged: Ext.emptyFn
 });
 Ext.tree.TreePanel.nodeTypes.cgxp_layerparam = cgxp.tree.LayerParamNode;
 
