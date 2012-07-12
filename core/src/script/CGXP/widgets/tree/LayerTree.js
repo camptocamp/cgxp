@@ -32,20 +32,6 @@
 
 Ext.namespace("cgxp.tree");
 
-cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
-    createParams: function(items) {
-        var items2 = items.slice(0);
-        // reverse the items list order so that mapserver layers are drawn
-        // on the map in the same order than in the layertree
-        items2.reverse();
-        return cgxp.tree.LayerParamNode.superclass.createParams.apply(this, [items2]);
-    },
-
-    // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
-    onLayerVisibilityChanged: Ext.emptyFn
-});
-Ext.tree.TreePanel.nodeTypes.cgxp_layerparam = cgxp.tree.LayerParamNode;
-
 /** api: (define)
  *  module = cgxp.tree
  *  class = LayerTree
@@ -1313,3 +1299,17 @@ cgxp.tree.LayerNode = Ext.extend(GeoExt.tree.LayerNode, {
     onLayerVisibilityChanged: Ext.emptyFn
 });
 Ext.tree.TreePanel.nodeTypes.cgxp_layer = cgxp.tree.LayerNode;
+
+cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
+    createParams: function(items) {
+        var items2 = items.slice(0);
+        // reverse the items list order so that mapserver layers are drawn
+        // on the map in the same order than in the layertree
+        items2.reverse();
+        return cgxp.tree.LayerParamNode.superclass.createParams.apply(this, [items2]);
+    },
+
+    // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
+    onLayerVisibilityChanged: Ext.emptyFn
+});
+Ext.tree.TreePanel.nodeTypes.cgxp_layerparam = cgxp.tree.LayerParamNode;
