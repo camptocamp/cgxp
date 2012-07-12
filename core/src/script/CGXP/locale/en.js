@@ -62,7 +62,7 @@ GeoExt.Lang.add("en", {
         titlefieldvalueText: "Map title",
         commentfieldText: "Comment",
         commentfieldvalueText: "Comment on the map",
-        includelegendText: "Inclure legend",
+        includelegendText: "Include legend",
         layoutText: "Layout",
         dpifieldText: "Resolution",
         scalefieldText: "Scale",
