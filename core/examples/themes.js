@@ -2,7 +2,7 @@ Ext.namespace('App');
 App.themes = {
     "local": [{
         "children": [{
-            "isExpanded": false,
+            "isExpanded": true,
             "isInternalWMS": true,
             "name": "Theme 1 - Group a",
             "isBaseLayer": false,
@@ -23,11 +23,21 @@ App.themes = {
                 "name": "group",
                 "children": [{
                     "name": "drain_fn",
-                    "legend": true
+                    "legend": true,
+                    "checked": true
                 }, {
                     "name": "drainage",
                     "legend": true,
                     "legendRule": "default"
+                }, {
+                    "name": "group 2nd level",
+                    "children": [{
+                        "name": "drain_fn1",
+                        "legend": true
+                    }, {
+                        "name": "drain_fn2",
+                        "legend": true
+                    }]
                 }]
             }]
         }],
@@ -40,9 +50,9 @@ App.themes = {
             "name": "Theme 2 - Group a",
             "isBaseLayer": false,
             "children": [{
-                "name": "drainage"
+                "name": "drainage2"
             }, {
-                "name": "drain_fn"
+                "name": "drain_fn3"
             }, {
                 "name": "roads",
                 "children": [{
