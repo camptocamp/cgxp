@@ -127,6 +127,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     readyText: 'Your PDF is ready.',
     failureTitle: "Printing Failure",
     failureText: "An error occured while printing. Please check the parameters.",
+    layoutText: "Layout",
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -381,6 +382,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             scaleText: this.scalefieldText,
             rotationText: this.rotationfieldText,
             printText: this.printbuttonText,
+            layoutText: this.layoutText,
             creatingPdfText: this.waitingText
         }, this.options);
         printPanel = new GeoExt.ux.SimplePrint(options);
