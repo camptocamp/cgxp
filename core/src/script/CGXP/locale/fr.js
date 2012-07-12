@@ -56,6 +56,8 @@ GeoExt.Lang.add("fr", {
         titlefieldvalueText: "Titre de la carte",
         commentfieldText: "Commentaires",
         commentfieldvalueText: "Commentaires sur la carte",
+        includelegendText: "Inclure la légende",
+        layoutText: "Format",
         dpifieldText: "Résolution",
         scalefieldText: "Échelle",
         rotationfieldText: "Rotation",

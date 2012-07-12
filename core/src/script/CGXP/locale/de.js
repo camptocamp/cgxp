@@ -54,6 +54,8 @@ GeoExt.Lang.add("de", {
         printTitle: "Drucken",
         titlefieldText: "Titel",
         titlefieldvalueText: "Kartentitel",
+        includelegendText: "Legende anzeigen",
+        layoutText: "Layout",
         commentfieldText: "Kommentar",
         commentfieldvalueText: "Kommentar auf der Karte",
         dpifieldText: "Auflösung",
