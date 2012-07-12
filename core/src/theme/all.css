@@ -428,6 +428,7 @@ div.legend label {
 .dygraph-legend {
     font-size: 12px !important;
     text-align: right !important;
+    background-color: transparent !important;
 }
 .dygraph-legend,
 .dygraph-xlabel,
