@@ -377,6 +377,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         groupNode.ui.show();
         groupNode.cascade(this.checkInRange);
+        return groupNode;
     },
 
     /**
@@ -897,10 +898,23 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
+        var groupNodes = [];
         // reverse to have the first layer in the list at the top
         Ext.each(theme.children.concat().reverse(), function(group) {
-            this.loadGroup(group);
+            groupNodes.push(this.loadGroup(group, undefined, undefined, 
+                    undefined, undefined, false));
         }, this);
+
+        var minPosition = 9999;
+        var node;
+        Ext.each(groupNodes, function(groupNode) {
+            var pos = this.root.indexOf(groupNode);
+            if (pos >= 0 && pos < minPosition) {
+                minPosition = pos;
+                node = groupNode;
+            }
+        }, this);
+        node.getUI().getEl().scrollIntoView(this.body, false);
 
         // change them in url
         if (this.uniqueTheme && this.frienlyUrl && history.replaceState) {
@@ -936,10 +950,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * opacity {Float} the OL layer opacity. optional
      * visibility {Boolean} the OL layer visibility. optional
      */
-    loadGroup: function(group, layers, opacity, visibility, nowarning) {
-        var existingGroup = this.root.findChild('groupId', group.name);
+    loadGroup: function(group, layers, opacity, visibility, nowarning, scroll) {
+        scroll = scroll === undefined || scroll;
+
+        var groupNode = this.root.findChild('groupId', group.name);
         nowarning = nowarning || false;
-        if (!existingGroup) {
+        if (!groupNode) {
             var index = this.mapPanel.layers.getCount();
             while (this.mapPanel.map.layers[index-1] instanceof OpenLayers.Layer.Vector && index > 0) { index-- }
             if (group.isInternalWMS !== false) {
@@ -994,7 +1010,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         idx.index++;
                     }
                 });
-                this.addGroup(group, true);
+                groupNode = this.addGroup(group, true);
             }
             else {
                 var result = {
@@ -1007,40 +1023,49 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
-                this.addGroup(group, false);
+                groupNode = this.addGroup(group, false);
+            }
+            if (scroll) {
+                this.body.scrollTo('top', 0);
             }
         }
         else {
-            layer = existingGroup.attributes.layer;
+            layer = groupNode.attributes.layer;
             if (layers) {
                 Ext.each(layers, function(l) {
-                    node = existingGroup.findChild('name', l, true);
+                    node = groupNode.findChild('name', l, true);
                     this.fireEvent('checkchange', node, true);
                 }, this);
             }
-            if(!nowarning) {
-                var html = [ 
-                    '<div class="layertree-msg">',
-                        this.themealreadyloadedText,
-                    '</div>'
-                ].join('');
-                var msg = Ext.DomHelper.insertBefore(
-                    this.body,
-                    {
-                        html: html,
-                        xtype: 'container'
-                    },
-                    true
-                ).fadeIn();
+            if (scroll) {
+                groupNode.getUI().getEl().scrollIntoView(this.innerCt, false);
+            }
+            if (!nowarning) {
+                // delayed to solved conflict with scroll
                 new Ext.util.DelayedTask(function() {
-                    var duration = 1;
-                    msg.fadeOut({ duration: duration });
+                    var html = [ 
+                        '<div class="layertree-msg">',
+                            this.themealreadyloadedText,
+                        '</div>'
+                    ].join('');
+                    var msg = Ext.DomHelper.insertBefore(
+                        this.body,
+                        {
+                            html: html,
+                            xtype: 'container'
+                        },
+                        true
+                    ).fadeIn();
                     new Ext.util.DelayedTask(function() {
-                        // make sure that the message is actually removed
-                        // ("remove" option of fadeOut() doesn't seem to work)
-                        msg.remove();
-                    }).delay(duration * 1000);
-                }).delay(3000);
+                        var duration = 1;
+                        msg.fadeOut({ duration: duration });
+                        new Ext.util.DelayedTask(function() {
+                            // make sure that the message is actually removed
+                            // ("remove" option of fadeOut() doesn't seem to work)
+                            msg.remove();
+                        }).delay(duration * 1000);
+                    }).delay(3000);
+                }, this).delay(10);
             }
         }
 
@@ -1050,6 +1075,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 layer.setVisibility(visibility !== false);
             }
         }
+
+        return groupNode;
     },
 
     checkGroupIsAllowed: function(group) {
