@@ -43,7 +43,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_profile',
  *              actionTarget: 'center.tbar',
  *              toggleGroup: 'maptools',
- *              serviceUrl: 'http://myserver.com/route/to/profile.json',
+ *              serviceUrl: "${request.route_url('profile.json')}",
  *              rasterLayers: ['mnt', 'mns']
  *          }]
  *          ...
