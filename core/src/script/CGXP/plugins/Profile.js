@@ -68,50 +68,50 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[serviceUrl]
      *  ``String``
-     *  The url to the profile service. 
+     *  The url to the profile service.
      */
     serviceUrl: null,
 
     /** api: config[valuesProperty]
      *  ``String``
-     *  The property in which are stored the elevation values.
+     *  The property in which are stored the elevation values (optional).
      *  Defaults to 'values'.
      */
     valuesProperty: "values",
 
     /** api: config[helpText]
      *  ``String``
-     *  The translated tool help html text.
+     *  The translated tool help html text (i18n).
      */
     helpText: null,
 
     /** api: config[waitMsgText]
      *  ``String``
-     *  The loading message.
+     *  The loading message (i18n).
      */
     waitMsgText: null,
 
     /** api: config[xLabelText]
      *  ``String``
-     *  The translated x label text.
+     *  The translated x label text (i18n).
      */
     xLabelText: null,
 
     /** api: config[yLabelText]
      *  ``String``
-     *  The translated y label text.
+     *  The translated y label text (i18n).
      */
     yLabelText: null,
 
     /** api: config[errorMsg]
      *  ``String``
-     *  The translated error message.
+     *  The translated error message (i18n).
      */
     errorMsg: null,
     
     /** api: config[style]
      *  ``Object``
-     *  The style to be applied to the control vector layer
+     *  The style to be applied to the control vector layer (optional).
      */
     style: null,
 
@@ -123,13 +123,15 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[nbPoints]
      *  ``Integer``
-     *  The number of points to show in the charts.
+     *  The number of points to show in the charts (optional).
+     *  Defaults to 100.
      */
     nbPoints: 100,
 
     /** api: config[markerStyle]
      *  ``Object``
-     *  The style to be applied to the marker when hovering the chart.
+     *  The style to be applied to the marker when hovering the chart
+     *  (optional).
      */
     markerStyle: OpenLayers.Util.applyDefaults({
         pointRadius: 4,
