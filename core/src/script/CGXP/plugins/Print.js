@@ -205,7 +205,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 layer.features = features;
             }
             return true;
-        });
+        }, this);
         printProvider.on('encodelayer', function(printProvider, layer, encodedLayer) {
             var apply = false;
             if (layer.mapserverLayers) {
@@ -244,7 +244,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             if (encodedLayer) {
                 Ext.apply(encodedLayer, this.encodeLayer);
             }
-        }.createDelegate(this));
+        }, this);
 
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
