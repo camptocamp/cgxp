@@ -17,24 +17,24 @@ GeoExt.Lang.add("fr", {
         tooltipTitle: "Rechercher",
         emptyText: "Recherche...",
         loadingText: "Recherche en cours..."
-    },  
+    }, 
     
     "cgxp.plugins.ThemeFinder.prototype": {
         emptyText: "Rechercher un thème ou une couche"
-    },  
+    }, 
 
     "cgxp.plugins.ThemeSelector.prototype": {
         localTitle: "Couches locales",
         externalTitle: "Couches externes",
         toolTitle: "Thèmes"
-    },  
+    }, 
     
     "cgxp.plugins.Permalink.prototype": {
         toolTitle: "Permalien",
         windowTitle: "Permalien",
         openlinkText: "Ouvrir le lien",
         closeText: "Fermer"
-    },  
+    }, 
     
     "cgxp.plugins.FeatureGrid.prototype": {
         clearAllText: "Tout effacer",
@@ -144,19 +144,19 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
         popupTitleText: "Position",
-        defaultTpl: "Coordonnées suisses : {coord_x} {coord_y}<br />" + 
+        defaultTpl: "Coordonnées suisses : {coord_x} {coord_y}<br />" +
             "WGS 84 : {wsg_x} {wsg_y}<br />",
-        defaultTplElevation: "Élevation (Terrain) : {elevation_dtm} [m]<br />" + 
+        defaultTplElevation: "Élevation (Terrain) : {elevation_dtm} [m]<br />" +
             "Élevation (Surface) : {elevation_dsm} [m]<br />" +
             "Hauteur (Surface-Terrain) : {elevation_dhm} [m]<br />"
     },
 
     "cgxp.plugins.ContextualData.ContextPopup.prototype": {
         popupTitleText: "Position",
-        coordTpl: "<tr><td width=\"150\">Coordonnées suisses</td>" + 
-            "<td>{coord_x} {coord_y}</td></tr>" + 
+        coordTpl: "<tr><td width=\"150\">Coordonnées suisses</td>" +
+            "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
-        elevationTpl: "<tr><td>Élevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" + 
+        elevationTpl: "<tr><td>Élevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" +
         "<tr><td>Élevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
         "<tr><td>Hauteur (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
         "<tr><td>Pente du terrain</td><td>{elevation_slope} [° dég.] </td></tr>"

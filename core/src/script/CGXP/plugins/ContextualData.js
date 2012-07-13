@@ -619,7 +619,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      *    - Tilt angle,
      *    - Zoom level,
      *    - Pitch (in degrees)
-     *  - layer: Turns overlays on and off. 
+     *  - layer: Turns overlays on and off:
      *    t for traffic, c for street view, or tc for both at the same time.
      *
      *  `More info <http://mapki.com/wiki/Google_Map_Parameters#Street_View>`_
