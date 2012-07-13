@@ -56,6 +56,8 @@ GeoExt.Lang.add("fr", {
         titlefieldvalueText: "Titre de la carte",
         commentfieldText: "Commentaires",
         commentfieldvalueText: "Commentaires sur la carte",
+        includelegendText: "Inclure la légende",
+        layoutText: "Format",
         dpifieldText: "Résolution",
         scalefieldText: "Échelle",
         rotationfieldText: "Rotation",
@@ -127,6 +129,37 @@ GeoExt.Lang.add("fr", {
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "+ WMS",
         windowTitleText: "Ajouter des couches WMS"
+    },
+
+    "cgxp.plugins.ContextualData.prototype": {
+        actionTooltipText: "Tooltips d'informations contextuelles"
+    },
+
+    "cgxp.plugins.ContextualData.Control.prototype": {
+        streetviewLabelText: 'Lien StreetView',
+        userValueErrorText: "La valeur retournée par la méthode handleServerData" +
+            "methode doit être un objet. Voir l'exemple dans la documentation de l'API",
+        userValueErrorTitleText: 'Erreur'
+    },
+
+    "cgxp.plugins.ContextualData.Tooltip.prototype": {
+        popupTitleText: "Position",
+        defaultTpl: "Coordonnées suisses : {coord_x} {coord_y}<br />" + 
+            "WGS 84 : {wsg_x} {wsg_y}<br />",
+        defaultTplElevation: "Élevation (Terrain) : {elevation_dtm} [m]<br />" + 
+            "Élevation (Surface) : {elevation_dsm} [m]<br />" +
+            "Hauteur (Surface-Terrain) : {elevation_dhm} [m]<br />"
+    },
+
+    "cgxp.plugins.ContextualData.ContextPopup.prototype": {
+        popupTitleText: "Position",
+        coordTpl: "<tr><td width=\"150\">Coordonnées suisses</td>" + 
+            "<td>{coord_x} {coord_y}</td></tr>" + 
+            "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+        elevationTpl: "<tr><td>Élevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" + 
+        "<tr><td>Élevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
+        "<tr><td>Hauteur (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
+        "<tr><td>Pente du terrain</td><td>{elevation_slope} [° dég.] </td></tr>"
     },
 
     "cgxp.plugins.Profile.prototype": {

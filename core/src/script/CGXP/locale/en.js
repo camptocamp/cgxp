@@ -62,6 +62,8 @@ GeoExt.Lang.add("en", {
         titlefieldvalueText: "Map title",
         commentfieldText: "Comment",
         commentfieldvalueText: "Comment on the map",
+        includelegendText: "Include legend",
+        layoutText: "Layout",
         dpifieldText: "Resolution",
         scalefieldText: "Scale",
         rotationfieldText: "Rotation",
@@ -128,6 +130,37 @@ GeoExt.Lang.add("en", {
         windowTitleText: 'Results',
         itemsText: "items",
         itemText: "item"
+    },
+
+    "cgxp.plugins.ContextualData.prototype": {
+        actionTooltipText: "Contextual Informations Tooltips"
+    },
+
+    "cgxp.plugins.ContextualData.Control.prototype": {
+        streetviewLabelText: 'StreetView Link',
+        userValueErrorText: 'The value returned by the handleServerData methode ' + 
+        'must be an object. See the example in the API.',
+        userValueErrorTitleText: 'Error'
+    },
+
+    "cgxp.plugins.ContextualData.Tooltip.prototype": {
+        popupTitleText: "Location",
+        defaultTpl: "Suisses  Coord. : {coord_x} {coord_y}<br />" + 
+            "WGS 84 : {wsg_x} {wsg_y}<br />",
+        defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" + 
+            "Elevation (Surface) : {elevation_dsm} [m]<br />" +
+            "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
+    },
+
+    "cgxp.plugins.ContextualData.ContextPopup.prototype": {
+        popupTitleText: "Location",
+        coordTpl: "<tr><td width=\"150\">Suisses  Coord.</td>" + 
+            "<td>{coord_x} {coord_y}</td></tr>" + 
+            "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+        elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" + 
+        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
+        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
+        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>"
     },
 
     "cgxp.plugins.Profile.prototype": {

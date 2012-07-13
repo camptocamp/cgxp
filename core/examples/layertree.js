@@ -18,7 +18,7 @@ Ext.onReady(function() {
     tree = new cgxp.tree.LayerTree({
         id: "layertree",
         width: 250,
-        height: 200,
+        height: 300,
         autoScroll: true,
         wmsURL: 'http://www2.dmsolutions.ca/cgi-bin/mswms_gmap',
         mapPanel: mapPanel,
