@@ -60,12 +60,6 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_profile*/
     ptype: "cgxp_profile",
 
-    /** api: config[events]
-     *  ``Object``
-     *  An Observer used to receive events.
-     */
-    events: null,
-
     /** api: config[serviceUrl]
      *  ``String``
      *  The url to the profile service.
