@@ -67,10 +67,10 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[streetViewLink]
      *  ``Boolean`` enable or disable the streeView link in right-click context
-     * menu.
-     * true to enable, 
-     * false to disable, 
-     * default is true.
+     *  menu.
+     *  true to enable, 
+     *  false to disable, 
+     *  default is true.
      */
     streetViewLink: true,
 
@@ -80,18 +80,25 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  The variable between curly brackets are automaticaly replaced with the 
      *  values recovered from server side.
      *  Example:
-     *  tpls: {
-     *      all: "Local Coord. Label : {coord_x} {coord_y}<br />" + 
-     *          "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
-     *          "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" + 
-     *          "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
-     *          "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
-     *  }
+     *
+     *  .. code-block:: javascript
+     *
+     *      tpls: {
+     *          all: "Local Coord. Label : {coord_x} {coord_y}<br />" + 
+     *              "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
+     *              "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" + 
+     *              "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
+     *              "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
+     *      }
+     *
      *  or
-     *  tpls: {
-     *      mouseoverTpl: "...some text/html...",
-     *      rightclickTpl: "...some text/html..."
-     *  }
+     *
+     *  .. code-block:: javascript
+     *
+     *      tpls: {
+     *          mouseoverTpl: "...some text/html...",
+     *          rightclickTpl: "...some text/html..."
+     *      }
      */
     tpls: {
         mouseoverTpl: null,
@@ -112,30 +119,32 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  {Object}
      *
      *  Full config example:
-     *  {
-     *     ptype: "cgxp_contextualdata",
-     *     url: "${request.route_url('raster', path='')}",
-     *     actionTarget: "center.tbar",
-     *     tpls: {
-     *         allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" + 
-     *                 "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" + 
-     *                 "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" + 
-     *                 "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
-     *                 "Height (Surface-Terrain) : {elevation_dhm} [m]<br />" + 
-     *                 "{custom_data_label} : {custom_data_value}"
-     *     },
-     *     handleServerData: function(data) {
-     *         if (data.some_data) {
-     *             // do some treatments ....
      *
-     *             return {
-     *                 'custom_data_value': data.some_data,
-     *                 'custom_data_label': OpenLayers.i18n('custom_data_label')
-     *             };
+     *  .. code-block:: javascript
+     *
+     *      {
+     *         ptype: "cgxp_contextualdata",
+     *         url: "${request.route_url('raster', path='')}",
+     *         actionTarget: "center.tbar",
+     *         tpls: {
+     *             allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" + 
+     *                     "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" + 
+     *                     "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" + 
+     *                     "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
+     *                     "Height (Surface-Terrain) : {elevation_dhm} [m]<br />" + 
+     *                     "{custom_data_label} : {custom_data_value}"
+     *         },
+     *         handleServerData: function(data) {
+     *             if (data.some_data) {
+     *                 // do some treatments ....
+     *    
+     *                 return {
+     *                     'custom_data_value': data.some_data,
+     *                     'custom_data_label': OpenLayers.i18n('custom_data_label')
+     *                 };
+     *             }
      *         }
-     *     }
-     *  }
-     *  
+     *      }
      */
     handleServerData: function(data) {
         result = {}
@@ -201,24 +210,20 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
 Ext.preg(cgxp.plugins.ContextualData.prototype.ptype, cgxp.plugins.ContextualData);
 
-/** api: (extends)
- *  OpenLayers.Control
- */
-
 /** api: constructor
  *  .. class:: ContextualData.Control(config)
  *
  *    Shared Main Control Class.
  *    Used by ContextualData.Tooltip and ContextualData.ContextPopup
  *
- *    Handle variables replacement in popup content and, if neede, server
+ *    Handle variables replacement in popup content and, if needed, server
  *    query to fetch data.
  *
  */
 cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
 
     /** api: config[serviceUrl]
-     * ``String`` URL to access the server web service
+     *  ``String`` URL to access the server web service
      */
     serviceUrl: null,
 
@@ -242,7 +247,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
     userValueErrorTitleText: 'Error notice',
 
     /** private: method[getContent]
-     * Treat server response and generate the popup html content
+     *  Process server response and generate the popup html content
      *
      *  :arg response: ``Object`` Ext.Ajax.request response
      *  :returns: ``String`` popup content
@@ -309,7 +314,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
     },
 
     /** private: method[request]
-     * Execute a server side request to fetch data
+     *  Execute a server side request to fetch data
      *
      *  :arg ev: ``Object`` DOM Event Object
      */
@@ -352,10 +357,6 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         // pass
     }
 });
-
-/** api: (extends)
- *  cgxp.plugins.ContextualData.Control
- */
 
 /** api: constructor
  *  .. class:: ContextualData.Tooltip(config)
@@ -570,10 +571,6 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
 
     CLASS_NAME: "cgxp.plugins.ContextualData.Tooltip"
 });
-
-/** api: (extends)
- *  cgxp.plugins.ContextualData.Control
- */
 
 /** api: constructor
  *  .. class:: ContextualData.ContextPopup(config)
