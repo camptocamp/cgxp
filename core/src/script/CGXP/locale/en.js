@@ -160,7 +160,7 @@ GeoExt.Lang.add("en", {
         elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" + 
         "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
         "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
-        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>",
+        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>"
     }
 });
 
