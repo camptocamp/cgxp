@@ -140,7 +140,7 @@ GeoExt.Lang.add("en", {
         streetviewLabelText: 'StreetView Link',
         userValueErrorText: 'The value returned by the handleServerData methode ' + 
         'must be an object. See the example in the API.',
-        userValueErrorTitleText: 'Error',
+        userValueErrorTitleText: 'Error'
     },
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
