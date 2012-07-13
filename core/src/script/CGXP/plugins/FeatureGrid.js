@@ -139,6 +139,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
+    /** api: config[aggregatedExport]
+     *  ``Boolean`` If true, aggregate results from all tabs and not only the 
+     *  active tab when exporting (pdf, csv, ...). Default is false.
+     */
+    aggregatedExport: false,
+
     /** private: private[dummy_form]
      *  ``Object`` Fake form used for csv export.
      */
@@ -188,7 +194,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of result" label (plural) (i18n).
      */
     resultsText: "Results",
-
+    
     init: function() {
         cgxp.plugins.FeatureGrid.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
@@ -249,43 +255,70 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  The columns names will be 'col1', 'col2', ....
      */
     printExport: function() {
-        var results = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
+        var groupedRecords = [];
+
+        var grids = [];
+
         if (this.tabpan.activeTab && this.currentGrid) {
-            var records = this.currentGrid.getSelectionModel().getSelections();
-            if (records.length === 0) {
-                records = this.currentGrid.getStore().getRange();
-            }
-            if (records.length === 0) {
-                return results;
-            }
-            var firstRow = true;
-            Ext.each(records, function(r) {
-                var attributes = r.getFeature().attributes;
-                var index = 0;
-                var raw = {};
-                if (firstRow) {
-                    results.table.columns = [];
-                    results.table.data = [];
-                }
-                for (prop in attributes) {
-                    if (attributes.hasOwnProperty(prop)) {
-                        var id = 'col' + index;
-                        raw[id] = attributes[prop];
-                        index++;
-                        if (index > 9) {
-                            break;
+            // list the grids to use
+            if (this.currentGrid.getSelectionModel().getSelections().length > 0) {
+                 grids.push(this.currentGrid);
+            } else {
+                if (this.aggregatedExport) {
+                    for (grid in this.gridByType) {
+                        if (this.gridByType.hasOwnProperty(grid)) {
+                            grids.push(this.gridByType[grid])
                         }
-                        if (firstRow) {
-                            results[id] = OpenLayers.i18n(prop);
-                            results.table.columns.push(id);
+                    } 
+                } else {
+                    grids.push(this.currentGrid);
+                }
+            }
+            // get data from grids
+            Ext.each(grids, function(grid) {
+                if (grids.length == 1) {
+                    var records = grid.getSelectionModel().getSelections();
+                } else {
+                    var records = grid.getStore().getRange();
+                }
+                if (records.length === 0) {
+                    return groupedRecords;
+                }
+
+                Ext.each(records, function(r) {
+                    var attributes = r.getFeature().attributes;
+                    
+                    var raw = {};
+                    var index = 0;
+                    // group records by type (layer)
+                    if (!groupedRecords[grid.title]) {
+                        var results = new cgxp.plugins.FeatureGrid.PrintResults();
+                        results.table.columns = [];
+                        results.table.data = [];
+                        results.new = true;
+                        groupedRecords[grid.title] = results;
+                    }
+                    for (prop in attributes) {
+                        if (attributes.hasOwnProperty(prop)) {
+
+                            var id = 'col' + index;
+                            raw[id] = attributes[prop];
+                            index++;
+                            if (index > 9) {
+                                break;
+                            }
+                            if (groupedRecords[grid.title].new) {
+                                groupedRecords[grid.title][id] = OpenLayers.i18n(prop);
+                                groupedRecords[grid.title].table.columns.push(id);
+                            }
                         }
                     }
-                }
-                firstRow = false;
-                results.table.data.push(raw);
-            });
+                    groupedRecords[grid.title].table.data.push(raw);
+                    groupedRecords[grid.title].new = false;
+                }, this);
+            }, this);
         }
-        return results;
+        return groupedRecords;
     },
     
     /** private: method[getCount]
@@ -588,3 +621,16 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
 Ext.preg(cgxp.plugins.FeatureGrid.prototype.ptype, cgxp.plugins.FeatureGrid);
 
+cgxp.plugins.FeatureGrid.PrintResults = OpenLayers.Class({
+
+    col0: '',
+    
+    initialize: function() {
+        this.table = {
+           data: [{col0: ''}], 
+           columns: ['col0']
+        };
+    },
+
+    CLASS_NAME: "cgxp.plugins.FeatureGrid.PrintResults"
+});
