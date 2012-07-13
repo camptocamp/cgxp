@@ -550,11 +550,13 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
 
         this.snapping.events.on({
             'snap': function(obj) {
+                this.map.div.style.cursor = 'pointer';
                 this.events.triggerEvent('distance',
                     this.computeDistance(obj.point)
                 );
             },
             'unsnap': function(obj) {
+                this.map.div.style.cursor = '';
                 this.events.triggerEvent('distance', false);
             },
             scope: this
