@@ -100,6 +100,24 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     timeout: 120000,
 
+    /** api: config[extentStyle]
+     *  ``Object``
+     *  Style config of the print extent fill.
+     */
+    extentStyle: {},
+
+    /** api: config[borderStyle]
+     *  ``Object``
+     *  Style config of the print extent stroke.
+     */
+    borderStyle: {},
+
+    /** api: config[rotateStyle]
+     *  ``Object``
+     *  Style config of the rotate icon.
+     */
+    rotateStyle: {},
+
     /** api: config[encodeLayer]
      * ``Object``
      * Additional attribute used on encode layer.
@@ -307,16 +325,20 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             layer: new OpenLayers.Layer.Vector(null, {
                 displayInLayerSwitcher: false,
                 styleMap: new OpenLayers.StyleMap({
-                    "temporary": new OpenLayers.Style({
+                    "default": new OpenLayers.Style(Ext.apply({
+                        fillColor: '#ee9900',
+                        fillOpacity: 0.4
+                    }, this.extentStyle)),
+                    "temporary": new OpenLayers.Style(Ext.apply({
                         fillColor: "#ffffff",
                         fillOpacity: 1,
-                        strokeColor: "#66cccc",
+                        strokeColor: "#000000",
                         strokeOpacity: 1,
-                        strokeWidth: 2,
-                        pointRadius: 4,
+                        strokeWidth: 1,
+                        pointRadius: 5,
                         cursor: "${role}"
-                    }),
-                    "rotate": new OpenLayers.Style({
+                    }, this.borderStyle)),
+                    "rotate": new OpenLayers.Style(Ext.apply({
                         externalGraphic: OpenLayers.Util.getImagesLocation() +
                             "print-rotate.png",
                         fillOpacity: 1.0,
@@ -327,7 +349,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         cursor: "pointer",
                         display: "${display}",
                         rotation: "${rotation}"
-                    }, {
+                    }, this.rotateStyle), {
                         context: {
                             display: function(f) {
                                 return f.attributes.role == "se-rotate" ? "" : "none";
