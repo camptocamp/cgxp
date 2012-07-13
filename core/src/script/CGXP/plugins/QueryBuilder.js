@@ -391,7 +391,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             });
         }
         this.store.load();
-    },
+    }
 });
 
 Ext.preg(cgxp.plugins.QueryBuilder.prototype.ptype, cgxp.plugins.QueryBuilder);
