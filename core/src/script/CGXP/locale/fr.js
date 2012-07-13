@@ -17,24 +17,24 @@ GeoExt.Lang.add("fr", {
         tooltipTitle: "Rechercher",
         emptyText: "Recherche...",
         loadingText: "Recherche en cours..."
-    }, 
+    },
     
     "cgxp.plugins.ThemeFinder.prototype": {
         emptyText: "Rechercher un thème ou une couche"
-    }, 
+    },
 
     "cgxp.plugins.ThemeSelector.prototype": {
         localTitle: "Couches locales",
         externalTitle: "Couches externes",
         toolTitle: "Thèmes"
-    }, 
+    },
     
     "cgxp.plugins.Permalink.prototype": {
         toolTitle: "Permalien",
         windowTitle: "Permalien",
         openlinkText: "Ouvrir le lien",
         closeText: "Fermer"
-    }, 
+    },
     
     "cgxp.plugins.FeatureGrid.prototype": {
         clearAllText: "Tout effacer",

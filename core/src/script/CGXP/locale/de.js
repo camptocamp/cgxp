@@ -128,7 +128,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.ContextualData.prototype": {
         actionTooltipText: "Contextual Informations Tooltips"
-    }, 
+    },
 
     "cgxp.plugins.ContextualData.Control.prototype": {
         streetviewLabelText: 'StreetView Link',
