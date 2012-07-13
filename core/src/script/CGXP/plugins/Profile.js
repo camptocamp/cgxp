@@ -17,8 +17,8 @@
 
 /**
  * @requires plugins/Tool.js
- * @include CGXP/dygraphs/dygraph-combined.js
- * @include CGXP/dygraphs/excanvas.js
+ * @include dygraphs/dygraph-combined.js
+ * @include dygraphs/excanvas.js
  * @include OpenLayers/StyleMap.js
  * @include OpenLayers/Style.js
  * @include OpenLayers/Rule.js
