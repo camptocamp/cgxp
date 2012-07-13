@@ -110,7 +110,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  specific treatments on server data
      *
      *  By default, all parameters other than 'mnt' and 'mns' are automatically
-     *  set as '*parameter_name*_value' with the label '*parameter_name*_label'
+     *  set as '<parameter_name>_value' with the label '<parameter_name>_label'
      *
      *  Parameters:
      *  data {Object} an Ext.Ajax.request responseText
@@ -609,17 +609,20 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      *  ``String`` Used to generate the base Ext.Template used streetview link in 
      *  popup content
      *
-     *  for reference:
-     *  ll: lonlat map
-     *  cbll: lonlat streetview
-     *  cbp: Street View/map arrangement,
-     *      Rotation angle/bearing (in degrees),
-     *      Tilt angle,
-     *      Zoom level,
-     *      Pitch (in degrees)
-     *  layer: Turns overlays on and off. 
-     *      t for traffic, c for street view, or tc for both at the same time.
-     *  http://mapki.com/wiki/Google_Map_Parameters#Street_View
+     *  For reference:
+     *
+     *  - ll: lonlat map
+     *  - cbll: lonlat streetview
+     *  - cbp:
+     *    - Street View/map arrangement,
+     *    - Rotation angle/bearing (in degrees),
+     *    - Tilt angle,
+     *    - Zoom level,
+     *    - Pitch (in degrees)
+     *  - layer: Turns overlays on and off:
+     *    t for traffic, c for street view, or tc for both at the same time.
+     *
+     *  `More info <http://mapki.com/wiki/Google_Map_Parameters#Street_View>`_
      */
     streetViewTpl: "<tr><td><a href='http://maps.google.ch/?ie=UTF8" +
         "&ll={streetviewlat},{streetviewlon}&layer=c" +
