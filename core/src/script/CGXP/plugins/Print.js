@@ -344,7 +344,19 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     rotationHandleSymbolizer: "rotate"
                 }
             },
-            bodyStyle: 'padding: 10px',
+            border: false,
+            width: '100%',
+            bodyStyle: {
+                'padding': '10px'
+            },
+            style: {
+                'border-color': '#D0D0D0',
+                'border-style': 'none solid solid',
+                'border-width': '0 1px 1px'
+            },
+            layoutConfig: {
+                labelSeparator: ''
+            },
             printProvider: printProvider,
             title: this.printTitle,
             items: [{
@@ -365,6 +377,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 xtype: 'checkbox',
                 name: 'legend',
                 fieldLabel: this.includelegendText,
+                hideLabel: true,
+                boxLabel: this.includelegendText,
                 checked: this.includeLegend,
                 // deactivate the checkbox if no legend panel is available
                 hidden: !this.includeLegend, 
