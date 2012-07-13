@@ -25,9 +25,6 @@
  *  class = SwitchableWMTSSource
  */
 
-/** api: (extends)
- *  plugins/LayerSource.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: example

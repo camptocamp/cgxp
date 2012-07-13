@@ -201,10 +201,6 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
 Ext.preg(cgxp.plugins.ContextualData.prototype.ptype, cgxp.plugins.ContextualData);
 
-/** api: (extends)
- *  OpenLayers.Control
- */
-
 /** api: constructor
  *  .. class:: ContextualData.Control(config)
  *
@@ -352,10 +348,6 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         // pass
     }
 });
-
-/** api: (extends)
- *  cgxp.plugins.ContextualData.Control
- */
 
 /** api: constructor
  *  .. class:: ContextualData.Tooltip(config)
@@ -570,10 +562,6 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
 
     CLASS_NAME: "cgxp.plugins.ContextualData.Tooltip"
 });
-
-/** api: (extends)
- *  cgxp.plugins.ContextualData.Control
- */
 
 /** api: constructor
  *  .. class:: ContextualData.ContextPopup(config)
