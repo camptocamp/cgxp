@@ -470,7 +470,7 @@ Ext.preg(cgxp.plugins.Profile.prototype.ptype, cgxp.plugins.Profile);
 
 /*
  * @requires OpenLayers/Control/DrawFeature.js
- * @requires OpenLayers/Handler/Path.js
+ * @include OpenLayers/Handler/Path.js
  * @include OpenLayers/Control/Snapping.js
  */
 
