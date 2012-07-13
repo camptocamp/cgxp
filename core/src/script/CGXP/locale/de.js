@@ -126,6 +126,37 @@ GeoExt.Lang.add("de", {
         itemText: "element"
     },
 
+    "cgxp.plugins.ContextualData.prototype": {
+        actionTooltipText: "Contextual Informations Tooltips"
+    },
+
+    "cgxp.plugins.ContextualData.Control.prototype": {
+        streetviewLabelText: 'StreetView Link',
+        userValueErrorText: 'The value returned by the handleServerData methode ' +
+        'must be an object. See the example in the API.',
+        userValueErrorTitleText: 'Error'
+    },
+
+    "cgxp.plugins.ContextualData.Tooltip.prototype": {
+        popupTitleText: "Location",
+        defaultTpl: "Suisses  Coord. : {coord_x} {coord_y}<br />" +
+            "WGS 84 : {wsg_x} {wsg_y}<br />",
+        defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" +
+            "Elevation (Surface) : {elevation_dsm} [m]<br />" +
+            "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
+    },
+
+    "cgxp.plugins.ContextualData.ContextPopup.prototype": {
+        popupTitleText: "Location",
+        coordTpl: "<tr><td width=\"150\">Suisses  Coord.</td>" +
+            "<td>{coord_x} {coord_y}</td></tr>" +
+            "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+        elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" +
+        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
+        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
+        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>"
+    },
+
     "cgxp.plugins.Profile.prototype": {
         helpText: "<h1>Höhenprofil</h1>Zeichnen Sie eine Linie auf der Karte. Doppelklicken Sie um die Linie zu beenden und das Höhenprofil anzuzeigen.",
         waitMsgText: "Höhenprofil wird geladen...",
@@ -134,7 +165,6 @@ GeoExt.Lang.add("de", {
         errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     }
 });
-
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "layertree": "Themen",
