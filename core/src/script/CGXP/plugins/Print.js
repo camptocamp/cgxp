@@ -274,7 +274,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     for (dataset in printExport) {
                         if (printExport.hasOwnProperty(dataset)) {
                             // TODO, implement paging in case of too many result to display on only one page
-                            if (printExport[dataset].table.data.length > 0 && printExport[dataset].table.data[0].col0 != '') {
+                            if (printExport[dataset].table.data.length > 0 && 
+                                printExport[dataset].table.data[0].col0 != '') {
                                 var page = new GeoExt.data.PrintPage({
                                     printProvider: printProvider
                                 });
