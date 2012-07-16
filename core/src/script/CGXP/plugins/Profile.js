@@ -482,11 +482,6 @@ Ext.preg(cgxp.plugins.Profile.prototype.ptype, cgxp.plugins.Profile);
  *  - <OpenLayers.Control>
  */
 cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, {
-    /**
-     * APIProperty: serviceUrl
-     * URL to access the profile service
-     */
-    serviceUrl: null,
 
     /**
      * Property: hoverHandler
