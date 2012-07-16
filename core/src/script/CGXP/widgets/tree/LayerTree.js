@@ -55,8 +55,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     frienlyUrl: true,
 
-    /**
-     * Property: mapPanel
+    /** api: config[mapPanel]
+     *  ``GeoExt.MapPanel``
      */
     mapPanel: null,
 
@@ -238,12 +238,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         });
     },
 
-    /**
-     * Method: addGroup
-     * Adds a layer group and its layers
+    /** private: method[addGroup]
+     *  Adds a layer group and its layers
      *
-     * Parameters:
-     * {Object} The group config object
+     *  :arg group: ``Object`` The group config object
+     *  :arg internalWMS: ``Boolean``
+     *  :arg scroll: ``Boolean``
+     *  :returns: ``Ext.tree.TreeNode``
      */
     addGroup: function(group, internalWMS) {
         function addNodes(children, parentNode, level) {
@@ -380,9 +381,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return groupNode;
     },
 
-    /**
-     * Method: addLegend
-     * Adds the action and the legend component to a node config
+    /** private: method[addLegend]
+     *  Adds the action and the legend component to a node config.
      */
     addLegend: function(item, nodeConfig, level) {
         if (!level) {
@@ -431,9 +431,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         Ext.apply(nodeConfig, config);
     },
 
-    /**
-     * Method: getLegendGraphicUrl
-     * Helper to build the getLegendGraphic request URL
+    /** private: method[getLegendGraphicUrl]
+     *  Helper to build the getLegendGraphic request URL.
+     *  :arg layer: ``OpenLayers.Layer``
+     *  :arg layerName: ``String``
+     *  :arg rule: ``String`` the class name
      */
     getLegendGraphicUrl: function(layer, layerName, rule) {
         if (!layer) {
@@ -471,9 +473,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return url;
     },
 
-    /**
-     * Method: addMetadata
-     * Adds the action for the metadata
+    /** private method[addMetadata]
+     *  Adds the action for the metadata.
+     *  :arg item: ``Object``
+     *  :arg nodeConfig ``Object``
+     *  :arg prepend: ``Boolean``
      */
     addMetadata: function(item, nodeConfig, prepend) {
         var metadataUrl;
@@ -498,9 +502,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: addScaleAction
-     * Adds the "zoom to scale" action
+    /** private: method[addScaleAction]
+     *  Adds the "zoom to scale" action.
+     *  :arg item: ``Object``
+     *  :arg nodeConfig: ``Object``
      */
     addScaleAction: function(item, nodeConfig) {
         var maxResolutionHint = item.maxResolutionHint,
@@ -514,9 +519,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: addShowIn3DAction
-     * Adds the action to show in 3D
+    /** private: method[addShowIn3DAction]
+     *  Adds the action to show in 3D.
+     *  :arg item: ``Object``
+     *  :arg nodeConfig: ``Object``
      */
     addShowIn3DAction: function(item, nodeConfig) {
         if (item.kml) {
@@ -529,12 +535,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: getOpacitySlider
-     * Adds the opacity slider block
+    /** private: method[getOpacitySlider]
+     *  Adds the opacity slider block.
      *
-     * Parameters:
-     * theme {Object}
+     * :arg theme: ``Object``
+     * :arg anchor: ``String``
      */
     getOpacitySlider: function(theme, anchor) {
         theme.slider = new GeoExt.LayerOpacitySlider({
@@ -562,20 +567,21 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         });
     },
 
-    /**
-     * Method: onMetadataAction
-     * Handles a click on the metadata icon
+    /** private: method[onMetadataAction]
+     *  Handles a click on the metadata icon.
      *
-     * Parameters:
-     * node {Object}
+     *  :arg node: ``Object``
      */
     onMetadataAction: function(node) {
         window.open(node.attributes.metadataUrl);
     },
 
-    /**
-     * Method: onAction
-     * Called when a action image is clicked
+    /** private method[onAction]
+     *  Called when a action image is clicked.
+     *
+     *  :arg node: ``Ext.tree.TreeNode``
+     *  :arg action: ``String``
+     *  :arg evt: ``Ext.EventObject``
      */
     onAction: function(node, action, evt) {
         var key;
@@ -728,9 +734,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: checkVisibility
-     * Checks layer visibility for the node (in case the node was previously hidden)
+    /** private: method[checkVisibility]
+     *  Checks layer visibility for the node (in case the node was previously hidden).
+     *
+     *  :arg node: ``Ext.tree.TreeNode``
      */
     checkVisibility: function(node) {
         // if node is LayerParamNode, set the node check correctly
@@ -741,20 +748,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: parseChildren
-     * Parses recursively the children of a group node.
+    /** private: method[parseChildren}
+     *  Parses recursively the children of a group node.
      * 
-     * Parameters:
-     * child {Object} the node to parse
-     * layer {<OpenLayers.Layer.WMS>} The reference to the OL Layer, 
+     *  :arg child: ``Object`` the node to parse
+     *  :arg layer: ``<OpenLayers.Layer.WMS>`` The reference to the OL Layer, 
      *      present only for internal WMS.
-     * result {Object} The result object of the parsed children, it contains
-     *     - allLayers {Array(String)} The list of WMS subLayers for this layer.
-     *     - checkedLayers {Array(String)} The list of checked subLayers.
-     *     - disclaimer {Object} The list layers disclaimers.
-     *     - allOlLayers {Array(OpenLayers.Layer)} The list of children layers (for non internal WMS).
-     *  index {int} index there to add the layers on non internal WMS (to have the right order).
+     *  :arg result: ``Object`` The result object of the parsed children, it contains
+     *     - allLayers ``Array(String)`` The list of WMS subLayers for this layer.
+     *     - checkedLayers ``Array(String)`` The list of checked subLayers.
+     *     - disclaimer ``Object`` The list layers disclaimers.
+     *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
+     *  :arg index: ``int`` index there to add the layers on non internal WMS (to have the right order).
      */
     parseChildren: function(child, layer, result, index) {
         if (child.children) {
@@ -881,12 +886,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: loadTheme
-     * Loads a theme from the config.
+    /** private :method[loadTheme]
+     *  Loads a theme from the config.
      *
-     * Parameters:
-     * theme {Object} the theme config
+     *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
         if (this.uniqueTheme) {
@@ -940,15 +943,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: loadGroup
-     * Loads a layer group from the config.
+    /** api: method[loadGroup]
+     *  Loads a layer group from the config.
      *
-     * Parameters:
-     * group {Object} the group config
-     * layers {Array} the sub layers displayed at once. optional.
-     * opacity {Float} the OL layer opacity. optional
-     * visibility {Boolean} the OL layer visibility. optional
+     *  :arg group: ``Object`` the group config
+     *  :arg layers: ``Array`` the sub layers displayed at once. optional.
+     *  :arg opacity: ``Float`` the OL layer opacity. optional.
+     *  :arg visibility: ``Boolean`` the OL layer visibility. optional.
+     *  :arg scroll: ``Boolean`` scroll on the element. optional, default to true.
+     *  :returns: ``Ext.tree.TreeNode``
      */
     loadGroup: function(group, layers, opacity, visibility, nowarning, scroll) {
         scroll = scroll === undefined || scroll;
@@ -1079,6 +1082,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return groupNode;
     },
 
+    /** private: method[checkGroupIsAllowed]
+     *  :arg group: ``Object``
+     */
     checkGroupIsAllowed: function(group) {
         var checkGroup = function(group, themes) {
             for (var i = 0, len = themes.length; i < len; i++) {
@@ -1098,12 +1104,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return isAllowed;
     },
 
+    /** api: method[applyState]
+     *  :arg state: ``Object``
+     */
     applyState: function(state) {
         // actual state is loaded later in delayedApplyState to prevent 
         // the layer from being displayed under the baselayers
         this.initialState = state;
     },
 
+    /** private: method[delayedApplyState]
+     */
     delayedApplyState: function() {
         if (!this.initialState) {
             return;
@@ -1137,6 +1148,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }, this);
     },
 
+    /** api: method[getState]
+     *  :returns: ``Object``
+     */
     getState: function() {
         var state = {};
 
@@ -1170,12 +1184,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return state;
     },
 
-    /**
-     * Method: findGroupByLayerName
-     * Finds the group config for a specific layer using its name
+    /** api: method[findGroupByLayerName]
+     *  Finds the group config for a specific layer using its name.
      *
-     * Parameters:
-     * name {String}
+     *  :arg name: ``String``
      */
     findGroupByLayerName: function(name) {
        var result = null;
@@ -1204,12 +1216,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
        return result;
     },
 
-    /**
-     * Method: findGroupByName
-     * Finds the group config using its name
+    /** api: method[findGroupByName]
+     *  Finds the group config using its name.
      *
-     * Parameters:
-     * name {String}
+     *  :arg name: ``String``
      */
     findGroupByName: function(name) {
         var group = false;
@@ -1232,12 +1242,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return group;
     },
 
-    /**
-     * Method: findThemeByName
-     * Finds the theme config using its name
+    /** api: method[findThemeByName]
+     *  Finds the theme config using its name.
      *
-     * Parameters:
-     * name {String}
+     *  :arg name: ``String``
      */
     findThemeByName: function(name) {
         var theme = false;
@@ -1255,10 +1263,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return theme;
     },
 
-    /**
-     * Method: checkInRange
-     * Checks if a layer is in range (correct scale) and modifies node
-     * rendering consequently
+    /** api :method[checkInRange]
+     *  Checks if a layer is in range (correct scale) and modifies node.
+     *  rendering consequently
+     *  :arg node: ``Ext.tree.TreeNode``
      */
     checkInRange: function(node) {
         if (!node.layer) {
@@ -1301,9 +1309,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /**
-     * Method: loadDefaultThemes
-     * load the default Theme
+    /** api: ethod[loadDefaultThemes]
+     *  Load the default Theme.
      */
     loadDefaultThemes: function() {
         if (this.defaultThemes) {
