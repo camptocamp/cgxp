@@ -378,10 +378,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             var index = 0;
             // group records by type (layer)
             if (!groupedRecords[attributes.type]) {
-                var results = new cgxp.plugins.FeaturesWindow.PrintResults();
-                results.table.columns = [];
-                results.table.data = [];
-                results.new = true;
+                var results = {
+                    table: {
+                        data: [], 
+                        columns: []
+                    },
+                    new: true
+                }
                 groupedRecords[attributes.type] = results;
             }
             for (prop in attributes) {
@@ -416,17 +419,3 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     }
 });
 Ext.preg(cgxp.plugins.FeaturesWindow.prototype.ptype, cgxp.plugins.FeaturesWindow);
-
-cgxp.plugins.FeaturesWindow.PrintResults = OpenLayers.Class({
-
-    col0: '',
-    
-    initialize: function() {
-        this.table = {
-           data: [{col0: ''}], 
-           columns: ['col0']
-        };
-    },
-
-    CLASS_NAME: "cgxp.plugins.FeaturesWindow.PrintResults"
-});
