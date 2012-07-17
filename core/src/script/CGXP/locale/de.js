@@ -162,7 +162,8 @@ GeoExt.Lang.add("de", {
         waitMsgText: "Höhenprofil wird geladen...",
         xLabelText: "Abstand (m)",
         yLabelText: "Höhe (m)",
-        errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        exportCsvText: "Export als CSV"
     }
 });
 

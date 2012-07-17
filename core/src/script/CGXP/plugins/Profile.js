@@ -97,6 +97,12 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     yLabelText: null,
 
+    /** api: config[exportCsvText]
+     *  ``String``
+     *  The translated "export as csv" text (i18n).
+     */
+    exportCsvText: null,
+
     /** api: config[errorMsg]
      *  ``String``
      *  The translated error message (i18n).
@@ -147,6 +153,12 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     control: null,
 
+    /** private: property[feature]
+     *  ``OpenLayers.Feature.Vector``
+     *  The drawn feature.
+     */
+    feature: null,
+
     /** private: property[chart]
      *  ``Object``
      *  The DyGraph chart
@@ -171,6 +183,17 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  Useful to get it positionned top left.
      */
     firstShow: true,
+
+    /** private: private[dummy_form]
+     *  ``Object`` Fake form used for csv export.
+     */
+    dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
+
+    /** private: property[container]
+     *  ``Component`` Either the created window or a component set in
+     *  outputTarget.
+     */
+    container: null,
 
     /** private: method[addActions]
      */
@@ -207,6 +230,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
         this.outputConfig = this.outputConfig || {};
         Ext.applyIf(this.outputConfig, {
+            title: '<span style="float: right; padding-right: 10px;"><a href="javascript:void(0)" class="csv">' +
+                   this.exportCsvText + '</a></span>',
             width: 400,
             height: 300,
             defaults: {
@@ -217,6 +242,17 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 hide: function() {
                     this.control.layer.destroyFeatures();
+                    this.clearProfile();
+                },
+                afterrender: function(cmp) {
+                    cmp.getEl().on({
+                        click: function(e) {
+                            if (e.getTarget('.csv')) {
+                                this.exportAsCsv();
+                            }
+                        },
+                        scope: this
+                    });
                 },
                 scope: this
             }
@@ -260,8 +296,10 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                     this.showOutput(cmp);
                     cmp.getEl().mask(this.waitMsgText);
 
+                    this.feature = obj.feature;
+
                     var format = new OpenLayers.Format.GeoJSON();
-                    var geometry = format.write(obj.feature.geometry);
+                    var geometry = format.write(this.feature.geometry);
 
                     Ext.Ajax.request({
                         url: this.serviceUrl,
@@ -302,23 +340,43 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         });
     },
 
+    /** private: method[exportAsCsv]
+     */
+    exportAsCsv: function() {
+        var format = new OpenLayers.Format.GeoJSON();
+        var geometry = format.write(this.feature.geometry);
+
+        Ext.Ajax.request({
+            url: this.csvServiceUrl,
+            method: 'POST',
+            isUpload: true,
+            params: {
+                layers: this.rasterLayers.join(','),
+                geom: geometry,
+                nbPoints: this.nbPoints
+            },
+            form: this.dummy_form
+        });
+    },
+
     /** private: method[showOutput]
      *  Shows the output
      */
     showOutput: function(cmp) {
         if (cmp.ownerCt && cmp.ownerCt.ownerCt &&
             cmp.ownerCt.ownerCt instanceof Ext.Window) {
-                cmp.ownerCt.ownerCt.show();
+                this.container = cmp.ownerCt.ownerCt;
                 if (this.firstShow) {
-                    cmp.ownerCt.ownerCt.alignTo(
+                    this.container.alignTo(
                         this.target.mapPanel.body, 'tl-tl', [30, 5]);
                 }
         } else if (this.outputTarget) {
-            var container = this.getContainer(this.outputTarget); 
-            container.show();
-            container.ownerCt.doLayout();
+            this.container = this.getContainer(this.outputTarget); 
+            this.container.show();
+            this.container.ownerCt.doLayout();
         }
         this.firstShow = false;
+        this.container.getEl().child('.csv').hide();
     },
 
     /** private: method[hideOutput]
@@ -357,6 +415,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             xtype: 'box'
         });
         this.output[0].getLayout().setActiveItem(cmp);
+        this.container.getEl().child('.csv').show();
 
         var values = [];
         var layers = this.rasterLayers;
@@ -463,6 +522,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         this.output[0].remove(1);
         this.chart = null;
         this.data = null;
+        this.container.getEl().child('.csv').hide();
+        this.feature = null;
     }
 });
 

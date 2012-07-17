@@ -167,7 +167,8 @@ GeoExt.Lang.add("fr", {
         waitMsgText: "Chargement du profil altimétrique...",
         xLabelText: "Distance (m)",
         yLabelText: "Elevation (m)",
-        errorMsg: "Une erreur s'est produite. Veuillez recommencer."
+        errorMsg: "Une erreur s'est produite. Veuillez recommencer.",
+        exportCsvText: "Exporter en CSV"
     }
 });
 

@@ -168,7 +168,8 @@ GeoExt.Lang.add("en", {
         waitMsgText: "Loading elevation profile...",
         xLabelText: "Distance (m)",
         yLabelText: "Elevation (m)",
-        errorMsg: "An error occured. Please try again."
+        errorMsg: "An error occured. Please try again.",
+        exportCsvText: "Export as CSV"
     }
 });
 
