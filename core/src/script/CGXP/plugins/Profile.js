@@ -187,7 +187,13 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     /** private: private[dummy_form]
      *  ``Object`` Fake form used for csv export.
      */
-    dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
+    dummy_form: null, 
+
+    /** private: property[exportAsCsvLink]
+     *  ``Ext.Element``
+     *  The "export as CSV" link
+     */
+    exportAsCsvLink: null,
 
     /** private: property[container]
      *  ``Component`` Either the created window or a component set in
@@ -216,6 +222,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
+        this.dummy_form = Ext.DomHelper.append(document.body, {tag : 'form'});
         var card = {
             xtype: 'container',
             layout: 'card',
@@ -230,8 +237,6 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
         this.outputConfig = this.outputConfig || {};
         Ext.applyIf(this.outputConfig, {
-            title: '<span style="float: right; padding-right: 10px;"><a href="javascript:void(0)" class="csv">' +
-                   this.exportCsvText + '</a></span>',
             width: 400,
             height: 300,
             defaults: {
@@ -376,7 +381,11 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             this.container.ownerCt.doLayout();
         }
         this.firstShow = false;
-        this.container.getEl().child('.csv').hide();
+        this.container.body.dom.style.position = 'relative';
+        this.exportAsCsvLink = Ext.DomHelper.append(this.container.body,
+            '<a href="javascript:void(0)" class="csv">' + this.exportCsvText + '</a>',
+            true);
+        this.exportAsCsvLink.hide();
     },
 
     /** private: method[hideOutput]
@@ -415,7 +424,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             xtype: 'box'
         });
         this.output[0].getLayout().setActiveItem(cmp);
-        this.container.getEl().child('.csv').show();
+        this.exportAsCsvLink.show();
 
         var values = [];
         var layers = this.rasterLayers;
@@ -522,7 +531,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         this.output[0].remove(1);
         this.chart = null;
         this.data = null;
-        this.container.getEl().child('.csv').hide();
+        this.exportAsCsvLink.hide();
         this.feature = null;
     }
 });

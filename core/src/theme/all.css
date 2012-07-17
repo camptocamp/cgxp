@@ -428,6 +428,12 @@ div.legend label {
 }
 
 /* cgxp profile */
+.csv {
+    position: absolute;
+    z-index: 2;
+    bottom: 5px;
+    right: 5px;
+}
 .dygraph-legend {
     font-size: 12px !important;
     text-align: right !important;
