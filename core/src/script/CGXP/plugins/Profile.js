@@ -371,6 +371,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         if (cmp.ownerCt && cmp.ownerCt.ownerCt &&
             cmp.ownerCt.ownerCt instanceof Ext.Window) {
                 this.container = cmp.ownerCt.ownerCt;
+                this.container.show();
                 if (this.firstShow) {
                     this.container.alignTo(
                         this.target.mapPanel.body, 'tl-tl', [30, 5]);
