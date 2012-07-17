@@ -327,7 +327,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 styleMap: new OpenLayers.StyleMap({
                     "default": new OpenLayers.Style(Ext.apply({
                         fillColor: '#ee9900',
-                        fillOpacity: 0.4
+                        fillOpacity: 0.4,
+                        strokeWidth: 0
                     }, this.extentStyle)),
                     "temporary": new OpenLayers.Style(Ext.apply({
                         fillColor: "#ffffff",
