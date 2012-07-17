@@ -571,6 +571,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
             this.layer.destroyFeatures();
             this.map.removeLayer(this.layer);
             this.map.removeControl(this.snapping);
+            this.hoverHandler.deactivate();
         }
     }, 
 
