@@ -18,6 +18,8 @@
 /**
  * @requires plugins/Tool.js
  * @include OpenLayers/Util.js
+ * @include OpenLayers/Control/Navigation.js
+ * @include OpenLayers/Control/Zoom.js
  * @include GeoExt.ux/data/Store.js
  * @include GeoExt.ux/data/WMSBrowserWMSCapabilitiesStore.js
  * @include GeoExt.ux/plugins/WMSBrowserAlerts.js
@@ -32,7 +34,6 @@
  *  module = cgxp.plugins
  *  class = WMSBrowser
  */
-
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
@@ -94,13 +95,36 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
 
     createWMSBrowser: function() {
         if (!this.wmsBrowser) {
+            var layers = []
+            Ext.each(this.target.mapPanel.map.layers, function(layer) {
+                if (layer.visibility && layer.group == 'background') {
+                    layers.push(layer.clone());
+                }
+            });
             var config = {
                 border: false,
                 zoomOnLayerAdded: true,
                 closeOnLayerAdded: false,
                 mapPanelPreviewOptions: {
                     height: 170,
-                    collapsed: false
+                    collapsed: false,
+                    extent: this.target.mapPanel.map.getExtent(),
+                    map: {
+                        projection: this.target.mapPanel.map.projection,
+                        maxExtent: this.target.mapPanel.map.maxExtent,
+                        restrictedExtent: this.target.mapPanel.map.restrictedExtent,
+                        units: this.target.mapPanel.map.units,
+                        resolutions: this.target.mapPanel.map.resolutions,
+                        controls: [
+                            new OpenLayers.Control.Navigation(),
+                            new OpenLayers.Control.Zoom()
+                        ]
+                    },
+                    layers: layers,
+                    style: {
+                        'padding': '0 0 0 10px'
+                    },
+                    collapsible: false
                 },
                 layerStore: this.target.mapPanel.layers
             };
