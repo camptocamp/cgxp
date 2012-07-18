@@ -452,6 +452,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             {
                 ylabel: this.yLabelText,
                 xlabel: this.xLabelText,
+                interactionModel: {},
                 axes: {
                     x: {
                         valueFormatter: function(d) {
