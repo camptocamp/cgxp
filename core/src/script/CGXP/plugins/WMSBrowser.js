@@ -82,9 +82,9 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         if (!this.window) {
             this.window = new Ext.Window({
                 closeAction: 'hide',
-                resizable: false,
-                width: 550,
-                height: 450,
+                border: false,
+                width: 700,
+                height: 500,
                 title: this.windowTitleText,
                 layout: 'fit',
                 items: [this.createWMSBrowser()]
