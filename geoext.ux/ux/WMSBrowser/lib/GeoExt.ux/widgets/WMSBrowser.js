@@ -772,6 +772,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             }
             
             if (extent) {
+                extent = extent.transform(
+                        new OpenLayers.Projection("EPSG:4326"),
+                        this.mapPanelPreview.map.getProjection());
                 this.mapPanelPreview.map.zoomToExtent(extent);
                 zoomed = true;
             }
