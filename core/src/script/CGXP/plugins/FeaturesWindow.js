@@ -237,16 +237,16 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 i = 0;
             }
 
+            // store original id in backup attribute
+            if (feature.attributes.id) {
+                feature.attributes[this.originalIdRef] = feature.attributes.id;
+            }
             if (this.layers[feature.type] &&
                 this.layers[feature.type].identifierAttribute) {
                 // use the identifierAttribute field if set
                 var identifier = this.layers[feature.type].identifierAttribute;
-                // store original id in backup attribute
-                feature.attributes[this.originalIdRef] = feature.attributes.id;
                 feature.attributes.id = feature.attributes[identifier];
             } else {
-                // store original id in backup attribute
-                feature.attributes[this.originalIdRef] = feature.attributes.id;
                 feature.attributes.id = feature.attributes.type + ' ' + (++i);
             }
         }, this);
@@ -363,7 +363,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
         var groupedRecords = [];
 
-        if (!this.grid.getStore()) {
+        if (!this.grid || !this.grid.getStore()) {
             return groupedRecords;
         }
         var records = this.grid.getStore().getRange();
@@ -383,7 +383,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                         data: [], 
                         columns: []
                     },
-                    new: true
+                    _newGroup: true
                 }
                 groupedRecords[attributes.type] = results;
             }
@@ -392,9 +392,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                     prop != this.formatedAttributesId &&
                     prop != this.originalIdRef) {
 
-                    // replace id value by original id value
+                    // replace id value by original id value, if it exists
                     if (prop == 'id') {
-                        prop = this.originalIdRef;
+                        if (attributes[this.originalIdRef]) {
+                            prop = this.originalIdRef;
+                        } else {
+                            continue;
+                        }
                     }
 
                     var id = 'col' + index;
@@ -403,7 +407,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                     if (index > 9) {
                         break;
                     }
-                    if (groupedRecords[attributes.type].new) {
+                    if (groupedRecords[attributes.type]._newGroup) {
                         if (prop == this.originalIdRef) {
                             prop = 'id';
                         }
@@ -413,7 +417,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             groupedRecords[attributes.type].table.data.push(raw);
-            groupedRecords[attributes.type].new = false;
+            groupedRecords[attributes.type]._newGroup = false;
         }, this);
         return groupedRecords;
     }
