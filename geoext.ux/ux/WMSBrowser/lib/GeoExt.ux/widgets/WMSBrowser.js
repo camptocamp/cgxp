@@ -388,10 +388,19 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             triggerAction: 'all',
             hideTrigger: this.hideTrigger || false,
             allowBlank: false,
-            validator:this.urlValidator,
+            validator: this.urlValidator,
             invalidText: this.inputURLInvalidText,
             emptyText: this.inputURLText,
-            selectOnFocus:true
+            selectOnFocus: true,
+            enableKeyEvents: true,
+            listeners: {
+                keypress: function(field, e) {
+                    if (e.keyCode == e.ENTER) {
+                        this.triggerGetCapabilities();
+                    }
+                },
+                scope: this
+            }
         });
 
         var northPanel = new Ext.form.FormPanel({
@@ -407,7 +416,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                 xtype: 'button',
                 text: this.connectText,
                 scope: this,
-                handler: function(b, e){this.triggerGetCapabilities();}
+                handler: function(b, e) {
+                    this.triggerGetCapabilities();
+                }
             }]
         });
 
