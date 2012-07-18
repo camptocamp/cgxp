@@ -126,14 +126,12 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
                     },
                     collapsible: false
                 },
-                layerStore: this.target.mapPanel.layers
+                layerStore: this.target.mapPanel.layers,
+                listeners: this.layerTreeId && this.target.tools[this.layerTreeId] ? {
+                    "layeradded":  this.onLayerAdded,
+                    scope: this
+                } : {}
             };
-            if (this.layerTreeId && this.target.tools[this.layerTreeId]) {
-                config.listeners = {
-                    "layeradded": this.onLayerAdded,
-                    scope: this.target.tools[this.layerTreeId].tree
-                };
-            }
             this.wmsBrowser = new GeoExt.ux.WMSBrowser(config);
         }
         return this.wmsBrowser;
@@ -142,11 +140,11 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     onLayerAdded: function(o) {
         // instruct the layertree to add new layers in a single group
         // with a single OpenLayers layer
-        var layer = o.layer,
-            layerNames = layer.params.LAYERS,
-            layerTitles = layer.name.split(','),
-            children = [], urlObj, groupName;
-        Ext.each(layerNames, function(layerName, idx) {
+        var layer = o.layer;
+
+        var layerTitles = layer.name.split(',');
+        var children = [];
+        Ext.each(layer.params.LAYERS, function(layerName, idx) {
             children.push({
                 displayName: layerTitles[idx],
                 name: layerName,
@@ -156,12 +154,12 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         });
 
         // create a human readable group name
-        urlObj = OpenLayers.Util.createUrlObject(layer.url, {
+        var urlObj = OpenLayers.Util.createUrlObject(layer.url, {
             ignorePort80: true
         });
-        groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
+        var groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
         
-        this.addGroup({
+        this.target.tools[this.layerTreeId].tree.addGroup({
             displayName: groupName,
             isExpanded: true,
             name: groupName,

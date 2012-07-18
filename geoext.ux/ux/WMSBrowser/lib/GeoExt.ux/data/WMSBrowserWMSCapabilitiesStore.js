@@ -9,7 +9,7 @@
 Ext.namespace("GeoExt.ux.data");
 
 /*
- * @requires GeoExt.ux/widgets/WMSBrowser.js
+ * @requires GeoExt/data/WMSCapabilitiesStore.js
  */
 
 /** api: (define)
