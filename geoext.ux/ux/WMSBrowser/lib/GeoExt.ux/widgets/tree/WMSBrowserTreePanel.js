@@ -197,7 +197,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                                               {'layer': newLayer});
                     layerAdded = true;
 
-                    if(this.wmsbrowser.zoomOnLayerAdded) {
+                    if (this.wmsbrowser.zoomOnLayerAdded) {
                         // zoom to added layer extent
                         // (in the current map projection)
                         var bounds = OpenLayers.Bounds.fromArray(
@@ -205,8 +205,8 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                         );
                         map.zoomToExtent(bounds.transform(
                             new OpenLayers.Projection("EPSG:4326"),
-                            new OpenLayers.Projection(map.getProjection())
-                        ));                    
+                            map.getProjection()
+                        ));
                     }
                 }
             }
@@ -248,7 +248,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
 
         var srs = this.map.getProjection();
         var mapMaxExtent = this.map.getMaxExtent().clone().transform(
-            new OpenLayers.Projection(this.map.getProjection()),
+            this.map.getProjection(),
             new OpenLayers.Projection('EPSG:4326')
         );
 
@@ -267,9 +267,9 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
         var extent;
         if (layerExtent) 
         {
-            if(typeof layerExtent == "string") {
+            if (typeof layerExtent == "string") {
                 extent = OpenLayers.Bounds.fromString(layerExtent);
-            } else if(layerExtent instanceof Array) {
+            } else if (layerExtent instanceof Array) {
                 extent = OpenLayers.Bounds.fromArray(layerExtent);
             }
         }

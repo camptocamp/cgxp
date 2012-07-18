@@ -468,8 +468,8 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             anchor: '50% 100%',
             x: '50%',
             y: '0',
-                    region: 'east',
-                    width: '50%',
+            region: 'east',
+            width: '50%',
             layout: 'border',
             border: true,
             items: [
