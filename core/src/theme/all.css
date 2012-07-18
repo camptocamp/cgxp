@@ -423,6 +423,7 @@ div.legend label {
     color: white;
     font-weight: bold;
     background-color: #FFA500;
-    margin: 10px 5px 0 5px;
+    margin: 10px 5px 5px 5px;
     padding: 10px;
+    border-radius: 0.3em;
 }
