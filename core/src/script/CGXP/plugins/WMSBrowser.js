@@ -36,6 +36,23 @@
  */
 Ext.namespace("cgxp.plugins");
 
+/** api: example
+ *  Sample code showing how to add a WMSBrowser plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_wmsbrowser',
+ *              actionTarget: "center.tbar",
+ *              layerTreeId: "layertree"
+ *          }]
+ *          ...
+ *      });
+ */
+
 /** api: constructor
  *  .. class:: WMSBrowser(config)
  *
