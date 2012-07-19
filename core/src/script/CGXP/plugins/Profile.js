@@ -679,24 +679,17 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
         var cmps = this.feature.geometry.components;
         var segmentIndex;
         var i;
+        var distance = 0;
         for (i=1; i < cmps.length; i++) {
-            var components = [cmps[i - 1], cmps[i]];
             var segment = new OpenLayers.Geometry.LineString([
                 cmps[i - 1].clone(),
                 cmps[i].clone()
             ]);
             if (point.distanceTo(segment) < 0.001) {
-                segmentIndex = i - 1;
-                continue;
+                distance += point.distanceTo(cmps[i - 1]);
+                break;
             }
-        }
-        var distance = 0;
-        for (i=0; i <= segmentIndex; i++) {
-            if (i == segmentIndex) {
-                distance += point.distanceTo(cmps[i]);
-            } else {
-                distance += cmps[i].distanceTo(cmps[i + 1]);
-            }
+            distance += cmps[i - 1].distanceTo(cmps[i]);
         }
         return distance;
     },
