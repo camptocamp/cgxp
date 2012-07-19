@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
  * 
@@ -10,8 +9,8 @@
 Ext.namespace("GeoExt.ux.tree");
 
 /*
- * @requires GeoExt.ux/widgets/WMSBrowser.js
- * @requires GeoExt.ux/widgets/tree/WMSBrowserTreePanel.js
+ * @include GeoExt.ux/widgets/WMSBrowser.js
+ * @include GeoExt/widgets/tree/WMSCapabilitiesLoader.js
  */
 
 /** api: (define)

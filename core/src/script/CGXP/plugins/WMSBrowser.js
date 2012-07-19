@@ -18,6 +18,8 @@
 /**
  * @requires plugins/Tool.js
  * @include OpenLayers/Util.js
+ * @include OpenLayers/Control/Navigation.js
+ * @include OpenLayers/Control/Zoom.js
  * @include GeoExt.ux/data/Store.js
  * @include GeoExt.ux/data/WMSBrowserWMSCapabilitiesStore.js
  * @include GeoExt.ux/plugins/WMSBrowserAlerts.js
@@ -32,8 +34,24 @@
  *  module = cgxp.plugins
  *  class = WMSBrowser
  */
-
 Ext.namespace("cgxp.plugins");
+
+/** api: example
+ *  Sample code showing how to add a WMSBrowser plugin to a
+ *  `gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_wmsbrowser',
+ *              actionTarget: "center.tbar",
+ *              layerTreeId: "layertree"
+ *          }]
+ *          ...
+ *      });
+ */
 
 /** api: constructor
  *  .. class:: WMSBrowser(config)
@@ -81,9 +99,9 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         if (!this.window) {
             this.window = new Ext.Window({
                 closeAction: 'hide',
-                resizable: false,
-                width: 550,
-                height: 450,
+                border: false,
+                width: 700,
+                height: 500,
                 title: this.windowTitleText,
                 layout: 'fit',
                 items: [this.createWMSBrowser()]
@@ -94,22 +112,43 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
 
     createWMSBrowser: function() {
         if (!this.wmsBrowser) {
+            var layers = []
+            Ext.each(this.target.mapPanel.map.layers, function(layer) {
+                if (layer.visibility && layer.group == 'background') {
+                    layers.push(layer.clone());
+                }
+            });
             var config = {
                 border: false,
                 zoomOnLayerAdded: true,
                 closeOnLayerAdded: false,
                 mapPanelPreviewOptions: {
                     height: 170,
-                    collapsed: false
+                    collapsed: false,
+                    extent: this.target.mapPanel.map.getExtent(),
+                    map: {
+                        projection: this.target.mapPanel.map.projection,
+                        maxExtent: this.target.mapPanel.map.maxExtent,
+                        restrictedExtent: this.target.mapPanel.map.restrictedExtent,
+                        units: this.target.mapPanel.map.units,
+                        resolutions: this.target.mapPanel.map.resolutions,
+                        controls: [
+                            new OpenLayers.Control.Navigation(),
+                            new OpenLayers.Control.Zoom()
+                        ]
+                    },
+                    layers: layers,
+                    style: {
+                        'padding': '0 0 0 10px'
+                    },
+                    collapsible: false
                 },
-                layerStore: this.target.mapPanel.layers
+                layerStore: this.target.mapPanel.layers,
+                listeners: this.layerTreeId && this.target.tools[this.layerTreeId] ? {
+                    "layeradded":  this.onLayerAdded,
+                    scope: this
+                } : {}
             };
-            if (this.layerTreeId && this.target.tools[this.layerTreeId]) {
-                config.listeners = {
-                    "layeradded": this.onLayerAdded,
-                    scope: this.target.tools[this.layerTreeId].tree
-                };
-            }
             this.wmsBrowser = new GeoExt.ux.WMSBrowser(config);
         }
         return this.wmsBrowser;
@@ -118,11 +157,11 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     onLayerAdded: function(o) {
         // instruct the layertree to add new layers in a single group
         // with a single OpenLayers layer
-        var layer = o.layer,
-            layerNames = layer.params.LAYERS,
-            layerTitles = layer.name.split(','),
-            children = [], urlObj, groupName;
-        Ext.each(layerNames, function(layerName, idx) {
+        var layer = o.layer;
+
+        var layerTitles = layer.name.split(',');
+        var children = [];
+        Ext.each(layer.params.LAYERS, function(layerName, idx) {
             children.push({
                 displayName: layerTitles[idx],
                 name: layerName,
@@ -132,12 +171,12 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         });
 
         // create a human readable group name
-        urlObj = OpenLayers.Util.createUrlObject(layer.url, {
+        var urlObj = OpenLayers.Util.createUrlObject(layer.url, {
             ignorePort80: true
         });
-        groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
+        var groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
         
-        this.addGroup({
+        this.target.tools[this.layerTreeId].tree.addGroup({
             displayName: groupName,
             isExpanded: true,
             name: groupName,

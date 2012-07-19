@@ -421,3 +421,31 @@ div.legend label {
     padding: 10px;
     border-radius: 0.3em;
 }
+
+.wms-browser-combo {
+    padding: 0;
+    margin: 1px 0 0 0;
+}
+.wms-browser-connect-btn {
+    padding: 0;
+    margin: 0 0 0 5px;
+}
+.wms-browser-description-fieldset {
+    padding-right: 0;
+    padding-top: 5px;
+}
+.wms-browser-layername-label {
+    margin-right: 5px;
+}
+.wms-browser-layername-textfield {
+    margin-top: 1px;
+    margin-right: 5px;
+}
+.wms-browser-tree {
+    padding-top: 5px;
+}
+div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
+    margin-top: 5px;
+    background: none;
+    border: none;
+}
