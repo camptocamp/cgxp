@@ -184,10 +184,10 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     firstShow: true,
 
-    /** private: private[dummy_form]
+    /** private: private[dummyForm]
      *  ``Object`` Fake form used for csv export.
      */
-    dummy_form: null, 
+    dummyForm: null, 
 
     /** private: property[exportAsCsvLink]
      *  ``Ext.Element``
@@ -222,7 +222,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
-        this.dummy_form = Ext.DomHelper.append(document.body, {tag : 'form'});
+        this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
         var card = {
             xtype: 'container',
             layout: 'card',
@@ -360,7 +360,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 geom: geometry,
                 nbPoints: this.nbPoints
             },
-            form: this.dummy_form
+            form: this.dummyForm
         });
     },
 
