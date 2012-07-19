@@ -203,7 +203,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of result" label (plural) (i18n).
      */
     resultsText: "Results",
-    
+
     init: function() {
         cgxp.plugins.FeatureGrid.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
@@ -312,7 +312,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                                 data: [], 
                                 columns: []
                             },
-                            new: true
+                            _newGroup: true
                         };
                         groupedRecords[grid.title] = results;
                     }
@@ -325,14 +325,14 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             if (index > 9) {
                                 break;
                             }
-                            if (groupedRecords[grid.title].new) {
+                            if (groupedRecords[grid.title]._newGroup) {
                                 groupedRecords[grid.title][id] = OpenLayers.i18n(prop);
                                 groupedRecords[grid.title].table.columns.push(id);
                             }
                         }
                     }
                     groupedRecords[grid.title].table.data.push(raw);
-                    groupedRecords[grid.title].new = false;
+                    groupedRecords[grid.title]._newGroup = false;
                 }, this);
             }, this);
         }
@@ -432,6 +432,13 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             /* this is important, if the grid are not cleared and created anew, 
                the event viewready is not triggered and we fall on an ext bug
                when we try to act on the grid before it is ready to be modified */
+            //this.gridByType.destroy();
+            for (gridName in this.gridByType) {
+                if (this.gridByType.hasOwnProperty(gridName)) {
+                    var grid = this.gridByType[gridName];
+                    grid.destroy();
+                }
+            }
             this.gridByType = {};
 
             if (this.tabpan !== null) {
