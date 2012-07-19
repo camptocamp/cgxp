@@ -130,6 +130,23 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     itemText: "Item",
 
+    /** private: attribute[grid]
+     *  ``Ext.grid.GridPanel``
+     */
+    grid: null,
+
+    /** private: attribute[formatedAttributes]
+     *  ``String`` Name of the attribte added to the features with a custom
+     *  Ext.Template for better rendering of the attributes in the tooltip
+     */
+    formatedAttributesId: 'detail',
+
+    /** private: attribute[originalIdRef]
+     *  ``String`` backup of the original feature id before is is replaced by
+     *  a grouped id
+     */
+    originalIdRef: 'originalId',
+
     init: function(target) {
         this.highlightStyle = OpenLayers.Util.applyDefaults(
             this.highlightStyle || {
@@ -212,7 +229,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             detail.push('</table>');
-            feature.attributes.detail = detail.join('');
+            feature.attributes[this.formatedAttributesId] = detail.join('');
             feature.attributes.type = OpenLayers.i18n(feature.type); 
 
             if (feature.type != previousLayer) {
@@ -220,6 +237,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 i = 0;
             }
 
+            // store original id in backup attribute
+            if (feature.attributes.id) {
+                feature.attributes[this.originalIdRef] = feature.attributes.id;
+            }
             if (this.layers[feature.type] &&
                 this.layers[feature.type].identifierAttribute) {
                 // use the identifierAttribute field if set
@@ -248,11 +269,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             fields: [
                 'id',
                 'type', // the layer 
-                'detail'
+                this.formatedAttributesId
             ]
         });
         var rowexpander = new Ext.ux.grid.RowExpander({
-            tpl: new Ext.Template('{detail}')
+            tpl: new Ext.Template('{' + this.formatedAttributesId + '}')
         });
 
         var groupTextTpl = [
@@ -262,7 +283,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             this.itemText,
             '"]})'
         ].join('');
-        var grid = new Ext.grid.GridPanel({
+        this.grid = new Ext.grid.GridPanel({
             border: false,
             store: store,
             columns: [
@@ -305,7 +326,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 height: 280,
                 title: this.windowTitleText,
                 closeAction: 'hide',
-                items: [grid],
+                items: [this.grid],
                 listeners : {
                     hide: function(win) {
                         win.removeAll();
@@ -315,7 +336,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             });
         } else {
             this.featuresWindow.removeAll();
-            this.featuresWindow.add(grid);
+            this.featuresWindow.add(this.grid);
             this.featuresWindow.doLayout();
         }
         this.featuresWindow.show();
@@ -330,6 +351,75 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 true
             );
         }
+    },
+
+    /** private: method[printExport]
+     *  Export for print.
+     *  Columns titles will be stored on 'col1', 'col2', ... of the page.
+     *  The dataset name is 'table '.
+     *  The columns names will be 'col1', 'col2', ....
+     */
+    printExport: function() {
+
+        var groupedRecords = [];
+
+        if (!this.grid || !this.grid.getStore()) {
+            return groupedRecords;
+        }
+        var records = this.grid.getStore().getRange();
+        if (records.length === 0) {
+            return groupedRecords;
+        }
+
+        Ext.each(records, function(r) {        
+            var attributes = r.getFeature().attributes;
+            
+            var raw = {};
+            var index = 0;
+            // group records by type (layer)
+            if (!groupedRecords[attributes.type]) {
+                var results = {
+                    table: {
+                        data: [], 
+                        columns: []
+                    },
+                    _newGroup: true
+                }
+                groupedRecords[attributes.type] = results;
+            }
+            for (prop in attributes) {
+                if (attributes.hasOwnProperty(prop) && 
+                    prop != this.formatedAttributesId &&
+                    prop != this.originalIdRef) {
+
+                    // replace id value by original id value, if it exists
+                    if (prop == 'id') {
+                        if (attributes[this.originalIdRef]) {
+                            prop = this.originalIdRef;
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    var id = 'col' + index;
+                    raw[id] = attributes[prop];
+                    index++;
+                    if (index > 9) {
+                        break;
+                    }
+                    if (groupedRecords[attributes.type]._newGroup) {
+                        if (prop == this.originalIdRef) {
+                            prop = 'id';
+                        }
+                        groupedRecords[attributes.type][id] = OpenLayers.i18n(prop);
+                        groupedRecords[attributes.type].table.columns.push(id);
+                    }
+                }
+            }
+            groupedRecords[attributes.type].table.data.push(raw);
+            groupedRecords[attributes.type]._newGroup = false;
+        }, this);
+        return groupedRecords;
     }
 });
 Ext.preg(cgxp.plugins.FeaturesWindow.prototype.ptype, cgxp.plugins.FeaturesWindow);

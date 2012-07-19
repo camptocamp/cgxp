@@ -47,7 +47,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_print',
  *              legendPanelId: "legendPanel",
- *              featureGridId: "featureGrid",
+ *              featureProvider: "featureGrid",
  *              outputTarget: "left-panel",
  *              printURL: "${request.route_url('printproxy', path='')}",
  *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
@@ -78,11 +78,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     legendPanelId: null,
 
-    /** api: config[featureGridId]
+    /** api: config[featureProvider]
      *  ``String``
-     *  Id of the featureGrid tool.
+     *  Id of the featureProvider tool.
      */
-    featureGridId: null,
+    featureProvider: null,
 
     printPanel: null,
 
@@ -279,27 +279,39 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             pages[0].customParams.showMapframe = true;
             pages[0].customParams.showMapframeQueryresult = false;
             // new blank page, if query results
-            var printExport = this.target.tools[this.featureGridId].printExport();
-            // TODO, implement paging in case of too many result to display on only one page
-            if (printExport.table.data.length > 0 && printExport.table.data[0].col0 != '') {
-                var page1 = new GeoExt.data.PrintPage({
-                    printProvider: printProvider
-                });
-                page1.center = pages[0].center.clone();
-                page1.customParams = printExport;
-                page1.customParams.showMap = false;
-                page1.customParams.showScale = false;
-                page1.customParams.showAttr = true;
-                page1.customParams.showNorth = false;
-                page1.customParams.showScalevalue = false;
-                page1.customParams.showMapframe = false;
-                page1.customParams.showMapframeQueryresult = true;
-                pages[1] = page1;
-            } else {
-              // remove page 1 if is exists (user printed a page with query result before clearing the query result)
-              if (pages[1]) {
-                  pages.pop();
-              }          
+            if (this.featureProvider) {
+
+                // clear existing result pages
+                while (pages.length > 1) {
+                    pages.pop();
+                }
+
+                var printExport = this.target.tools[this.featureProvider].printExport();
+                if (printExport instanceof Array) {
+                    var pageCount = 1;
+                    for (dataset in printExport) {
+                        if (printExport.hasOwnProperty(dataset)) {
+                            // TODO, implement paging in case of too many result to display on only one page
+                            if (printExport[dataset].table.data.length > 0 && 
+                                printExport[dataset].table.data[0].col0 != '') {
+                                var page = new GeoExt.data.PrintPage({
+                                    printProvider: printProvider
+                                });
+                                page.center = pages[0].center.clone();
+                                page.customParams = printExport[dataset];
+                                page.customParams.showMap = false;
+                                page.customParams.showScale = false;
+                                page.customParams.showAttr = true;
+                                page.customParams.showNorth = false;
+                                page.customParams.showScalevalue = false;
+                                page.customParams.showMapframe = false;
+                                page.customParams.showMapframeQueryresult = true;
+                                pages[pageCount] = page;
+                            }
+                            pageCount++;
+                        }
+                    }
+                }
             }
         }.createDelegate(this));
 
