@@ -160,6 +160,15 @@ GeoExt.Lang.add("fr", {
         "<tr><td>Élevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
         "<tr><td>Hauteur (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
         "<tr><td>Pente du terrain</td><td>{elevation_slope} [° dég.] </td></tr>"
+    },
+
+    "cgxp.plugins.Profile.prototype": {
+        helpText: "<h1>Profil altimétrique</h1>Dessinez une ligne sur la carte. Double-cliquez pour terminer et afficher le profil.",
+        waitMsgText: "Chargement du profil altimétrique...",
+        xLabelText: "Distance (m)",
+        yLabelText: "Altitude (m)",
+        errorMsg: "Une erreur s'est produite. Veuillez recommencer.",
+        exportCsvText: "Exporter en CSV"
     }
 });
 
