@@ -93,7 +93,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     mapPanelPreviewTitleText: "Map preview",
 
     /** api: config[layerCantBeAddedText] ``String`` i18n */
-    layerCantBeAddedText: "This layer can't be added : ",
+    layerCantBeAddedText: "This layer can't be added: ",
 
     /** api: config[srsNotSupportedText] ``String`` i18n */
     srsNotSupportedText: "This layer can't be added to the current map" + 
@@ -121,7 +121,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     inputURLInvalidText: "The url address entered is not valid.",
 
     /** api: config[layerNameText] ``String`` i18n */
-    layerNameText: "Layer name :",
+    layerNameText: "Layer name",
 
     /** api: config[noLayerReturnedText] ``String`` i18n */
     noLayerReturnedText: "The url address is valid but returned no layers.",
@@ -376,7 +376,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     initMyItems: function() {
         // north (connection informations)
         this.serverComboBox = new Ext.form.ComboBox({
-            style:'padding:0px;margin:0px;',
+            cls: 'wms-browser-combo',
             columnWidth: 0.85,
             'name': 'wms_url',
             xtype: 'combo',
@@ -388,26 +388,37 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             triggerAction: 'all',
             hideTrigger: this.hideTrigger || false,
             allowBlank: false,
-            validator:this.urlValidator,
+            validator: this.urlValidator,
             invalidText: this.inputURLInvalidText,
             emptyText: this.inputURLText,
-            selectOnFocus:true
+            selectOnFocus: true,
+            enableKeyEvents: true,
+            listeners: {
+                keypress: function(field, e) {
+                    if (e.keyCode == e.ENTER) {
+                        this.triggerGetCapabilities();
+                    }
+                },
+                scope: this
+            }
         });
 
         var northPanel = new Ext.form.FormPanel({
             height: 'auto',
             autoHeight: true,
-            border: false,
+            unstyled: true,
             region: 'north',
             layout: 'column',
             items: [this.serverComboBox, {
                 columnWidth: 0.15,
                 width: '100%',
-                style:'padding:0px;margin:0px;',
+                cls: 'wms-browser-connect-btn',
                 xtype: 'button',
                 text: this.connectText,
                 scope: this,
-                handler: function(b, e){this.triggerGetCapabilities();}
+                handler: function(b, e) {
+                    this.triggerGetCapabilities();
+                }
             }]
         });
 
@@ -419,7 +430,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                 region: 'south',
                 collapsible: true,
                 collapsed: true,
-                border: false,
+                border: true,
                 height: 200,
                 floatable: false,
                 minSize: 100,
@@ -453,11 +464,12 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
         }
 
         this.infoPanel = new Ext.Panel({
+            unstyled: true,
             anchor: '50% 100%',
             x: '50%',
             y: '0',
-                    region: 'east',
-                    width: '50%',
+            region: 'east',
+            width: '50%',
             layout: 'border',
             border: true,
             items: [
@@ -518,7 +530,11 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
      * to this widget to display and select the layers from nodes in a tree.
      */
     createTreePanel: function() {
-        var options = {'wmsbrowser': this};
+        var options = {
+            'wmsbrowser': this,
+            border: true,
+            cls: 'wms-browser-tree'
+        };
         return new GeoExt.ux.tree.WMSBrowserTreePanel(options);
     },
 
@@ -544,6 +560,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             anchor: '100% 100%',
             defaultType: 'textfield',
             border: false,
+            cls: 'wms-browser-description-fieldset',
             items: [{
                 x: 0,
                 y: 0,
@@ -576,18 +593,18 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
         // LayerName textfield
         items.push({
             xtype: 'label',
-            text: this.layerNameText
+            text: this.layerNameText,
+            cls: 'wms-browser-layername-label'
         });
         this.layerNameField = new Ext.form.TextField(
             Ext.applyIf(
                 this.layerNameFieldOptions, {
                     width: 275,
-                    xtype: 'textfield'
+                    xtype: 'textfield',
+                    cls: 'wms-browser-layername-textfield'
             })
         );
         items.push(this.layerNameField);
-
-        items.push('-');
 
         // AddLayer action
         var actionOptions = {
@@ -605,7 +622,12 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
         var action = new Ext.Action(actionOptions);
         items.push(action);
 
-        Ext.apply(this, {bbar: new Ext.Toolbar(items)});
+        Ext.apply(this, {
+            bbar: new Ext.Toolbar({
+                items: items,
+                cls: 'wms-browser-toolbar'
+            })
+        });
     },
 
     /** private: method[triggerGetCapabilities]
@@ -750,6 +772,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             }
             
             if (extent) {
+                extent = extent.transform(
+                        new OpenLayers.Projection("EPSG:4326"),
+                        this.mapPanelPreview.map.getProjection());
                 this.mapPanelPreview.map.zoomToExtent(extent);
                 zoomed = true;
             }
