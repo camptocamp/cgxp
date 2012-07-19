@@ -449,3 +449,24 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     background: none;
     border: none;
 }
+
+/* cgxp profile */
+.csv {
+    position: absolute;
+    z-index: 2;
+    bottom: 5px;
+    right: 5px;
+}
+.dygraph-legend {
+    font-size: 12px !important;
+    text-align: right !important;
+    background-color: transparent !important;
+}
+.dygraph-legend,
+.dygraph-xlabel,
+.dygraph-ylabel,
+.dygraph-axis-label-x,
+.dygraph-axis-label-y {
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 12px;
+}
