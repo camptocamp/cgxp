@@ -139,10 +139,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
-    /** private: private[dummy_form]
+    /** private: private[dummyForm]
      *  ``Object`` Fake form used for csv export.
      */
-    dummy_form: Ext.DomHelper.append(document.body, {tag : 'form'}),
+    dummyForm: null,
 
     /** api: config[clearAllText]
      *  ``String`` Text for the "clear all results" button (i18n).
@@ -190,6 +190,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     resultsText: "Results",
 
     init: function() {
+        this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
         cgxp.plugins.FeatureGrid.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
     },
@@ -236,7 +237,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     name: this.currentGrid.title,
                     csv: csv.join('\n')
                 },
-                form: this.dummy_form,
+                form: this.dummyForm,
                 isUpload: true
             });
         }
