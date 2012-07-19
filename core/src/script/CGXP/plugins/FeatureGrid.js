@@ -139,11 +139,20 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
-    /** api: config[aggregatedExport]
-     *  ``Boolean`` If true, aggregate results from all tabs and not only the 
-     *  active tab when exporting (pdf, csv, ...). Default is false.
+    /** api: config[globalSelection]
+     *  ``Boolean`` If true, selection state are remembered across all result 
+     *  tabs when switching tab.
+     *  Also the "select all", "select none" and "toggle" buttons act on all tabs 
+     *  and not only the active tab.
+     *  This also enable global result in export pdf. Default is false.
      */
-    aggregatedExport: false,
+    globalSelection: false,
+
+    /** api: config[autoSelectFirst]
+     *  ``Boolean`` If true, the first row of every result grid is automatically
+     *  selected. Default is true.
+     */
+    autoSelectFirst: true,
 
     /** private: private[dummy_form]
      *  ``Object`` Fake form used for csv export.
@@ -261,10 +270,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
         if (this.tabpan.activeTab && this.currentGrid) {
             // list the grids to use
-            if (this.currentGrid.getSelectionModel().getSelections().length > 0) {
-                 grids.push(this.currentGrid);
+            if (!this.globalSelection && 
+                this.currentGrid.getSelectionModel().getSelections().length > 0) {
+                grids.push(this.currentGrid);
             } else {
-                if (this.aggregatedExport) {
+                if (this.globalSelection) {
                     for (grid in this.gridByType) {
                         if (this.gridByType.hasOwnProperty(grid)) {
                             grids.push(this.gridByType[grid])
@@ -276,10 +286,15 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }
             // get data from grids
             Ext.each(grids, function(grid) {
+                var records = [];
                 if (grids.length == 1) {
-                    var records = grid.getSelectionModel().getSelections();
+                    records = grid.getSelectionModel().getSelections();
                 } else {
-                    var records = grid.getStore().getRange();
+                    if (!this.globalSelection) {
+                        records = grid.getStore().getRange();
+                    } else if (grid.selection) {
+                        records = grid.selection;
+                    }
                 }
                 if (records.length === 0) {
                     return groupedRecords;
@@ -292,10 +307,13 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     var index = 0;
                     // group records by type (layer)
                     if (!groupedRecords[grid.title]) {
-                        var results = new cgxp.plugins.FeatureGrid.PrintResults();
-                        results.table.columns = [];
-                        results.table.data = [];
-                        results.new = true;
+                        var results = {
+                            table: {
+                                data: [], 
+                                columns: []
+                            },
+                            new: true
+                        };
                         groupedRecords[grid.title] = results;
                     }
                     for (prop in attributes) {
@@ -335,6 +353,41 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 count + " " + resultText;
     },
 
+    /** private: method[showFeature]
+     *  ``Ext.data.Record``
+     */
+    showFeature: function(record) {
+        record.getFeature().style = OpenLayers.Feature.Vector.style['default'];
+        record.getFeature().style.strokeWidth = 4;
+        this.vectorLayer.drawFeature(record.getFeature())
+    },
+
+    /** private: method[showFeatures]
+     *  ``Array`` Array of Ext.data.Record
+     */
+    showFeatures: function(records) {
+        Ext.each(records, function(record) {
+            this.showFeature(record);
+        }, this)
+    },
+
+    /** private: method[hideFeature]
+     *  ``Ext.data.Record``
+     */
+    hideFeature: function(record) {
+        record.getFeature().style = {display: 'none'};
+        this.vectorLayer.eraseFeatures(record.getFeature())
+    },
+
+    /** private: method[hideFeatures]
+     *  ``Array`` Array of Ext.data.Record
+     */
+    hideFeatures: function(records) {
+        Ext.each(records, function(record) {
+            this.hideFeature(record);
+        }, this)
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -347,7 +400,6 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             'querystarts': true,
             'queryresults': true
         });
-
 
         // a ResultsPanel object has its own vector layer, which
         // is added to the map once for good
@@ -363,26 +415,30 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.events.on('queryclose', function() {
             this.control && this.control.deactivate();
         }, this);
-       
-        this.events.on('querystarts', function() {
-            if (this.currentGrid !== null) {
-                this.currentGrid.getSelectionModel().clearSelections();
-            }
-            this.currentGrid = null;
-            this.vectorLayer.destroyFeatures();
-            if (this.tabpan !== null) {
-                this.tabpan.items.each(function (item) {
-                    this.tabpan.hideTabStripItem(item);
-                }.createDelegate(this));
-                this.tabpan.doLayout();
-            }
-        }, this);
 
         this.events.on('queryresults', function(features, selectAll) {
 
             // if no feature do nothing
             if (!features || features.length == 0) {
                 return;
+            }
+
+            if (this.currentGrid !== null) {
+                this.currentGrid.getSelectionModel().clearSelections();
+            }
+            this.currentGrid = null;
+            this.vectorLayer.destroyFeatures();
+
+            /* this is important, if the grid are not cleared and created anew, 
+               the event viewready is not triggered and we fall on an ext bug
+               when we try to act on the grid before it is ready to be modified */
+            this.gridByType = {};
+
+            if (this.tabpan !== null) {
+                this.tabpan.items.each(function (item) {
+                    this.tabpan.hideTabStripItem(item);
+                }.createDelegate(this));
+                this.tabpan.doLayout();
             }
 
             var currentType = {}, feature;
@@ -447,15 +503,23 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             selectControl: this.control,
                             singleSelect: false
                         }),
-                        title: OpenLayers.i18n(feature.type)
+                        title: OpenLayers.i18n(feature.type),
+                        ready: false
                     });
                     grid.getSelectionModel().on('rowdeselect', function (model, index, record) {
-                        record.getFeature().style = {display: 'none'};
-                    });
+                        this.hideFeature(record);
+                        if (this.globalSelection) {
+                            // store change
+                            model.grid.selection = model.getSelections();
+                        }
+                    }, this);
                     grid.getSelectionModel().on('rowselect', function (model, index, record) {
-                        record.getFeature().style = OpenLayers.Feature.Vector.style['default'];
-                        record.getFeature().style.strokeWidth = 4;
-                    });
+                        this.showFeature(record);
+                        if (this.globalSelection) {
+                            // store change
+                            model.grid.selection = model.getSelections();
+                        }
+                    }, this);
                     grid.on('rowdblclick', function(gclickGrid, index) {
                         var feature = store.getAt(index).getFeature();
                         if (feature.bounds) {
@@ -466,27 +530,32 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         }
                         feature.layer.map.setCenter(center);
                     }, this);
-                    // task to fix an ext bug ...
-                    var task = new Ext.util.DelayedTask(function() {
+                    grid.on('render', function(renderGrid) {
+                        this.currentGrid = renderGrid
+                    }, this);
+                    grid.on('viewready', function(renderGrid) {
                         var sm = this.currentGrid.getSelectionModel();
-                        sm.clearSelections();
+
+                        // set grid as ready
+                        sm.grid.ready = true;
+
+                        if (!this.globalSelection) {
+                            sm.clearSelections();
+                        }
                         if (selectAll) {
                             sm.selectAll();
-                        } else {
+                        } else if (this.globalSelection && sm.grid.selection) {
+                            sm.selectRecords(sm.grid.selection);
+                        } else if (this.autoSelectFirst) {
                             sm.selectFirstRow();
                         }
-                    }, this);
-                    grid.on('render', function(renderGrid) {
-                        if (this.currentGrid != null) {
-                            this.currentGrid.getSelectionModel().clearSelections();
-                        }
-                        this.currentGrid = renderGrid
-                        task.delay(200);
                     }, this);
                     this.gridByType[feature.type] = grid;
                     this.tabpan.add(grid);
                 } else {
                     var grid = this.gridByType[feature.type];
+                    // reset grid selection
+                    grid.selection = null;
                     this.tabpan.unhideTabStripItem(grid);
                 }
                 this.vectorLayer.addFeatures(feature);
@@ -502,15 +571,13 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     continue;
                 }
             }
-            this.tabpan.setActiveTab(this.gridByType[firstType].id);
+            this.currentGrid = this.gridByType[firstType];
+            this.tabpan.setActiveTab(this.currentGrid.id);
             this.textItem.setText(this.getCount());
-            this.currentGrid = this.tabpan.getActiveTab();
             this.tabpan.ownerCt.setVisible(true);
-            this.currentGrid.getSelectionModel().selectFirstRow();
             this.tabpan.ownerCt.expand();
             this.tabpan.ownerCt.ownerCt.doLayout();
         }, this);
-        
 
         this.textItem = new Ext.Toolbar.TextItem({
             text: ''
@@ -522,13 +589,36 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             enableTabScroll: true,
             listeners: {
                 'tabchange': function(tabpanel, tab) {
-                    if (this.currentGrid != null) {
-                        this.currentGrid.getSelectionModel().clearSelections();
-                    }
                     this.currentGrid = tab;
-                    if (this.currentGrid != null) {
-                        this.currentGrid.getSelectionModel().selectFirstRow();
+                    if (this.currentGrid != null && this.currentGrid.ready) {
+                        /* this must be done here because the grid has alerady been
+                           initialized and the event "viewready" is not triggered 
+                           anymore.
+                           this is not done the first time the grid is initialized, 
+                           condition set by the custom ready property, see the 
+                           code of the "viewready" stage */
+                        if (this.globalSelection && this.currentGrid.selection) {
+                            // restore selection
+                            this.currentGrid.getSelectionModel().selectRecords(
+                                this.currentGrid.selection);
+                        } else if (this.autoSelectFirst) {
+                            this.currentGrid.getSelectionModel().selectFirstRow();
+                        } else {
+                            var sm = this.currentGrid.getSelectionModel();
+                            sm.clearSelections();
+                        }
                         this.textItem.setText(this.getCount());
+                    }
+                },
+                beforetabchange: function(p, n, o) {
+                    if (o) {
+                        if (this.globalSelection) {
+                          // save selection
+                          o.selection = o.getSelectionModel().getSelections();
+                        } else {
+                            // hide all feature of unselected tab
+                            this.hideFeatures(o.getSelectionModel().getSelections());
+                        }
                     }
                 },
                 scope: this
@@ -537,22 +627,73 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 new Ext.SplitButton({
                     text: this.selectText,
                     handler: function() {
+                        if (this.globalSelection) {
+                            // update selection list for all grids
+                            for (gridName in this.gridByType) {
+                                if (this.gridByType.hasOwnProperty(gridName)) {
+                                    var grid = this.gridByType[gridName];
+                                    grid.selection = grid.getStore().getRange();
+                                    this.showFeatures(grid.selection);
+                                }
+                            }
+                        }
                         var sm = this.currentGrid.getSelectionModel();
                         sm.selectAll();
                     }, // handle a click on the button itself
                     menu: new Ext.menu.Menu({
                         items: [
                             {text: this.selectAllText, handler: function() {
+                                if (this.globalSelection) {
+                                    // update selection list for all grids
+                                    for (gridName in this.gridByType) {
+                                        if (this.gridByType.hasOwnProperty(gridName)) {
+                                            var grid = this.gridByType[gridName];
+                                            grid.selection = grid.getStore().getRange();
+                                            this.showFeatures(grid.selection);
+                                        }
+                                    }
+                                }
                                 var sm = this.currentGrid.getSelectionModel();
                                 sm.selectAll();
                             },
                             scope: this},
                             {text: this.selectNoneText, handler: function() {
+                                if (this.globalSelection) {
+                                    // update selection list for all grids
+                                    for (gridName in this.gridByType) {
+                                        if (this.gridByType.hasOwnProperty(gridName)) {
+                                            var grid = this.gridByType[gridName];
+                                            this.hideFeatures(grid.selection);
+                                            grid.selection = [];
+                                        }
+                                    }
+                                }
                                 var sm = this.currentGrid.getSelectionModel();
                                 sm.clearSelections();
                             },
                             scope: this},
                             {text: this.selectToggleText, handler: function() {
+                                if (this.globalSelection) {
+                                    // update selection list for all grids
+                                    for (gridName in this.gridByType) {
+                                        if (this.gridByType.hasOwnProperty(gridName)) {
+                                            var newSelection = [];
+                                            var grid = this.gridByType[gridName];
+                                            grid.getStore().each(function(record) {
+                                                var found = false;
+                                                Ext.each(grid.selection, function(refrecord) {
+                                                    if (refrecord.get('id') == record.get('id')) {
+                                                        found = true;
+                                                    }
+                                                });
+                                                if (!found) {
+                                                    newSelection.push(record);
+                                                }
+                                            });
+                                            grid.selection = newSelection;
+                                        }
+                                    }
+                                }
                                 var sm = this.currentGrid.getSelectionModel();
                                 var recordsToSelect = [];
                                 this.currentGrid.getStore().each(function(record) {
@@ -620,17 +761,3 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 });
 
 Ext.preg(cgxp.plugins.FeatureGrid.prototype.ptype, cgxp.plugins.FeatureGrid);
-
-cgxp.plugins.FeatureGrid.PrintResults = OpenLayers.Class({
-
-    col0: '',
-    
-    initialize: function() {
-        this.table = {
-           data: [{col0: ''}], 
-           columns: ['col0']
-        };
-    },
-
-    CLASS_NAME: "cgxp.plugins.FeatureGrid.PrintResults"
-});
