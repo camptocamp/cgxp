@@ -1,13 +1,7 @@
-html, body {
-    background-color: white;
-    font-family: tahoma, arial, verdana, sans-serif;
-    font-size: 12px;
-    margin: 0 !important;
-}
-a {
+div.x-panel a {
     text-decoration: none;
 }
-a:hover {
+div.x-panel a:hover {
     text-decoration: underline;
 }
 div#header-out {
