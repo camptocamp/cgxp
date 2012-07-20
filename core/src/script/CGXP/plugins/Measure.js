@@ -182,11 +182,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             this.popup.hide();
             var singlePoint = false;
             var measure = null;
+            var points;
             if (event.geometry.components) {
-                var points = event.geometry.components;
+                points = event.geometry.components;
                 measure = event.measure.toFixed(2);
             } else {
-                var points = Array(event.geometry);
+                points = Array(event.geometry);
                 singlePoint = true;
                 measure = event.measure;
             }
