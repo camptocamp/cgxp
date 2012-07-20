@@ -294,6 +294,14 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.activeIndex = 1;
+        function setActiveItem(item, checked) {
+            this.activeIndex = this.button.menu.items.indexOf(item);
+            this.button.toggle(checked);
+            if (checked) {
+                this.button.setIconClass(item.iconCls);
+            }
+            this.cleanup();
+        }
         this.button = new Ext.SplitButton({
             iconCls: "cgxp-icon-measure-length",
             tooltip: this.measureTooltip,
@@ -329,14 +337,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             toggleGroup: this.toggleGroup,
                             group: this.toggleGroup,
                             listeners: {
-                                checkchange: function(item, checked) {
-                                    this.activeIndex = 0;
-                                    this.button.toggle(checked);
-                                    if (checked) {
-                                        this.button.setIconClass(item.iconCls);
-                                    }
-                                    this.cleanup();
-                                },
+                                checkchange: setActiveItem,
                                 scope: this
                             },
                             map: this.target.mapPanel.map,
@@ -352,14 +353,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             toggleGroup: this.toggleGroup,
                             group: this.toggleGroup,
                             listeners: {
-                                checkchange: function(item, checked) {
-                                    this.activeIndex = 1;
-                                    this.button.toggle(checked);
-                                    if (checked) {
-                                        this.button.setIconClass(item.iconCls);
-                                    }
-                                    this.cleanup();
-                                },
+                                checkchange: setActiveItem,
                                 scope: this
                             },
                             map: this.target.mapPanel.map,
@@ -376,14 +370,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             group: this.toggleGroup,
                             allowDepress: false,
                             listeners: {
-                                checkchange: function(item, checked) {
-                                    this.activeIndex = 2;
-                                    this.button.toggle(checked);
-                                    if (checked) {
-                                        this.button.setIconClass(item.iconCls);
-                                    }
-                                    this.cleanup();
-                                },
+                                checkchange: setActiveItem,
                                 scope: this
                             },
                             map: this.target.mapPanel.map,
