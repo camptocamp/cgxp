@@ -208,11 +208,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 }
                 this.popup.position();
                 this.popup.show();
-                var measure;
+                //var measure;
                 this.popup.update({
-                    measure: measure,
-                    units: event.units,
-                    dim: event.order == 2 ? '<sup>2</sup>' : '',
+                    //measure: measure,
+                    //units: event.units,
+                    //dim: event.order == 2 ? '<sup>2</sup>' : '',
                     html: this.makeString(event)
                 });
             }
@@ -237,6 +237,86 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             new OpenLayers.Control.Measure(handlerType, controlOptions);
 
         return measureControl;
+    },
+
+    /**
+     * Method: createSegmentMeasureControl
+     */
+    createSegmentMeasureControl: function() {
+        // style the sketch fancy
+        var sketchSymbolizers = {
+            "Point": {
+                pointRadius: 6,
+                graphicName: "cross",
+                fillColor: "#FF0000",
+                fillOpacity: 1,
+                strokeWidth: 1,
+                strokeOpacity: 1,
+                strokeColor: "#333333"
+            },
+            "Line": {
+                strokeWidth: 3,
+                strokeOpacity: 1,
+                strokeColor: "#FF0000"
+            },
+            "Polygon": {
+                strokeWidth: 1,
+                strokeOpacity: 1,
+                strokeColor: "#FF0000",
+                fillOpacity: 0
+            }
+        };
+        var style = new OpenLayers.Style();
+        style.addRules([
+            new OpenLayers.Rule({symbolizer: sketchSymbolizers})
+        ]);
+        var styleMap = new OpenLayers.StyleMap({"default": style});
+        var control = new cgxp.plugins.Measure.SegmentMeasureControl({
+            elevationServiceUrl: this.elevationServiceUrl,
+            handlerOptions: {
+                layerOptions: {styleMap: styleMap}
+            }
+        });
+        function measurepartial(e) {
+            var units = e.units;
+            var distance = OpenLayers.i18n('Distance: ') +
+                e.distance.toFixed(3) + " " + units;
+            var azimut = OpenLayers.i18n('Azimut: ') + e.azimut + '&deg;';
+            var elevations = e.elevations;
+            var out = [distance, azimut];
+            if (elevations) {
+                out.push(OpenLayers.i18n('Elevation offset: ') +
+                    Math.round(elevations[1] - elevations[0], 2) + " m");
+            }
+            return out;
+        }
+        var popup;
+        function measure(e) {
+            var out = measurepartial(e);
+            if (popup) {
+                popup.close();
+                popup = undefined;
+            }
+            popup = new Ext.Window({
+                title: OpenLayers.i18n('measure.popup.azimut'),
+                html: out.join('<br/>'),
+                width: 150,
+                bodyStyle: 'background-color: #FFFFD0;'
+            });
+            popup.show();
+        }
+        control.events.on({
+            "deactivate": function() {
+                if (popup) {
+                    popup.close();
+                    popup = undefined;
+                }
+            },
+            "measure": measure,
+            "measurepartial": measurepartial,
+            scope: this
+        });
+        return control;
     },
 
     makePointString: function(metric, unit) {
@@ -378,6 +458,23 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                                 OpenLayers.Handler.Polygon, this.areaTooltip
                             )
                         })
+                    ),
+                    new Ext.menu.CheckItem(
+                        new GeoExt.Action({
+                            text: this.azimuthMenuText,
+                            iconCls: "cgxp-icon-measure-azimuth",
+                            toggleGroup: this.toggleGroup,
+                            group: this.toggleGroup,
+                            allowDepress: false,
+                            listeners: {
+                                checkchange: setActiveItem,
+                                scope: this
+                            },
+                            map: this.target.mapPanel.map,
+                            control: this.createSegmentMeasureControl(
+                                this.azimuthTooltip
+                            )
+                        })
                     )
                 ]
             })
@@ -480,5 +577,314 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
     },
     
-    CLASS_NAME: "cgxp.plugins.Measure.LocatorControl"
+    class_name: "cgxp.plugins.measure.locatorcontrol"
+});
+
+/**
+ * @requires OpenLayers/Control/Measure.js
+ */
+
+/**
+ * Class: cgxp.plugins.Measure.SegmentMeasureControl
+ * Control to measure segment length (ie. for azimuth)
+ *
+ * Inherits from:
+ *  - <OpenLayers.Control>
+ */
+cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control.Measure, {
+
+    // we want to have partial measures each time the mouse is moved
+    partialDelay: 0,
+
+    persist: true,
+
+    /**
+     * APIProperty: elevationServiceUrl
+     * {String} The url to the elevation service
+     */
+    elevationServiceUrl: null,
+
+    /**
+     * Property: elevations
+     * {Array} Elevation service responses
+     */
+    elevations: null,
+
+    /**
+     * Property: measuring
+     * {Boolean} Indicate if currently measuring. Measuring
+     *     starts when the first point of the segment is added.
+     */
+    measuring: false,
+
+    /**
+     *
+     */
+    initialize: function(options) {
+        var handler = cgxp.plugins.Measure.Segment;
+        this.callbacks = {
+            point: this.startMeasuring,
+            modify: this.measureDrawing,
+            done: this.measureDone,
+            cancel: this.measureCancel
+        };
+        OpenLayers.Control.Measure.prototype.initialize.call(
+                this, handler, options);
+    },
+
+    /**
+     *
+     */
+    startMeasuring: function() {
+        this.measuring = true;
+    },
+
+    /**
+     *
+     */
+    measureDrawing: function(point, feature) {
+        if (this.measuring) {
+            var geometry = feature.geometry.clone();
+            this.measure(geometry);
+            this.elevations = new Array(2);
+        }
+    },
+
+    /**
+     *
+     */
+    measureDone: function(geometry) {
+        function onElevationResponse(index, response) {
+            this.elevations[index] = response.responseText;
+            if (this.elevations[0] && this.elevations[1]) {
+                onMeasure.call(this, [this.elevations]);
+            }
+        }
+        function onMeasure(elevations) {
+            var stat = this.getBestLength(geometry),
+                azimut = this.getAzimut(geometry),
+                values = {
+                    distance: stat[0],
+                    units: stat[1],
+                    azimut: azimut
+                };
+            if (elevations) {
+                values.elevations = elevations;
+            }
+            this.events.triggerEvent('measure', values);
+        }
+        this.measuring = false;
+        if (this.elevationServiceUrl) {
+            for (var i = 0; i <=1; i++) {
+                OpenLayers.Request.GET({
+                    url: this.elevationServiceUrl,
+                    params: {
+                        lon: geometry.components[i].x,
+                        lat: geometry.components[i].y
+                    },
+                    callback: OpenLayers.Function.bind(
+                                    onElevationResponse, this, i)
+                });
+            }
+        } else {
+            onMeasure.call(this);
+        }
+    },
+
+    /**
+     *
+     */
+    measureCancel: function(geometry) {
+        this.measuring = false;
+    },
+
+    /**
+     * Method: measure
+     *
+     * Parameters:
+     * geometry - {<OpenLayers.Geometry>}
+     */
+    measure: function(geometry) {
+        var stat = this.getBestLength(geometry),
+            azimut = this.getAzimut(geometry); 
+        if (azimut !== undefined) {
+            this.events.triggerEvent('measurepartial', {
+                distance: stat[0],
+                units: stat[1],
+                azimut: azimut
+            });
+        }
+    },
+
+    /**
+     * Method: getAzimut
+     * Gets the azimut
+     *
+     * Parameters:
+     * geometry - {<OpenLayers.Geometry>}
+     *
+     * Returns:
+     * {Float} Returns the azimut
+     */
+    getAzimut: function(geometry) {
+        // prevent errors with 1 length strings
+        if (geometry.components.length <= 1) {
+            return;
+        }
+        // we consider that we don't use geodetic
+        var pt1 = geometry.components[0];
+        var pt2 = geometry.components[1];
+        var x = pt2.x - pt1.x;
+        var y = pt2.y - pt1.y; 
+
+        var rad = Math.acos( y / Math.sqrt( x * x + y * y));
+        // negative or positive
+        var factor = x > 0 ? 1 : -1;
+
+        return Math.round(factor * rad * 180 / Math.PI);
+    },
+    
+    class_name: "cgxp.plugins.measure.segmentmeasurecontrol"
+});
+
+/**
+ * @requires OpenLayers/Handler/Path.js
+ */
+
+/**
+ * Class: cgxp.plugins.Measure.Segment
+ * Handler to draw a segment on the map.
+ *
+ * Inherits from:
+ *  - <OpenLayers.Handler.Path>
+ */
+cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
+
+    /**
+     * Property: origin
+     * {<OpenLayers.Feature.Vector>} The origin of the segment, first clicked
+     * point
+     */
+    origin: null,
+
+    /**
+     * Property: target
+     * {<OpenLayers.Feature.Vector>} The target of the segment, second clicked
+     * point
+     */
+    target: null,
+
+    /**
+     * Property: circle
+     * {<OpenLayers.Feature.Vector>} The circle which radius is the drawn
+     *     segment
+     */
+    circle: null,
+
+    /**
+     * Property: _drawing
+     * {Boolean} Indicate if in the process of drawing a segment.
+     *    (We prefix the variable name with an underscore not to
+     *     collide with a "drawing" property of the parent.)
+     */
+    _drawing: false,
+
+    /**
+     * Constructor: cgxp.plugins.Measure.Segment
+     */
+    initialize: function(control, callbacks, options) {
+        options = options || {};
+        options.maxVertices = 2;
+        options.persist = true;
+        options.freehandToggle = null;
+        OpenLayers.Handler.Path.prototype.initialize.apply(
+            this, [control, callbacks, options]);
+    },
+
+    /**
+     *
+     */
+    addPoint: function() {
+        OpenLayers.Handler.Path.prototype.addPoint.apply(this, arguments);
+        var numVertices = this.line.geometry.components.length;
+        if (numVertices == 2) {
+            var feature = this.origin = new OpenLayers.Feature.Vector(
+                this.line.geometry.components[0].clone());
+            this.layer.addFeatures([feature], {silent: true});
+            this._drawing = true;
+        }
+    },
+
+    /**
+     *
+     */
+    finishGeometry: function() {
+        var components = this.line.geometry.components;
+        this.target = new OpenLayers.Feature.Vector(
+                components[components.length-2].clone());
+        this.layer.addFeatures([this.target], {silent: true});
+        this._drawing = false;
+        OpenLayers.Handler.Path.prototype.finishGeometry.apply(
+                this, arguments);
+    },
+
+    /**
+     *
+     */
+    destroyPersistedFeature: function() {
+        OpenLayers.Handler.Path.prototype.destroyPersistedFeature.apply(
+            this, arguments);
+        if (this.layer) {
+            if (this.origin) {
+                this.origin.destroy();
+                this.origin = null;
+            }
+            if (this.target) {
+                this.target.destroy();
+                this.target = null;
+            }
+            if (this.circle) {
+                this.circle.destroy();
+                this.circle = null;
+            }
+        }
+    },
+
+    /**
+     *
+     */
+    modifyFeature: function() {
+        OpenLayers.Handler.Path.prototype.modifyFeature.apply(
+            this, arguments);
+        if (this._drawing) {
+            if (this.circle) {
+                this.layer.removeFeatures([this.circle]);
+            }
+            var geometry = OpenLayers.Geometry.Polygon.createRegularPolygon(
+                this.origin.geometry, this.line.geometry.getLength(), 40
+            );
+            this.circle = new OpenLayers.Feature.Vector(geometry);
+            this.layer.addFeatures([this.circle], {silent: true});
+        }
+    },
+
+    /**
+     *
+     */
+    deactivate: function() {
+        if (OpenLayers.Handler.Path.prototype.deactivate.call(this)) {
+            this._drawing = false;
+            return true;
+        }
+        return false;
+    },
+
+    /**
+     *
+     */
+    dblclick: function() {
+        // we don't want double click
+    },
+
+    class_name: "cgxp.plugins.measure.segment"
 });
