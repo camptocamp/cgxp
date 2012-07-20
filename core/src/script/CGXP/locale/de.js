@@ -47,7 +47,8 @@ GeoExt.Lang.add("de", {
         csvSelectionExportText: "Als CSV Datei exportieren",
         maxFeaturesText: "Maximale Anzahl Resultate erreicht",
         resultText: "Resultat",
-        resultsText: "Resultate"
+        resultsText: "Resultate",
+        csvTitleMixedContentText: "Mixed Daten"
     },
 
     "cgxp.plugins.Print.prototype": {
