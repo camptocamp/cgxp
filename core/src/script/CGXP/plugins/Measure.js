@@ -163,8 +163,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             })
         });
 
-        var showPopup = function(event, complet) {
-            var complet = typeof(complet) != 'undefined' ? complet : false;
+        var showPopup = function(event, partial) {
             if (!this.popup) {
                 this.popup = new GeoExt.Popup({
                     title: title,
@@ -196,11 +195,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 points = points[0].components;
             }
             // conditions to show the popup are different for partial and final
-            // geometries, the cases are: poly ongoing, poly complet, line ongoing,
-            // line complet, point
-            if (points.length > 4 || (points.length > 3 && complet)||
+            // geometries, the cases are: poly ongoing, poly partial, line ongoing,
+            // line partial, point
+            if (points.length > 4 || (points.length > 3 && partial !== true)||
                 (points.length > 2 && event.order == 1) ||
-                (points.length > 1 && event.order == 1 && complet) || singlePoint) {
+                (points.length > 1 && event.order == 1 && partial !== true) || singlePoint) {
                 if (event.order == 2) {
                     var poly = new OpenLayers.Geometry.Polygon([line]);
                     this.popup.location = poly.getBounds().getCenterLonLat();
