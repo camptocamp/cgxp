@@ -155,6 +155,15 @@ GeoExt.Lang.add("de", {
         "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
         "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
         "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>"
+    },
+
+    "cgxp.plugins.Profile.prototype": {
+        helpText: "<h1>Höhenprofil</h1>Zeichnen Sie eine Linie auf der Karte. Doppelklicken Sie um die Linie zu beenden und das Höhenprofil anzuzeigen.",
+        waitMsgText: "Höhenprofil wird geladen...",
+        xLabelText: "Abstand (m)",
+        yLabelText: "Höhe (m)",
+        errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        exportCsvText: "Export als CSV"
     }
 });
 

@@ -34,6 +34,7 @@
         "plugins/FeaturesWindow.js",
         "plugins/WMSBrowser.js",
         "plugins/WFSGetFeature.js",
+        "plugins/Profile.js",
         "../../../../geoext.ux/ux/FeatureSelectionModel/lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js",
         "../../../../ext/Ext/examples/ux/RowExpander.js",
         // <wmsbrowser dependencies>
