@@ -3,7 +3,7 @@
 }
 
 .gx-featureediting-draw-circle {
-  background-image: url("../images/silk/bullet_red_add.png") !important;
+  background-image: url("../images/geosilk/circle_red_add.png") !important;
 }
 
 .gx-featureediting-draw-line {
@@ -11,7 +11,7 @@
 }
 
 .gx-featureediting-draw-polygon {
-  background-image: url("../images/geosilk/shape_square_red_add.png") !important;
+  background-image: url("../images/geosilk/shape_red_add.png") !important;
 }
 
 .gx-featureediting-draw-box {
