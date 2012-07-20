@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -49,7 +49,7 @@ Ext.namespace("cgxp.plugins");
  *    Provides two actions for measuring length and area.
  */
 cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = cgxp_measure */
     ptype: "cgxp_measure",
 
@@ -119,7 +119,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (this.popup) {
             this.popup.destroy();
             delete this.popup;
-        }  
+        }
     },
 
     /** private: method[createMeasureControl]
@@ -193,13 +193,13 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             }
             if (points[0] instanceof OpenLayers.Geometry.LinearRing) {
                 var line = points[0];
-                points = points[0].components;              
+                points = points[0].components;
             }
-            // conditions to show the popup are different for partial and final 
-            // geometries, the cases are: poly ongoing, poly complet, line ongoing, 
+            // conditions to show the popup are different for partial and final
+            // geometries, the cases are: poly ongoing, poly complet, line ongoing,
             // line complet, point
-            if (points.length > 4 || (points.length > 3 && complet)|| 
-                (points.length > 2 && event.order == 1) || 
+            if (points.length > 4 || (points.length > 3 && complet)||
+                (points.length > 2 && event.order == 1) ||
                 (points.length > 1 && event.order == 1 && complet) || singlePoint) {
                 if (event.order == 2) {
                     var poly = new OpenLayers.Geometry.Polygon([line]);
@@ -325,11 +325,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             if (!this.pointMeterTemplate) {
                 this.pointMeterTemplate = new Ext.Template(
                         '<table class="measure point"><tr>' +
-                        '<td>' + OpenLayers.i18n('Coordinate') + '</td>' + 
+                        '<td>' + OpenLayers.i18n('Coordinate') + '</td>' +
                         '<td>{lonm}  {latm} m</td>' +
                         '</tr><tr>' +
                         '<td>' + OpenLayers.i18n('WGS 84') + '</td>' +
-                        '<td>{lond} {latd}°</td>' + 
+                        '<td>{lond} {latd}°</td>' +
                         '</tr></table>', {compiled: true});
             }
 
@@ -349,7 +349,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                         {compiled: true});
             }
             return this.pointTemplate.apply({
-                lon: metric.x.toFixed(5), 
+                lon: metric.x.toFixed(5),
                 lat: metric.y.toFixed(5),
                 unit: metricUnit
             });
@@ -483,7 +483,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
         return cgxp.plugins.Measure.superclass.addActions.apply(this, [this.button]);
     }
-        
+
 });
 
 Ext.preg(cgxp.plugins.Measure.prototype.ptype, cgxp.plugins.Measure);
@@ -496,21 +496,21 @@ Ext.preg(cgxp.plugins.Measure.prototype.ptype, cgxp.plugins.Measure);
  * Inherits from:
  *  - <OpenLayers.Control>
  */
-cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, { 
-    
+cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
+
     /**
      * APIProperty: displayProjection
-     * {<OpenLayers.Projection>} The projection in which the 
+     * {<OpenLayers.Projection>} The projection in which the
      * position is displayed
      */
     displayProjection: null,
-    
+
     /**
      * APIProperty: handlerOptions
      * {Object} ReadOnly options for point handler
      */
     handlerOptions: null,
-    
+
     /**
      * Constant: EVENT_TYPES
      *
@@ -522,7 +522,7 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
     /**
      * Constructor: cgxp.plugins.Measure.LocatorControl
      * Create a new locator control to get point position
-     * 
+     *
      * Parameters:
      * options - {Object} An optional object whose properties will be used
      *     to extend the control.
@@ -559,7 +559,7 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
             geometry: geometry
         });
     },
-    
+
     /**
      * APIMethod: cancel
      * Stop the control from measuring. The temporary sketch will be erased.
@@ -567,17 +567,17 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
     cancel: function() {
         this.handler.cancel();
     },
-    
+
     /**
      * Method: destroy
      * The destroy method is used to perform any clean up before the control
-     * is dereferenced. 
+     * is dereferenced.
      */
     destroy: function() {
         this.handler = null;
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
     },
-    
+
     class_name: "cgxp.plugins.measure.locatorcontrol"
 });
 
@@ -707,7 +707,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
      */
     measure: function(geometry) {
         var stat = this.getBestLength(geometry),
-            azimut = this.getAzimut(geometry); 
+            azimut = this.getAzimut(geometry);
         if (azimut !== undefined) {
             this.events.triggerEvent('measurepartial', {
                 distance: stat[0],
@@ -736,7 +736,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         var pt1 = geometry.components[0];
         var pt2 = geometry.components[1];
         var x = pt2.x - pt1.x;
-        var y = pt2.y - pt1.y; 
+        var y = pt2.y - pt1.y;
 
         var rad = Math.acos( y / Math.sqrt( x * x + y * y));
         // negative or positive
@@ -744,7 +744,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
 
         return Math.round(factor * rad * 180 / Math.PI);
     },
-    
+
     class_name: "cgxp.plugins.measure.segmentmeasurecontrol"
 });
 
