@@ -611,7 +611,12 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
     measuring: false,
 
     /**
+     * Constructor: cgxp.plugins.Measure.SegmentMeasureControl
+     * Create a new segment measure control to get azimut
      *
+     * Parameters:
+     * options - {Object} An optional object whose properties will be used
+     *     to extend the control.
      */
     initialize: function(options) {
         var handler = cgxp.plugins.Measure.Segment;
@@ -626,14 +631,14 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
     },
 
     /**
-     *
+     * Method: startMeasuring
      */
     startMeasuring: function() {
         this.measuring = true;
     },
 
     /**
-     *
+     * Method: measureDrawing
      */
     measureDrawing: function(point, feature) {
         if (this.measuring) {
@@ -644,7 +649,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
     },
 
     /**
-     *
+     * Method: measureDone
      */
     measureDone: function(geometry) {
         function onElevationResponse(index, response) {
@@ -686,9 +691,9 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
     },
 
     /**
-     *
+     * Method: measureCancel
      */
-    measureCancel: function(geometry) {
+    measureCancel: function() {
         this.measuring = false;
     },
 
@@ -796,7 +801,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
     },
 
     /**
-     *
+     * Method: addPoint
      */
     addPoint: function() {
         OpenLayers.Handler.Path.prototype.addPoint.apply(this, arguments);
@@ -810,7 +815,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
     },
 
     /**
-     *
+     * Method: finishGeometry
      */
     finishGeometry: function() {
         var components = this.line.geometry.components;
@@ -823,7 +828,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
     },
 
     /**
-     *
+     * Method: destroyPersistedFeature
      */
     destroyPersistedFeature: function() {
         OpenLayers.Handler.Path.prototype.destroyPersistedFeature.apply(
@@ -845,7 +850,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
     },
 
     /**
-     *
+     * Method: modifyFeature
      */
     modifyFeature: function() {
         OpenLayers.Handler.Path.prototype.modifyFeature.apply(
@@ -863,7 +868,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
     },
 
     /**
-     *
+     * APIMethod: deactivate
      */
     deactivate: function() {
         if (OpenLayers.Handler.Path.prototype.deactivate.call(this)) {
@@ -874,7 +879,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
     },
 
     /**
-     *
+     * Method: dblclick
      */
     dblclick: function() {
         // we don't want double click
