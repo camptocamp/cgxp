@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+
+    <script type="text/javascript" src="http://svn.geoext.org/ext/3.2.0/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="http://svn.geoext.org/ext/3.2.0/ext-all.js"></script>
+    <!-- Google Maps API for "localhost" -->
+    <!--
+    <script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ'></script>
+    -->
+
+    <!-- Google Maps API for "dev.geoext.org" -->
+    <script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;key=ABQIAAAAY-I0w1WyNCVHbxpuwQWMpRTv_-xvSZ6KJmWSkQfCJoxbiB7tyBQ1ey_kgwA_p7sbTQSTOBeMyXtXkA'></script>
+
+    
+    <script type="text/javascript" src="../../../../../trunk/openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../../../../../trunk/geoext/lib/GeoExt.js"></script>
+
+    <script type="text/javascript" src="../../../ux/widgets/StreetViewPanel.js"></script>
+    <script type="text/javascript" src="../../../ux/control/StreetViewClick.js"></script>
+    <script type="text/javascript">
+        function test_ctor(t) {
+
+            t.plan(5);
+
+            var options = {
+                projection: new OpenLayers.Projection("EPSG:900913"),
+                units: "m",
+                numZoomLevels: 18,
+                maxResolution: 156543.0339,
+                maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
+                        20037508, 20037508.34)
+            };
+
+            var layer = new OpenLayers.Layer.Google(
+                    "Google Street", {sphericalMercator: true});
+
+            var map = new OpenLayers.Map('map', options);
+            map.addLayer(layer);
+            var extent = new OpenLayers.Bounds(736500, 5861500, 740700, 5862500);
+            map.zoomToExtent(extent);
+
+            var positionPano = new OpenLayers.LonLat(739019.93169167, 5861792.5629019);
+            positionPano.transform(map.projection, new OpenLayers.Projection("EPSG:4326"));
+            var featurePosition = new GLatLng(positionPano.lat, positionPano.lon);
+
+            var streetViewPanel = new GeoExt.ux.StreetViewPanel({
+                renderTo: "StreetViewPanel",
+                map: map,
+                panoramaLocation: featurePosition
+            });
+            t.ok(streetViewPanel instanceof GeoExt.ux.StreetViewPanel,
+                    "ctor creates a GeoExt.ux.StreetViewPanel object");
+            t.ok(streetViewPanel instanceof Ext.Panel,
+                    "ctor creates an Ext.Panel object");
+
+            t.eq(map.getCenter().toString(), "lon=738600,lat=5862000", "map center set correctly");
+            t.eq(streetViewPanel.videoTimeInterval, 2500, "video time intervall is 2500 per default");
+
+            t.delay_call(3, function() {
+                t.eq(streetViewPanel.panorama.getLatLng().lat(), 46.505891, "panorama correctly located");
+                streetViewPanel.destroy();
+            });
+        }
+    </script>
+<body>
+<div id="map" style="position:absolute; top:50px; left:400px; width:100px; height:100px;"></div>
+<div id="StreetViewPanel" style="position:absolute; top:50px; left:400px; width:100px; height:100px;"></div>
+</body>
+</html>

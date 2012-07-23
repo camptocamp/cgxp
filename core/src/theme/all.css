@@ -64,6 +64,11 @@ div#header-out {
     background-image: url(img/google_earth.png) !important;
 }
 
+/* cgxp_streetview */
+.x-btn .cgxp-icon-streetview {
+    background-image: url(img/streetview.png) !important;
+}
+
 .x-toolbar .permalink {
     background: url('img/permalink.png') top left no-repeat;
 }
