@@ -58,6 +58,9 @@ div#header-out {
 .x-btn .cgxp-icon-measure-area, .x-menu-item .cgxp-icon-measure-area, .x-tree-node .cgxp-icon-measure-area {
    background-image: url(img/ruler_square.png) !important;
 }
+.x-btn .cgxp-icon-measure-azimut, .x-menu-item .cgxp-icon-measure-azimut, .x-tree-node .cgxp-icon-measure-azimut {
+   background-image: url(img/ruler_triangle.png) !important;
+}
 
 /* cgxp_googleearthview */
 .x-btn .cgxp-icon-googleearthview {

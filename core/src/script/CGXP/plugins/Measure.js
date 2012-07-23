@@ -76,6 +76,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     areaMenuText: "Area",
 
+    /** api: config[azimutMenuText]
+     *  ``String``
+     *  Text for azimut menu item (i18n).
+     */
+    azimutMenuText: "Azimut",
+
     /** api: config[pointTooltip]
      *  ``String``
      *  Text for measure point action tooltip (i18n).
