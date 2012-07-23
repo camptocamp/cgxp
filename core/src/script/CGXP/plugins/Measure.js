@@ -313,8 +313,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         else {
             if (!this.pointTemplate) {
                 this.pointTemplate = new Ext.Template(
-                        OpenLayers.i18n('eastern:') + ' {lon} {unit}<br />' +
-                        OpenLayers.i18n('northern:') + ' {lat} {unit}',
+                        OpenLayers.i18n('eastern:'), ' {lon} {unit}<br />',
+                        OpenLayers.i18n('northern:'), ' {lat} {unit}',
                         {compiled: true});
             }
             return this.pointTemplate.apply({
