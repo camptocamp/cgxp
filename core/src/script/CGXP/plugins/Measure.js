@@ -94,11 +94,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     areaTooltip: "Measure area",
 
-    /** api: config[azimuthTooltip]
+    /** api: config[azimutTooltip]
      *  ``String``
-     *  Text for azimuth action tooltip (i18n).
+     *  Text for azimut action tooltip (i18n).
      */
-    azimuthTooltip: "Measure an azimuth",
+    azimutTooltip: "Measure an azimut",
 
     /** api: config[measureTooltip]
      *  ``String``
@@ -282,7 +282,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 this.popup && this.popup.hide();
             },
             "measure": function(event) {
-                this.showPopup(event, this.azimuthTooltip);
+                this.showPopup(event, this.azimutTooltip);
             },
             scope: this
         });
@@ -325,7 +325,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    makeAzimuthString: function(e) {
+    makeAzimutString: function(e) {
         e.distance = e.distance.toFixed(3);
         if (e.elevations) {
             e.el_delta = Math.round(elevations[1] - elevations[0], 2);
@@ -354,7 +354,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
             return this.makePointString(metric, metricUnit);
         } else if (metricData.azimut) {
-            return this.makeAzimuthString(metricData);
+            return this.makeAzimutString(metricData);
         }
 
         var dim = metricData.order == 2 ?
@@ -455,8 +455,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                     ),
                     new Ext.menu.CheckItem(
                         new GeoExt.Action({
-                            text: this.azimuthMenuText,
-                            iconCls: "cgxp-icon-measure-azimuth",
+                            text: this.azimutMenuText,
+                            iconCls: "cgxp-icon-measure-azimut",
                             toggleGroup: this.toggleGroup,
                             group: this.toggleGroup,
                             allowDepress: false,
@@ -466,7 +466,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             },
                             map: this.target.mapPanel.map,
                             control: this.createSegmentMeasureControl(
-                                this.azimuthTooltip
+                                this.azimutTooltip
                             )
                         })
                     )
@@ -580,7 +580,7 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
 
 /**
  * Class: cgxp.plugins.Measure.SegmentMeasureControl
- * Control to measure segment length (ie. for azimuth)
+ * Control to measure segment length (ie. for azimut)
  *
  * Inherits from:
  *  - <OpenLayers.Control>
