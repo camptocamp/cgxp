@@ -358,8 +358,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
 
         var dim = metricData.order == 2 ?
-        '<sup>2</sup>' :
-        '';
+            '<sup>2</sup>' : '';
 
         return metric.toFixed(2) + " " + metricUnit + dim;
     },
