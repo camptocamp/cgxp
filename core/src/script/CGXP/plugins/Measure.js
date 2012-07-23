@@ -104,7 +104,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for azimut action tooltip (i18n).
      */
-    azimutTooltip: "Measure an azimut",
+    azimutTooltip: "Measure azimut",
 
     /** api: config[measureTooltip]
      *  ``String``
