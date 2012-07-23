@@ -293,12 +293,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (unit == 'm') {
             if (!this.pointMeterTemplate) {
                 this.pointMeterTemplate = new Ext.Template(
-                        '<table class="measure point"><tr>' +
-                        '<td>' + OpenLayers.i18n('Coordinate') + '</td>' +
-                        '<td>{lonm}  {latm} m</td>' +
-                        '</tr><tr>' +
-                        '<td>' + OpenLayers.i18n('WGS 84') + '</td>' +
-                        '<td>{lond} {latd}°</td>' +
+                        '<table class="measure point"><tr>',
+                        '<td>', OpenLayers.i18n('Coordinate'), '</td>',
+                        '<td>{lonm}  {latm} m</td>',
+                        '</tr><tr>',
+                        '<td>', OpenLayers.i18n('WGS 84'), '</td>',
+                        '<td>{lond} {latd}°</td>',
                         '</tr></table>', {compiled: true});
             }
 
