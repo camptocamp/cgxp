@@ -94,6 +94,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     areaTooltip: "Measure area",
 
+    /** api: config[azimuthTooltip]
+     *  ``String``
+     *  Text for azimuth action tooltip (i18n).
+     */
+    azimuthTooltip: "Measure an azimuth",
+
     /** api: config[measureTooltip]
      *  ``String``
      *  Text for measure action tooltip (i18n).
@@ -220,7 +226,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (!order || measure > 0) {
             if (order == 2) {
                 geom = geom.getCentroid();
-            } else if (order == 1) {
+            } else if (order == 1 || event.azimut) {
                 geom = geom.components[geom.components.length - 1];
             }
             this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
@@ -271,43 +277,13 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 layerOptions: {styleMap: styleMap}
             }
         });
-        function measurepartial(e) {
-            var units = e.units;
-            var distance = OpenLayers.i18n('Distance: ') +
-                e.distance.toFixed(3) + " " + units;
-            var azimut = OpenLayers.i18n('Azimut: ') + e.azimut + '&deg;';
-            var elevations = e.elevations;
-            var out = [distance, azimut];
-            if (elevations) {
-                out.push(OpenLayers.i18n('Elevation offset: ') +
-                    Math.round(elevations[1] - elevations[0], 2) + " m");
-            }
-            return out;
-        }
-        var popup;
-        function measure(e) {
-            var out = measurepartial(e);
-            if (popup) {
-                popup.close();
-                popup = undefined;
-            }
-            popup = new Ext.Window({
-                title: OpenLayers.i18n('measure.popup.azimut'),
-                html: out.join('<br/>'),
-                width: 150,
-                bodyStyle: 'background-color: #FFFFD0;'
-            });
-            popup.show();
-        }
         control.events.on({
-            "deactivate": function() {
-                if (popup) {
-                    popup.close();
-                    popup = undefined;
-                }
+            "measurepartial": function(event) {
+                this.popup && this.popup.hide();
             },
-            "measure": measure,
-            "measurepartial": measurepartial,
+            "measure": function(event) {
+                this.showPopup(event, this.azimuthTooltip);
+            },
             scope: this
         });
         return control;
@@ -349,12 +325,36 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
+    makeAzimuthString: function(e) {
+        e.distance = e.distance.toFixed(3);
+        if (e.elevations) {
+            e.el_delta = Math.round(elevations[1] - elevations[0], 2);
+        } else {
+            e.el_delta = false;
+        }
+        var tpl = new Ext.XTemplate(
+            '<table class="measure"><tr>',
+            '<td>', OpenLayers.i18n('Distance:'), '</td>',
+            '<td>{distance} {units}</td>',
+            '</tr>',
+            '<tr><td>', OpenLayers.i18n('Azimut:'), '</td>',
+            '<td>{azimut}&deg;</td></tr>',
+            '<tpl if="el_delta != false">',
+                '<tr><td>{el_delta} {units}</td></tr>',
+            '</tpl>',
+            '</table>'
+        );
+        return tpl.apply(e);
+    },
+
     makeString: function(metricData) {
         var metric = metricData.measure;
         var metricUnit = metricData.units;
 
         if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
             return this.makePointString(metric, metricUnit);
+        } else if (metricData.azimut) {
+            return this.makeAzimuthString(metricData);
         }
 
         var dim = metricData.order == 2 ?
@@ -660,7 +660,8 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
                 values = {
                     distance: stat[0],
                     units: stat[1],
-                    azimut: azimut
+                    azimut: azimut,
+                    geometry: geometry
                 };
             if (elevations) {
                 values.elevations = elevations;
