@@ -163,60 +163,6 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             })
         });
 
-        var showPopup = function(event, partial) {
-            if (!this.popup) {
-                this.popup = new GeoExt.Popup({
-                    title: title,
-                    border: false,
-                    map: this.target.mapPanel.map,
-                    unpinnable: false,
-                    closeAction: 'hide',
-                    location: new OpenLayers.LonLat(0, 0)
-                });
-                if (Ext.isIE7) {
-                    // IE7 needs an explicit width.
-                    this.popup.setWidth(200);
-                }
-            }
-            this.popup.hide();
-            var singlePoint = false;
-            var measure = null;
-            var points;
-            if (event.geometry.components) {
-                points = event.geometry.components;
-                measure = event.measure.toFixed(2);
-            } else {
-                points = Array(event.geometry);
-                singlePoint = true;
-                measure = event.measure;
-            }
-            if (points[0] instanceof OpenLayers.Geometry.LinearRing) {
-                var line = points[0];
-                points = points[0].components;
-            }
-            // conditions to show the popup are different for partial and final
-            // geometries, the cases are: poly ongoing, poly partial, line ongoing,
-            // line partial, point
-            if (points.length > 4 || (points.length > 3 && partial !== true)||
-                (points.length > 2 && event.order == 1) ||
-                (points.length > 1 && event.order == 1 && partial !== true) || singlePoint) {
-                if (event.order == 2) {
-                    var poly = new OpenLayers.Geometry.Polygon([line]);
-                    this.popup.location = poly.getBounds().getCenterLonLat();
-                } else {
-                    this.popup.location = points[points.length-1].getBounds().getCenterLonLat();
-                }
-                this.popup.position();
-                this.popup.show();
-                //var measure;
-                this.popup.update({
-                    //measure: measure,
-                    //units: event.units,
-                    //dim: event.order == 2 ? '<sup>2</sup>' : '',
-                    html: this.makeString(event)
-                });
-            }
-        }.createDelegate(this);
 
         var controlOptions = Ext.apply({}, this.initialConfig.controlOptions);
         Ext.applyIf(controlOptions, {
@@ -224,11 +170,15 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             persist: true,
             handlerOptions: {layerOptions: {styleMap: styleMap}},
             eventListeners: {
-                measurepartial: showPopup,
-                measure: function(event) {
-                    showPopup(event, true);
+                measurepartial: function(event) {
+                    this.showPopup(event, title);
                 },
-                deactivate: function() { this.popup && this.popup.hide(); },
+                measure: function(event) {
+                    this.showPopup(event, title);
+                },
+                deactivate: function() {
+                    this.popup && this.popup.hide();
+                },
                 scope: this
             }
         });
@@ -237,6 +187,50 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             new OpenLayers.Control.Measure(handlerType, controlOptions);
 
         return measureControl;
+    },
+
+    /** private: method[showPopup]
+     * :param: event: the `Object` containing information about what to display
+     *     in the popup
+     * :param: title: `String` the title for the popup
+     */
+    showPopup: function(event, title) {
+        if (!this.popup) {
+            this.popup = new GeoExt.Popup({
+                border: false,
+                map: this.target.mapPanel.map,
+                unpinnable: false,
+                closeAction: 'hide',
+                location: new OpenLayers.LonLat(0, 0)
+            });
+            if (Ext.isIE7) {
+                // IE7 needs an explicit width.
+                this.popup.setWidth(200);
+            }
+        }
+        this.popup.hide();
+        this.popup.setTitle(title);
+
+        var order = event.order,
+            geom = event.geometry;
+
+        var measure = (order) ?
+            event.measure.toFixed(2) : event.measure;
+
+        if (!order || measure > 0) {
+            if (order == 2) {
+                geom = geom.getCentroid();
+            } else if (order == 1) {
+                geom = geom.components[geom.components.length - 1];
+            }
+            this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
+
+            this.popup.position();
+            this.popup.show();
+            this.popup.update({
+                html: this.makeString(event)
+            });
+        }
     },
 
     /**
