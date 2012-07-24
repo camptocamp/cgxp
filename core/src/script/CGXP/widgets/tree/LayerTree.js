@@ -265,6 +265,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     uiProvider: 'default',
                     component: !internalWMS ? this.getOpacitySlider(item, '90%') : null,
                     actions: actions,
+                    expanded: item.isExpanded,
                     minResolutionHint: item.minResolutionHint,
                     maxResolutionHint: item.maxResolutionHint
                 };
@@ -337,6 +338,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             loaded: true,
             uiProvider: 'layer',
             checked: false,
+            expanded: group.isExpanded,
             layer: group.layer,
             allOlLayers: group.allOlLayers,
             component: internalWMS ? this.getOpacitySlider(group) : null,
@@ -352,9 +354,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.fireEvent('addgroup');
         groupNode.expand(true, false);
         groupNode.collapse(true, false);
-        if (group.isExpanded) {
-            groupNode.expand(false, false);
-        }
+
+        groupNode.cascade(function(node) {
+            if (node.attributes.expanded) {
+                node.expand(false, false);
+            }
+        });
+
         groupNode.ui.show();
         groupNode.cascade(this.checkInRange);
         this.getRootNode().eachChild(function(n) {

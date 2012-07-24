@@ -4,38 +4,41 @@ App.themes = {
         "children": [{
             "isExpanded": true,
             "isInternalWMS": true,
-            "name": "Theme 1 - Group a",
+            "name": "Theme 1 - Physical",
             "isBaseLayer": false,
             "children": [{
-                "name": "land_fn",
+                "name": "Bathymetry",
+                "isChecked": true,
                 "metadataUrl": "http://yahoo.fr",
-                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png",
-                "minResolutionHint": 0.05,
-                "maxResolutionHint": 0.1
+                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
             }, {
-                "name": "park",
+                "name": "Topography",
                 "legend": true,
                 "maxResolutionHint": 0.1
             }, {
-                "name": "bathymetry",
+                "name": "Hillshading",
                 "icon": "http://sitn.ne.ch/mapfish/app/images/layers/communes.png"
             }, {
-                "name": "group",
+                "name": "Features",
+                "isExpanded": true,
                 "children": [{
-                    "name": "drain_fn",
+                    "name": "Rivers",
                     "legend": true,
-                    "checked": true
+                    "isChecked": true
                 }, {
-                    "name": "drainage",
+                    "name": "Waterbodies",
                     "legend": true,
                     "legendRule": "default"
                 }, {
-                    "name": "group 2nd level",
+                    "name": "Others",
                     "children": [{
-                        "name": "drain_fn1",
-                        "legend": true
+                        "name": "Spot elevations",
+                        "legend": true,
+                        "minResolutionHint": 0.00005,
+                        "maxResolutionHint": 0.002
+
                     }, {
-                        "name": "drain_fn2",
+                        "name": "Streams",
                         "legend": true
                     }]
                 }]
@@ -47,18 +50,18 @@ App.themes = {
         "children": [{
             "isExpanded": false,
             "isInternalWMS": true,
-            "name": "Theme 2 - Group a",
+            "name": "Theme 2 - Group a - Cultural",
             "isBaseLayer": false,
             "children": [{
-                "name": "drainage2"
+                "name": "Settlements"
             }, {
-                "name": "drain_fn3"
+                "name": "Railroads"
             }, {
                 "name": "roads",
                 "children": [{
-                    "name": "rail"
+                    "name": "Highways"
                 }, {
-                    "name": "road"
+                    "name": "Roads"
                 }]
             }]
         },{
@@ -67,7 +70,7 @@ App.themes = {
             "name": "Theme 2 - Group b",
             "isBaseLayer": false,
             "children": [{
-                "name": "popplace"
+                "name": "Cities"
             }]
         }],
         "name": "Theme 2",
@@ -80,7 +83,7 @@ App.themes = {
             "name": "Theme ext 1 - Group a",
             "isBaseLayer": false,
             "children": [{
-                "name": "fedlimit"
+                "name": "Countries"
             }]
         }],
         "name": "Theme external 1",
