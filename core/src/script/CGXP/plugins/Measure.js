@@ -82,6 +82,36 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     azimuthMenuText: "Azimuth",
 
+    /** api: config[coordinateText]
+     *  ``String``
+     *  Text to display in point mesure tooltip.
+     */
+    coordinateText: "Coordinate: ",
+
+    /** api: config[easternText]
+     *  ``String``
+     *  Text to display in point mesure tooltip.
+     */
+    easternText: "Eastern: ",
+
+    /** api: config[northernText]
+     *  ``String``
+     *  Text to display in point mesure tooltip.
+     */
+    northernText: "Northern: ",
+
+    /** api: config[distanceText]
+     *  ``String``
+     *  Text to display in point azimuth tooltip.
+     */
+    distanceText: "Distance: ",
+
+    /** api: config[azimuthText]
+     *  ``String``
+     *  Text to display in point azimuth tooltip.
+     */
+    azimuthText: "Azimuth: ",
+
     /** api: config[pointTooltip]
      *  ``String``
      *  Text for measure point action tooltip (i18n).
@@ -300,10 +330,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             if (!this.pointMeterTemplate) {
                 this.pointMeterTemplate = new Ext.Template(
                         '<table class="measure point"><tr>',
-                        '<td>', OpenLayers.i18n('Coordinate'), '</td>',
+                        '<td>', this.coordinateText, '</td>',
                         '<td>{lonm}  {latm} m</td>',
                         '</tr><tr>',
-                        '<td>', OpenLayers.i18n('WGS 84'), '</td>',
+                        '<td>WGS 84: </td>',
                         '<td>{lond} {latd}°</td>',
                         '</tr></table>', {compiled: true});
             }
@@ -319,8 +349,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         else {
             if (!this.pointTemplate) {
                 this.pointTemplate = new Ext.Template(
-                        OpenLayers.i18n('eastern:'), ' {lon} {unit}<br />',
-                        OpenLayers.i18n('northern:'), ' {lat} {unit}',
+                        this.easternText, ' {lon} {unit}<br />',
+                        this.northernText, ' {lat} {unit}',
                         {compiled: true});
             }
             return this.pointTemplate.apply({
@@ -340,10 +370,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
         var tpl = new Ext.XTemplate(
             '<table class="measure"><tr>',
-            '<td>', OpenLayers.i18n('Distance:'), '</td>',
+            '<td>', this.distanceText, '</td>',
             '<td>{distance} {units}</td>',
             '</tr>',
-            '<tr><td>', OpenLayers.i18n('Azimuth:'), '</td>',
+            '<tr><td>', this.azimuthText, '</td>',
             '<td>{azimuth}&deg;</td></tr>',
             '<tpl if="el_delta != false">',
                 '<tr><td>{el_delta} {units}</td></tr>',
