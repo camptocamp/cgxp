@@ -8,8 +8,10 @@ GeoExt.Lang.add("de", {
         pointTooltip: "Punkt messen",
         lengthMenuText: "Länge",
         areaMenuText: "Fläche",
+        azimuthMenuText: "Azimut",
         lengthTooltip: "Länge messen",
         areaTooltip: "Fläche messen",
+        azimuthTooltip: "Azimut messen",
         measureTooltip: "Messen"
     },
 

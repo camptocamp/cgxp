@@ -14,8 +14,10 @@ GeoExt.Lang.add("en", {
         pointTooltip: "Measure point",
         lengthMenuText: "Length",
         areaMenuText: "Area",
+        azimuthMenuText: "Azimuth",
         lengthTooltip: "Measure length",
         areaTooltip: "Measure area",
+        azimuthTooltip: "Measure azimuth",
         measureTooltip: "Measure"
     },
 
