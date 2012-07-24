@@ -8,8 +8,15 @@ GeoExt.Lang.add("de", {
         pointTooltip: "Punkt messen",
         lengthMenuText: "Länge",
         areaMenuText: "Fläche",
+        azimuthMenuText: "Azimut",
+        coordinateText: "Koordinaten : ",
+        easternText: "Östlich : ",
+        northernText: "Nordlich : ",
+        distanceText: "Distanz : ",
+        azimuthText: "Azimut : ",
         lengthTooltip: "Länge messen",
         areaTooltip: "Fläche messen",
+        azimuthTooltip: "Azimut messen",
         measureTooltip: "Messen"
     },
 
