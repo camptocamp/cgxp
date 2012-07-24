@@ -295,16 +295,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         function updateMoveUp(el) {
             var isFirst = this.isFirst();
-            if (isFirst && !this._updating &&
-            this.nextSibling &&
-            this.nextSibling.hidden === false) {
-                this._updating = true; // avoid recursion
-                var next = this.nextSibling;
-                if (next) {
-                    this.ownerTree.actionsPlugin.updateActions(next);
-                }
-                delete this._updating;
-            }
             if (isFirst) {
                 el.addClass('disabled');
             } else {
@@ -314,16 +304,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         function updateMoveDown(el) {
             var isLast = this.isLast();
-            if (isLast && !this._updating &&
-            this.previousSibling &&
-            this.previousSibling.hidden === false) {
-                this._updating = true; // avoid recursion
-                var previous = this.previousSibling;
-                if (previous) {
-                    this.ownerTree.actionsPlugin.updateActions(previous);
-                }
-                delete this._updating;
-            }
             if (isLast) {
                 el.addClass('disabled');
             } else {
@@ -383,6 +363,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         groupNode.ui.show();
         groupNode.cascade(this.checkInRange);
+        this.getRootNode().eachChild(function(n) {
+            n.ownerTree.actionsPlugin.updateActions(n);
+        });
         return groupNode;
     },
 
@@ -609,6 +592,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     });
                 }
                 tree.fireEvent('removegroup');
+                this.getRootNode().eachChild(function(n) {
+                    n.ownerTree.actionsPlugin.updateActions(n);
+                });
                 break;
             case 'opacity':
                 var slider = node.component;
@@ -654,7 +640,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     layer.map.raiseLayer(layer, index);
                 });
                 node.parentNode.insertBefore(node, node.nextSibling.nextSibling);
-                node.ownerTree.actionsPlugin.updateActions(node);
+                this.getRootNode().eachChild(function(n) {
+                    n.ownerTree.actionsPlugin.updateActions(n);
+                });
                 node.ui.removeClass('x-tree-node-over');
                 if (Ext.enableFx){
                     node.ui.highlight();
@@ -678,7 +666,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     layer.map.raiseLayer(layer, index);
                 });
                 node.parentNode.insertBefore(node, node.previousSibling);
-                node.ownerTree.actionsPlugin.updateActions(node);
+                this.getRootNode().eachChild(function(n) {
+                    n.ownerTree.actionsPlugin.updateActions(n);
+                });
                 node.ui.removeClass('x-tree-node-over');
                 if(Ext.enableFx){
                     node.ui.highlight();
