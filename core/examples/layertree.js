@@ -13,14 +13,14 @@ Ext.onReady(function() {
         map: map
     });
 
-    map.zoomToExtent(new OpenLayers.Bounds(-155.146484,33.134766,-65.146484,78.134766));
+    map.setCenter(new OpenLayers.LonLat(-1.44, 43), 8);
 
     tree = new cgxp.tree.LayerTree({
         id: "layertree",
         width: 250,
         height: 300,
         autoScroll: true,
-        wmsURL: 'http://www2.dmsolutions.ca/cgi-bin/mswms_gmap',
+        wmsURL: 'http://www2.demis.nl/wms/wms.asp?wms=WorldMap',
         mapPanel: mapPanel,
         themes: App.themes,
         defaultThemes: App.default_themes
