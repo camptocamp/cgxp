@@ -76,11 +76,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     areaMenuText: "Area",
 
-    /** api: config[azimutMenuText]
+    /** api: config[azimuthMenuText]
      *  ``String``
-     *  Text for azimut menu item (i18n).
+     *  Text for azimuth menu item (i18n).
      */
-    azimutMenuText: "Azimut",
+    azimuthMenuText: "Azimuth",
 
     /** api: config[pointTooltip]
      *  ``String``
@@ -100,11 +100,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     areaTooltip: "Measure area",
 
-    /** api: config[azimutTooltip]
+    /** api: config[azimuthTooltip]
      *  ``String``
-     *  Text for azimut action tooltip (i18n).
+     *  Text for azimuth action tooltip (i18n).
      */
-    azimutTooltip: "Measure azimut",
+    azimuthTooltip: "Measure azimuth",
 
     /** api: config[measureTooltip]
      *  ``String``
@@ -232,7 +232,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (!order || measure > 0) {
             if (order == 2) {
                 geom = geom.getCentroid();
-            } else if (order == 1 || event.azimut) {
+            } else if (order == 1 || event.azimuth) {
                 geom = geom.components[geom.components.length - 1];
             }
             this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
@@ -288,7 +288,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 this.popup && this.popup.hide();
             },
             "measure": function(event) {
-                this.showPopup(event, this.azimutTooltip);
+                this.showPopup(event, this.azimuthTooltip);
             },
             scope: this
         });
@@ -331,7 +331,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    makeAzimutString: function(e) {
+    makeAzimuthString: function(e) {
         e.distance = e.distance.toFixed(3);
         if (e.elevations) {
             e.el_delta = Math.round(elevations[1] - elevations[0], 2);
@@ -343,8 +343,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             '<td>', OpenLayers.i18n('Distance:'), '</td>',
             '<td>{distance} {units}</td>',
             '</tr>',
-            '<tr><td>', OpenLayers.i18n('Azimut:'), '</td>',
-            '<td>{azimut}&deg;</td></tr>',
+            '<tr><td>', OpenLayers.i18n('Azimuth:'), '</td>',
+            '<td>{azimuth}&deg;</td></tr>',
             '<tpl if="el_delta != false">',
                 '<tr><td>{el_delta} {units}</td></tr>',
             '</tpl>',
@@ -359,8 +359,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
         if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
             return this.makePointString(metric, metricUnit);
-        } else if (metricData.azimut) {
-            return this.makeAzimutString(metricData);
+        } else if (metricData.azimuth) {
+            return this.makeAzimuthString(metricData);
         }
 
         var dim = metricData.order == 2 ?
@@ -460,8 +460,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                     ),
                     new Ext.menu.CheckItem(
                         new GeoExt.Action({
-                            text: this.azimutMenuText,
-                            iconCls: "cgxp-icon-measure-azimut",
+                            text: this.azimuthMenuText,
+                            iconCls: "cgxp-icon-measure-azimuth",
                             toggleGroup: this.toggleGroup,
                             group: this.toggleGroup,
                             allowDepress: false,
@@ -471,7 +471,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             },
                             map: this.target.mapPanel.map,
                             control: this.createSegmentMeasureControl(
-                                this.azimutTooltip
+                                this.azimuthTooltip
                             )
                         })
                     )
@@ -585,7 +585,7 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
 
 /**
  * Class: cgxp.plugins.Measure.SegmentMeasureControl
- * Control to measure segment length (ie. for azimut)
+ * Control to measure segment length (ie. for azimuth)
  *
  * Inherits from:
  *  - <OpenLayers.Control>
@@ -618,7 +618,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
 
     /**
      * Constructor: cgxp.plugins.Measure.SegmentMeasureControl
-     * Create a new segment measure control to get azimut
+     * Create a new segment measure control to get azimuth
      *
      * Parameters:
      * options - {Object} An optional object whose properties will be used
@@ -666,11 +666,11 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         }
         function onMeasure(elevations) {
             var stat = this.getBestLength(geometry),
-                azimut = this.getAzimut(geometry),
+                azimuth = this.getAzimuth(geometry),
                 values = {
                     distance: stat[0],
                     units: stat[1],
-                    azimut: azimut,
+                    azimuth: azimuth,
                     geometry: geometry
                 };
             if (elevations) {
@@ -711,27 +711,27 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
      */
     measure: function(geometry) {
         var stat = this.getBestLength(geometry),
-            azimut = this.getAzimut(geometry);
-        if (azimut !== undefined) {
+            azimuth = this.getAzimuth(geometry);
+        if (azimuth !== undefined) {
             this.events.triggerEvent('measurepartial', {
                 distance: stat[0],
                 units: stat[1],
-                azimut: azimut
+                azimuth: azimuth
             });
         }
     },
 
     /**
-     * Method: getAzimut
-     * Gets the azimut
+     * Method: getAzimuth
+     * Gets the azimuth
      *
      * Parameters:
      * geometry - {<OpenLayers.Geometry>}
      *
      * Returns:
-     * {Float} Returns the azimut
+     * {Float} Returns the azimuth
      */
-    getAzimut: function(geometry) {
+    getAzimuth: function(geometry) {
         // prevent errors with 1 length strings
         if (geometry.components.length <= 1) {
             return;
