@@ -576,7 +576,7 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
     },
 
-    class_name: "cgxp.plugins.measure.locatorcontrol"
+    CLASS_NAME: "cgxp.plugins.Measure.LocatorControl"
 });
 
 /**
@@ -749,7 +749,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         return Math.round(factor * rad * 180 / Math.PI);
     },
 
-    class_name: "cgxp.plugins.measure.segmentmeasurecontrol"
+    CLASS_NAME: "cgxp.plugins.Measure.SegmentMeasureControl"
 });
 
 /**
@@ -891,5 +891,5 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
         // we don't want double click
     },
 
-    class_name: "cgxp.plugins.measure.segment"
+    CLASS_NAME: "cgxp.plugins.Measure.Segment"
 });
