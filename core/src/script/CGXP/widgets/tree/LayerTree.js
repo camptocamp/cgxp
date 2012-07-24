@@ -592,6 +592,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     });
                 }
                 tree.fireEvent('removegroup');
+                this.getRootNode().eachChild(function(n) {
+                    n.ownerTree.actionsPlugin.updateActions(n);
+                });
                 break;
             case 'opacity':
                 var slider = node.component;
