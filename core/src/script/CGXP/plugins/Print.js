@@ -190,7 +190,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         window.location.href = url;
                     }
                     return false;
-                }
+                },
+                scope: this
             }
         });
         printProvider.on('beforeencodelayer', function(printProvider, layer) {
