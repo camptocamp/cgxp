@@ -160,7 +160,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 url: this.printURL
             },
             listeners: {
-                beforedownload: function(pp, url) {
+                beforedownload: (function(pp, url) {
                     if (Ext.isIE) {
                         var win = new Ext.Window({
                             width: 200,
@@ -190,7 +190,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         window.location.href = url;
                     }
                     return false;
-                }
+                }).createDelegate(this)
             }
         });
         printProvider.on('beforeencodelayer', function(printProvider, layer) {
