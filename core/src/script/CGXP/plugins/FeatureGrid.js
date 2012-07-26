@@ -203,6 +203,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of result" label (plural) (i18n).
      */
     resultsText: "Results",
+    /** api: config[csvTitleMixedContentText]
+     *  ``String`` Text for the csv title when containing more than one set of 
+     *  data (i18n).
+     */
+    csvTitleMixedContentText: "Mixed Data",
 
     init: function() {
         this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
@@ -219,37 +224,73 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  http://tools.ietf.org/html/rfc4180
      */
     csvExport: function() {
-        if (this.tabpan.activeTab) {
-            var csv = [];
-            var records = this.currentGrid.getSelectionModel().getSelections();
 
-            if (records.length === 0) {
-                records = this.currentGrid.getStore().getRange();
-            }
-            if (records.length === 0) {
-                return;
-            }
-            Ext.each(records, function(r) {
-                var attributes = r.getFeature().attributes;
-                var properties = [];
-                for (prop in attributes) {
-                    if (attributes.hasOwnProperty(prop)) {
-                        // special IE as it doesnt handle null element as string
-                        if (attributes[prop] != null) {
-                            properties.push(this.quote + attributes[prop].replace(this.quote, this.quote+this.quote) + this.quote);
-                        } else {
-                            properties.push(this.quote + this.quote);
+        var grids = [];
+
+        if (this.tabpan.activeTab && this.currentGrid) {
+            // list the grids to use
+            if (!this.globalSelection && 
+                this.currentGrid.getSelectionModel().getSelections().length > 0) {
+                grids.push(this.currentGrid);
+            } else {
+                if (this.globalSelection) {
+                    for (grid in this.gridByType) {
+                        if (this.gridByType.hasOwnProperty(grid)) {
+                            grids.push(this.gridByType[grid])
                         }
+                    } 
+                } else {
+                    grids.push(this.currentGrid);
+                }
+            }
+
+            var csv = [];
+
+            // get data from grids
+            Ext.each(grids, function(grid) {
+                
+                var records = [];
+
+                if (grids.length == 1) {
+                    records = grid.getSelectionModel().getSelections();
+                } else {
+                    if (!this.globalSelection) {
+                        records = grid.getStore().getRange();
+                    } else if (grid.selection) {
+                        records = grid.selection;
                     }
                 }
-                csv.push(properties.join(this.csvSeparator));
+                if (records.length === 0) {
+                    return;
+                }
+                Ext.each(records, function(r) {
+                    var attributes = r.getFeature().attributes;
+                    var properties = [];
+                    var doublequote = this.quote + this.quote;
+                    if (this.globalSelection) {
+                        properties.push(this.quote + grid.title + this.quote);
+                    }
+                    for (prop in attributes) {
+                        if (attributes.hasOwnProperty(prop)) {
+                            // special IE as it doesnt handle null element as string
+                            if (attributes[prop] != null) {
+                                properties.push(this.quote + attributes[prop].replace(this.quote, 
+                                    this.quote+this.quote) + this.quote);
+                            } else {
+                                properties.push(this.quote + this.quote);
+                            }
+                        }
+                    }
+                    csv.push(properties.join(this.csvSeparator));
+                }, this);
             }, this);
 
             Ext.Ajax.request({
                 url: this.csvURL,
                 method: 'POST',
                 params: {
-                    name: this.currentGrid.title,
+                    name: grids.length > 1 ? this.csvTitleMixedContentText : 
+                          this.currentGrid.title,
                     csv: csv.join('\n')
                 },
                 form: this.dummyForm,
