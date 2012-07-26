@@ -219,10 +219,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }, this);
         this.changing = false;
 
-        this.on('click', function(node) {
-            node.getUI().toggleCheck(!node.getUI().isChecked());
-        });
-
         this.mapPanel.map.events.on({
             'zoomend': function() {
                 this.getRootNode().cascade(this.checkInRange);
