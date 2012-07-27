@@ -191,6 +191,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         this.events.on('querystarts', function() {
             if (this.featuresWindow) {
                 this.featuresWindow.removeAll();
+                this.vectorLayer.destroyFeatures();
             }
         }, this);
 
