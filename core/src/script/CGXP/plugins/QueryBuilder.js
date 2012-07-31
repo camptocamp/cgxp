@@ -53,7 +53,7 @@ Ext.namespace("cgxp.plugins");
  *              // don't work with actual version of mapserver, the proxy will limit to 200
  *              // it is intended to be reactivated this once mapserver is fixed
  *              srsName: 'EPSG:21781',
- *              featureType: 'The_layer_to_query"
+ *              featureTypes: ['layer1', 'layer2']
  *          }
  *      % endif
  *          ]
@@ -99,26 +99,26 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
-    /** api: config[featureType]
-     *  ``String``
-     *  The name of the mapserver layer
+    /** api: config[featureTypes]
+     *  ``Array(String)``
+     *  The name of the mapserver layers
      */
-    featureType: null,
+    featureTypes: null,
 
     /** api: config[matchCase]
      *  ``Boolean`` the matchCase WFS/GetFeature query argument.
      */
     matchCase: false,
 
+    /** api: config[layerText]
+     *  ``String`` Label for the layer chooser (i18n)
+     */
+    layerText: null,
+
     /** private: property[panel]
      *  ``Ext.Panel`` The panel included in accordion panel with a card layout
      */
     panel: null,
-
-    /** private: property[querierPanel]
-     *  ``Ext.Panel`` The querier panel (child of panel)
-     */
-    querierPanel: null,
 
     /** private: property[store]
      *  ``GeoExt.data.AttributeStore`` The store containing the properties of the queried layer
@@ -149,18 +149,51 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
+        var layers = [];
+        for (var i=0; i < this.featureTypes.length; i++) {
+            var ft = this.featureTypes[i];
+            layers.push([ft, OpenLayers.i18n(ft)]);
+        }
+        var store = new Ext.data.ArrayStore({
+            fields: ['layer', 'name'],
+            data: layers
+        });
         this.panel = new Ext.Panel(Ext.apply({
             title: OpenLayers.i18n("querier"),
-            layout: 'card',
-            activeItem: 0,
+            layout: 'vbox',
+            layoutConfig: {
+                align: 'stretch',
+                padding: '4px;'
+            },
             defaults: {
                 border: false
             },
             items: [{
-                html: " "
+                xtype: 'panel',
+                tbar: {
+                    cls: 'invisible-toolbar',
+                    items: [{
+                        xtype: 'tbtext',
+                        text: this.layerText + ' : '
+                    }, {
+                        xtype: "combo",
+                        store: store,
+                        displayField: 'name',
+                        valueField: 'layer',
+                        value: store.getAt(0).get('layer'),
+                        mode: 'local',
+                        editable: false,
+                        triggerAction: 'all',
+                        listeners: {
+                            select: function(combo, record, index) {
+                                this.loadCapabilities(record);
+                            },
+                            scope: this
+                        }
+                    }]
+                }
             }],
             listeners: {
-                "expand": this.onPanelExpanded,
                 "collapse": function() {
                     if (this.drawingLayer) {
                         this.drawingLayer.setVisibility(false);
@@ -171,6 +204,8 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         }, this.options));
+
+        this.loadCapabilities(store.getAt(0));
 
         return cgxp.plugins.QueryBuilder.superclass.addOutput.call(this, this.panel);
     },
@@ -234,7 +269,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     var fs = response.features, l = fs.length;
                     // required by ResultsPanel:
                     while(l--) {
-                        fs[l].type = this.featureType;
+                        fs[l].type = this.protocol.featureType;
                     }
                     this.events.fireEvent("queryresults", fs);
                 } else {
@@ -245,10 +280,20 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         });
     },
 
-    /** private: method[createQuerierPanel]
+    /** private: method[createFilterBuilder]
      *  Create the query builder form interface
+     *
+     *  Remove any existing filter builder and create a new one.
+     *
+     *  Parameters:
+     *  store - ``GeoExt.data.AttributeStore`` the attribute store
      */
-    createQuerierPanel: function() {
+    createFilterBuilder: function(store) {
+        var owner = this.filterBuilder && this.filterBuilder.ownerCt;
+        if (owner) {
+            owner.remove(this.filterBuilder, true);
+        }
+
         var style = OpenLayers.Util.extend({},
             OpenLayers.Feature.Vector.style['default']);
 
@@ -267,8 +312,9 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             styleMap: styleMap
         });
 
-        this.querierPanel = this.panel.add({
-            xtype: 'gx_filterbuilder',
+        this.filterBuilder = new Styler.FilterBuilder({
+            flex: 1,
+            border: true,
             preComboText: OpenLayers.i18n("QueryBuilder.match"),
             postComboText: OpenLayers.i18n("QueryBuilder.of"),
             comboConfig: {
@@ -305,23 +351,38 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }],
             map: this.target.mapPanel.map,
-            attributes: this.store,
+            attributes: store,
             allowSpatial: true,
-            vectorLayer: this.drawingLayer
+            vectorLayer: this.drawingLayer,
+            listeners: {
+                destroy: function() {
+                    this.drawingLayer.destroy();
+                },
+                scope: this
+            }
         });
-        this.panel.layout.setActiveItem(1);
+
+        if (!owner) {
+            owner = this.panel;
+        }
+        owner.add(this.filterBuilder);
+        owner.doLayout();
     },
 
     /** private: method[createProtocol]
+     *
+     *  Parameters:
+     *  store - ``GeoExt.data.AttributeStore`` the attribute store
+     *  featureType - ``String`` the featureType
      */
-    createProtocol: function() {
-        var idx = this.store.find('type',
+    createProtocol: function(store, featureType) {
+        var idx = store.find('type',
             /^gml:(Multi)?(Point|LineString|Polygon|Curve|Surface|Geometry)PropertyType$/);
         if (idx > -1) {
             // we have a geometry
-            var r = this.store.getAt(idx);
+            var r = store.getAt(idx);
             this.geometryName = r.get('name');
-            this.store.remove(r);
+            store.remove(r);
         } else {
             alert(OpenLayers.i18n("QueryBuilder.alert_no_geom_field"));
             return;
@@ -329,7 +390,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
 
         this.protocol = new OpenLayers.Protocol.WFS({
             url: this.mapserverproxyURL,
-            featureType: this.featureType,
+            featureType: featureType,
             featureNS: "http://mapserver.gis.umn.edu/mapserver",
             srsName: this.srsName,
             version: "1.1.0",
@@ -337,15 +398,12 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         });
     },
 
-    /** private: method[onPanelExpanded]
+    /** private: method[loadCapabilities]
      */
-    onPanelExpanded: function() {
+    loadCapabilities: function(record) {
+        var featureType = record.get('layer');
         if (this.drawingLayer) {
             this.drawingLayer.setVisibility(true);
-        }
-        if (this.querierPanel) {
-            // child panel already created => exit
-            return;
         }
         if (!this.mask) {
             window.setTimeout(function() {
@@ -354,43 +412,43 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 });
                 this.mask.show();
             }.createDelegate(this), 10);
+        } else {
+            this.mask.show();
         }
-        if (!this.store) {
-            this.store = new GeoExt.data.AttributeStore({
-                url: this.mapserverproxyURL,
-                fields: ["name", "type", "displayName"],
-                baseParams: {
-                    "TYPENAME": this.featureType,
-                    "REQUEST": "DescribeFeatureType",
-                    "SERVICE": "WFS",
-                    "VERSION": "1.0.0"
+        var store = new GeoExt.data.AttributeStore({
+            url: this.mapserverproxyURL,
+            fields: ["name", "type", "displayName"],
+            baseParams: {
+                "TYPENAME": featureType,
+                "REQUEST": "DescribeFeatureType",
+                "SERVICE": "WFS",
+                "VERSION": "1.0.0"
+            },
+            listeners: {
+                "load": function() {
+                    // one shot listener:
+                    store.purgeListeners();
+                    // attributes translation:
+                    store.each(function(r) {
+                        r.set("displayName", OpenLayers.i18n(r.get("name")));
+                    });
+                    this.createProtocol(store, featureType);
+                    this.createFilterBuilder(store);
+                    if (this.mask) {
+                        this.mask.hide();
+                    }
                 },
-                listeners: {
-                    "load": function() {
-                        // one shot listener:
-                        this.store.purgeListeners();
-                        // attributes translation:
-                        this.store.each(function(r) {
-                            r.set("displayName", OpenLayers.i18n(r.get("name")));
-                        });
-                        this.createProtocol();
-                        this.createQuerierPanel();
-                        if (this.mask) {
-                            this.mask.hide();
-                        }
-                    },
-                    "loadexception": function() {
-                        if (this.mask) {
-                            this.mask.hide();
-                        }
-                        alert(OpenLayers.i18n("QueryBuilder.describefeaturetype_exception"));
-                    },
-                    scope: this
+                "loadexception": function() {
+                    if (this.mask) {
+                        this.mask.hide();
+                    }
+                    alert(OpenLayers.i18n("QueryBuilder.describefeaturetype_exception"));
                 },
                 scope: this
-            });
-        }
-        this.store.load();
+            },
+            scope: this
+        });
+        store.load();
     }
 });
 
