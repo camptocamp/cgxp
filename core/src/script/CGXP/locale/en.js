@@ -170,6 +170,10 @@ GeoExt.Lang.add("en", {
         yLabelText: "Elevation (m)",
         errorMsg: "An error occured. Please try again.",
         exportCsvText: "Export as CSV"
+    },
+
+    "cgxp.plugins.QueryBuilder.prototype": {
+        layerText: "Layer"
     }
 });
 

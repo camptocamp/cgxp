@@ -164,6 +164,10 @@ GeoExt.Lang.add("de", {
         yLabelText: "Höhe (m)",
         errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
         exportCsvText: "Export als CSV"
+    },
+
+    "cgxp.plugins.QueryBuilder.prototype": {
+        layerText: "Layer"
     }
 });
 

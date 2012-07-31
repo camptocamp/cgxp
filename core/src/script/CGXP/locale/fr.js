@@ -169,6 +169,10 @@ GeoExt.Lang.add("fr", {
         yLabelText: "Altitude (m)",
         errorMsg: "Une erreur s'est produite. Veuillez recommencer.",
         exportCsvText: "Exporter en CSV"
+    },
+
+    "cgxp.plugins.QueryBuilder.prototype": {
+        layerText: "Couche"
     }
 });
 
