@@ -145,11 +145,6 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      */
     mask: null,
 
-    /** private: property[featureType]
-     *  ``String``
-     */
-    featureType: null,
-
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -274,7 +269,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     var fs = response.features, l = fs.length;
                     // required by ResultsPanel:
                     while(l--) {
-                        fs[l].type = this.featureType;
+                        fs[l].type = this.protocol.featureType;
                     }
                     this.events.fireEvent("queryresults", fs);
                 } else {
@@ -378,8 +373,9 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *
      *  Parameters:
      *  store - ``GeoExt.data.AttributeStore`` the attribute store
+     *  featureType - ``String`` the featureType
      */
-    createProtocol: function(store) {
+    createProtocol: function(store, featureType) {
         var idx = store.find('type',
             /^gml:(Multi)?(Point|LineString|Polygon|Curve|Surface|Geometry)PropertyType$/);
         if (idx > -1) {
@@ -394,7 +390,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
 
         this.protocol = new OpenLayers.Protocol.WFS({
             url: this.mapserverproxyURL,
-            featureType: this.featureType,
+            featureType: featureType,
             featureNS: "http://mapserver.gis.umn.edu/mapserver",
             srsName: this.srsName,
             version: "1.1.0",
@@ -405,7 +401,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
     /** private: method[loadCapabilities]
      */
     loadCapabilities: function(record) {
-        this.featureType = record.get('layer');
+        var featureType = record.get('layer');
         if (this.drawingLayer) {
             this.drawingLayer.setVisibility(true);
         }
@@ -423,7 +419,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             url: this.mapserverproxyURL,
             fields: ["name", "type", "displayName"],
             baseParams: {
-                "TYPENAME": this.featureType,
+                "TYPENAME": featureType,
                 "REQUEST": "DescribeFeatureType",
                 "SERVICE": "WFS",
                 "VERSION": "1.0.0"
@@ -436,7 +432,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     store.each(function(r) {
                         r.set("displayName", OpenLayers.i18n(r.get("name")));
                     });
-                    this.createProtocol(store);
+                    this.createProtocol(store, featureType);
                     this.createFilterBuilder(store);
                     if (this.mask) {
                         this.mask.hide();
