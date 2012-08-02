@@ -96,7 +96,6 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
                 toggle: false,
                 clickout: false
             },  
-            'export': false,
             'import': false,
             bodyStyle: 'display: none',
             border: false
@@ -128,7 +127,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
          * Property: redliningWindow
          */
         this.redliningWindow = new cgxp.tool.Window({
-            width: 200, 
+            width: 240,
             items: []
         }); 
 
@@ -156,21 +155,3 @@ Ext.preg(cgxp.plugins.Redlining.prototype.ptype, cgxp.plugins.Redlining);
 
 // monkey patch
 GeoExt.ux.FeatureEditingControler.prototype.reactivateDrawControl = Ext.emptyFn;
-
-GeoExt.ux.form.FeaturePanel.prototype.getActions = function() {
-    if (!this.closeAction) {
-        this.closeAction = new Ext.Action({
-            handler: function() {
-                this.controler.triggerAutoSave();
-                if(this.controler.popup) {
-                    this.controler.popup.close();
-                }
-                this.controler.reactivateDrawControl();
-            },
-            scope: this,
-            text: OpenLayers.i18n('Close')
-        });
-    }
-
-    return [this.deleteAction, '->', this.closeAction];
-};

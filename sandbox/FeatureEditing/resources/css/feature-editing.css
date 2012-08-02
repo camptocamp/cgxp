@@ -31,9 +31,9 @@
 }
 
 .gx-featureediting-import {
-  background-image: url("../images/silk/page_white_goback.png") !important;
+  background-image: url("../images/silk/kml_import.png") !important;
 }
 
 .gx-featureediting-export {
-  background-image: url("../images/silk/page_white_go.png") !important;
+  background-image: url("../images/silk/kml_export.png") !important;
 }
