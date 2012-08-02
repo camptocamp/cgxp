@@ -232,10 +232,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             Ext.each(records, function(r) {
                 var attributes = r.getFeature().attributes;
                 var properties = [];
-                for (prop in attributes) {
+                for (var prop in attributes) {
                     if (attributes.hasOwnProperty(prop)) {
                         // special IE as it doesnt handle null element as string
-                        if (attributes[prop] != null) {
+                        if (attributes[prop] !== null) {
                             properties.push(this.quote + attributes[prop].replace(this.quote, this.quote+this.quote) + this.quote);
                         } else {
                             properties.push(this.quote + this.quote);
@@ -276,9 +276,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 grids.push(this.currentGrid);
             } else {
                 if (this.globalSelection) {
-                    for (grid in this.gridByType) {
+                    for (var grid in this.gridByType) {
                         if (this.gridByType.hasOwnProperty(grid)) {
-                            grids.push(this.gridByType[grid])
+                            grids.push(this.gridByType[grid]);
                         }
                     } 
                 } else {
@@ -317,7 +317,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         };
                         groupedRecords[grid.title] = results;
                     }
-                    for (prop in attributes) {
+                    for (var prop in attributes) {
                         if (attributes.hasOwnProperty(prop)) {
 
                             var id = 'col' + index;
@@ -360,7 +360,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     showFeature: function(record) {
         record.getFeature().style = OpenLayers.Feature.Vector.style['default'];
         record.getFeature().style.strokeWidth = 4;
-        this.vectorLayer.drawFeature(record.getFeature())
+        this.vectorLayer.drawFeature(record.getFeature());
     },
 
     /** private: method[showFeatures]
@@ -369,7 +369,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     showFeatures: function(records) {
         Ext.each(records, function(record) {
             this.showFeature(record);
-        }, this)
+        }, this);
     },
 
     /** private: method[hideFeature]
@@ -377,7 +377,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     hideFeature: function(record) {
         record.getFeature().style = {display: 'none'};
-        this.vectorLayer.eraseFeatures(record.getFeature())
+        this.vectorLayer.eraseFeatures(record.getFeature());
     },
 
     /** private: method[hideFeatures]
@@ -386,7 +386,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     hideFeatures: function(records) {
         Ext.each(records, function(record) {
             this.hideFeature(record);
-        }, this)
+        }, this);
     },
 
     /** private: method[addOutput]
@@ -420,29 +420,31 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.events.on('queryresults', function(features, selectAll) {
 
             // if no feature do nothing
-            if (!features || features.length == 0) {
+            if (!features || features.length === 0) {
                 return;
             }
 
-            if (this.currentGrid !== null) {
+            if (this.currentGrid) {
                 this.currentGrid.getSelectionModel().clearSelections();
             }
             this.currentGrid = null;
             this.vectorLayer.destroyFeatures();
+
+            var grid;
 
             /* this is important, if the grid are not cleared and created anew, 
                the event viewready is not triggered and we fall on an ext bug
                when we try to act on the grid before it is ready to be modified */
             for (var gridName in this.gridByType) {
                 if (this.gridByType.hasOwnProperty(gridName)) {
-                    var grid = this.gridByType[gridName];
+                    grid = this.gridByType[gridName];
                     grid.getSelectionModel().unbind();
                     grid.destroy();
                 }
             }
             this.gridByType = {};
 
-            if (this.tabpan !== null) {
+            if (this.tabpan) {
                 this.tabpan.items.each(function (item) {
                     this.tabpan.hideTabStripItem(item);
                 }.createDelegate(this));
@@ -453,9 +455,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             for (var i = 0, len = features.length ; i < len ; i++) {
                 feature = features[i];
                 var hasAttributes = false;
-                for (var attribute in feature.attributes) {
-                    hasAttributes = true;
-                    break;
+                var attribute;
+                for (attribute in feature.attributes) {
+                    if (feature.attributes.hasOwnProperty(attribute)) {
+                        hasAttributes = true;
+                        break;
+                    }
                 }
                 // don't use feature without attributes
                 if (!hasAttributes) {
@@ -484,9 +489,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 if (this.gridByType[feature.type] === undefined) {
                     var fields = [];
                     var columns = [];
-                    for (var attribute in feature.attributes) {
-                        fields.push({name: attribute, type: 'string'});
-                        columns.push({header: OpenLayers.i18n(attribute), dataIndex: attribute});
+                    for (attribute in feature.attributes) {
+                        if (feature.attributes.hasOwnProperty(attribute)) {
+                            fields.push({name: attribute, type: 'string'});
+                            columns.push({header: OpenLayers.i18n(attribute), dataIndex: attribute});
+                        }
                     }
 
                     var store = new GeoExt.data.FeatureStore({
@@ -494,7 +501,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         fields: fields
                     });
                 
-                    var grid = new Ext.grid.GridPanel({
+                    grid = new Ext.grid.GridPanel({
                         store: store,
                         viewConfig: {
                             // we add an horizontal scroll bar in case 
@@ -514,69 +521,82 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         title: OpenLayers.i18n(feature.type),
                         ready: false
                     });
-                    grid.getSelectionModel().on('rowdeselect', function (model, index, record) {
-                        this.hideFeature(record);
-                        if (this.globalSelection) {
-                            // store change
-                            model.grid.selection = model.getSelections();
-                        }
-                    }, this);
-                    grid.getSelectionModel().on('rowselect', function (model, index, record) {
-                        this.showFeature(record);
-                        if (this.globalSelection) {
-                            // store change
-                            model.grid.selection = model.getSelections();
-                        }
-                    }, this);
-                    grid.on('rowdblclick', function(gclickGrid, index) {
-                        var feature = store.getAt(index).getFeature();
-                        if (feature.bounds) {
-                            var center = feature.bounds.getCenterLonLat();
-                        } else if (feature.geometry) {
-                            var centroid = feature.geometry.getCentroid();
-                            center = new  OpenLayers.LonLat(centroid.x, centroid.y);
-                        }
-                        feature.layer.map.setCenter(center);
-                    }, this);
-                    grid.on('render', function(renderGrid) {
-                        this.currentGrid = renderGrid
-                    }, this);
-                    grid.on('viewready', function(renderGrid) {
-                        var sm = this.currentGrid.getSelectionModel();
+                    grid.getSelectionModel().on({
+                        'rowdeselect': function (model, index, record) {
+                            this.hideFeature(record);
+                            if (this.globalSelection) {
+                                // store change
+                                model.grid.selection = model.getSelections();
+                            }
+                        },
+                        'rowselect': function (model, index, record) {
+                            this.showFeature(record);
+                            if (this.globalSelection) {
+                                // store change
+                                model.grid.selection = model.getSelections();
+                            }
+                        },
+                        scope: this
+                    });
+                    grid.on({
+                        'rowdblclick': function(gclickGrid, index) {
+                            var feature = store.getAt(index).getFeature();
+                            var center;
+                            if (feature.bounds) {
+                                center = feature.bounds.getCenterLonLat();
+                            } else if (feature.geometry) {
+                                var centroid = feature.geometry.getCentroid();
+                                center = new  OpenLayers.LonLat(centroid.x, centroid.y);
+                            }
+                            feature.layer.map.setCenter(center);
+                        },
+                        'render': function(renderGrid) {
+                            this.currentGrid = renderGrid;
+                        },
+                        'viewready': function(renderGrid) {
+                            var sm = this.currentGrid.getSelectionModel();
 
-                        // set grid as ready
-                        sm.grid.ready = true;
+                            // set grid as ready
+                            sm.grid.ready = true;
 
-                        if (!this.globalSelection) {
-                            sm.clearSelections();
-                        }
-                        if (selectAll) {
-                            sm.selectAll();
-                        } else if (this.globalSelection && sm.grid.selection) {
-                            sm.selectRecords(sm.grid.selection);
-                        } else if (this.autoSelectFirst) {
-                            sm.selectFirstRow();
-                        }
-                    }, this);
+                            if (!this.globalSelection) {
+                                sm.clearSelections();
+                            }
+                            if (selectAll) {
+                                sm.selectAll();
+                            } else if (this.globalSelection && sm.grid.selection) {
+                                sm.selectRecords(sm.grid.selection);
+                            } else if (this.autoSelectFirst) {
+                                sm.selectFirstRow();
+                            }
+                        },
+                        scope: this
+                    });
                     this.gridByType[feature.type] = grid;
                     this.tabpan.add(grid);
                 } else {
-                    var grid = this.gridByType[feature.type];
+                    grid = this.gridByType[feature.type];
                     // reset grid selection
                     grid.selection = null;
                     this.tabpan.unhideTabStripItem(grid);
                 }
                 this.vectorLayer.addFeatures(feature);
             }
+            var type;
             for (type in currentType) {
-                this.gridByType[type].getStore().filterBy(function(record) {
-                    return record.getFeature().type === type && record.getFeature().layer;
-                });
+                if (currentType.hasOwnProperty(type)) {
+                    this.gridByType[type].getStore().filterBy(function(record) {
+                        return record.getFeature().type === type && record.getFeature().layer;
+                    });
+                }
             }
+            var firstType;
             for (type in this.gridByType) {
-                if (currentType[type]) {
-                    var firstType = type;
-                    continue;
+                if (this.gridByType.hasOwnProperty(type)) {
+                    if (currentType[type]) {
+                        firstType = type;
+                        continue;
+                    }
                 }
             }
             this.currentGrid = this.gridByType[firstType];
@@ -598,7 +618,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 'tabchange': function(tabpanel, tab) {
                     this.currentGrid = tab;
-                    if (this.currentGrid != null && this.currentGrid.ready) {
+                    if (this.currentGrid && this.currentGrid.ready) {
                         /* this must be done here because the grid has alerady been
                            initialized and the event "viewready" is not triggered 
                            anymore.
@@ -637,7 +657,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     handler: function() {
                         if (this.globalSelection) {
                             // update selection list for all grids
-                            for (gridName in this.gridByType) {
+                            for (var gridName in this.gridByType) {
                                 if (this.gridByType.hasOwnProperty(gridName)) {
                                     var grid = this.gridByType[gridName];
                                     grid.selection = grid.getStore().getRange();
@@ -653,7 +673,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             {text: this.selectAllText, handler: function() {
                                 if (this.globalSelection) {
                                     // update selection list for all grids
-                                    for (gridName in this.gridByType) {
+                                    for (var gridName in this.gridByType) {
                                         if (this.gridByType.hasOwnProperty(gridName)) {
                                             var grid = this.gridByType[gridName];
                                             grid.selection = grid.getStore().getRange();
@@ -668,7 +688,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             {text: this.selectNoneText, handler: function() {
                                 if (this.globalSelection) {
                                     // update selection list for all grids
-                                    for (gridName in this.gridByType) {
+                                    for (var gridName in this.gridByType) {
                                         if (this.gridByType.hasOwnProperty(gridName)) {
                                             var grid = this.gridByType[gridName];
                                             this.hideFeatures(grid.selection);
@@ -683,7 +703,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             {text: this.selectToggleText, handler: function() {
                                 if (this.globalSelection) {
                                     // update selection list for all grids
-                                    for (gridName in this.gridByType) {
+                                    for (var gridName in this.gridByType) {
                                         if (this.gridByType.hasOwnProperty(gridName)) {
                                             var newSelection = [];
                                             var grid = this.gridByType[gridName];
