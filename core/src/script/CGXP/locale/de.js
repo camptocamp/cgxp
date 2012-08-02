@@ -180,7 +180,7 @@ GeoExt.Lang.add("de", {
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "layertree": "Themen",
-    "querier": "Attributabfrage Eigentümer",
+    "querier": "Attributabfrage",
 
     // query builder
     "QueryBuilder.loading": "Lade Daten...",
