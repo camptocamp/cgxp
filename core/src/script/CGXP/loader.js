@@ -35,6 +35,7 @@
         "plugins/WMSBrowser.js",
         "plugins/WFSGetFeature.js",
         "plugins/Profile.js",
+        "plugins/AddKMLFile.js",
         "plugins/Measure.js",
         "../../../../geoext.ux/ux/FeatureSelectionModel/lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js",
         "../../../../ext/Ext/examples/ux/RowExpander.js",
