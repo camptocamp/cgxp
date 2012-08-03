@@ -39,6 +39,7 @@
         "plugins/MapOpacitySlider.js",
         "plugins/MapQuery.js",
         "plugins/Measure.js",
+        "plugins/MenuShortcut.js",
         "plugins/Profile.js",
         "plugins/ScaleChooser.js",
         "plugins/ThemeSelector.js",
