@@ -994,6 +994,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 var result = {
                     allLayers: [],
                     checkedLayers: [],
+                    childLayers: null,
                     disclaimer: {}
                 };
                 this.parseChildren(group, layer, result);
@@ -1004,6 +1005,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.mapPanel.layers.insert(index,
                     new this.recordType({
                         disclaimer: result.disclaimer,
+                        childLayers: result.childLayers,
                         layer: layer
                     }, layer.id));
                 groupNode = this.addGroup(group, true);
@@ -1013,6 +1015,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     allLayers: [],
                     checkedLayers: [],
                     disclaimer: {},
+                    childLayers: null,
                     allOlLayers: []
                 };
                 this.indexesToAdd = [];
