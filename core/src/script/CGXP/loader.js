@@ -28,6 +28,7 @@
         "plugins/ContextualData.js",
         "plugins/Disclaimer.js",
         "plugins/Editing.js",
+        "plugins/FeatureGrid.js",
         "plugins/FeaturesWindow.js",
         "plugins/GoogleEarthView.js",
         "plugins/LayerTree.js",
