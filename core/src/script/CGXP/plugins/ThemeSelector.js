@@ -111,6 +111,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             }   
         };
 
+        var themepanel;
         if (this.themes.external) {
             var localView = new Ext.DataView(Ext.apply({
                 title: this.localTitle,
@@ -121,7 +122,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 store: externalStore
             }, tabconfig));
     
-            var themepanel = new Ext.TabPanel({
+            themepanel = new Ext.TabPanel({
                 width: 560,
                 activeTab: 0,
                 plain: true,
@@ -136,7 +137,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 }
             });
         } else {
-            var themepanel = new Ext.DataView(Ext.apply({
+            themepanel = new Ext.DataView(Ext.apply({
                 width: 560,
                 store: localStore
             }, tabconfig));
@@ -155,7 +156,6 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
         var themeSelector = cgxp.plugins.ThemeSelector.superclass.addOutput.call(this, config);
         return themeSelector;
     }
-
 });
 
 Ext.preg(cgxp.plugins.ThemeSelector.prototype.ptype, cgxp.plugins.ThemeSelector);
