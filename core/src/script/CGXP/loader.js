@@ -43,6 +43,7 @@
         "plugins/Permalink.js",
         "plugins/Print.js",
         "plugins/Profile.js",
+        "plugins/QueryBuilder.js",
         "plugins/ScaleChooser.js",
         "plugins/ThemeSelector.js",
         "plugins/ThemeFinder.js",
