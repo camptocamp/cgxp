@@ -41,6 +41,7 @@
         "plugins/Measure.js",
         "plugins/MenuShortcut.js",
         "plugins/Permalink.js",
+        "plugins/Print.js",
         "plugins/Profile.js",
         "plugins/ScaleChooser.js",
         "plugins/ThemeSelector.js",
