@@ -30,6 +30,7 @@
         "plugins/Editing.js",
         "plugins/FeatureGrid.js",
         "plugins/FeaturesWindow.js",
+        "plugins/FullTextSearch.js",
         "plugins/GoogleEarthView.js",
         "plugins/LayerTree.js",
         "plugins/MapQuery.js",

@@ -95,7 +95,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[projectionCodes]
      *  ``Array``
-     *  List of EPSG codes of projections that should be used when trying to 
+     *  List of EPSG codes of projections that should be used when trying to
      *  recenter on coordinates. Leftmost projections are used preferably.
      *  Default is current map projection.
      */
@@ -137,7 +137,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
-        
+
         // style used when recentering on coordinates
         this.coordsRecenteringStyle = this.coordsRecenteringStyle || {
             pointRadius: "10",
@@ -151,7 +151,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             displayInLayerSwitcher: false,
             alwaysInRange: true
         });
-        
+
         this.target.on('ready', this.viewerReady, this);
     },
 
@@ -204,7 +204,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 var map = this.target.mapPanel.map;
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
-                
+
                 var tryProjection = function(lon, lat, projection) {
                     var position = new OpenLayers.LonLat(lon, lat);
                     position.transform(projection, map.getProjectionObject());
@@ -221,7 +221,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                         break;
                     }
                 }
-                
+
                 if (this.position) {
                     // close the loading twin box.
                     this.closeLoading.delay(10);
@@ -289,7 +289,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 var feature = record.getFeature();
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
                 this.vectorLayer.addFeatures([feature]);
-                
+
                 // zoom onto the feature
                 if (this.pointRecenterZoom &&
                     feature.geometry instanceof OpenLayers.Geometry.Point) {
