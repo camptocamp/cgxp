@@ -50,8 +50,9 @@
         "plugins/SwitchableWMTSSource.js",
         "plugins/ThemeSelector.js",
         "plugins/ThemeFinder.js",
-        "plugins/WMSBrowser.js",
         "plugins/WFSGetFeature.js",
+        "plugins/WFSPermalink.js",
+        "plugins/WMSBrowser.js",
 
         "../../../../geoext.ux/ux/FeatureSelectionModel/lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js",
         "../../../../ext/Ext/examples/ux/RowExpander.js",

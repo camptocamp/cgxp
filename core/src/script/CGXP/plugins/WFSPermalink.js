@@ -106,25 +106,25 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
      *  The queryable type on the internal server.
      */
     WFSTypes: null,
-    
+
     /** api: config[WFSURL]
      *  ``String``
      *  The mapserver proxy URL
      */
     WFSURL: null,
-    
+
     /** api: config[maxFeatures]
      *  ``Integer``
      *  Maximum number of features returned.
      */
     maxFeatures: 100,
-    
+
     /** api: config[events]
      *  ``Object``
      *  An Observer used to send events.
      */
     events: null,
-    
+
     /** api: config[srsName]
      *  ``String``
      *  Projection code.
@@ -165,7 +165,7 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
             this.WFSTypes = this.target.tools[this.WFSGetFeatureId].WFSTypes;
         }
     },
-    
+
     /** private: method[applyState]
      *  :param state: ``Object`` The state to apply.
      */
@@ -203,7 +203,7 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         if (!this.filters) {
             return null;
         }
-        
+
         var filters = [], prop;
         for (prop in this.filters) {
             if (!this.filters[prop]) {
@@ -215,7 +215,7 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
                 value: this.filters[prop]
             }));
         }
-        
+
         if (!filters) {
             return null;
         }
