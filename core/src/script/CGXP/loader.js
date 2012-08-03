@@ -32,6 +32,7 @@
         "plugins/FeaturesWindow.js",
         "plugins/FullTextSearch.js",
         "plugins/GoogleEarthView.js",
+        "plugins/Help.js",
         "plugins/LayerTree.js",
         "plugins/MapQuery.js",
         "plugins/Measure.js",
