@@ -36,6 +36,7 @@
         "plugins/LayerTree.js",
         "plugins/Legend.js",
         "plugins/Login.js",
+        "plugins/MapOpacitySlider.js",
         "plugins/MapQuery.js",
         "plugins/Measure.js",
         "plugins/Profile.js",
