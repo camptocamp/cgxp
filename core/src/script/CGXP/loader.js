@@ -34,6 +34,7 @@
         "plugins/GoogleEarthView.js",
         "plugins/Help.js",
         "plugins/LayerTree.js",
+        "plugins/Legend.js",
         "plugins/MapQuery.js",
         "plugins/Measure.js",
         "plugins/Profile.js",
