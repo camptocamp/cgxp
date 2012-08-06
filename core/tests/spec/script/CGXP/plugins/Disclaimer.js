@@ -44,13 +44,13 @@ describe('plugins.Disclaimer', function() {
         });
         describe('when add event is fired', function() {
             it('calls the onAdd method', function() {
-                o.fireEvent('add', 'foo')
+                o.fireEvent('add', 'foo');
                 expect(d.onAdd).toHaveBeenCalledWith('foo');
             });
         });
         describe('when remove event is fired', function() {
             it('calls the onRemove method', function() {
-                o.fireEvent('remove', 'bar')
+                o.fireEvent('remove', 'bar');
                 expect(d.onRemove).toHaveBeenCalledWith('bar');
             });
         });
@@ -87,12 +87,12 @@ describe('plugins.Disclaimer', function() {
                 spyOn(d, 'addDisclaimer').andCallThrough();
             });
             it('stores the disclaimer internally', function() {
-                d.onAdd(null, records)
+                d.onAdd(null, records);
                 expect(d.disclaimers['discl 1'].nb).toEqual(1);
                 expect(d.disclaimers['discl 1'].elt).toBeInstanceOf(Ext.Element);
             });
             it('calls addDisclaimer method', function() {
-                d.onAdd(null, records)
+                d.onAdd(null, records);
                 expect(d.addDisclaimer).toHaveBeenCalled();
                 expect(d.addDisclaimer.callCount).toEqual(1);
             });
@@ -104,15 +104,15 @@ describe('plugins.Disclaimer', function() {
                     };
                 });
                 it('does not update elt', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.disclaimers['discl 1'].elt).toBeInstanceOf(Ext.Element);
                 });
                 it('increment the disclaimer nb', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.disclaimers['discl 1'].nb).toEqual(2);
                 });
                 it('calls addDisclaimer method', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.addDisclaimer).toHaveBeenCalled();
                     expect(d.addDisclaimer.callCount).toEqual(1);
                 });
@@ -125,15 +125,15 @@ describe('plugins.Disclaimer', function() {
                     };
                 });
                 it('does not call addDisclaimer', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.addDisclaimer).not.toHaveBeenCalled();
                 });
                 it('increment the disclaimer nb', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.disclaimers['discl 1'].nb).toEqual(2);
                 });
                 it('does not update elt', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.disclaimers['discl 1'].elt).toEqual('foo');
                 });
             });
@@ -147,14 +147,14 @@ describe('plugins.Disclaimer', function() {
                     }];
                 });
                 it('stores both disclaimers internally', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.disclaimers['discl 1'].nb).toEqual(1);
                     expect(d.disclaimers['discl 1'].elt).toBeInstanceOf(Ext.Element);
                     expect(d.disclaimers['discl 2'].nb).toEqual(1);
                     expect(d.disclaimers['discl 2'].elt).toBeInstanceOf(Ext.Element);
                 });
                 it('calls addDisclaimer method twice', function() {
-                    d.onAdd(null, records)
+                    d.onAdd(null, records);
                     expect(d.addDisclaimer).toHaveBeenCalled();
                     expect(d.addDisclaimer.callCount).toEqual(2);
                 });
@@ -178,11 +178,11 @@ describe('plugins.Disclaimer', function() {
                     }};
                 });
                 it('decrements nb', function() {
-                    d.onRemove(null, record)
+                    d.onRemove(null, record);
                     expect(d.disclaimers['discl 1'].nb).toEqual(0);
                 });
                 it('calls removeDisclaimer', function() {
-                    d.onRemove(null, record)
+                    d.onRemove(null, record);
                     expect(d.removeDisclaimer).toHaveBeenCalled();
                     expect(d.removeDisclaimer.callCount).toEqual(1);
                 });
@@ -194,11 +194,11 @@ describe('plugins.Disclaimer', function() {
                     }};
                 });
                 it('decrements nb', function() {
-                    d.onRemove(null, record)
+                    d.onRemove(null, record);
                     expect(d.disclaimers['discl 1'].nb).toEqual(1);
                 });
                 it('does not call removeDisclaimer', function() {
-                    d.onRemove(null, record)
+                    d.onRemove(null, record);
                     expect(d.removeDisclaimer).not.toHaveBeenCalled();
                 });
             });
@@ -220,12 +220,12 @@ describe('plugins.Disclaimer', function() {
                     };
                 });
                 it('decrements nb', function() {
-                    d.onRemove(null, record)
+                    d.onRemove(null, record);
                     expect(d.disclaimers['discl 1'].nb).toEqual(0);
                     expect(d.disclaimers['discl 2'].nb).toEqual(1);
                 });
                 it('calls removeDisclaimer only when nb==0', function() {
-                    d.onRemove(null, record)
+                    d.onRemove(null, record);
                     expect(d.removeDisclaimer).toHaveBeenCalled();
                     expect(d.removeDisclaimer.callCount).toEqual(1);
                 });
@@ -259,7 +259,7 @@ describe('plugins.Disclaimer', function() {
             });
             it('sets the disclaimer elt property to null', function() {
                 d.removeDisclaimer('foo');
-                expect(d.disclaimers['foo'].elt).toBeNull();
+                expect(d.disclaimers.foo.elt).toBeNull();
             });
         });
     });

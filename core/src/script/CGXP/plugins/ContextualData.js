@@ -36,7 +36,7 @@ Ext.namespace("cgxp.plugins");
  *
  *    Contextual Data Display
  *
- *    Add right-click popup and/or mouse-over popup with contextual data 
+ *    Add right-click popup and/or mouse-over popup with contextual data
  *    corresponding to current cursor coordinates.
  *
  *    This plugin may works with web service to retrieve additional data.
@@ -53,12 +53,12 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
     url: null,
 
     /** api: config[enabledAction]
-     *  ``String`` the type of action triggering the context data query and 
+     *  ``String`` the type of action triggering the context data query and
      *  display.
      *  possible values are: 'all', 'mouseover', 'rightclick'.
-     *  'mouseover' enable a tool in the toolbar which allow to display the 
+     *  'mouseover' enable a tool in the toolbar which allow to display the
      *  context data popup on mouseover on the map.
-     *  'rightclick' allow to display the context data popup on right-click on 
+     *  'rightclick' allow to display the context data popup on right-click on
      *  the map.
      *  'all' enable both behavior.
      *  default is 'all'
@@ -68,25 +68,25 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
     /** api: config[streetViewLink]
      *  ``Boolean`` enable or disable the streeView link in right-click context
      *  menu.
-     *  true to enable, 
-     *  false to disable, 
+     *  true to enable,
+     *  false to disable,
      *  default is true.
      */
     streetViewLink: true,
 
     /** api: config[tpls]
-     *  ``Object`` Allow to override the Ext.Template used for mouseover, 
+     *  ``Object`` Allow to override the Ext.Template used for mouseover,
      *  rightclick or both window content.
-     *  The variable between curly brackets are automaticaly replaced with the 
+     *  The variable between curly brackets are automaticaly replaced with the
      *  values recovered from server side.
      *  Example:
      *
      *  .. code-block:: javascript
      *
      *      tpls: {
-     *          all: "Local Coord. Label : {coord_x} {coord_y}<br />" + 
+     *          all: "Local Coord. Label : {coord_x} {coord_y}<br />" +
      *              "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
-     *              "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" + 
+     *              "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
      *              "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
      *              "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
      *      }
@@ -114,7 +114,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *
      *  Parameters:
      *  data {Object} an Ext.Ajax.request responseText
-     *  
+     *
      *  Return:
      *  {Object}
      *
@@ -127,17 +127,17 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *         url: "${request.route_url('raster', path='')}",
      *         actionTarget: "center.tbar",
      *         tpls: {
-     *             allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" + 
-     *                     "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" + 
-     *                     "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" + 
+     *             allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +
+     *                     "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
+     *                     "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
      *                     "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
-     *                     "Height (Surface-Terrain) : {elevation_dhm} [m]<br />" + 
+     *                     "Height (Surface-Terrain) : {elevation_dhm} [m]<br />" +
      *                     "{custom_data_label} : {custom_data_value}"
      *         },
      *         handleServerData: function(data) {
      *             if (data.some_data) {
      *                 // do some treatments ....
-     *    
+     *
      *                 return {
      *                     'custom_data_value': data.some_data,
      *                     'custom_data_label': OpenLayers.i18n('custom_data_label')
@@ -147,7 +147,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *      }
      */
     handleServerData: function(data) {
-        result = {}
+        var result = {};
         Ext.each(data, function(key) {
             if (['mnt', 'mns'].indexOf(key) < 0) {
                 result[key + '_value'] = data[key];
@@ -170,10 +170,11 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
         if (this.tpls.allTpl) {
             this.tpls.mouseoverTpl = this.tpls.rightclickTpl = this.tpls.allTpl;
         }
-        
+
+        var control;
         if (this.enabledAction == 'all' || this.enabledAction == 'rightclick') {
             // Rigth Clic-context menu
-            var control = new cgxp.plugins.ContextualData.ContextPopup({
+            control = new cgxp.plugins.ContextualData.ContextPopup({
                 handleRightClicks:true,
                 map: this.target.mapPanel.map,
                 serviceUrl: this.url,
@@ -187,7 +188,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
         if (this.enabledAction == 'all' || this.enabledAction == 'mouseover') {
             // Tooltip
-            var control = new cgxp.plugins.ContextualData.Tooltip({
+            control = new cgxp.plugins.ContextualData.Tooltip({
                 serviceUrl: this.url,
                 tpl: this.tpls.mouseoverTpl,
                 handleServerData: this.handleServerData
@@ -237,7 +238,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
      *  ``String``
      *  Text for the error in case of wrong type of variable for custom data (i18n).
      */
-    userValueErrorText: 'The value returned by the handleServerData methode ' + 
+    userValueErrorText: 'The value returned by the handleServerData methode ' +
         'must be an object. See the example in the API.',
 
     /** api: config[userValueErrorTitleText]
@@ -256,13 +257,13 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         // Set popup content
         var coord_x = (Math.round(this.lonLat.lon * 10) / 10).toFixed(1);
         var coord_y = (Math.round(this.lonLat.lat * 10) / 10).toFixed(1);
-        this.lonLat.transform(this.map.getProjectionObject(), 
+        this.lonLat.transform(this.map.getProjectionObject(),
                               new OpenLayers.Projection("EPSG:4326"));
         // Set popup content
         var values = {
-            'coord_x': coord_x, 
-            'coord_y': coord_y, 
-            'wsg_x': Math.round(this.lonLat.lon * 100000) / 100000, 
+            'coord_x': coord_x,
+            'coord_y': coord_y,
+            'wsg_x': Math.round(this.lonLat.lon * 100000) / 100000,
             'wsg_y': Math.round(this.lonLat.lat * 100000) / 100000
         };
 
@@ -270,7 +271,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         if (this.streetViewLink) {
             Ext.apply(values, {
                 'streetviewlabel': this.streetviewLabelText,
-                'streetviewlat': this.lonLat.lat, 
+                'streetviewlat': this.lonLat.lat,
                 'streetviewlon': this.lonLat.lon
             });
         }
@@ -279,7 +280,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
             var data = Ext.decode(response.responseText);
 
             // default server data handling
-            var serverValues = {}
+            var serverValues = {};
             // specific elevation treatments
             if (data.mns && data.mnt) {
                 var Dh=Math.round((data.mns-data.mnt)*10)/10;
@@ -361,7 +362,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
 /** api: constructor
  *  .. class:: ContextualData.Tooltip(config)
  *
- *    Mouseover Control 
+ *    Mouseover Control
  *
  *    Handle activation and display of a mouseover tooltips with contextual
  *    data.
@@ -371,14 +372,14 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
     /** api: config[defaultTpl]
      *  ``String`` Used to generate the Ext.Template for popup content
      */
-    defaultTpl: "Local Coordinates : {coord_x} {coord_y}<br />" + 
+    defaultTpl: "Local Coordinates : {coord_x} {coord_y}<br />" +
         "WGS 84 : {wsg_x} {wsg_y}<br />",
 
     /** api: config[defaultTplElevation]
-     *  ``String`` Used to generate the Ext.Template for popup content with 
+     *  ``String`` Used to generate the Ext.Template for popup content with
      *  server elevation data
      */
-    defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" + 
+    defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" +
         "Elevation (Surface) : {elevation_dsm} [m]<br />" +
         "Height (Surface-Terrain) : {elevation_dhm} [m]<br />",
 
@@ -452,7 +453,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
             draggable: false,
             title: this.popupTitleText,
             bodyStyle: 'padding:3px;',
-            html: '<div style="background-color: rgb(255, 255, 208);" id="' + 
+            html: '<div style="background-color: rgb(255, 255, 208);" id="' +
                   this.popupId + '"></div>'
         });
         this.win.render(Ext.getBody());
@@ -477,11 +478,11 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
      *  :arg clientY: ``Int`` Mouse y coordinate
      */
     updateTooltip: function(response, clientX, clientY) {
-          
+
         var popup = Ext.get(this.popupId).dom;
         var content = this.getContent(response);
 
-        popup.innerHTML = content
+        popup.innerHTML = content;
         var topPixel = clientY + 10;
         var leftPixel = clientX + 10;
         this.win.hide(this);
@@ -575,7 +576,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
 /** api: constructor
  *  .. class:: ContextualData.ContextPopup(config)
  *
- *    Right-click Control 
+ *    Right-click Control
  *
  *    Handle activation and display of a tooltips with contextual
  *    data on right-click on the map.
@@ -583,30 +584,30 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
 cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.ContextualData.Control, {
 
     /** api: config[mainTpl]
-     *  ``String`` Used to generate the base Ext.Template used for default popup 
+     *  ``String`` Used to generate the base Ext.Template used for default popup
      *  content
      */
     mainTpl: "<table>{0}</table>",
 
     /** api: config[coordTpl]
-     *  ``String`` Used to generate the base Ext.Template used for coordinates in 
+     *  ``String`` Used to generate the base Ext.Template used for coordinates in
      *  popup content
      */
-    coordTpl: "<tr><td width=\"150\">Local Coord.</td>" + 
-            "<td>{coord_x} {coord_y}</td></tr>" + 
+    coordTpl: "<tr><td width=\"150\">Local Coord.</td>" +
+            "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
 
     /** api: config[elevationTpl]
-     *  ``String`` Used to generate the base Ext.Template used for elevation in 
+     *  ``String`` Used to generate the base Ext.Template used for elevation in
      *  popup content
      */
-    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" + 
+    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" +
         "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
         "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
         "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>",
 
     /** api: config[streetViewTpl]
-     *  ``String`` Used to generate the base Ext.Template used streetview link in 
+     *  ``String`` Used to generate the base Ext.Template used streetview link in
      *  popup content
      *
      *  For reference:
@@ -626,7 +627,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      */
     streetViewTpl: "<tr><td><a href='http://maps.google.ch/?ie=UTF8" +
         "&ll={streetviewlat},{streetviewlon}&layer=c" +
-        "&cbll={streetviewlat},{streetviewlon}&cbp=12,57.78,,0,8.1' " + 
+        "&cbll={streetviewlat},{streetviewlon}&cbp=12,57.78,,0,8.1' " +
         "target='_blank'><font color='#990000'>{streetviewlabel}</font></a></td></tr>",
 
     /** api: config[streetViewLink]
@@ -712,7 +713,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
             }
         };
         this.map.addControl(this);
-        this.activate();     
+        this.activate();
     },
 
     /** private: method[handleRightClick]
@@ -728,8 +729,8 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
             this.request(ev);
         } else {
             // no server request
-            /* using defer because otherwise the updateTooltip is called before 
-              the oncontextmenu preventDefault both in IE and FF and the 
+            /* using defer because otherwise the updateTooltip is called before
+              the oncontextmenu preventDefault both in IE and FF and the
               default right-clic menu is still displayed */
             this.updateTooltip.defer(100, this, [null, ev.clientX, ev.clientY], false);
         }
@@ -759,7 +760,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
             maximizable: false,
             collapsible: false,
             unpinnable: false
-        }); 
+        });
         this.popup.show();
     },
 

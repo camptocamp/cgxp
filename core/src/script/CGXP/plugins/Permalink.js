@@ -114,7 +114,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                                 window.location.pathname;
                 var params = OpenLayers.Util.getParameters();
                 if (params.debug !== undefined) {
-                    var base = Ext.urlAppend(base, 'debug=' + params.debug);
+                    base = Ext.urlAppend(base, 'debug=' + params.debug);
                 }
                 link = provider.getLink(base);
                 permalinkTextField.setValue(link);

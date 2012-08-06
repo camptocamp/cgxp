@@ -112,7 +112,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
 
     createWMSBrowser: function() {
         if (!this.wmsBrowser) {
-            var layers = []
+            var layers = [];
             Ext.each(this.target.mapPanel.map.layers, function(layer) {
                 if (layer.visibility && layer.group == 'background') {
                     layers.push(layer.clone());
@@ -185,7 +185,6 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             children: children
         }, true);
     }
-    
 });
 
 Ext.preg(cgxp.plugins.WMSBrowser.prototype.ptype, cgxp.plugins.WMSBrowser);
