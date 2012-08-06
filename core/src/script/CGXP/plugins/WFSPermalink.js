@@ -203,17 +203,30 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         if (!this.filters) {
             return null;
         }
-
-        var filters = [], prop;
+        
+        var filters = [], prop, values, propFilters, i, len;
         for (prop in this.filters) {
             if (!this.filters[prop]) {
                 continue;
             }
-            filters.push(new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                property: prop,
-                value: this.filters[prop]
-            }));
+            values = this.filters[prop] instanceof Array ?
+                     this.filters[prop] : [this.filters[prop]];
+            propFilters = [];
+            for (i = 0, len = values.length; i < len; i++) {
+                propFilters.push(new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: prop,
+                    value: values[i]
+                }));
+            }
+            if (propFilters.length > 1) {
+                filters.push(new OpenLayers.Filter.Logical({
+                    type: OpenLayers.Filter.Logical.OR,
+                    filters: propFilters
+                }));
+            } else {
+                filters.push(propFilters[0]);
+            }
         }
 
         if (!filters) {

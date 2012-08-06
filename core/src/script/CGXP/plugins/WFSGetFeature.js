@@ -215,7 +215,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             externalWFSTypes: this.externalWFSTypes,
             enableWMTSLayers: this.enableWMTSLayers, 
             eventListeners: {
-                beforefeatureselected: function() {
+                beforefeaturesselected: function() {
                     this.events.fireEvent('querystarts');
                 },
                 featuresselected: function(e) {
