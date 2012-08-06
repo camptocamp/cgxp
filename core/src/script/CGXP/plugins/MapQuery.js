@@ -39,7 +39,7 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: MapQuery(config)
  *
- */   
+ */
 cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_mapquery */
@@ -103,10 +103,10 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
 
     /** api: method[addActions]
      */
-    addActions: function() { 
-       
+    addActions: function() {
+
         if (this.alwaysActive) {
-            var control = this.createControl();            
+            var control = this.createControl();
             this.target.mapPanel.map.addControl(control);
             control.activate();
             return;
@@ -120,7 +120,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
                 control: this.createControl()
             }, this.options);
             var action = new GeoExt.Action(options);
-            return cgxp.plugins.MapQuery.superclass.addActions.apply(this, [[action]]);         
+            return cgxp.plugins.MapQuery.superclass.addActions.apply(this, [[action]]);
         }
     },
 
@@ -136,14 +136,14 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
             maxFeatures: this.maxFeatures || 100,
             handlerOptions: this.handlerOptions || {},
             hover: true,
-            layer: new OpenLayers.Layer.WMS("MapQuery WMS", this.wmsURL, 
+            layer: new OpenLayers.Layer.WMS("MapQuery WMS", this.wmsURL,
                                             {layers: [this.layerName]}),
 
             request: function(clickPosition, options) {
 
                 var wmsOptions = this.buildWMSOptions(this.layer.url, [this.layer],
                                                       clickPosition, this.layer.params.FORMAT);
-                var request = OpenLayers.Request.GET(wmsOptions);                
+                var request = OpenLayers.Request.GET(wmsOptions);
                 this.hoverRequest = request;
             },
             eventListeners: {

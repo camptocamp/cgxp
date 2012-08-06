@@ -108,7 +108,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  The translated error message (i18n).
      */
     errorMsg: null,
-    
+
     /** api: config[style]
      *  ``Object``
      *  The style to be applied to the control vector layer (optional).
@@ -187,7 +187,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     /** private: private[dummyForm]
      *  ``Object`` Fake form used for csv export.
      */
-    dummyForm: null, 
+    dummyForm: null,
 
     /** private: property[exportAsCsvLink]
      *  ``Ext.Element``
@@ -213,7 +213,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             toggleGroup: this.toggleGroup,
             text: this.buttonText,
             iconCls: "cgxp-icon-profile",
-            control: control 
+            control: control
         });
         return cgxp.plugins.Profile.superclass.addActions.apply(this,[btn]);
     },
@@ -262,7 +262,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        
+
         var target = cgxp.plugins.Profile.superclass.addOutput.call(this, card);
         this.showOutput(target);
         return target;
@@ -377,7 +377,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                         this.target.mapPanel.body, 'tl-tl', [30, 5]);
                 }
         } else if (this.outputTarget) {
-            this.container = this.getContainer(this.outputTarget); 
+            this.container = this.getContainer(this.outputTarget);
             this.container.show();
             this.container.ownerCt.doLayout();
         }
@@ -397,7 +397,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             cmp.ownerCt.ownerCt instanceof Ext.Window) {
                 cmp.ownerCt.ownerCt.hide();
         } else if (this.outputTarget) {
-            var container = this.getContainer(this.outputTarget); 
+            var container = this.getContainer(this.outputTarget);
             container.hide();
             container.ownerCt.doLayout();
         }
@@ -645,7 +645,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
             this.map.removeControl(this.snapping);
             this.hoverHandler.deactivate();
         }
-    }, 
+    },
 
     setMap: function(map) {
         this.hoverHandler.setMap(map);

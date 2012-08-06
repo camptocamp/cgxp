@@ -11,22 +11,6 @@ describe('plugins.FeaturesWindow', function() {
             expect(fw).toBeInstanceOf(cgxp.plugins.FeaturesWindow);
         });
     });
-    describe('when calling constructor with options', function() {
-        beforeEach(function() {
-            fw = new cgxp.plugins.MapQuery({
-                highlightStyle: {
-                    externalGraphic: 'foo.png'
-                }
-            });
-            fw.init({
-                tools: {},
-                on: function() {}
-            });
-        });
-        it('sets the highlight style option', function() {
-            expect(fw.highlightStyle.externalGraphic).toEqual('foo.png');
-        });
-    });
     describe('when calling viewerReady', function() {
         beforeEach(function() {
             fw = new cgxp.plugins.FeaturesWindow({
@@ -38,7 +22,7 @@ describe('plugins.FeaturesWindow', function() {
             // some mocking
             fw.target = {
                 mapPanel: {
-                    map: new OpenLayers.Map() 
+                    map: new OpenLayers.Map()
                 }
             };
             fw.viewerReady();
@@ -59,7 +43,7 @@ describe('plugins.FeaturesWindow', function() {
             });
             // some mocking
             mapPanel = new Ext.Panel({
-                map: new OpenLayers.Map() 
+                map: new OpenLayers.Map()
             });
             mapPanel.render(document.body);
             fw.target = {

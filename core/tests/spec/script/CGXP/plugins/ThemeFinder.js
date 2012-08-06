@@ -53,7 +53,7 @@ describe('plugins.ThemeFinder', function() {
                     children: []
                 }]
             };
-            
+
             tf = new cgxp.plugins.ThemeFinder({
                 themes: themes
             });

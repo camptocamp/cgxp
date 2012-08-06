@@ -96,14 +96,14 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                     Ext.each(nodes, function(node) {
                         var mainGroup = level <= 1 ? node : theme;
                         // remove dupplicate theme and same layergroup
-                        if (level == 1 && theme.children.length == 1 
-                                && theme.children[0] === node 
-                                && theme.name === node.name) {
+                        if (level == 1 && theme.children.length == 1 &&
+                                theme.children[0] === node &&
+                                theme.name === node.name) {
                             filter(node.children, level+1, mainGroup);
                             return;
                         }
-                        if (node.name.search(queryText) >= 0
-                                || node.displayName.search(queryText) >= 0) {
+                        if (node.name.search(queryText) >= 0 ||
+                                node.displayName.search(queryText) >= 0) {
                             store.add([new ThemeRecord({
                                 'name': node.name,
                                 'displayName': node.displayName,
@@ -114,8 +114,8 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                         }
                         else {
                             // case insensitive search
-                            if (node.name.toLowerCase().search(iQueryText) >= 0
-                                    || node.displayName.toLowerCase().search(iQueryText) >= 0) {
+                            if (node.name.toLowerCase().search(iQueryText) >= 0 ||
+                                    node.displayName.toLowerCase().search(iQueryText) >= 0) {
                                 store.add([new ThemeRecord({
                                     'name': node.name,
                                     'displayName': node.displayName,
