@@ -123,6 +123,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                         }
                         else {
                             this.panel.panorama.navigationToolLayer.setVisibility(true);
+                            this.panel.panorama.navigationLinkLayer.setVisibility(true);
                         }
                         this.intermediateContainer.setSize(this.size, 0);
                         this.intermediateContainer.setVisible(true);
@@ -131,6 +132,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                     }
                     else {
                         this.panel.panorama.navigationToolLayer.setVisibility(false);
+                        this.panel.panorama.navigationLinkLayer.setVisibility(false);
                         this.intermediateContainer.setVisible(false);
                         this.outputTarget.doLayout();
                     }
