@@ -915,7 +915,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 node = groupNode;
             }
         }, this);
-        node.getUI().getEl().scrollIntoView(this.body, false);
+        node.getUI().getEl().scrollIntoView();
 
         // change them in url
         if (this.uniqueTheme && this.frienlyUrl && history.replaceState) {
@@ -1038,7 +1038,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }, this);
             }
             if (scroll) {
-                groupNode.getUI().getEl().scrollIntoView(this.innerCt, false);
+                groupNode.getUI().getEl().scrollIntoView();
             }
             if (!nowarning) {
                 // delayed to solved conflict with scroll
