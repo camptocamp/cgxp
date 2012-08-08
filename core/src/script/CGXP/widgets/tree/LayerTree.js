@@ -890,6 +890,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
+        var node;
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
                 node = this.root.childNodes[i];
@@ -907,7 +908,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }, this);
 
         var minPosition = 9999;
-        var node;
         Ext.each(groupNodes, function(groupNode) {
             var pos = this.root.indexOf(groupNode);
             if (pos >= 0 && pos < minPosition) {
