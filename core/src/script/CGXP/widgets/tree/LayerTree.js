@@ -568,7 +568,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg evt: ``Ext.EventObject``
      */
     onAction: function(node, action, evt) {
-        var key;
+        var key,
+            index;
         if (action.indexOf('legend') != -1) {
             action = 'legend';
         }
@@ -631,7 +632,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         current = false;
                     }
                 });
-                var index = -next.attributes.allOlLayers.length;
+                index = -next.attributes.allOlLayers.length;
                 Ext.each(node.attributes.allOlLayers, function(layer) {
                     layer.map.raiseLayer(layer, index);
                 });
@@ -656,7 +657,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         previous = n;
                     }
                 });
-                var index = previous.attributes.allOlLayers.length;
+                index = previous.attributes.allOlLayers.length;
                 var layers = [].concat(node.attributes.allOlLayers);
                 Ext.each(layers.reverse(), function(layer) {
                     layer.map.raiseLayer(layer, index);
@@ -823,7 +824,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 doc = request.responseText;
                             }
                             var capabilities = format.read(doc);
-                            var capabilities_layers = capabilities.contents.layers
+                            var capabilities_layers = capabilities.contents.layers;
                             var capabilities_layer = null;
                             for (i = 0, ii = capabilities_layers.length;
                                     i < ii ; i++) {
@@ -890,6 +891,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
+        var node;
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
                 node = this.root.childNodes[i];
@@ -907,7 +909,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }, this);
 
         var minPosition = 9999;
-        var node;
         Ext.each(groupNodes, function(groupNode) {
             var pos = this.root.indexOf(groupNode);
             if (pos >= 0 && pos < minPosition) {
@@ -915,7 +916,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 node = groupNode;
             }
         }, this);
-        node.getUI().getEl().scrollIntoView(this.body, false);
+        node.getUI().getEl().scrollIntoView();
 
         // change them in url
         if (this.uniqueTheme && this.frienlyUrl && history.replaceState) {
@@ -956,9 +957,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         var groupNode = this.root.findChild('groupId', group.name);
         nowarning = nowarning || false;
+        var layer;
         if (!groupNode) {
             var index = this.mapPanel.layers.getCount();
-            while (this.mapPanel.map.layers[index-1] instanceof OpenLayers.Layer.Vector && index > 0) { index-- }
+            while (this.mapPanel.map.layers[index-1] instanceof OpenLayers.Layer.Vector && index > 0) { index--; }
+            var result;
             if (group.isInternalWMS !== false) {
                 var params = {
                     layers: [],
@@ -976,12 +979,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                     return false;
                 };
-                if (this.themes.external != undefined &&
+                if (this.themes.external !== undefined &&
                     isExternalgroup(group.name, this.themes)) {
                     params.external = true;
                 }
 
-                var layer = new OpenLayers.Layer.WMS(
+                layer = new OpenLayers.Layer.WMS(
                     group.displayName,
                     this.wmsURL, params, Ext.apply({
                         ref: group.name,
@@ -991,7 +994,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     }, this.wmsOptions || {})
                 );
 
-                var result = {
+                result = {
                     allLayers: [],
                     checkedLayers: [],
                     childLayers: null,
@@ -1011,7 +1014,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 groupNode = this.addGroup(group, true);
             }
             else {
-                var result = {
+                result = {
                     allLayers: [],
                     checkedLayers: [],
                     disclaimer: {},
@@ -1038,7 +1041,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }, this);
             }
             if (scroll) {
-                groupNode.getUI().getEl().scrollIntoView(this.innerCt, false);
+                groupNode.getUI().getEl().scrollIntoView();
             }
             if (!nowarning) {
                 // delayed to solved conflict with scroll
@@ -1095,7 +1098,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         };
 
         var isAllowed = checkGroup(group, this.themes.local);
-        if (this.themes.external != undefined && !isAllowed) {
+        if (this.themes.external !== undefined && !isAllowed) {
             isAllowed = checkGroup(group, this.themes.external);
         }
         return isAllowed;
@@ -1129,7 +1132,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.initialState['group_opacity_' + t] : 1;
             var layers = this.initialState['group_layers_' + t] ?
                 this.initialState['group_layers_' + t] : [];
-            var visibility = layers != '' ? true : false;
+            var visibility = layers !== '' ? true : false;
             var group = this.findGroupByName(t);
             this.loadGroup(group, layers, opacity, visibility);
         }, this);
