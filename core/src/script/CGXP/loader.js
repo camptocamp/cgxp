@@ -77,7 +77,7 @@
         "../../../../geoext.ux/ux/StreetViewPanel/ux/widgets/StreetViewPanel.js",
         // </streetview dependencies>
         // <googleearthview dependencies>
-        "widgets/GoogleEarthPanel",
+        "widgets/GoogleEarthPanel.js",
         "../../../../gxp/src/script/plugins/GoogleEarth.js",
         "../../../../openlayers.addins/GoogleEarthView/lib/OpenLayers/Control/GoogleEarthView.js",
         // </googleearthview dependencies>
