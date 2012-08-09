@@ -44,6 +44,7 @@ Ext.namespace("cgxp.plugins");
  *              actionTarget: 'center.tbar',
  *              toggleGroup: 'maptools',
  *              serviceUrl: "${request.route_url('profile.json')}",
+ *              csvServiceUrl: "${request.route_url('profile.csv')}",
  *              rasterLayers: ['mnt', 'mns']
  *          }]
  *          ...
@@ -65,6 +66,12 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  The url to the profile service.
      */
     serviceUrl: null,
+
+    /** api: config[csvServiceUrl]
+     *  ``String``
+     *  The url to the profile csv export service.
+     */
+    csvServiceUrl: null,
 
     /** api: config[valuesProperty]
      *  ``String``
