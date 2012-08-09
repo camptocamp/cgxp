@@ -18,7 +18,7 @@ Ext.onReady(function() {
     tree = new cgxp.tree.LayerTree({
         id: "layertree",
         width: 250,
-        height: 300,
+        height: 200,
         autoScroll: true,
         wmsURL: 'http://www2.demis.nl/wms/wms.asp?wms=WorldMap',
         mapPanel: mapPanel,
