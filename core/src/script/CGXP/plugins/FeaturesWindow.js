@@ -105,12 +105,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     layers: null,
 
-    /** private: attribute[featureGroupingStoreClass]
-     *  ``Object``
-     *  The object class to use the store.
-     */
-    featureGroupingStoreClass: null,
-
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
      *  on the map when hovering the row in the grid (optional).
@@ -129,6 +123,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of items" label (singular) (i18n).
      */
     itemText: "Item",
+
+    /** private: attribute[store]
+     *  ``Ext.data.Store``
+     */
+    store: null,
 
     /** private: attribute[grid]
      *  ``Ext.grid.GridPanel``
@@ -190,7 +189,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
         this.events.on('querystarts', function() {
             if (this.featuresWindow) {
-                this.featuresWindow.removeAll();
+                this.store.removeAll();
                 this.vectorLayer.destroyFeatures();
             }
         }, this);
@@ -258,14 +257,51 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     showWindow: function(features) {
         this.extendFeaturesAttributes(features);
-        if (!this.featureGroupingStoreClass) {
-            this.featureGroupingStoreClass = Ext.extend(
-                Ext.data.GroupingStore,
-                GeoExt.data.FeatureStoreMixin()
+
+        if (!this.grid) {
+            this.createGrid();
+        }
+        this.store.loadData(features);
+
+        var first = false;
+        if (!this.featuresWindow) {
+            first = true;
+            this.featuresWindow = new Ext.Window({
+                layout: 'fit',
+                width: 300,
+                height: 280,
+                title: this.windowTitleText,
+                closeAction: 'hide',
+                items: [this.grid]
+            });
+        } else {
+            this.featuresWindow.add(this.grid);
+            this.featuresWindow.doLayout();
+        }
+        this.featuresWindow.show();
+
+        // position the attributes window the first time
+        // then it should appear at the last position the user chose
+        if (first) {
+            this.featuresWindow.alignTo(
+                this.target.mapPanel.body,
+                "tr-tr",
+                [-5, 5],
+                true
             );
         }
-        var store = new this.featureGroupingStoreClass({
-            features: features,
+    },
+
+    /** private: method[createGrid]
+     *  Creates the grid and associated store.
+     *  :returns: ``Ext.data.Store``
+     */
+    createGrid: function() {
+        var featureGroupingStoreClass = Ext.extend(
+            Ext.data.GroupingStore,
+            GeoExt.data.FeatureStoreMixin()
+        );
+        this.store = new featureGroupingStoreClass({
             groupField: 'type',
             fields: [
                 'id',
@@ -286,7 +322,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         ].join('');
         this.grid = new Ext.grid.GridPanel({
             border: false,
-            store: store,
+            store: this.store,
             columns: [
                 rowexpander,
             {
@@ -318,40 +354,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             disableSelection: true,
             hideHeaders: true
         });
-        var first = false;
-        if (!this.featuresWindow) {
-            first = true;
-            this.featuresWindow = new Ext.Window({
-                layout: 'fit',
-                width: 300,
-                height: 280,
-                title: this.windowTitleText,
-                closeAction: 'hide',
-                items: [this.grid],
-                listeners : {
-                    hide: function(win) {
-                        win.removeAll();
-                    },
-                    scope: this
-                }
-            });
-        } else {
-            this.featuresWindow.removeAll();
-            this.featuresWindow.add(this.grid);
-            this.featuresWindow.doLayout();
-        }
-        this.featuresWindow.show();
-
-        // position the attributes window the first time
-        // then it should appear at the last position the user chose
-        if (first) {
-            this.featuresWindow.alignTo(
-                this.target.mapPanel.body,
-                "tr-tr",
-                [-5, 5],
-                true
-            );
-        }
     },
 
     /** private: method[printExport]
