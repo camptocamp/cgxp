@@ -36,14 +36,24 @@ Ext.namespace("cgxp");
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
     /** api: property[vectorLayer]
-     *  :class:`OpenLayers.Layer.Vector` 
+     *  :class:`OpenLayers.Layer.Vector`
      */
     vectorLayer: null,
-    
+
+    /** private: property[initialState]
+     */
+
+    /** private: method[initComponent]
+     */
+    initComponent: function() {
+        var result = cgxp.MapPanel.superclass.initComponent.call(this);
+        this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
+    },
+
     /** private: method[getState]
      *  :return:  ``Object`` The state.
      *
-     *  Override the GeoExt.MapPanel getState to remove the OL layers 
+     *  Override the GeoExt.MapPanel getState to remove the OL layers
      *  visibility and opacity state
      */
     getState: function() {
@@ -80,15 +90,8 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      *  such as map_tooltip and map_crosshair
      */
     applyState: function(state) {
+        this.initialState = state;
         cgxp.MapPanel.superclass.applyState.apply(this, arguments);
-        if (state.tooltip) {
-            new GeoExt.Popup({
-                location: this.center,
-                map: this.map,
-                unpinnable: false,
-                html: state.tooltip
-            }).show();
-        }
         if (state.crosshair && state.x && state.y) {
             this.getVectorLayer().addFeatures([
                 new OpenLayers.Feature.Vector(
@@ -100,10 +103,28 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         }
     },
 
+    /** private: method[applyStateOnChangebaselayer]
+     *
+     *  Apply the state on usable base layer
+     *  (all Ext and GeoExt events will be too early).
+     */
+    applyStateOnChangebaselayer: function() {
+        if (this.initialState && this.initialState.tooltip &&
+                this.map.baseLayer.CLASS_NAME != "OpenLayers.Layer") {
+            new GeoExt.Popup({
+                location: this.center,
+                map: this.map,
+                unpinnable: false,
+                html: this.initialState.tooltip
+            }).show();
+            this.initialState = undefined;
+        }
+    },
+
     /** private: method[getVectorLayer]
      *  :return:  ``OpenLayers.Layer.Vector`` The vector layer.
      *
-     * Creates a layer to display features if not already existing.
+     *  Creates a layer to display features if not already existing.
      */
     getVectorLayer: function() {
         if (!this.vectorLayer) {
