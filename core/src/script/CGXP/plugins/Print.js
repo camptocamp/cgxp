@@ -338,7 +338,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             // the print interface.
             printProvider.scales.each(translate_name);
             printProvider.layouts.each(translate_name);
-            this.capabilitiesLoaded = true;
 
         }.createDelegate(this));
 
@@ -435,7 +434,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }],
             comboOptions: {
-                editable: false
+                editable: false,
+                displayField: 'label'
             },
             dpiText: this.dpifieldText,
             scaleText: this.scalefieldText,
