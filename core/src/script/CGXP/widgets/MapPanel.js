@@ -47,7 +47,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      */
     initComponent: function() {
         var result = cgxp.MapPanel.superclass.initComponent.call(this);
-        this.map.events.register('changebaselayer', this, this.applyStateOnRender);
+        this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
     },
 
     /** private: method[getState]
@@ -103,11 +103,11 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         }
     },
 
-    /** private: method[applyStateOnRender]
+    /** private: method[applyStateOnChangebaselayer]
      *
      *  Apply the state on render event
      */
-    applyStateOnRender: function() {
+    applyStateOnChangebaselayer: function() {
         if (this.initialState && this.initialState.tooltip &&
                 this.map.baseLayer.CLASS_NAME != "OpenLayers.Layer") {
             new GeoExt.Popup({
