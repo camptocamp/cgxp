@@ -316,6 +316,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             }
         }.createDelegate(this));
 
+        var translate_name = function(record) {
+            record.set('label', OpenLayers.i18n(record.get('name')));
+        };
+
         printProvider.on('loadcapabilities', function(printProvider, capabilities) {
             // if png is supported, add a button into the print panel
             if (Ext.pluck(capabilities.outputFormats, 'name').indexOf('png') != -1) {
@@ -329,6 +333,13 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     }, this.printPanel);
                 }
             }
+
+            // Makes sure the print capabilities are fully loaded before rendering
+            // the print interface.
+            printProvider.scales.each(translate_name);
+            printProvider.layouts.each(translate_name);
+            printProvider.dpis.each(translate_name);
+
         }.createDelegate(this));
 
         // create the print panel
@@ -424,7 +435,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }],
             comboOptions: {
-                editable: false
+                editable: false,
+                displayField: 'label'
             },
             dpiText: this.dpifieldText,
             scaleText: this.scalefieldText,
