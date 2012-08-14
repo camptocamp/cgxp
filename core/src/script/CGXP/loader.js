@@ -44,6 +44,9 @@
         "plugins/Print.js",
         "plugins/Profile.js",
         "plugins/QueryBuilder.js",
+        // <redlining dependencies>
+        "../../../../sandbox/FeatureEditing/ux/widgets/FeatureEditingControler.js",
+        // </redlining dependencies>
         "plugins/Redlining.js",
         "plugins/ScaleChooser.js",
         "plugins/StreetView.js",
@@ -69,6 +72,15 @@
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/widgets/tree/WMSBrowserTreePanel.js",
         "../../../../geoext.ux/ux/WMSBrowser/resources/lang/fr.js",
         // </wmsbrowser dependencies>
+        // <streetview dependencies>
+        "../../../../geoext.ux/ux/StreetViewPanel/ux/control/StreetViewClick.js",
+        "../../../../geoext.ux/ux/StreetViewPanel/ux/widgets/StreetViewPanel.js",
+        // </streetview dependencies>
+        // <googleearthview dependencies>
+        "widgets/GoogleEarthPanel.js",
+        "../../../../gxp/src/script/plugins/GoogleEarth.js",
+        "../../../../openlayers.addins/GoogleEarthView/lib/OpenLayers/Control/GoogleEarthView.js",
+        // </googleearthview dependencies>
         "locale/en.js",
         "locale/fr.js",
         "locale/de.js",
