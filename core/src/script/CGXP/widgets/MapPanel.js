@@ -105,7 +105,8 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
     /** private: method[applyStateOnChangebaselayer]
      *
-     *  Apply the state on render event
+     *  Apply the state on usable base layer
+     *  (all Ext and GeoExt events will be too early).
      */
     applyStateOnChangebaselayer: function() {
         if (this.initialState && this.initialState.tooltip &&
