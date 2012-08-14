@@ -338,6 +338,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             // the print interface.
             printProvider.scales.each(translate_name);
             printProvider.layouts.each(translate_name);
+            printProvider.dpis.each(translate_name);
 
         }.createDelegate(this));
 
