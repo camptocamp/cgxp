@@ -485,6 +485,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         store.remove(r);
                         return false;
                     }
+                    r.set('label', OpenLayers.i18n(r.get('name')));
                 });
                 callback.call(this, store, geometryType);
             },
@@ -514,6 +515,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     showAttributesEditingWindow: function(store) {
         this.editorGrid = new GeoExt.ux.FeatureEditorGrid({
             store: store,
+            nameField: 'label',
             forceValidation: true,
             allowSave: true,
             allowCancel: true,
