@@ -578,17 +578,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.onMetadataAction(node);
                 break;
             case 'delete':
-                var tree = node.getOwnerTree();
-                node.remove();
-                if (node.attributes.layer) {
-                    node.layer.destroy();
-                }
-                else {
-                    Ext.each(node.attributes.allOlLayers, function(layer) {
-                        layer.destroy();
-                    });
-                }
-                tree.fireEvent('removegroup');
+                this.removeGroup(node);
                 this.getRootNode().eachChild(function(n) {
                     n.ownerTree.actionsPlugin.updateActions(n);
                 });
@@ -895,9 +885,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
                 node = this.root.childNodes[i];
-                node.remove();
-                node.layer.destroy();
-                this.fireEvent('removegroup');
+                this.removeGroup(node);
             }
         }
 
@@ -1323,6 +1311,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }, this);
         }
+    },
+
+    /** api: method[removeGroup]
+     * Removes a layer group.
+     * :arg node: ``Ext.tree.TreeNode``
+     */
+    removeGroup: function(node) {
+        node.remove();
+        if (node.attributes.layer) {
+            node.layer.destroy();
+        } else {
+            Ext.each(node.attributes.allOlLayers, function(layer) {
+                layer.destroy();
+            });
+        }
+        this.fireEvent('removegroup');
     }
 });
 
