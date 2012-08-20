@@ -233,8 +233,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                             split: true,
                             collapseMode: "mini"
                         });
-                        // mark as not rendered to force to render the new component.
-                        this.outputTarget.layout.rendered = false;
                     }
 
                     this.googleEarthPanel = new cgxp.GoogleEarthPanel({
@@ -307,11 +305,14 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                     this.googleEarthPanel.on("pluginready", this.pluginReadyCallback);
                     this.target.mapPanel.map.addControl(this.googleEarthViewControl);
 
+                    this.outputTarget.add(this.intermediateContainer);
+                    // mark as not rendered to force to render the new component.
+                    this.outputTarget.layout.rendered = false;
+
                     this.intermediateContainer.add(this.googleEarthPanel);
                     this.intermediateContainer.setSize(this.size, 0);
                     this.intermediateContainer.setVisible(true);
                     this.outputTarget.doLayout();
-
                 } else {
 
                     this.googleEarthPanel.un("pluginready", this.pluginReadyCallback);
