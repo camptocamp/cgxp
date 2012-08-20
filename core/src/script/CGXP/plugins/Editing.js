@@ -476,6 +476,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
         store.on({
             load: function() {
+                // Remove geometry fields, and add "label" fields for i18n.
                 var geometryType;
                 var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
                 store.each(function(r) {
@@ -483,7 +484,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     if (match) {
                         geometryType = match[1];
                         store.remove(r);
-                        return false;
                     }
                     r.set('label', OpenLayers.i18n(r.get('name')));
                 });
