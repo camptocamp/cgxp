@@ -109,14 +109,12 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  Method intended to be overriden at config level, so users dans specify
      *  specific treatments on server data
      *
-     *  By default, all parameters other than 'mnt' and 'mns' are automatically
-     *  set as '<parameter_name>_value' with the label '<parameter_name>_label'
+     *  By default, all parameters other than ``mnt`` and ``mns`` are
+     *  automatically  set as ``<parameter_name>_value`` with the label
+     *  ``<parameter_name>_label``.
      *
-     *  Parameters:
-     *  data {Object} an Ext.Ajax.request responseText
-     *
-     *  Return:
-     *  {Object}
+     *  :arg data: ``Object`` JavaScript literal created from the JSON response.
+     *  :return: ``Object``
      *
      *  Full config example:
      *
@@ -211,7 +209,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
 Ext.preg(cgxp.plugins.ContextualData.prototype.ptype, cgxp.plugins.ContextualData);
 
-/** api: constructor
+/** private: constructor
  *  .. class:: ContextualData.Control(config)
  *
  *    Shared Main Control Class.
@@ -223,25 +221,25 @@ Ext.preg(cgxp.plugins.ContextualData.prototype.ptype, cgxp.plugins.ContextualDat
  */
 cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
 
-    /** api: config[serviceUrl]
+    /** private: config[serviceUrl]
      *  ``String`` URL to access the server web service
      */
     serviceUrl: null,
 
-    /** api: config[streetviewLabelText]
+    /** private: config[streetviewLabelText]
      *  ``String``
      *  Text for the Streeview link (i18n).
      */
     streetviewLabelText: 'StreetView Link',
 
-    /** api: config[userValueErrorText]
+    /** private: config[userValueErrorText]
      *  ``String``
      *  Text for the error in case of wrong type of variable for custom data (i18n).
      */
     userValueErrorText: 'The value returned by the handleServerData methode ' +
         'must be an object. See the example in the API.',
 
-    /** api: config[userValueErrorTitleText]
+    /** private: config[userValueErrorTitleText]
      *  ``String``
      *  Text for the error title for userValueErrorText (i18n).
      */
@@ -359,7 +357,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
     }
 });
 
-/** api: constructor
+/** private: constructor
  *  .. class:: ContextualData.Tooltip(config)
  *
  *    Mouseover Control
@@ -369,13 +367,13 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
  */
 cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualData.Control, {
 
-    /** api: config[defaultTpl]
+    /** private: config[defaultTpl]
      *  ``String`` Used to generate the Ext.Template for popup content
      */
     defaultTpl: "Local Coordinates : {coord_x} {coord_y}<br />" +
         "WGS 84 : {wsg_x} {wsg_y}<br />",
 
-    /** api: config[defaultTplElevation]
+    /** private: config[defaultTplElevation]
      *  ``String`` Used to generate the Ext.Template for popup content with
      *  server elevation data
      */
@@ -383,12 +381,12 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
         "Elevation (Surface) : {elevation_dsm} [m]<br />" +
         "Height (Surface-Terrain) : {elevation_dhm} [m]<br />",
 
-    /** api: config[serviceUrl]
+    /** private: config[serviceUrl]
      *  ``String`` URL to access the profile service
      */
     serviceUrl: null,
 
-    /** api: config[popupTitleText]
+    /** private: config[popupTitleText]
      *  ``String``
      *  Text for the right click popup window (i18n).
      */
@@ -573,7 +571,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
     CLASS_NAME: "cgxp.plugins.ContextualData.Tooltip"
 });
 
-/** api: constructor
+/** private: constructor
  *  .. class:: ContextualData.ContextPopup(config)
  *
  *    Right-click Control
@@ -583,13 +581,13 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
  */
 cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.ContextualData.Control, {
 
-    /** api: config[mainTpl]
+    /** private: config[mainTpl]
      *  ``String`` Used to generate the base Ext.Template used for default popup
      *  content
      */
     mainTpl: "<table>{0}</table>",
 
-    /** api: config[coordTpl]
+    /** private: config[coordTpl]
      *  ``String`` Used to generate the base Ext.Template used for coordinates in
      *  popup content
      */
@@ -597,7 +595,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
 
-    /** api: config[elevationTpl]
+    /** private: config[elevationTpl]
      *  ``String`` Used to generate the base Ext.Template used for elevation in
      *  popup content
      */
@@ -606,7 +604,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
         "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
         "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>",
 
-    /** api: config[streetViewTpl]
+    /** private: config[streetViewTpl]
      *  ``String`` Used to generate the base Ext.Template used streetview link in
      *  popup content
      *
@@ -630,22 +628,22 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
         "&cbll={streetviewlat},{streetviewlon}&cbp=12,57.78,,0,8.1' " +
         "target='_blank'><font color='#990000'>{streetviewlabel}</font></a></td></tr>",
 
-    /** api: config[streetViewLink]
+    /** private: config[streetViewLink]
      *  ``Boolean`` Enable or disable the streeView link in the right click popup
      */
     streetViewLink: true,
 
-    /** api: config[map]
+    /** private: config[map]
      *  ``Object`` Map ref
      */
     map: null,
 
-    /** api: config[serviceUrl]
+    /** private: config[serviceUrl]
      *  ``String`` URL to access the profile service
      */
     serviceUrl: null,
 
-    /** api: config[popupTitleText]
+    /** private: config[popupTitleText]
      *  ``String``
      *  Text for the popup window title (i18n).
      */
