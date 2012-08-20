@@ -1251,7 +1251,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return theme;
     },
 
-    /** api :method[checkInRange]
+    /** api: method[checkInRange]
      *  Checks if a layer is in range (correct scale) and modifies node.
      *  rendering consequently
      *  :arg node: ``Ext.tree.TreeNode``
@@ -1297,7 +1297,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /** api: ethod[loadDefaultThemes]
+    /** api: method[loadDefaultThemes]
      *  Load the default Theme.
      */
     loadDefaultThemes: function() {
