@@ -138,48 +138,46 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     size: "40%",
 
     /** api: config[showBordersLayer]
-     *  ``Boolean`` or ``null`
+     *  ``Boolean`` or ``null``
      *  Enable or disable the Google Earth Plugin's built-in borders layer.
      *  Set this to one of three values:
-     *    true
-     *      force layer to be enabled
-     *    false
-     *      force layer to be disabled
-     *    null
-     *      leave layer as default
+     *
+     *  * ``true``: force layer to be enabled
+     *  * ``false``: force layer to be disabled
+     *  * ``null``: leave layer as default
      */
     showBordersLayer: null,
 
     /** api: config[showBuildingsLayer]
-     *  ``Boolean`` or ``null`
+     *  ``Boolean`` or ``null``
      *  Enable or disable the Google Earth Plugin's built-in buildings layer.
      *  See comments for showBordersLayer above.
      */
     showBuildingsLayer: null,
 
     /** api: config[showBuildingsLowResolutionLayer]
-     *  ``Boolean`` or ``null`
+     *  ``Boolean`` or ``null``
      *  Enable or disable the Google Earth Plugin's built-in low resolution buildings layer.
      *  See comments for showBordersLayer above.
      */
     showBuildingsLowResolutionLayer: null,
 
     /** api: config[showRoadsLayer]
-     *  ``Boolean`` or ``null`
+     *  ``Boolean`` or ``null``
      *  Enable or disable the Google Earth Plugin's built-in roads layer.
      *  See comments for showBordersLayer above.
      */
     showRoadsLayer: null,
 
     /** api: config[showTerrainLayer]
-     *  ``Boolean`` or ``null`
+     *  ``Boolean`` or ``null``
      *  Enable or disable the Google Earth Plugin's built-in terrain layer.
      *  See comments for showBordersLayer above.
      */
     showTerrainLayer: null,
 
     /** api: config[showTreesLayer]
-     *  ``Boolean`` or ``null`
+     *  ``Boolean`` or ``null``
      *  Enable or disable the Google Earth Plugin's built-in trees layer.
      *  See comments for showBordersLayer above.
      */

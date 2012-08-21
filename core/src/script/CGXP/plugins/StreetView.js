@@ -46,16 +46,16 @@ Ext.namespace("cgxp.plugins");
  *      });
  *
  *  Don't mis to add in the html file:
- *  .. code-block::
- *     <script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;key=<your key>`
  *
- *  In the jsbuild/app.cfg, add in `root`:
- *  .. code-block::
+ *  .. code-block:: html
+ *
+ *     <script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;key=<your key>'></script>
+ *
+ *  In the jsbuild/app.cfg, add in ``root``::
  *
  *      regiogis/static/lib/cgxp/geoext.ux/ux/StreetViewPanel
  *
- *  and in `include`:
- *  .. code-block::
+ *  and in ``include``::
  *
  *      CGXP/plugins/StreetView.js
  */

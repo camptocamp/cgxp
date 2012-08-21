@@ -76,7 +76,7 @@ cgxp.plugins.SwitchableWMTSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (Ext.isArray(config.args)) {
             config.args = config.args[0];
         }
-        var layer = new cgxp.layers.SwitchableWMTS(config.args);
+        var layer = new cgxp.plugins.SwitchableWMTSSource.Layer(config.args);
 
         // apply properties that may have come from saved config
         if ("visibility" in config) {
@@ -125,27 +125,18 @@ cgxp.plugins.SwitchableWMTSSource = Ext.extend(gxp.plugins.LayerSource, {
 
 Ext.preg(cgxp.plugins.SwitchableWMTSSource.prototype.ptype, cgxp.plugins.SwitchableWMTSSource);
 
-/** api: (define)
- *  module = cgxp.layers
- *  class = SwitchableWMTS
- */
-Ext.namespace("cgxp.layers");
 
-/** api: constructor
- *  .. class:: SwitchableWMTS(config)
- *
- */
-cgxp.layers.SwitchableWMTS = OpenLayers.Class(OpenLayers.Layer.WMTS, {
+cgxp.plugins.SwitchableWMTSSource.Layer = OpenLayers.Class(OpenLayers.Layer.WMTS, {
 
     /** 
-     * APIProperty: url
+     * Property: url
      * {String|Array(String)} The base URL or request URL template for the WMTS
      * service when zoomlevel threshold is reached.
      */
     secondaryUrl: null,
 
     /** 
-     * APIProperty: zoomThreshold
+     * Property: zoomThreshold
      * Max zoomlevel for using standard base url. Above this zoomlevel, the
      * secondaryUrl is used as base url.
      */
