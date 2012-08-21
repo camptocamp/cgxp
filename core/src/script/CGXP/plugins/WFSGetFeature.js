@@ -244,6 +244,9 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                         if (Ext.isArray(layers)) {
                             layers = layers.join(',');
                         }
+                        if (!layers) {
+                            return;
+                        }
                         layers = layers.split(',');
                         
                         // replacing layerGroups by child layers and filtering by 
