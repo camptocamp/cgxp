@@ -414,6 +414,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     layerIds.push(i);
                 }
                 if (layerIds.length === 0) {
+                    // we need to reset the cursor manually
+                    OpenLayers.Element.removeClass(self.map.viewPortDiv, "olCursorWait");
                     return;
                 }
                 options.url = baseURL + layerIds.join(',');
