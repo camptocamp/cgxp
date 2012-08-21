@@ -578,17 +578,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.onMetadataAction(node);
                 break;
             case 'delete':
-                var tree = node.getOwnerTree();
-                node.remove();
-                if (node.attributes.layer) {
-                    node.layer.destroy();
-                }
-                else {
-                    Ext.each(node.attributes.allOlLayers, function(layer) {
-                        layer.destroy();
-                    });
-                }
-                tree.fireEvent('removegroup');
+                this.removeGroup(node);
                 this.getRootNode().eachChild(function(n) {
                     n.ownerTree.actionsPlugin.updateActions(n);
                 });
@@ -742,20 +732,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     /** private: method[parseChildren}
      *  Parses recursively the children of a group node.
-     * 
+     *
      *  :arg child: ``Object`` the node to parse
-     *  :arg layer: ``<OpenLayers.Layer.WMS>`` The reference to the OL Layer, 
+     *  :arg layer: ``<OpenLayers.Layer.WMS>`` The reference to the OL Layer,
      *      present only for internal WMS.
      *  :arg result: ``Object`` The result object of the parsed children, it contains
      *     - allLayers ``Array(String)`` The list of WMS subLayers for this layer.
      *     - checkedLayers ``Array(String)`` The list of checked subLayers.
      *     - disclaimer ``Object`` The list layers disclaimers.
      *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
-     *  :arg currentIndex: ``int`` index there to add the layers on non 
+     *  :arg currentIndex: ``int`` index there to add the layers on non
      *          internal WMS (to have the right order).
-     *  :arg realIndex: ``int`` the deference with ``currentIndex`` is that is 
-     *          current index is where the layer should be added in the actual 
-     *          configuration, the ``realIndex`` is the position where the 
+     *  :arg realIndex: ``int`` the deference with ``currentIndex`` is that is
+     *          current index is where the layer should be added in the actual
+     *          configuration, the ``realIndex`` is the position where the
      *          layer should be in the final configuration.
      */
     parseChildren: function(child, layer, result, currentIndex, realIndex) {
@@ -895,16 +885,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
                 node = this.root.childNodes[i];
-                node.remove();
-                node.layer.destroy();
-                this.fireEvent('removegroup');
+                this.removeGroup(node);
             }
         }
 
         var groupNodes = [];
         // reverse to have the first layer in the list at the top
         Ext.each(theme.children.concat().reverse(), function(group) {
-            groupNodes.push(this.loadGroup(group, undefined, undefined, 
+            groupNodes.push(this.loadGroup(group, undefined, undefined,
                     undefined, undefined, false));
         }, this);
 
@@ -1046,7 +1034,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (!nowarning) {
                 // delayed to solved conflict with scroll
                 new Ext.util.DelayedTask(function() {
-                    var html = [ 
+                    var html = [
                         '<div class="layertree-msg">',
                             this.themealreadyloadedText,
                         '</div>'
@@ -1263,7 +1251,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return theme;
     },
 
-    /** api :method[checkInRange]
+    /** api: method[checkInRange]
      *  Checks if a layer is in range (correct scale) and modifies node.
      *  rendering consequently
      *  :arg node: ``Ext.tree.TreeNode``
@@ -1309,7 +1297,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /** api: ethod[loadDefaultThemes]
+    /** api: method[loadDefaultThemes]
      *  Load the default Theme.
      */
     loadDefaultThemes: function() {
@@ -1323,6 +1311,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }, this);
         }
+    },
+
+    /** api: method[removeGroup]
+     * Removes a layer group.
+     * :arg node: ``Ext.tree.TreeNode``
+     */
+    removeGroup: function(node) {
+        node.remove();
+        if (node.attributes.layer) {
+            node.layer.destroy();
+        } else {
+            Ext.each(node.attributes.allOlLayers, function(layer) {
+                layer.destroy();
+            });
+        }
+        this.fireEvent('removegroup');
     }
 });
 

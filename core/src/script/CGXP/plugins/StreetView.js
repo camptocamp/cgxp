@@ -86,9 +86,6 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
     /** private: property[panel]
      *  The Street View panel.
      */
-    /** private: property[intermediateContainer]
-     *  Required intermediate container
-     */
 
     /** api: method[addActions]
      */
@@ -108,30 +105,33 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                                 showLinks: true,
                                 showTool: true,
                                 readPermalink: false,
-                                baseUrl: this.baseURL
-                            });
-                            this.intermediateContainer = this.outputTarget.add({
+                                baseUrl: this.baseURL,
                                 autoDestroy: false,
-                                layout: "fit",
                                 region: "east",
                                 split: true,
                                 collapseMode: "mini"
                             });
-                            this.intermediateContainer.add(this.panel);
-                            // mark as not rendered to force to render the new component.
-                            this.outputTarget.layout.rendered = false;
                         }
                         else {
                             this.panel.panorama.navigationToolLayer.setVisibility(true);
+                            this.panel.panorama.navigationLinkLayer.setVisibility(true);
                         }
-                        this.intermediateContainer.setSize(this.size, 0);
-                        this.intermediateContainer.setVisible(true);
-                        this.intermediateContainer.doLayout();
-                        this.outputTarget.doLayout();
+                        this.outputTarget.add(this.panel);
+                        // mark as not rendered to force to render the new component.
+                        this.outputTarget.layout.rendered = false;
+
+                        this.panel.setSize(this.size, 0);
+                        this.panel.setVisible(true);
+                        this.panel.doLayout();
+
+                        (function() {
+                            this.outputTarget.doLayout();
+                        }).defer(100, this);
                     }
                     else {
                         this.panel.panorama.navigationToolLayer.setVisibility(false);
-                        this.intermediateContainer.setVisible(false);
+                        this.panel.panorama.navigationLinkLayer.setVisibility(false);
+                        this.panel.setVisible(false);
                         this.outputTarget.doLayout();
                     }
                 },
