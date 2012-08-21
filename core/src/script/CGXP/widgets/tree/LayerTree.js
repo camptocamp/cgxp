@@ -990,7 +990,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 };
                 this.parseChildren(group, layer, result);
                 group.layer = layer;
-                group.allLayers = result.allLayers;
+                group.allLayers = result.allLayers.reverse();
                 group.allOlLayers = [layer];
                 layer.params.LAYERS = layers || result.checkedLayers;
                 this.mapPanel.layers.insert(index,
