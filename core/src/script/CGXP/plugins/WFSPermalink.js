@@ -42,14 +42,12 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_wfspermalink",
- *              componentConfig: {
- *                  WFSURL: "$${request.route_url('mapserverproxy', path='')}",
- *                  WFSGetFeatureId: "wfsgetfeature",
- *                  maxFeatures: 10,
- *                  pointRecenterZoom: 13,
- *                  srsName: 'EPSG:21781',
- *                  events: EVENTS
- *              }
+ *              WFSURL: "$${request.route_url('mapserverproxy', path='')}",
+ *              WFSGetFeatureId: "wfsgetfeature",
+ *              maxFeatures: 10,
+ *              pointRecenterZoom: 13,
+ *              srsName: 'EPSG:21781',
+ *              events: EVENTS
  *          }]
  *          ...
  *      });
@@ -65,83 +63,58 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_wfspermalink */
     ptype: "cgxp_wfspermalink",
 
-    /** api: config[componentConfig]
-     *  ``Object``
-     *  Parameters of the WFS query tool.
-     */
-    componentConfig: null,
-
-    init: function() {
-        cgxp.plugins.WFSPermalink.superclass.init.apply(this, arguments);
-        this.componentConfig.target = this.target;
-        new cgxp.WFSPermalink(this.componentConfig);
-    }
-});
-
-Ext.preg(cgxp.plugins.WFSPermalink.prototype.ptype,
-         cgxp.plugins.WFSPermalink);
-
-/** api: (define)
- *  module = cgxp
- *  class = WFSPermalink
- */
-
-Ext.namespace("cgxp");
-
-/** api: constructor
- *  .. class:: WFSPermalink(config)
- *
- *    Utility class that parses the URL parameters and make a WFS request.
- */
-cgxp.WFSPermalink = Ext.extend(Ext.Component, {
-
     /** api: config[stateId]
      *  ``String``
-     * Prefix of the permalink parameters.
+     * Prefix of the permalink parameters. Default is "wfs". (Optional)
      */
     stateId: 'wfs',
 
     /** api: config[WFSTypes]
      *  ``Array``
-     *  The queryable type on the internal server.
+     *  The queryable type on the internal server. Can be obtained
+     *  from any ``cgxp.plugins.WFSGetFeature`` tool configured in
+     *  the viewer. See the ``WFSGetFeatureId`` option. (Optional)
      */
     WFSTypes: null,
 
+    /** api: config[WFSGetFeatureId]
+     *  ``String``
+     *  The id of a ``cgxp.plugins.WFSGetFeature`` tool used in
+     *  the viewer. (Optional) One of ``WFSTypes`` and
+     *  ``WFSGetFeatureId`` should be provided.
+     */
+    WFSGetFeatureId: null,
+
     /** api: config[WFSURL]
      *  ``String``
-     *  The mapserver proxy URL
+     *  The mapserver proxy URL. (Required)
      */
     WFSURL: null,
 
     /** api: config[maxFeatures]
      *  ``Integer``
-     *  Maximum number of features returned.
+     *  Maximum number of features returned. Default is 100. (Optional)
      */
     maxFeatures: 100,
 
     /** api: config[events]
      *  ``Object``
-     *  An Observer used to send events.
+     *  An Observer used to send events. (Required)
      */
     events: null,
 
     /** api: config[srsName]
      *  ``String``
-     *  Projection code.
+     *  Projection code. (Required)
      */
     srsName: null,
 
     /** api: config[pointRecenterZoom]
      *  ``Integer``
-     *  Zoomlevel to use when result is a single point feature.
+     *  Zoom level to use when result is a single point feature. If
+     *  not set the map is not zoomed to a specific zoom level. (Optional)
      */
     pointRecenterZoom: null,
-
-    /** api: config[target]
-     *  ``gxp.Viewer``
-     *  Reference to the viewer.
-     */
-    target: null,
 
     /** private: property[filters]
      *  ``Object``
@@ -155,14 +128,20 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
      */
     layername: null,
 
-    /** private: method[initComponent]
+    /** private: method[init]
+     *  Initialize the plugin.
      */
-    initComponent: function() {
-        cgxp.WFSPermalink.superclass.initComponent.apply(this, arguments);
+    init: function() {
+        cgxp.plugins.WFSPermalink.superclass.init.apply(this, arguments);
 
         if (!this.WFSTypes && this.WFSGetFeatureId &&
             this.target.tools[this.WFSGetFeatureId]) {
             this.WFSTypes = this.target.tools[this.WFSGetFeatureId].WFSTypes;
+        }
+
+        var state = Ext.state.Manager.get(this.stateId);
+        if (state) {
+            this.applyState(Ext.apply({}, state));
         }
     },
 
@@ -174,13 +153,13 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
             // layername is missing or unknown => do nothing
             return;
         }
-        this.layername = state.layer;
+
+        var layerName = state.layer;
         delete state.layer;
-        this.filters = state;
 
         var protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
-            featureType: this.layername,
+            featureType: layerName,
             srsName: this.srsName,
             featureNS: 'http://mapserver.gis.umn.edu/mapserver',
             version: "1.1.0"
@@ -188,29 +167,32 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
 
         this.events.fireEvent('querystarts');
         protocol.read({
-            filter: this.createFilter(),
+            filter: this.createFilter(layerName, state),
             maxFeatures: this.maxFeatures,
-            callback: this.handleResult,
+            callback: function(response) {
+                this.handleResponse(response, layerName);
+            },
             scope: this
         });
     },
 
     /** private: method[createFilter]
-     *
      *  Build a WFS filter according to the permalink parameters.
+     *  :param layerName: ``String`` The layer name.
+     *  :param state: ``Object`` The state object.
      */
-    createFilter: function() {
-        if (!this.filters) {
+    createFilter: function(layerName, state) {
+        if (!state) {
             return null;
         }
         
         var filters = [], prop, values, propFilters, i, len;
-        for (prop in this.filters) {
-            if (!this.filters[prop]) {
+        for (prop in state) {
+            if (!state[prop]) {
                 continue;
             }
-            values = this.filters[prop] instanceof Array ?
-                     this.filters[prop] : [this.filters[prop]];
+            values = state[prop] instanceof Array ?
+                     state[prop] : [state[prop]];
             propFilters = [];
             for (i = 0, len = values.length; i < len; i++) {
                 propFilters.push(new OpenLayers.Filter.Comparison({
@@ -243,14 +225,16 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         });
     },
 
-    /** private: method[handleResult]
-     *  :param result: ``Object`` Response to the WFS request.
+    /** private: method[handleResponse]
+     *  :param response: ``OpenLayers.Protocol.Response`` Response to
+     *      the WFS request.
+     *  :param layerName: ``String`` The layer name.
      *
      *  Callback of the WFS request.
      */
-    handleResult: function(result) {
-        if (result.success() && result.features.length) {
-            var features = result.features;
+    handleResponse: function(response, layerName) {
+        if (response.success() && response.features.length) {
+            var features = response.features;
             if (!(OpenLayers.Util.isArray(features))) {
                 features = [features];
             }
@@ -268,7 +252,7 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
                 // FIXME: workaround: type should already be available
                 // in the WFS response
                 if (!features[i].type) {
-                    features[i].type = this.layername;
+                    features[i].type = layerName;
                 }
             }
             if (maxExtent) {
@@ -284,3 +268,6 @@ cgxp.WFSPermalink = Ext.extend(Ext.Component, {
         }
     }
 });
+
+Ext.preg(cgxp.plugins.WFSPermalink.prototype.ptype,
+         cgxp.plugins.WFSPermalink);
