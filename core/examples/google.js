@@ -1,17 +1,19 @@
+var app;
 Ext.onReady(function() {
     GeoExt.Lang.set("en");
 
-    var app = new gxp.Viewer({
+    app = new gxp.Viewer({
         portalConfig: {
-            renderTo: document.body,
             layout: "border",
-            width: 650,
-            height: 400,
             items: [{
                 id: "center",
                 region: "center",
                 layout: "border",
                 items: "mymap"
+            }, {
+                id: "east",
+                region: "east",
+                width: 250
             }]
         },
         tools: [{
@@ -23,6 +25,15 @@ Ext.onReady(function() {
             ptype: "cgxp_googleearthview",
             outputTarget: 'center',
             toggleGroup: 'maptools'
+        }, {
+            ptype: "cgxp_layertree",
+            outputTarget: "east",
+            outputConfig: {
+                autoScroll: true,
+                wmsURL: 'http://www2.demis.nl/wms/wms.asp?wms=WorldMap',
+                themes: App.themes,
+                defaultThemes: App.default_themes
+            }
         }],
         sources: {
             osm: {
@@ -36,8 +47,8 @@ Ext.onReady(function() {
             units: "m",
             maxResolution: 156543.0339,
             maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-            center: [659704.09163989,5711205.1705888],
-            zoom: 15,
+            center: [-160300.06674231394,5311971.846945471],
+            zoom: 8,
             layers: [{
                 source: "osm",
                 name: "mapnik"

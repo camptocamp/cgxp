@@ -32,9 +32,10 @@ Ext.onReady(function() {
     gxp.plugins.GoogleEarth.loader.loadScript({
         callback: function() {
             ge = new cgxp.GoogleEarthPanel({
+                id: 'googleearthpanel',
                 mapPanel: mapPanel,
-                height: 150,
-                width: 200
+                height: 250,
+                width: 500
             });
             ge.render(document.body);
         },

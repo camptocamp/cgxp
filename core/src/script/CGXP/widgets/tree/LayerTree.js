@@ -20,6 +20,9 @@
  * @requires GeoExt/data/LayerRecord.js
  * @include OpenLayers/Layer/WMS.js
  * @include OpenLayers/Format/WMTSCapabilities/v1_0_0.js
+ * @include OpenLayers/Format/KML.js
+ * @include OpenLayers/Protocol/HTTP.js
+ * @include OpenLayers/Strategy/Fixed.js
  * @requires GeoExt/widgets/tree/LayerParamNode.js
  * @include GeoExt/widgets/tree/TreeNodeUIEventMixin.js
  * @include GeoExt/plugins/TreeNodeActions.js
@@ -670,10 +673,43 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 map.setCenter(center, zoom);
                 break;
             case 'showin3d':
-                var googleEarthPanel = Ext.getCmp("googleearthpanel");
-                if (googleEarthPanel) {
-                    googleEarthPanel.toggleKmlUrl(node.attributes.kml);
+                var n = node;
+
+                // load the KML in the 2D map
+                var layer = new OpenLayers.Layer.Vector(n.text, {
+                    strategies: [new OpenLayers.Strategy.Fixed()],
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        // Note: this won't work for crossdomain urls
+                        url: node.attributes.kml,
+                        format: new OpenLayers.Format.KML({
+                            extractStyles: true,
+                            internalProjection: n.layer.map.projection
+                        })
+                    })
+                });
+                n.layer.map.addLayer(layer);
+
+                // load the KML in the Earth view
+                function loadKml(kml) {
+                    alert('ready');
+                    var googleEarthPanel = Ext.getCmp("googleearthpanel");
+                    if (googleEarthPanel) {
+                        googleEarthPanel.toggleKmlUrl(node.attributes.kml);
+                    }
                 }
+                var tool;
+                for (var i in app.tools) {
+                    if (app.tools[i].ptype == 'cgxp_googleearthview') {
+                        tool = app.tools[i];
+                        tool.actions[0].toggle(true);
+                        break;
+                    }
+                }
+                if (tool) {
+                    console.log(tool, tool.googleEarthPanel);
+                    tool.googleEarthPanel.on("pluginready", loadKml(node.attributes.kml));
+                }
+
                 break;
         }
 
