@@ -44,6 +44,7 @@ App.themes = {
                 "metadataUrl": "http://yahoo.fr",
                 "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png",
                 "legend": true,
+                "kml": "http://dev.openlayers.org/releases/OpenLayers-2.12/examples/kml/sundials.kml",
                 "legendImage": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
             }]
         }],
