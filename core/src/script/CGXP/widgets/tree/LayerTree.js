@@ -658,7 +658,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 key = 'legend';
                 break;
             case 'zoomtoscale':
-                    var n = node,
+                var n = node,
                     map = n.layer.map,
                     res = map.getResolution(),
                     zoom,
@@ -673,21 +673,29 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 map.setCenter(center, zoom);
                 break;
             case 'showin3d':
-                var n = node;
+                var n = node,
+                    map = n.layer.map,
+                    layerName = n.text + '_kml';
 
                 // load the KML in the 2D map
-                var layer = new OpenLayers.Layer.Vector(n.text, {
-                    strategies: [new OpenLayers.Strategy.Fixed()],
-                    protocol: new OpenLayers.Protocol.HTTP({
-                        // Note: this won't work for crossdomain urls
-                        url: node.attributes.kml,
-                        format: new OpenLayers.Format.KML({
-                            extractStyles: true,
-                            internalProjection: n.layer.map.projection
+                if (!map.getLayersByName(layerName).length) {
+                    var layer = new OpenLayers.Layer.Vector(layerName, {
+                        strategies: [new OpenLayers.Strategy.Fixed()],
+                        protocol: new OpenLayers.Protocol.HTTP({
+                            // Note: this won't work for crossdomain urls
+                            url: node.attributes.kml,
+                            format: new OpenLayers.Format.KML({
+                                extractStyles: true,
+                                internalProjection: map.projection
+                            })
                         })
-                    })
-                });
-                n.layer.map.addLayer(layer);
+                    });
+                    map.addLayer(layer);
+                } else {
+                    Ext.each(map.getLayersByName(layerName), function(layer) {
+                        map.removeLayer(layer);
+                    });
+                }
 
                 // load the KML in the Earth view
                 function loadKml(kml) {
