@@ -7,18 +7,6 @@ App.themes = {
             "name": "Theme 1 - Physical",
             "isBaseLayer": false,
             "children": [{
-                "name": "Bathymetry",
-                "isChecked": true,
-                "metadataUrl": "http://yahoo.fr",
-                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
-            }, {
-                "name": "Topography",
-                "legend": true,
-                "maxResolutionHint": 0.1
-            }, {
-                "name": "Hillshading",
-                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/communes.png"
-            }, {
                 "name": "Features",
                 "isExpanded": true,
                 "children": [{
@@ -28,20 +16,36 @@ App.themes = {
                 }, {
                     "name": "Waterbodies",
                     "legend": true,
+                    "isChecked": true,
                     "legendRule": "default"
                 }, {
                     "name": "Others",
                     "children": [{
                         "name": "Spot elevations",
                         "legend": true,
+                        "isChecked": true,
                         "minResolutionHint": 0.00005,
                         "maxResolutionHint": 0.002
-
                     }, {
                         "name": "Streams",
+                        "isChecked": true,
                         "legend": true
                     }]
                 }]
+            }, {
+                "name": "Hillshading",
+                "isChecked": true,
+                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/communes.png"
+            }, {
+                "name": "Topography",
+                "isChecked": true,
+                "legend": true,
+                "maxResolutionHint": 0.1
+            }, {
+                "name": "Bathymetry",
+                "isChecked": true,
+                "metadataUrl": "http://yahoo.fr",
+                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
             }]
         }],
         "name": "Theme 1",
