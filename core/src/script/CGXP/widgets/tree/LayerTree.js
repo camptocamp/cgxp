@@ -691,7 +691,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
                 // load the KML in the Earth view
                 function loadKml(kml) {
-                    alert('ready');
                     var googleEarthPanel = Ext.getCmp("googleearthpanel");
                     if (googleEarthPanel) {
                         googleEarthPanel.toggleKmlUrl(node.attributes.kml);
@@ -701,13 +700,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 for (var i in app.tools) {
                     if (app.tools[i].ptype == 'cgxp_googleearthview') {
                         tool = app.tools[i];
-                        tool.actions[0].toggle(true);
+                        var action = tool.actions[0];
+                        if (!action.pressed) {
+                            tool.actions[0].toggle(true);
+                            tool.googleEarthPanel.on("pluginready", function() {
+                                loadKml(node.attributes.kml);
+                            });
+                        } else {
+                            loadKml(node.attributes.kml);
+                        }
                         break;
                     }
-                }
-                if (tool) {
-                    console.log(tool, tool.googleEarthPanel);
-                    tool.googleEarthPanel.on("pluginready", loadKml(node.attributes.kml));
                 }
 
                 break;
