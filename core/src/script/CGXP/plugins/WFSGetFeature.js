@@ -43,9 +43,14 @@ Ext.namespace("cgxp.plugins");
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
- *              ptype: 'cgxp_addkmlfile',
- *              outputTarget: 'center.bbar',
- *              echoURL: "${request.route_url('echo')}",
+ *              ptype: 'cgxp_wfsgetfeature',
+ *              WFSURL: "${request.route_url('mapserverproxy', path='')}",
+ *              actionTarget: 'center.tbar',
+ *              events: EVENTS,
+ *              WFSTypes: ${WFSTypes | n},
+ *              externalWFSTypes: ${externalWFSTypes | n},
+ *              enableWMTSLayers: true,
+ *              toggleGroup: "maptools"
  *          }]
  *          ...
  *      });
