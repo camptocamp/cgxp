@@ -242,11 +242,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :returns: ``Ext.tree.TreeNode``
      */
     addGroup: function(group, internalWMS) {
+        var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
         function addNodes(children, parentNode, level) {
             if (!level) {
                 level = 1;
             }
-            var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
             Ext.each(children, function(item) {
                 var actions = !internalWMS ? [{
                     action: "opacity",
