@@ -29,7 +29,7 @@ Ext.namespace("cgxp");
 
 /** api: constructor
  *  .. class:: MapOpacitySlider(config)
- */   
+ */
 cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
 
     /** api: config[orthoRef]
@@ -64,6 +64,12 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     stateEvents: ['opacitychange', 'changebaselayer'],
 
+    /** private: property[layers]
+     *  ``Array(OpenLayers.Layer)``
+     *  The list of background layers.
+     */
+    layers: null,
+
     /**
      * private: method[initComponent]
      * Creates the map toolbar.
@@ -85,14 +91,9 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             'changebaselayer'
         );
 
-        // we should get the layers list for to combobox before 
-        // changeing the base layer to have the right order. 
-        var layers = this.map.getLayersBy('group', 'background');
-        Ext.each(layers,
-            function(layer) {
-                layer.setVisibility(false);
-            }
-        );
+        // we should get the layers list for combobox before
+        // changing the base layer to have the right order.
+        this.layers = this.map.getLayersBy('group', 'background');
         var baseLayer = this.map.getLayersBy('ref', this.defaultBaseLayerRef)[0];
         if (baseLayer) {
             this.updateBaseLayer(baseLayer);
@@ -102,7 +103,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         this.add([
             this.createOrthoLabel(),
             this.opacitySlider,
-            this.createBaselayerCombo(layers)
+            this.createBaselayerCombo()
         ]);
     },
 
@@ -114,7 +115,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      * {Ext.BoxComponent} The opacity slider
      */
     createOpacitySlider: function() {
-        var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0]
+        var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
         var slider = new GeoExt.LayerOpacitySlider({
             width: 100,
             layer: orthoLayer,
@@ -125,8 +126,8 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             maxvalue: 100,
             style: "margin-right: 10px;"
         });
-        this.map.events.register("changebaselayer", this, function(e) { 
-            slider.complementaryLayer = e.layer; 
+        this.map.events.register("changebaselayer", this, function(e) {
+            slider.complementaryLayer = e.layer;
             slider.complementaryLayer.setVisibility(!(orthoLayer.opacity == 1));
             this.fireEvent('changebaselayer');
         });
@@ -156,16 +157,16 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      * Returns:
      * {Ext.form.ComboBox} The combobox.
      */
-    createBaselayerCombo: function(layers) {
-        if (layers.length == 1) {
+    createBaselayerCombo: function() {
+        if (this.layers.length == 1) {
             return new Ext.BoxComponent({
-                html: '<span class="tools-baselayer-label">' + layers[0].name + '</span>'
+                html: '<span class="tools-baselayer-label">' + this.layers[0].name + '</span>'
             });
         }
 
         // base layer store
         var store = new GeoExt.data.LayerStore({
-           layers: layers
+           layers: this.layers
         });
 
         var combo = new Ext.form.ComboBox({
@@ -195,11 +196,16 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         return combo;
     },
 
+    /** private: method[updateBaseLayer]
+     *  Updates the base layer.
+     *
+     *  :arg newBaseLayer: ``OpenLayers.Layer`` The new base layer
+     */
     updateBaseLayer: function(newBaseLayer) {
         if (this.map.allOverlays) {
-            this.map.layers[0].setVisibility(false);
+            Ext.invoke(this.layers, "setVisibility", false);
             this.map.setLayerIndex(newBaseLayer, 0);
-            this.map.layers[0].setVisibility(true);
+            newBaseLayer.setVisibility(true);
         } else {
             this.map.setBaseLayer(newBaseLayer);
         }
