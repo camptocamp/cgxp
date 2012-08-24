@@ -1,4 +1,4 @@
-var mapPanel, map, tree, ge;
+var mapPanel, map, tree;
 Ext.onReady(function() {
     Ext.QuickTips.init();
 
@@ -28,22 +28,4 @@ Ext.onReady(function() {
     tree.render('tree');
 
     tree.loadDefaultThemes();
-
-    gxp.plugins.GoogleEarth.loader.loadScript({
-        callback: function() {
-            ge = new cgxp.GoogleEarthPanel({
-                id: 'googleearthpanel',
-                mapPanel: mapPanel,
-                height: 250,
-                width: 500
-            });
-            ge.render(document.body);
-        },
-        errback: Ext.emptyFn,
-        failure: Ext.emptyFn,
-        ready: Ext.emptyFn,
-        scope: this,
-        timeout: 30 * 1000
-    });
-
 });
