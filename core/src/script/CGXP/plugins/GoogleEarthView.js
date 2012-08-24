@@ -63,7 +63,7 @@ Ext.namespace("cgxp.plugins");
  *                  collapseMode: "mini",
  *                  hidden: true,
  *                  bodyStyle: 'background-color: transparent;'
- *              }, 
+ *              },
  *              {
  *                  layout: "accordion",
  *                  id: "left-panel",
@@ -101,7 +101,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: "cgxp_menushortcut",
  *              actionTarget: "center.bbar",
  *              type: '->'
- *          }, 
+ *          },
  *          {
  *              ptype: "cgxp_addkmlfile",
  *              echoUrl: "${request.route_url('echo', path='')}",
@@ -343,8 +343,24 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             }
         }, this.actionConfig);
         return cgxp.plugins.GoogleEarthView.superclass.addActions.apply(this, [button]);
-    }
+    },
 
+    /** api: config[show]
+     *  Toggle the action and shows the GoogleEarthPanel
+     *
+     *  :arg callback: ``Function`` the function to call when plugin is ready
+     */
+    show: function(callback) {
+        var action = this.actions[0];
+        if (!action.pressed) {
+            this.actions[0].toggle(true);
+            this.googleEarthPanel.on("pluginready", function() {
+                callback.call();
+            });
+        } else {
+            callback.call();
+        }
+    }
 });
 
 Ext.preg(cgxp.plugins.GoogleEarthView.prototype.ptype, cgxp.plugins.GoogleEarthView);

@@ -699,19 +699,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         });
                     }
                 }
-                var tool;
-                for (var i in app.tools) {
-                    if (app.tools[i].ptype == 'cgxp_googleearthview') {
-                        tool = app.tools[i];
-                        var action = tool.actions[0];
-                        if (!action.pressed) {
-                            tool.actions[0].toggle(true);
-                            tool.googleEarthPanel.on("pluginready", function() {
-                                loadKml(node.attributes.kml);
-                            });
-                        } else {
-                            loadKml(node.attributes.kml);
-                        }
+                var tool,
+                    viewer = this.target;
+                for (var i in viewer.tools) {
+                    if (viewer.tools[i].ptype == 'cgxp_googleearthview') {
+                        tool = viewer.tools[i];
+                        tool.show(loadKml.createCallback(null, [node.attributes.kml]);
                         break;
                     }
                 }
