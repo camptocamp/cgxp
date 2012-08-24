@@ -203,11 +203,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     updateBaseLayer: function(newBaseLayer) {
         if (this.map.allOverlays) {
-            Ext.each(this.layers,
-                function(layer) {
-                    layer.setVisibility(false);
-                }
-            );
+            Ext.invoke(this.layers, "setVisibility", false);
             this.map.setLayerIndex(newBaseLayer, 0);
             newBaseLayer.setVisibility(true);
         } else {
