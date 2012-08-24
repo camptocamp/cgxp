@@ -677,31 +677,26 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     map = n.layer.map,
                     layerName = n.text + '_kml';
 
-                // load the KML in the 2D map
-                if (!map.getLayersByName(layerName).length) {
-                    var layer = new OpenLayers.Layer.Vector(layerName, {
-                        strategies: [new OpenLayers.Strategy.Fixed()],
-                        protocol: new OpenLayers.Protocol.HTTP({
-                            // Note: this won't work for crossdomain urls
-                            url: node.attributes.kml,
-                            format: new OpenLayers.Format.KML({
-                                extractStyles: true,
-                                internalProjection: map.projection
-                            })
-                        })
-                    });
-                    map.addLayer(layer);
-                } else {
-                    Ext.each(map.getLayersByName(layerName), function(layer) {
-                        map.removeLayer(layer);
-                    });
-                }
-
                 // load the KML in the Earth view
                 function loadKml(kml) {
-                    var googleEarthPanel = Ext.getCmp("googleearthpanel");
-                    if (googleEarthPanel) {
-                        googleEarthPanel.toggleKmlUrl(node.attributes.kml);
+                    // load the KML in the 2D map
+                    // this should trigger its load in the 3D viewer as well
+                    if (!map.getLayersByName(layerName).length) {
+                        var layer = new OpenLayers.Layer.Vector(layerName, {
+                            strategies: [new OpenLayers.Strategy.Fixed()],
+                            protocol: new OpenLayers.Protocol.HTTP({
+                                url: node.attributes.kml,
+                                format: new OpenLayers.Format.KML({
+                                    extractStyles: true,
+                                    internalProjection: map.projection
+                                })
+                            })
+                        });
+                        map.addLayer(layer);
+                    } else {
+                        Ext.each(map.getLayersByName(layerName), function(layer) {
+                            map.removeLayer(layer);
+                        });
                     }
                 }
                 var tool;
