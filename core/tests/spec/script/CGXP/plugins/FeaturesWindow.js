@@ -67,4 +67,25 @@ describe('plugins.FeaturesWindow', function() {
             expect(fw.featuresWindow).toBeInstanceOf(Ext.Window);
         });
     });
+    describe('when closing the window', function() {
+        beforeEach(function() {
+            fw = new cgxp.plugins.FeaturesWindow({});
+            fw.layers = {};
+            fw.target = {
+                mapPanel: {
+                    body: document.body
+                }
+            };
+            fw.showWindow([
+                new OpenLayers.Feature.Vector(null, {})
+            ]);
+            fw.featuresWindow.close();
+        });
+        afterEach(function() {
+            fw.featuresWindow.destroy();
+        });
+        it('empties the feature store', function() {
+            expect(fw.store.getCount()).toEqual(0);
+        });
+    });
 });
