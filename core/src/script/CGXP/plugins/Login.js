@@ -86,6 +86,12 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     actionConfig: null,
 
+    /** api[config]: extraHtml
+     *  ``String``
+     *  Some extra HTML code to put below the login form (optional).
+     */
+    extraHtml: null,
+
     button: null,
     loginForm: null,
 
@@ -106,10 +112,18 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
         this.loginForm = this.createLoginForm();
+        var items = [this.loginForm];
+
+        if (this.extraHtml) {
+            items.push({
+                xtype: 'box',
+                html: this.extraHtml
+            });
+        }
 
         var loginWindow = new cgxp.tool.Window({
             width: 250,
-            items: this.loginForm
+            items: items
         });
         loginWindow.render(Ext.getBody());
 
