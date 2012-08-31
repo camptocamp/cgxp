@@ -274,7 +274,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 closeAction: 'hide',
                 items: [this.grid],
                 listeners: {
-                    close: function() {
+                    hide: function() {
                         this.store.removeAll();
                     },
                     scope: this

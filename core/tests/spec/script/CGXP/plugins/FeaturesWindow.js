@@ -79,7 +79,7 @@ describe('plugins.FeaturesWindow', function() {
             fw.showWindow([
                 new OpenLayers.Feature.Vector(null, {})
             ]);
-            fw.featuresWindow.close();
+            fw.featuresWindow.hide();
         });
         afterEach(function() {
             fw.featuresWindow.destroy();
