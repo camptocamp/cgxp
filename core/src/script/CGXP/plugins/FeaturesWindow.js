@@ -272,7 +272,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 height: 280,
                 title: this.windowTitleText,
                 closeAction: 'hide',
-                items: [this.grid]
+                items: [this.grid],
+                listeners: {
+                    hide: function() {
+                        this.store.removeAll();
+                    },
+                    scope: this
+                }
             });
         } else {
             this.featuresWindow.add(this.grid);
