@@ -6,6 +6,10 @@ Ext.onReady(function() {
         portalConfig: {
             layout: "border",
             items: [{
+                region: "north",
+                html: "This example shoes how to integrate <b>Google plugins</b> (StreetView and GoogleEarth) in GXP Viewer.<br/>" +
+                    "One can load a <b>KML</b> for the <b>Bathymetry</b> layer (hover the node in the tree and click on the globe icon). This should show markers on the 2D map as well as on the 3D plugin (which should open automatically)."
+            }, {
                 id: "center",
                 region: "center",
                 layout: "border",
@@ -42,17 +46,9 @@ Ext.onReady(function() {
         },
         map: {
             id: "mymap",
-            //region: "center",
-            projection: "EPSG:900913",
-            units: "m",
-            maxResolution: 156543.0339,
-            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-            center: [-160300.06674231394,5311971.846945471],
+            center: [-1.44, 43],
             zoom: 8,
-            layers: [{
-                source: "osm",
-                name: "mapnik"
-            }]
+            layers: [new OpenLayers.Layer('fake', {isBaseLayer: true})]
         }
     });
 });
