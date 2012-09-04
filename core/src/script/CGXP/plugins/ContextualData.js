@@ -106,7 +106,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** api: method[handleServerData]
-     *  Method intended to be overriden at config level, so users dans specify
+     *  Method intended to be overriden at config level, so users can specify
      *  specific treatments on server data
      *
      *  By default, all parameters other than ``mnt`` and ``mns`` are
