@@ -411,6 +411,30 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         });
 
         this.events.on('queryopen', function() {
+            if (this.currentGrid) {
+                this.currentGrid.getSelectionModel().clearSelections();
+            }
+            this.currentGrid = null;
+            this.vectorLayer.destroyFeatures();
+
+            /* this is important, if the grid are not cleared and created anew, 
+               the event viewready is not triggered and we fall on an ext bug
+               when we try to act on the grid before it is ready to be modified */
+            for (var gridName in this.gridByType) {
+                if (this.gridByType.hasOwnProperty(gridName)) {
+                    var grid = this.gridByType[gridName];
+                    grid.getSelectionModel().unbind();
+                    grid.destroy();
+                }
+            }
+            this.gridByType = {};
+
+            if (this.tabpan) {
+                this.tabpan.items.each(function (item) {
+                    this.tabpan.hideTabStripItem(item);
+                }.createDelegate(this));
+                this.tabpan.doLayout();
+            }
         }, this);
      
         this.events.on('queryclose', function() {
@@ -424,33 +448,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 return;
             }
 
-            if (this.currentGrid) {
-                this.currentGrid.getSelectionModel().clearSelections();
-            }
-            this.currentGrid = null;
-            this.vectorLayer.destroyFeatures();
-
             var grid;
-
-            /* this is important, if the grid are not cleared and created anew, 
-               the event viewready is not triggered and we fall on an ext bug
-               when we try to act on the grid before it is ready to be modified */
-            for (var gridName in this.gridByType) {
-                if (this.gridByType.hasOwnProperty(gridName)) {
-                    grid = this.gridByType[gridName];
-                    grid.getSelectionModel().unbind();
-                    grid.destroy();
-                }
-            }
-            this.gridByType = {};
-
-            if (this.tabpan) {
-                this.tabpan.items.each(function (item) {
-                    this.tabpan.hideTabStripItem(item);
-                }.createDelegate(this));
-                this.tabpan.doLayout();
-            }
-
             var currentType = {}, feature;
             for (var i = 0, len = features.length ; i < len ; i++) {
                 feature = features[i];
