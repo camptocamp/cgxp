@@ -75,7 +75,7 @@ Ext.namespace("cgxp.plugins");
  *      :class:`cgxp.plugins.WMSGetFeatureInfo`, and
  *      :class:`cgxp.plugins.QueryBuilder`.
  *
- */   
+ */
 cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_featuregrid */
@@ -140,9 +140,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     events: null,
 
     /** api: config[globalSelection]
-     *  ``Boolean`` If true, selection state are remembered across all result 
+     *  ``Boolean`` If true, selection state are remembered across all result
      *  tabs when switching tab.
-     *  Also the "select all", "select none" and "toggle" buttons act on all tabs 
+     *  Also the "select all", "select none" and "toggle" buttons act on all tabs
      *  and not only the active tab.
      *  This also enable global result in export pdf. Default is false.
      */
@@ -271,7 +271,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
         if (this.tabpan.activeTab && this.currentGrid) {
             // list the grids to use
-            if (!this.globalSelection && 
+            if (!this.globalSelection &&
                 this.currentGrid.getSelectionModel().getSelections().length > 0) {
                 grids.push(this.currentGrid);
             } else {
@@ -280,7 +280,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         if (this.gridByType.hasOwnProperty(grid)) {
                             grids.push(this.gridByType[grid]);
                         }
-                    } 
+                    }
                 } else {
                     grids.push(this.currentGrid);
                 }
@@ -303,14 +303,14 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
                 Ext.each(records, function(r) {
                     var attributes = r.getFeature().attributes;
-                    
+
                     var raw = {};
                     var index = 0;
                     // group records by type (layer)
                     if (!groupedRecords[grid.title]) {
                         var results = {
                             table: {
-                                data: [], 
+                                data: [],
                                 columns: []
                             },
                             _newGroup: true
@@ -339,7 +339,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         }
         return groupedRecords;
     },
-    
+
     /** private: method[getCount]
      *  Gets the result count.
      */
@@ -417,7 +417,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             this.currentGrid = null;
             this.vectorLayer.destroyFeatures();
 
-            /* this is important, if the grid are not cleared and created anew, 
+            /* this is important, if the grid are not cleared and created anew,
                the event viewready is not triggered and we fall on an ext bug
                when we try to act on the grid before it is ready to be modified */
             for (var gridName in this.gridByType) {
@@ -436,7 +436,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.tabpan.doLayout();
             }
         }, this);
-     
+
         this.events.on('queryclose', function() {
             this.control && this.control.deactivate();
         }, this);
@@ -498,11 +498,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         layer: this.vectorLayer,
                         fields: fields
                     });
-                
+
                     grid = new Ext.grid.GridPanel({
                         store: store,
                         viewConfig: {
-                            // we add an horizontal scroll bar in case 
+                            // we add an horizontal scroll bar in case
                             // there are too many attributes to display:
                             forceFit: (columns.length < 9)
                         },
@@ -607,7 +607,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
         this.textItem = new Ext.Toolbar.TextItem({
             text: ''
-        }); 
+        });
 
         config = {
             xtype: 'tabpanel',
@@ -618,10 +618,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     this.currentGrid = tab;
                     if (this.currentGrid && this.currentGrid.ready) {
                         /* this must be done here because the grid has alerady been
-                           initialized and the event "viewready" is not triggered 
+                           initialized and the event "viewready" is not triggered
                            anymore.
-                           this is not done the first time the grid is initialized, 
-                           condition set by the custom ready property, see the 
+                           this is not done the first time the grid is initialized,
+                           condition set by the custom ready property, see the
                            code of the "viewready" stage */
                         if (this.globalSelection && this.currentGrid.selection) {
                             // restore selection
@@ -730,10 +730,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                                 });
                                 sm.clearSelections();
                                 sm.selectRecords(recordsToSelect);
-                            }, 
+                            },
                             scope: this}
                         ]
-                    }), 
+                    }),
                     scope: this
                 }),
                 {
@@ -743,7 +743,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         xtype: 'menu',
                         plain: true,
                         items: [{
-                            text: this.zoomToSelectionText, 
+                            text: this.zoomToSelectionText,
                             handler: function() {
                                 var sm = this.currentGrid.getSelectionModel();
                                 var bbox = new OpenLayers.Bounds();
@@ -756,7 +756,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             },
                             scope: this
                         }, {
-                            text: this.csvSelectionExportText, 
+                            text: this.csvSelectionExportText,
                             handler: this.csvExport,
                             target: this,
                             scope: this
