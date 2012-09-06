@@ -54,12 +54,12 @@ Ext.namespace("cgxp.plugins");
  *              csvURL: "$${request.route_url('csvecho')}",
  *              maxFeatures: 200,
  *              outputTarget: "featuregrid-container",
- *              events: obs
+ *              events: EVENTS
  *          }, {
  *              ptype: "cgxp_wmsgetfeatureinfo",
  *              actionTarget: "center.tbar",
  *              toggleGroup: "maptools",
- *              events: obs
+ *              events: EVENTS
  *          }]
  *          ...
  *      });
