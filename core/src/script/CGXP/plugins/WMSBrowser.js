@@ -85,13 +85,19 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
      */
     wmsBrowser: null,
 
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     /** private: method[addActions]
      */
     addActions: function() {
-        var btn = {
+        var btn = Ext.apply({
             text: this.buttonText,
             handler: Ext.createDelegate(this.showPopup, this)
-        };
+        }, this.actionConfig);
         return cgxp.plugins.WMSBrowser.superclass.addActions.apply(this,[btn]);
     },
 
