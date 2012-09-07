@@ -71,18 +71,24 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
      */
     waitMsgText: "Loading...",
 
+    /** api[config]: actionConfig
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     /** private: method[addActions]
      */
     addActions: function() {
 
-        var button = new Ext.ux.form.FileUploadField({
+        var button = new Ext.ux.form.FileUploadField(Ext.apply({
             buttonOnly: true,
             buttonText: this.buttonText,
             name: "file",
             listeners: {
                 fileselected: Ext.createDelegate(this.onFileselected, this)
             }
-        });
+        }, this.actionConfig));
         this.form = new Ext.form.FormPanel({
             unstyled: true,
             fileUpload: true,
