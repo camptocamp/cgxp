@@ -714,7 +714,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
      * geometry - {<OpenLayers.Geometry>}
      */
     measure: function(geometry) {
-        function onElevationResponse(index, response) {
+        function onRasterResponse(index, response) {
             this.raster[index] = Ext.util.JSON.decode(response.responseText);
             if (this.raster[0] && this.raster[1]) {
                 onMeasure.call(this, this.raster);
@@ -740,6 +740,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
                 this.events.triggerEvent('measure', values);
             }
         }
+        onMeasure.call(this);
         if (this.rasterServiceUrl) {
             for (var i = 0; i <=1; i++) {
                 Ext.Ajax.abort(this.pendingRequests[i]);
@@ -751,15 +752,10 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
                         lat: geometry.components[i].y
                     },
                     success: OpenLayers.Function.bind(
-                        onElevationResponse, this, i),
-                    failure: function() {
-                        onMeasure.call(this);
-                    },
+                        onRasterResponse, this, i),
                     scope: this
                 });
             }
-        } else {
-            onMeasure.call(this);
         }
     },
 
