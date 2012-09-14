@@ -276,7 +276,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (!order || measure > 0) {
             if (order == 2) {
                 geom = geom.getCentroid();
-            } else if (order == 1 || event.azimuth) {
+            } else if (order == 1 || typeof event.azimuth != 'undefined') {
                 geom = geom.components[geom.components.length - 1];
             }
             this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
@@ -390,7 +390,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
         if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
             return this.makePointString(metric, metricUnit);
-        } else if (metricData.azimuth) {
+        } else if (typeof metricData.azimuth != 'undefined') {
             return this.makeAzimuthString(metricData);
         }
 
@@ -723,8 +723,9 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         function onMeasure(raster) {
             var stat = this.getBestLength(geometry),
                 azimuth = this.getAzimuth(geometry),
+                distance = stat[0],
                 values = {
-                    distance: stat[0],
+                    distance: distance,
                     units: stat[1],
                     mapUnits: this.map.getUnits(),
                     azimuth: azimuth,
@@ -735,7 +736,9 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
             } else {
                 values.raster = false;
             }
-            this.events.triggerEvent('measure', values);
+            if (distance !== 0 && !isNaN(azimuth)) {
+                this.events.triggerEvent('measure', values);
+            }
         }
         if (this.rasterServiceUrl) {
             for (var i = 0; i <=1; i++) {
