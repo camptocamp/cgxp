@@ -572,12 +572,15 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             }
-            this.currentGrid = this.gridByType[firstType];
-            this.tabpan.setActiveTab(this.currentGrid.id);
+            // select new tab only if it's the first receive
+            if (previouslyNoFeature && firstType) {
+                this.currentGrid = this.gridByType[firstType];
+                this.tabpan.setActiveTab(this.currentGrid.id);
+                this.tabpan.ownerCt.setVisible(true);
+                this.tabpan.ownerCt.expand();
+                this.tabpan.ownerCt.ownerCt.doLayout();
+            }
             this.textItem.setText(this.getCount());
-            this.tabpan.ownerCt.setVisible(true);
-            this.tabpan.ownerCt.expand();
-            this.tabpan.ownerCt.ownerCt.doLayout();
         }, this);
 
         this.textItem = new Ext.Toolbar.TextItem({
