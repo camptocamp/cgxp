@@ -451,8 +451,15 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.events.on('queryresults', function(features, selectAll) {
             this.selectAll = selectAll;
 
+            var previouslyNoFeature = this.vectorLayer.features.length === 0;
+
             // if no feature do nothing
             if (!features || features.length === 0) {
+                // if relay no feature close panel)
+                if (previouslyNoFeature) {
+                    this.tabpan.ownerCt.setVisible(false);
+                    this.tabpan.ownerCt.ownerCt.doLayout();
+                }
                 return;
             }
 
