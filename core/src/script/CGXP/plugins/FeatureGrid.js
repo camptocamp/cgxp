@@ -415,7 +415,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 alwaysInRange: true
         });
 
-        this.events.on('queryopen', function() {
+        this.events.on('querystarts', function() {
             if (this.currentGrid) {
                 this.currentGrid.getSelectionModel().clearSelections();
             }
@@ -440,6 +440,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 }.createDelegate(this));
                 this.tabpan.doLayout();
             }
+
+            this.textItem.setText('');
         }, this);
 
         this.events.on('queryclose', function() {

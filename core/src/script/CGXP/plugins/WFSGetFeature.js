@@ -250,6 +250,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
         });
 
         var self = this;
+        var events = this.events;
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
         return new OpenLayers.Control.GetFeature({
@@ -259,9 +260,6 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             single: false, 
             clickTolerance: this.clickTolerance, 
             eventListeners: {
-                beforefeaturesselected: function() {
-                    this.events.fireEvent('querystarts');
-                },
                 featuresselected: function(e) {
                     this.events.fireEvent('queryresults', e.features);
                 },
@@ -274,6 +272,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             },
             request: function() {
+                events.fireEvent('querystarts');
                 var l = self.getLayers.call(self);
                 if (l.internalLayers.length > 0) {
                     protocol.format.featureType = l.internalLayers;
