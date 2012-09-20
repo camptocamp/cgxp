@@ -422,7 +422,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             this.currentGrid = null;
             this.vectorLayer.destroyFeatures();
 
-            /* this is important, if the grid are not cleared and created anew,
+            /* this is important, if the grid are not cleared and created a new,
                the event viewready is not triggered and we fall on an ext bug
                when we try to act on the grid before it is ready to be modified */
             for (var gridName in this.gridByType) {
