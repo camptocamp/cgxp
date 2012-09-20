@@ -42,13 +42,13 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_featureswindow",
- *              themes: themes,
- *              events: obs
+ *              themes: THEMES,
+ *              events: EVENTS
  *          }, {
  *              ptype: "cgxp_wmsgetfeatureinfo",
  *              actionTarget: "center.tbar",
  *              toggleGroup: "maptools",
- *              events: obs
+ *              events: EVENTS
  *          }]
  *          ...
  *      });
