@@ -215,7 +215,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.target.on('ready', this.viewerReady, this);
     },
 
-    /** private: method viewerReady
+    /** private: method[viewerReady]
      */
     viewerReady: function() {
         this.target.mapPanel.map.addLayer(this.vectorLayer);
