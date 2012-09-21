@@ -70,15 +70,43 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
      */
     width: 100,
 
+    /** api: config[scaleStoreListeners]
+     *  ``Object``
+     *  Ext listener config to be applied on the scale store
+     *  for example:
+     *  scaleStoreListeners: {
+     *      load: function(store, records, index) {
+     *          store.each(function(record) {
+     *              // bla
+     *          }
+     *      }
+     *  }
+     */
+    scaleStoreListeners: {},
+
+    /** api: config[tpl]
+     *  ``String``
+     *  Ext template to format the scale value in the scale combobox.
+     */
+    tpl: '<tpl for="."><div class="x-combo-list-item">1 : {[parseInt(values.scale)]}</div></tpl>',
+
+    /** api: config[formatValue]
+     *  ``Function``
+     *  Callback function to format the value of the selected scale in the scale combobox.
+     */
+    formatValue: function(scale) {
+        return "1 : " + parseInt(scale.data.scale);
+    },
+
     /** public: method[addActions]
      *  :arg config: ``Object``
      */
     addActions: function(config) {
         var map = this.target.mapPanel.map;
-        var scaleStore = new GeoExt.data.ScaleStore({map: map});
+        var scaleStore = new GeoExt.data.ScaleStore({map: map, listeners: this.scaleStoreListeners});
         var zoomSelector = new Ext.form.ComboBox({
             store: scaleStore,
-            tpl: '<tpl for="."><div class="x-combo-list-item">1 : {[parseInt(values.scale)]}</div></tpl>',
+            tpl: this.tpl,
             editable: false,
             width: this.width,
             triggerAction: 'all', // needed so that the combo box doesn't filter by its current content
@@ -101,7 +129,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
     
             if (scale.length > 0) {
                 scale = scale.items[0];
-                zoomSelector.setValue("1 : " + parseInt(scale.data.scale));
+                zoomSelector.setValue(this.formatValue(scale));
             } else {
                 if (!zoomSelector.rendered) return;
                 zoomSelector.clearValue();
