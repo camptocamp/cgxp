@@ -206,6 +206,26 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 autoconfig: false
             }
         });
+
+        var layersConfig = {};
+        function browseThemes(node) {
+            for (var i=0, len=node.length; i<len; i++) {
+                var child = node[i];
+                if (child.children) {
+                    browseThemes(child.children);
+                } else {
+                    layersConfig[child.name] = child;
+                }
+            }
+        }
+        var themes = Ext.apply(this.themes.local, this.themes.external);
+        browseThemes(themes);
+
+        function inRange(l, res) {
+            return (!((l.minResolutionHint && res < l.minResolutionHint) ||
+                (l.maxResolutionHint && res > l.maxResolutionHint)));
+        }
+
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
         return new OpenLayers.Control.GetFeature({
@@ -243,7 +263,10 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 }
                 var internalLayers = [];
                 var externalLayers = [];
+
+                var currentRes = this.map.getResolution();
                 Ext.each(olLayers, function(layer) {
+                    var j, lenj, l, k;
                     if (layer.getVisibility() === true) {
                         var layers = layer.params.LAYERS || layer.mapserverLayers;
                         if (Ext.isArray(layers)) {
@@ -253,47 +276,38 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                             return;
                         }
                         layers = layers.split(',');
-                        
-                        // replacing layerGroups by child layers and filtering by 
-                        // min/maxResolutionHint
+
                         var filteredLayers = [];
-                        var layerGroupsData = this.target.mapPanel.layers.getById(layer.id).data.childLayers;
-                        if (layerGroupsData) {
-                            for (var j = 0, lenj = layers.length; j < lenj; j++) {
-                                if (layerGroupsData[layers[j]] && layerGroupsData[layers[j]].length > 0) {
-                                    // layer is a layergroup
-                                    var layerGroup = layerGroupsData[layers[j]]
-                                    for (var k = 0, lenk = layerGroup.length; k < lenk; k++) {
-                                        // check if layer is visible at current resolution
-                                        var currentRes = this.map.getResolution();
-                                        var  visible = true;
-                                        if ((layerGroup[k].minResolutionHint && 
-                                             currentRes < layerGroup[k].minResolutionHint) || 
-                                            (layerGroup[k].maxResolutionHint && 
-                                             currentRes > layerGroup[k].maxResolutionHint)) {
-                                            visible = false;
-                                        }
-                                        if (visible) {
-                                            filteredLayers.push(layerGroup[k].name);
+                        for (j = 0, lenj = layers.length; j < lenj; j++) {
+                            l = layersConfig[layers[j]];
+                            if (l) {
+                                if (l.childLayers && l.childLayers.length > 0) {
+                                    // layer is a layergroup (as per Mapserver)
+                                    for (k = 0, lenk = l.childLayers.length; k < lenk; k++) {
+                                        var c = l.childLayers[k];
+                                        if (inRange(c, currentRes)) {
+                                            filteredLayers.push(child.name);
                                         }
                                     }
                                 } else {
                                     // layer is not a layergroup
-                                    filteredLayers.push(layers[j]);
+                                    if (inRange(l, currentRes)) {
+                                        filteredLayers.push(layers[j]);
+                                    }
                                 }
+                            } else {
+                                filteredLayers.push(layers[j]);
                             }
-                        } else {
-                            filteredLayers = layers;
                         }
 
-                        for (var j = 0, lenj = filteredLayers.length ; j < lenj ; j++) {
+                        for (j = 0, lenj = filteredLayers.length ; j < lenj ; j++) {
                             for (var i = 0, leni = this.WFSTypes.length ; i < leni ; i++) {
                                 if (this.WFSTypes[i] === filteredLayers[j]) {
                                     internalLayers.push(this.WFSTypes[i]);
                                     break;
                                 }
                             }
-                            for (var k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
+                            for (k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
                                 if (this.externalWFSTypes[k] === filteredLayers[j]) {
                                     externalLayers.push(this.externalWFSTypes[k]);
                                     break;
