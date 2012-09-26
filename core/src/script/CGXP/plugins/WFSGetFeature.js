@@ -240,6 +240,9 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                     olLayers = olLayers.concat(
                         this.map.getLayersByClass("OpenLayers.Layer.WMTS")
                     );
+                    olLayers = olLayers.concat(
+                        this.map.getLayersByClass("OpenLayers.Layer.TMS")  
+                    );
                 }
                 var internalLayers = [];
                 var externalLayers = [];
