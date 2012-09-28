@@ -91,11 +91,11 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
      */
     actionConfig: null,
     
-    /** api: config[serverStore]
+    /** api: config[defaultUrls]
     * ``Array(String)``
-    * The list of WMS services to be displayed in the layer combobox.
+    * The list of WMS services urls to be displayed in the layer combobox.
     */
-    serverStore: null,
+    defaultUrls: null,
     
     /** private: method[addActions]
      */
@@ -161,10 +161,10 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
                     scope: this
                 } : {}
             };
-            if (this.serverStore) {
-                config.serverStore = new Ext.data.SimpleStore({
+            if (this.defaultUrls) {
+                config.serverStore = new Ext.data.ArrayStore({
                     fields: ['url'],
-                    data: this.serverStore
+                    data: Ext.zip(this.defaultUrls)
                 });
             }
             this.wmsBrowser = new GeoExt.ux.WMSBrowser(config);
