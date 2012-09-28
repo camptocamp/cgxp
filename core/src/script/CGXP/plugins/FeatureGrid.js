@@ -811,7 +811,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         } else if (this.autoSelectFirst) {
             sm.selectFirstRow();
         }
-    },
+    }
 });
 
 Ext.preg(cgxp.plugins.FeatureGrid.prototype.ptype, cgxp.plugins.FeatureGrid);
