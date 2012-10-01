@@ -76,7 +76,7 @@ cgxp.plugins.ModalDisclaimer = Ext.extend(gxp.plugins.Tool, {
                 return;
             }
             Ext.iterate(record.get('disclaimer'), function(key, value) {
-                // the key is the disclaimer message, this avoids duplicate
+                // the key is the disclaimer message, this avoids duplicated
                 // messages
                 var html = [
                     '<div class="disclaimer-item">',
