@@ -333,7 +333,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             cls: 'x-tree-node-theme',
             loaded: true,
             uiProvider: 'layer',
-            checked: false,
+            checked: !!group.isChecked,
             expanded: group.isExpanded,
             layer: group.layer,
             allOlLayers: group.allOlLayers,
