@@ -1,14 +1,75 @@
+var themes = {
+    "local": [{
+        "children": [{
+            "isExpanded": true,
+            "isInternalWMS": true,
+            "isBaseLayer": false,
+            "name": "foo",
+            "children": [{
+                "name": "group1",
+                "childLayers": [{
+                    "name": "layer11"
+                }, {
+                    "name": "layer12"
+                }, {
+                    "name": "layer13_outOfRange",
+                    "maxResolutionHint": 4
+                }]
+            }, {
+                "name": "group2",
+                "childLayers": [{
+                    "name": "layer21"
+                }, {
+                    "name": "layer22"
+                }]
+            }, {
+                "name": "layer3"
+            }, {
+                "name": "outOfRange",
+                "minResolutionHint": 6
+            }]
+        }],
+        "name": "Theme 1"
+    }],
+    "external": [{
+        "children": [{
+            "isExpanded": false,
+            "isInternalWMS": true,
+            "name": "Theme ext 1 - Group a",
+            "isBaseLayer": false,
+            "children": [{
+                "name": "group4",
+                "childLayers": [{
+                    "name": "layer41"
+                }, {
+                    "name": "layer42"
+                }]
+            }, {
+                "name": "group5",
+                "childLayers": [{
+                    "name": "layer51"
+                }, {
+                    "name": "layer52"
+                }]
+            }]
+        }],
+        "name": "Theme external 1"
+    }]
+};
 describe('plugins.WFSGetFeature', function() {
     describe('when requesting features', function() {
-        var control, request;
+        var control, request, numRequests, featureTypes;
 
         beforeEach(function() {
+            numRequests = 0;
+            featureTypes = [];
             var observable = new Ext.util.Observable();
 
             var plugin = new cgxp.plugins.WFSGetFeature({
                 WFSURL: 'wfs_url',
-                WFSTypes: ['layer11', 'layer42', 'layer21', 'layer3'],
+                WFSTypes: ['layer11', 'layer13_outOfRange', 'layer42', 'layer21', 'layer3', 'outOfRange'],
                 externalWFSTypes: ['layer41', 'layer12', 'layer51', 'layer6'],
+                themes: themes,
                 events: observable
             });
 
@@ -16,7 +77,7 @@ describe('plugins.WFSGetFeature', function() {
 
             var layer1 = new OpenLayers.Layer.WMS(
                 'olayer1', 'wms',
-                {layers: 'group1,group2,layer3,group7'},
+                {layers: 'group1,group2,layer3,group7,outOfRange'},
                 {singleTile: true, isBaseLayer: false}
             );
 
@@ -30,45 +91,23 @@ describe('plugins.WFSGetFeature', function() {
                 layers: [baseLayer, layer1, layer2],
                 projection: 'EPSG:900913'
             });
+            map.getResolution = function() {
+                return 5;
+            };
 
             var recordType = GeoExt.data.LayerRecord.create([
-                {name: 'disclaimer'},
-                {name: 'childLayers'}
+                {name: 'disclaimer'}
             ]);
 
             var layerStore = new GeoExt.data.LayerStore();
             layerStore.add(
                 new recordType({
-                    layer: layer1,
-                    childLayers: {
-                        'group1': [{
-                            name: 'layer11'
-                        }, {
-                            name: 'layer12'
-                        }],
-                        'group2': [{
-                            name: 'layer21'
-                        }, {
-                            name: 'layer22'
-                        }]
-                    }
+                    layer: layer1
                 }, layer1.id)
             );
             layerStore.add(
                 new recordType({
-                    layer: layer2,
-                    childLayers: {
-                        'group4': [{
-                            name: 'layer41'
-                        }, {
-                            name: 'layer42'
-                        }],
-                        'group5': [{
-                            name: 'layer51'
-                        }, {
-                            name: 'layer52'
-                        }]
-                    }
+                    layer: layer2
                 }, layer2.id)
             );
 
@@ -81,6 +120,8 @@ describe('plugins.WFSGetFeature', function() {
 
             request = OpenLayers.Control.GetFeature.prototype.request;
             OpenLayers.Control.GetFeature.prototype.request = function() {
+                numRequests++;
+                featureTypes.push(this.protocol.format.featureType);
             };
 
             control = plugin.createControl();
@@ -93,10 +134,16 @@ describe('plugins.WFSGetFeature', function() {
 
         it('uses expected feature types in the requests', function() {
             control.request();
-            expect(control.internalProtocol.format.featureType).toEqual(
-                ['layer11', 'layer21', 'layer3', 'layer42']);
-            expect(control.externalProtocol.format.featureType).toEqual(
-                ['layer12', 'layer41', 'layer51', 'layer6']);
+            expect(featureTypes).toEqual(
+                [
+                    ['layer11', 'layer21', 'layer3', 'layer42'],
+                    ['layer12', 'layer41', 'layer51', 'layer6']
+                ]
+            );
+        });
+        it('requests the server twice', function() {
+            control.request();
+            expect(numRequests).toEqual(2);
         });
     });
 });
