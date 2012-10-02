@@ -273,7 +273,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             return config;
-        })(Ext.apply(this.themes.local, this.themes.external, {}));
+        })([].concat(this.themes.local || [], this.themes.external || []));
 
         function inRange(l, res) {
             return (!((l.minResolutionHint && res < l.minResolutionHint) ||
