@@ -47,6 +47,7 @@ Ext.namespace("cgxp.plugins");
  *              WFSURL: "${request.route_url('mapserverproxy', path='')}",
  *              actionTarget: 'center.tbar',
  *              events: EVENTS,
+ *              themes: THEMES,
  *              WFSTypes: ${WFSTypes | n},
  *              externalWFSTypes: ${externalWFSTypes | n},
  *              enableWMTSLayers: true,
@@ -130,6 +131,12 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      *  An Observer used to send events.
      */
     events: null,
+
+    /** api: config[themes]
+     *  ``Object`` List of internal and external themes and layers. (The
+     *  same object as that passed to the :class:`cgxp.plugins.LayerTree`).
+     */
+    themes: null,
 
     /** api: config[geometryName]
      *  ``String``
