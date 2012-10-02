@@ -311,7 +311,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                             for (k = 0, lenk = l.childLayers.length; k < lenk; k++) {
                                 var c = l.childLayers[k];
                                 if (inRange(c, currentRes)) {
-                                    filteredLayers.push(child.name);
+                                    filteredLayers.push(c.name);
                                 }
                             }
                         } else {
