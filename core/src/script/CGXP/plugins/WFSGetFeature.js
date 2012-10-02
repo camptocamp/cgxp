@@ -214,19 +214,18 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        var layersConfig = {};
-        function browseThemes(node) {
+        var layersConfig = (function browse(node, config) {
+            config = config || {};
             for (var i=0, len=node.length; i<len; i++) {
                 var child = node[i];
                 if (child.children) {
-                    browseThemes(child.children);
+                    browse(child.children, config);
                 } else {
-                    layersConfig[child.name] = child;
+                    config[child.name] = child;
                 }
             }
-        }
-        var themes = Ext.apply(this.themes.local, this.themes.external);
-        browseThemes(themes);
+            return config;
+        })(Ext.apply(this.themes.local, this.themes.external, {}));
 
         function inRange(l, res) {
             return (!((l.minResolutionHint && res < l.minResolutionHint) ||
