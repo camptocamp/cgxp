@@ -1,62 +1,62 @@
-var themes = {
-    "local": [{
-        "children": [{
-            "isExpanded": true,
-            "isInternalWMS": true,
-            "isBaseLayer": false,
-            "name": "foo",
-            "children": [{
-                "name": "group1",
-                "childLayers": [{
-                    "name": "layer11"
-                }, {
-                    "name": "layer12"
-                }, {
-                    "name": "layer13_outOfRange",
-                    "maxResolutionHint": 4
-                }]
-            }, {
-                "name": "group2",
-                "childLayers": [{
-                    "name": "layer21"
-                }, {
-                    "name": "layer22"
-                }]
-            }, {
-                "name": "layer3"
-            }, {
-                "name": "outOfRange",
-                "minResolutionHint": 6
-            }]
-        }],
-        "name": "Theme 1"
-    }],
-    "external": [{
-        "children": [{
-            "isExpanded": false,
-            "isInternalWMS": true,
-            "name": "Theme ext 1 - Group a",
-            "isBaseLayer": false,
-            "children": [{
-                "name": "group4",
-                "childLayers": [{
-                    "name": "layer41"
-                }, {
-                    "name": "layer42"
-                }]
-            }, {
-                "name": "group5",
-                "childLayers": [{
-                    "name": "layer51"
-                }, {
-                    "name": "layer52"
-                }]
-            }]
-        }],
-        "name": "Theme external 1"
-    }]
-};
 describe('plugins.WFSGetFeature', function() {
+    var themes = {
+        "local": [{
+            "children": [{
+                "isExpanded": true,
+                "isInternalWMS": true,
+                "isBaseLayer": false,
+                "name": "foo",
+                "children": [{
+                    "name": "group1",
+                    "childLayers": [{
+                        "name": "layer11"
+                    }, {
+                        "name": "layer12"
+                    }, {
+                        "name": "layer13_outOfRange",
+                        "maxResolutionHint": 4
+                    }]
+                }, {
+                    "name": "group2",
+                    "childLayers": [{
+                        "name": "layer21"
+                    }, {
+                        "name": "layer22"
+                    }]
+                }, {
+                    "name": "layer3"
+                }, {
+                    "name": "outOfRange",
+                    "minResolutionHint": 6
+                }]
+            }],
+            "name": "Theme 1"
+        }],
+        "external": [{
+            "children": [{
+                "isExpanded": false,
+                "isInternalWMS": true,
+                "name": "Theme ext 1 - Group a",
+                "isBaseLayer": false,
+                "children": [{
+                    "name": "group4",
+                    "childLayers": [{
+                        "name": "layer41"
+                    }, {
+                        "name": "layer42"
+                    }]
+                }, {
+                    "name": "group5",
+                    "childLayers": [{
+                        "name": "layer51"
+                    }, {
+                        "name": "layer52"
+                    }]
+                }]
+            }],
+            "name": "Theme external 1"
+        }]
+    };
     describe('when requesting features', function() {
         var control, request, numRequests, featureTypes;
 
