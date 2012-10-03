@@ -47,6 +47,7 @@ Ext.namespace("cgxp.plugins");
  *              WFSURL: "${request.route_url('mapserverproxy', path='')}",
  *              actionTarget: 'center.tbar',
  *              events: EVENTS,
+ *              themes: THEMES,
  *              WFSTypes: ${WFSTypes | n},
  *              externalWFSTypes: ${externalWFSTypes | n},
  *              enableWMTSLayers: true,
@@ -131,6 +132,12 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
+    /** api: config[themes]
+     *  ``Object`` List of internal and external themes and layers. (The
+     *  same object as that passed to the :class:`cgxp.plugins.LayerTree`).
+     */
+    themes: null,
+
     /** api: config[geometryName]
      *  ``String``
      *  The geometry name.
@@ -206,19 +213,16 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 autoconfig: false
             }
         });
+
+        var self = this;
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
         return new OpenLayers.Control.GetFeature({
             target: this.target,
-            internalProtocol: protocol,
-            externalProtocol: externalProtocol,
             box: true, 
             click: true, 
             single: false, 
             clickTolerance: this.clickTolerance, 
-            WFSTypes: this.WFSTypes,
-            externalWFSTypes: this.externalWFSTypes,
-            enableWMTSLayers: this.enableWMTSLayers, 
             eventListeners: {
                 beforefeaturesselected: function() {
                     this.events.fireEvent('querystarts');
@@ -235,88 +239,116 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             },
             request: function() {
-                var olLayers = this.map.getLayersByClass("OpenLayers.Layer.WMS");
-                if (this.enableWMTSLayers) {
-                    olLayers = olLayers.concat(
-                        this.map.getLayersByClass("OpenLayers.Layer.WMTS")
-                    );
-                    olLayers = olLayers.concat(
-                        this.map.getLayersByClass("OpenLayers.Layer.TMS")  
-                    );
-                }
-                var internalLayers = [];
-                var externalLayers = [];
-                Ext.each(olLayers, function(layer) {
-                    if (layer.getVisibility() === true) {
-                        var layers = layer.params.LAYERS || layer.mapserverLayers;
-                        if (Ext.isArray(layers)) {
-                            layers = layers.join(',');
-                        }
-                        if (!layers) {
-                            return;
-                        }
-                        layers = layers.split(',');
-                        
-                        // replacing layerGroups by child layers and filtering by 
-                        // min/maxResolutionHint
-                        var filteredLayers = [];
-                        var layerGroupsData = this.target.mapPanel.layers.getById(layer.id).data.childLayers;
-                        if (layerGroupsData) {
-                            for (var j = 0, lenj = layers.length; j < lenj; j++) {
-                                if (layerGroupsData[layers[j]] && layerGroupsData[layers[j]].length > 0) {
-                                    // layer is a layergroup
-                                    var layerGroup = layerGroupsData[layers[j]]
-                                    for (var k = 0, lenk = layerGroup.length; k < lenk; k++) {
-                                        // check if layer is visible at current resolution
-                                        var currentRes = this.map.getResolution();
-                                        var  visible = true;
-                                        if ((layerGroup[k].minResolutionHint && 
-                                             currentRes < layerGroup[k].minResolutionHint) || 
-                                            (layerGroup[k].maxResolutionHint && 
-                                             currentRes > layerGroup[k].maxResolutionHint)) {
-                                            visible = false;
-                                        }
-                                        if (visible) {
-                                            filteredLayers.push(layerGroup[k].name);
-                                        }
-                                    }
-                                } else {
-                                    // layer is not a layergroup
-                                    filteredLayers.push(layers[j]);
-                                }
-                            }
-                        } else {
-                            filteredLayers = layers;
-                        }
-
-                        for (var j = 0, lenj = filteredLayers.length ; j < lenj ; j++) {
-                            for (var i = 0, leni = this.WFSTypes.length ; i < leni ; i++) {
-                                if (this.WFSTypes[i] === filteredLayers[j]) {
-                                    internalLayers.push(this.WFSTypes[i]);
-                                    break;
-                                }
-                            }
-                            for (var k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
-                                if (this.externalWFSTypes[k] === filteredLayers[j]) {
-                                    externalLayers.push(this.externalWFSTypes[k]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }, this);
-                this.internalProtocol.format.featureType = internalLayers;
-                this.externalProtocol.format.featureType = externalLayers;
-                if (internalLayers.length > 0) {
-                    this.protocol = this.internalProtocol;
+                var l = self.getLayers.call(self);
+                if (l.internalLayers.length > 0) {
+                    protocol.format.featureType = l.internalLayers;
+                    this.protocol = protocol;
                     OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
                 }
-                if (externalLayers.length > 0) {
-                    this.protocol = this.externalProtocol;
+                if (l.externalLayers.length > 0) {
+                    externalProtocol.format.featureType = l.externalLayers;
+                    this.protocol = externalProtocol;
                     OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
                 }
             }
         });
+    },
+
+    /** private: method[getLayers]
+     *
+     *  Gets the list of layers (internal and external) to build a request
+     *  with.
+     *  :returns: ``Object`` An object with `internalLayers` and `externalLayers`
+     *  properties.
+     */
+    getLayers: function() {
+        var layersConfig = (function browse(node, config) {
+            config = config || {};
+            for (var i=0, len=node.length; i<len; i++) {
+                var child = node[i];
+                if (child.children) {
+                    browse(child.children, config);
+                } else {
+                    config[child.name] = child;
+                }
+            }
+            return config;
+        })([].concat(this.themes.local || [], this.themes.external || []));
+
+        function inRange(l, res) {
+            return (!((l.minResolutionHint && res < l.minResolutionHint) ||
+                (l.maxResolutionHint && res > l.maxResolutionHint)));
+        }
+
+        var olLayers = this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.WMS");
+        if (this.enableWMTSLayers) {
+            olLayers = olLayers.concat(
+                this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.WMTS")
+            );
+            olLayers = olLayers.concat(
+                this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.TMS")  
+            );
+        }
+        var internalLayers = [];
+        var externalLayers = [];
+
+        var currentRes = this.target.mapPanel.map.getResolution();
+        Ext.each(olLayers, function(layer) {
+            var j, lenj, l, k;
+            if (layer.getVisibility() === true) {
+                var layers = layer.params.LAYERS || layer.mapserverLayers;
+                if (Ext.isArray(layers)) {
+                    layers = layers.join(',');
+                }
+                if (!layers) {
+                    return;
+                }
+                layers = layers.split(',');
+
+                var filteredLayers = [];
+                for (j = 0, lenj = layers.length; j < lenj; j++) {
+                    l = layersConfig[layers[j]];
+                    if (l) {
+                        if (l.childLayers && l.childLayers.length > 0) {
+                            // layer is a layergroup (as per Mapserver)
+                            for (k = 0, lenk = l.childLayers.length; k < lenk; k++) {
+                                var c = l.childLayers[k];
+                                if (inRange(c, currentRes)) {
+                                    filteredLayers.push(c.name);
+                                }
+                            }
+                        } else {
+                            // layer is not a layergroup
+                            if (inRange(l, currentRes)) {
+                                filteredLayers.push(layers[j]);
+                            }
+                        }
+                    } else {
+                        filteredLayers.push(layers[j]);
+                    }
+                }
+
+                for (j = 0, lenj = filteredLayers.length ; j < lenj ; j++) {
+                    for (var i = 0, leni = this.WFSTypes.length ; i < leni ; i++) {
+                        if (this.WFSTypes[i] === filteredLayers[j]) {
+                            internalLayers.push(this.WFSTypes[i]);
+                            break;
+                        }
+                    }
+                    for (k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
+                        if (this.externalWFSTypes[k] === filteredLayers[j]) {
+                            externalLayers.push(this.externalWFSTypes[k]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }, this);
+
+        return {
+            internalLayers: internalLayers,
+            externalLayers: externalLayers
+        };
     }
 });
 
