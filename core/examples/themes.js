@@ -52,6 +52,12 @@ App.themes = {
         "icon": "http://sitn.ne.ch/mapfish/app/images/themes/environnement.png"
     }, {
         "children": [{
+            "name": "Bathymetry",
+            "isChecked": true
+        }],
+        "name": "Group with only one level"
+    }, {
+        "children": [{
             "isExpanded": false,
             "isInternalWMS": true,
             "name": "Theme 2 - Group a - Cultural",
