@@ -80,7 +80,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     username: null,
 
-    /** api[config]: actionConfig
+    /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
      */

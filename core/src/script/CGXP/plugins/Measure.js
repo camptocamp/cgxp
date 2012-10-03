@@ -53,6 +53,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_measure */
     ptype: "cgxp_measure",
 
+    /** api: config[actionConfig]
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     /** api: config[outputTarget]
      *  ``String`` Popups created by this tool are added to the map by default.
      */
@@ -411,7 +417,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             }
             this.cleanup();
         }
-        this.button = new Ext.SplitButton({
+        this.button = new Ext.SplitButton(Ext.apply({
             iconCls: "cgxp-icon-measure-length",
             tooltip: this.measureTooltip,
             enableToggle: true,
@@ -507,7 +513,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                     )
                 ]
             })
-        });
+        }, this.actionConfig));
 
         return cgxp.plugins.Measure.superclass.addActions.apply(this, [this.button]);
     }
