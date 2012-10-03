@@ -65,7 +65,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     toggleGroup: null,
 
-    /** api[config]: actionConfig
+    /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
      */

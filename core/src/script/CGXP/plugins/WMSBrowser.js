@@ -85,7 +85,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
      */
     wmsBrowser: null,
 
-    /** api[config]: actionConfig
+    /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
      */

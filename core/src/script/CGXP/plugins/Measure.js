@@ -53,7 +53,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_measure */
     ptype: "cgxp_measure",
 
-    /** api[config]: actionConfig
+    /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
      */
