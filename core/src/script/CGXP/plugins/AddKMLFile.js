@@ -71,7 +71,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
      */
     waitMsgText: "Loading...",
 
-    /** api[config]: actionConfig
+    /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
      */

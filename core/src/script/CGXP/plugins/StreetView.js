@@ -70,6 +70,12 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_streetview */
     ptype: "cgxp_streetview",
 
+    /** api: config[actionConfig]
+     *  ``Object``
+     *  Config object for the action created by this plugin.
+     */
+    actionConfig: null,
+
     /** api: config[toggleGroup]
      *  The group theses toggle buttons are members of.
      */
