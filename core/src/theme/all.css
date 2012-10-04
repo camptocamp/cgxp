@@ -39,12 +39,14 @@ div#header-out {
     width: 300px;
 }
 .disclaimer-item {
+    font-size: 12px;
+    padding: 5px;
+}
+.disclaimer-ct .disclaimer-item {
     border: 1px solid #ccc;
     background-color: #fff;
     color: #333;
-    font-size: 12px;
     margin: 5px 0 0;
-    padding: 5px;
     width: 100%;
 }
 
