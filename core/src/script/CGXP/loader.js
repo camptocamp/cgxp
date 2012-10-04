@@ -27,6 +27,7 @@
         "plugins/AddKMLFile.js",
         "plugins/ContextualData.js",
         "plugins/Disclaimer.js",
+        "plugins/ModalDisclaimer.js",
         "plugins/Editing.js",
         "plugins/FeatureGrid.js",
         "plugins/FeaturesWindow.js",
