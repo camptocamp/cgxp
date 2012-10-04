@@ -308,6 +308,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         ]);
         var styleMap = new OpenLayers.StyleMap({"default": style});
         var control = new cgxp.plugins.Measure.SegmentMeasureControl({
+            geodesic: true,
             elevationServiceUrl: this.elevationServiceUrl,
             handlerOptions: {
                 layerOptions: {styleMap: styleMap}
