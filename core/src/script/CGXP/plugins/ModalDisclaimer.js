@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Camptocamp
+ * Copyright (c) 2012 Camptocamp
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: ModalDisclaimer(config)
  *
- *      Plugin to add a disclaimers for the layers in a modal window.
+ *      Plugin to add a disclaimer for the layers in a modal window.
  *
  */
 cgxp.plugins.ModalDisclaimer = Ext.extend(gxp.plugins.Tool, {
