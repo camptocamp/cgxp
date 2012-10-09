@@ -28,8 +28,19 @@
  *  module = cgxp.plugins
  *  class = WFSGetFeature
  *
- *  To use this plugin all the layers should support the WFS, and should have 
- *  the same name for the geometry.
+ *  This plugin adds a toggle button to a toolbar. When the button is
+ *  pressed the map changes to "query" mode - user can click and draw
+ *  boxes to query the map. WFS GetFeature is used for queries.
+ *
+ *  Only the currently visible layers are queried.
+ *
+ *  For a WMS layer the feature types sent in the WFS GetFeature query
+ *  are obtained from its "layers" parameter.
+ *
+ *  For a layer of another type (layer that does not have a "layers"
+ *  parameter), the feature types are obtained from the layer's
+ *  "mapserverLayers" option if it is defined, and from its
+ *  "queryLayers" option if "mapserverLayers" is not defined.
  */
 
 Ext.namespace("cgxp.plugins");
@@ -296,7 +307,9 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
         Ext.each(olLayers, function(layer) {
             var j, lenj, l, k;
             if (layer.getVisibility() === true) {
-                var layers = layer.params.LAYERS || layer.mapserverLayers;
+                var layers = layer.params.LAYERS ||
+                             layer.mapserverLayers ||
+                             layer.queryLayers;
                 if (Ext.isArray(layers)) {
                     layers = layers.join(',');
                 }
