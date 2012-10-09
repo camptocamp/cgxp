@@ -308,8 +308,8 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             var j, lenj, l, k;
             if (layer.getVisibility() === true) {
                 var layers = layer.params.LAYERS ||
-                             layer.mapserverLayers ||
-                             layer.queryLayers;
+                             layer.queryLayers ||
+                             layer.mapserverLayers;
                 if (Ext.isArray(layers)) {
                     layers = layers.join(',');
                 }
