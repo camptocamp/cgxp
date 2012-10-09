@@ -836,9 +836,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 mapserverLayers: child.mapserverLayers
                             });
                             child.node.attributes.layer = layer;
-                            name = child.name;
-                            if (this.initialState && this.initialState['opacity_' + name]) {
-                                layer.setOpacity(this.initialState['opacity_' + name]);
+                            if (this.initialState && this.initialState['opacity_' + child.name]) {
+                                layer.setOpacity(this.initialState['opacity_' + child.name]);
                             }
                             layer.setVisibility(child.node.attributes.checked);
                             result.allOlLayers[allOlLayerIndex] = layer;
