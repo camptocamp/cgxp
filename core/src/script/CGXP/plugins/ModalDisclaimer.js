@@ -52,6 +52,12 @@ cgxp.plugins.ModalDisclaimer = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_modaldisclaimer */
     ptype: "cgxp_modaldisclaimer",
 
+    /** api: config[windowConfig]
+     *  ``Object``
+     *  Config object for the disclaimer window.
+     */
+    windowConfig: null,
+
     /** private: method[init]
      */
     init: function() {
@@ -87,10 +93,10 @@ cgxp.plugins.ModalDisclaimer = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }, this);
         if (msg.length > 0) {
-            new Ext.Window({
+            new Ext.Window(Ext.apply({
                 modal: true,
                 html: msg.join('<br />')
-            }).show();
+            }, this.windowConfig)).show();
         }
     }
 });
