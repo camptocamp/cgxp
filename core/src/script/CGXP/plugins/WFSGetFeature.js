@@ -310,13 +310,13 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 var layers = layer.params.LAYERS ||
                              layer.queryLayers ||
                              layer.mapserverLayers;
-                if (Ext.isArray(layers)) {
-                    layers = layers.join(',');
-                }
                 if (!layers) {
                     return;
                 }
-                layers = layers.split(',');
+
+                if (!Ext.isArray(layers)) {
+                    layers = layers.split(',');
+                }
 
                 var filteredLayers = [];
                 for (j = 0, lenj = layers.length; j < lenj; j++) {
@@ -336,8 +336,8 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                                 filteredLayers.push(layers[j]);
                             }
                         }
-                    } else {
-                        filteredLayers.push(layers[j]);
+                    } else if (inRange(layers[j], currentRes)) {
+                        filteredLayers.push(layers[j].name);
                     }
                 }
 
