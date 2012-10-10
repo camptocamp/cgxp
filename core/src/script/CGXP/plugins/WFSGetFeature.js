@@ -39,8 +39,8 @@
  *
  *  For a layer of another type (layer that does not have a "layers"
  *  parameter), the feature types are obtained from the layer's
- *  "mapserverLayers" option if it is defined, and from its
- *  "queryLayers" option if "mapserverLayers" is not defined.
+ *  "queryLayers" option if it is defined, and from its
+ *  "mapserverLayers" option if "queryLayers" is not defined.
  */
 
 Ext.namespace("cgxp.plugins");
