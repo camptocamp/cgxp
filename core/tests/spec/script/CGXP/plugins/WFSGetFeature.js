@@ -46,6 +46,8 @@ describe('plugins.WFSGetFeature', function() {
                         "name": "layer42"
                     }]
                 }, {
+                    "name": "layer6"
+                }, {
                     "name": "group5",
                     "childLayers": [{
                         "name": "layer51"
