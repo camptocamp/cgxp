@@ -66,6 +66,27 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
+ *  Here's an example on how to configure the queryLayers option.
+ *
+ *  .. code-block:: javascript
+ *
+ *      ...
+ *      queryLayers: [{
+ *          name: "buildings"
+ *      }, {
+ *          name: "parcels",
+ *          maxResolutionHint: 6.6145797614602611
+ *      }]
+ *      ...
+ *
+ *  The min/maxResolutionHint can be computed with the following rule:
+ *
+ *  .. code-block:: javascript
+ *
+ *      1 / (1 / MIN/MAXSCALEDENOMINATOR * INCHES_PER_UNIT * DOTS_PER_INCH)
+ *      1 / (1 / 25000 * 39.3701 * 96)
+ *
  */
 
 /** api: constructor
