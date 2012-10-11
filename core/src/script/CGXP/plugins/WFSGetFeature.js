@@ -73,10 +73,11 @@ Ext.namespace("cgxp.plugins");
  *
  *      ...
  *      queryLayers: [{
- *          name: "buildings"
+ *          name: "buildings",
+ *          maxResolutionHint: 6.6145797614602611
  *      }, {
  *          name: "parcels",
- *          maxResolutionHint: 6.6145797614602611
+ *          maxScaleDenominator: 10000
  *      }]
  *      ...
  *
@@ -86,6 +87,8 @@ Ext.namespace("cgxp.plugins");
  *
  *      1 / (1 / MIN/MAXSCALEDENOMINATOR * INCHES_PER_UNIT * DOTS_PER_INCH)
  *      1 / (1 / 25000 * 39.3701 * 96)
+ *
+ *  Or you can use min/maxScaleDenominator as set in MapServer.
  *
  */
 
