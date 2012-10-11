@@ -46,6 +46,8 @@ describe('plugins.WFSGetFeature', function() {
                         "name": "layer42"
                     }]
                 }, {
+                    "name": "layer6"
+                }, {
                     "name": "group5",
                     "childLayers": [{
                         "name": "layer51"
@@ -67,10 +69,11 @@ describe('plugins.WFSGetFeature', function() {
 
             var plugin = new cgxp.plugins.WFSGetFeature({
                 WFSURL: 'wfs_url',
-                WFSTypes: ['layer11', 'layer13_outOfRange', 'layer42', 'layer21', 'layer3', 'outOfRange'],
+                WFSTypes: ['layer11', 'layer13_outOfRange', 'layer42', 'layer21', 'layer3', 'outOfRange', 'layer7', 'layer8_outOfRange'],
                 externalWFSTypes: ['layer41', 'layer12', 'layer51', 'layer6'],
                 themes: themes,
-                events: observable
+                events: observable,
+                enableWMTSLayers: true
             });
 
             var baseLayer = new OpenLayers.Layer('', {isBaseLayer: true});
@@ -87,8 +90,23 @@ describe('plugins.WFSGetFeature', function() {
                 {singleTile: true, isBaseLayer: false}
             );
 
+            var layer3 = new OpenLayers.Layer.WMTS({
+                name: 'ollayer3',
+                url: 'url',
+                layer: 'layer',
+                style: 'default',
+                matrixSet: 'matrix',
+                isBaseLayer: false,
+                queryLayers: [{
+                    name: 'layer7'
+                }, {
+                    name: 'layer8_outOfRange',
+                    "maxResolutionHint": 4
+                }]
+            });
+
             var map = new OpenLayers.Map({
-                layers: [baseLayer, layer1, layer2],
+                layers: [baseLayer, layer1, layer2, layer3],
                 projection: 'EPSG:900913'
             });
             map.getResolution = function() {
@@ -136,7 +154,7 @@ describe('plugins.WFSGetFeature', function() {
             control.request();
             expect(featureTypes).toEqual(
                 [
-                    ['layer11', 'layer21', 'layer3', 'layer42'],
+                    ['layer11', 'layer21', 'layer3', 'layer42', 'layer7'],
                     ['layer12', 'layer41', 'layer51', 'layer6']
                 ]
             );
