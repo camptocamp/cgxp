@@ -66,6 +66,30 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
+ *  Here's an example on how to configure the queryLayers option.
+ *
+ *  .. code-block:: javascript
+ *
+ *      ...
+ *      queryLayers: [{
+ *          name: "buildings",
+ *          maxResolutionHint: 6.6145797614602611
+ *      }, {
+ *          name: "parcels",
+ *          maxScaleDenominator: 10000
+ *      }]
+ *      ...
+ *
+ *  The min/maxResolutionHint can be computed with the following rule:
+ *
+ *  .. code-block:: javascript
+ *
+ *      1 / (1 / MIN/MAXSCALEDENOMINATOR * INCHES_PER_UNIT * DOTS_PER_INCH)
+ *      1 / (1 / 25000 * 39.3701 * 96)
+ *
+ *  Or you can use min/maxScaleDenominator as set in MapServer.
+ *
  */
 
 /** api: constructor
@@ -286,37 +310,47 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             return config;
         })([].concat(this.themes.local || [], this.themes.external || []));
 
+        var map = this.target.mapPanel.map;
+        var units = map.getUnits();
         function inRange(l, res) {
+            if (!l.minResolutionHint && l.minScaleDenominator) {
+                l.minResolutionHint =
+                    OpenLayers.Util.getResolutionFromScale(l.minScaleDenominator, units);
+            }
+            if (!l.maxResolutionHint && l.maxScaleDenominator) {
+                l.maxResolutionHint =
+                    OpenLayers.Util.getResolutionFromScale(l.maxScaleDenominator, units);
+            }
             return (!((l.minResolutionHint && res < l.minResolutionHint) ||
                 (l.maxResolutionHint && res > l.maxResolutionHint)));
         }
 
-        var olLayers = this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.WMS");
+        var olLayers = map.getLayersByClass("OpenLayers.Layer.WMS");
         if (this.enableWMTSLayers) {
             olLayers = olLayers.concat(
-                this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.WMTS")
+                map.getLayersByClass("OpenLayers.Layer.WMTS")
             );
             olLayers = olLayers.concat(
-                this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.TMS")  
+                map.getLayersByClass("OpenLayers.Layer.TMS")
             );
         }
         var internalLayers = [];
         var externalLayers = [];
 
-        var currentRes = this.target.mapPanel.map.getResolution();
+        var currentRes = map.getResolution();
         Ext.each(olLayers, function(layer) {
             var j, lenj, l, k;
             if (layer.getVisibility() === true) {
                 var layers = layer.params.LAYERS ||
                              layer.queryLayers ||
                              layer.mapserverLayers;
-                if (Ext.isArray(layers)) {
-                    layers = layers.join(',');
-                }
                 if (!layers) {
                     return;
                 }
-                layers = layers.split(',');
+
+                if (!Ext.isArray(layers)) {
+                    layers = layers.split(',');
+                }
 
                 var filteredLayers = [];
                 for (j = 0, lenj = layers.length; j < lenj; j++) {
@@ -336,8 +370,8 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                                 filteredLayers.push(layers[j]);
                             }
                         }
-                    } else {
-                        filteredLayers.push(layers[j]);
+                    } else if (inRange(layers[j], currentRes)) {
+                        filteredLayers.push(layers[j].name);
                     }
                 }
 
