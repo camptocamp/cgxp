@@ -307,24 +307,34 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             return config;
         })([].concat(this.themes.local || [], this.themes.external || []));
 
+        var map = this.target.mapPanel.map;
+        var units = map.getUnits();
         function inRange(l, res) {
+            if (!l.minResolutionHint && l.minScaleDenominator) {
+                l.minResolutionHint =
+                    OpenLayers.Util.getResolutionFromScale(l.minScaleDenominator, units);
+            }
+            if (!l.maxResolutionHint && l.maxScaleDenominator) {
+                l.maxResolutionHint =
+                    OpenLayers.Util.getResolutionFromScale(l.maxScaleDenominator, units);
+            }
             return (!((l.minResolutionHint && res < l.minResolutionHint) ||
                 (l.maxResolutionHint && res > l.maxResolutionHint)));
         }
 
-        var olLayers = this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.WMS");
+        var olLayers = map.getLayersByClass("OpenLayers.Layer.WMS");
         if (this.enableWMTSLayers) {
             olLayers = olLayers.concat(
-                this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.WMTS")
+                map.getLayersByClass("OpenLayers.Layer.WMTS")
             );
             olLayers = olLayers.concat(
-                this.target.mapPanel.map.getLayersByClass("OpenLayers.Layer.TMS")  
+                map.getLayersByClass("OpenLayers.Layer.TMS")
             );
         }
         var internalLayers = [];
         var externalLayers = [];
 
-        var currentRes = this.target.mapPanel.map.getResolution();
+        var currentRes = map.getResolution();
         Ext.each(olLayers, function(layer) {
             var j, lenj, l, k;
             if (layer.getVisibility() === true) {
