@@ -201,7 +201,7 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
     applyState: function(state) {
         if (state.val) {
             var stage = parseInt(state.val);
-            this.setValue(stage);
+            this.slider.setValue(stage);
             this.setStage(stage);
         }
     }
