@@ -15,10 +15,6 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * @require GeoExt/widgets/ZoomSlider.js
- */
-
 /** api: (define)
  *  module = cgxp
  *  class = StageSlider
