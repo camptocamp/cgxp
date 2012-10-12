@@ -478,3 +478,18 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     font-family: tahoma,arial,verdana,sans-serif;
     font-size: 12px;
 }
+
+/* cgxp stage slider */
+.stage-window {
+    width: 55px;
+}
+.stage-window .x-window-mc {
+    background-color: white
+}
+.stage-window ul {
+    line-height: 13px;
+    text-align: right;
+}
+.stage-window ul li, .stage-window .x-slider-thumb {
+    cursor: pointer;
+}
