@@ -183,7 +183,7 @@ GeoExt.Lang.add("en", {
         layerText: "Layer"
     },
 
-    "cgxp.StageSlider.prototype": {
+    "cgxp.FloorSlider.prototype": {
         skyText: "Sky",
         levelText: "Level"
     }

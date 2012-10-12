@@ -17,39 +17,39 @@
 
 /** api: (define)
  *  module = cgxp
- *  class = StageSlider
+ *  class = FloorSlider
  */
 
 Ext.namespace("cgxp");
 
 /** api: constructor
- *  .. class:: StageSlider(config)
+ *  .. class:: FloorSlider(config)
  */
-cgxp.StageSlider = Ext.extend(Ext.Window, {
+cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
-    /* api: xtype = cgxp_stageslider */
-    xtype: 'cgxp_stageslider',
+    /* api: xtype = cgxp_floorslider */
+    xtype: 'cgxp_floorslider',
 
     /** api: config[minValue]
      *  ``int``
-     *  The fist stage value.
+     *  The fist floor value.
      */
 
     /** api: config[maxValue]
      *  ``int``
-     *  The max stage value.
+     *  The max floor value.
      */
 
     /** api: config[maxMeanAll]
      *  ``Boolean``
-     *  Max value mean all stage, default is true.
+     *  Max value mean all floor, default is true.
      */
 
     /** api: config[stateId]
      *  ``String``
      *  Used for the permalink.
      */
-    stateId: 'stage',
+    stateId: 'floor',
 
     /** api: config[mapPanel]
      *  ``GeoExt.MapPanel``
@@ -73,7 +73,7 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
      *  ``Array(String)``
      *  Array of state events
      */
-    stateEvents: ['stagechange'],
+    stateEvents: ['floorchange'],
 
     /** api: config[skyText]
      *  ``String``
@@ -100,7 +100,7 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
             }, true);
             li.on({
                 click: (function(i) {
-                    this.setStage(i);
+                    this.setFloor(i);
                     this.slider.setValue(i);
                 }).createDelegate(this, [i])
             });
@@ -122,16 +122,16 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
             draggable: false,
             title: this.levelText,
             layout: 'hbox',
-            cls: 'stage-window',
+            cls: 'floor-window',
             items: [this.slider,
                 {
-                    cls: 'stagelabelscontainer',
+                    cls: 'floorlabelscontainer',
                     border: false,
                     contentEl: ul
                 }
             ]
         }, config);
-        cgxp.StageSlider.superclass.constructor.call(this, config);
+        cgxp.FloorSlider.superclass.constructor.call(this, config);
 
         this.show();
         this.anchorTo.defer(100, this, [this.mapPanel.body,
@@ -146,38 +146,38 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
      * {Ext.Toolbar} The toolbar.
      */
     initComponent: function() {
-        cgxp.StageSlider.superclass.initComponent.call(this);
+        cgxp.FloorSlider.superclass.initComponent.call(this);
         this.addEvents(
-            /** private: event[stagechange]
-             * Throws when the stage change.
+            /** private: event[floorchange]
+             * Throws when the floor change.
              */
-            'stagechange'
+            'floorchange'
         );
 
         this.slider.on('change', function() {
-            this.fireEvent('stagechange');
+            this.fireEvent('floorchange');
             var value = this.slider.getValue();
-            this.setStage(this.maxMeanAll && value == this.maxValue ?
+            this.setFloor(this.maxMeanAll && value == this.maxValue ?
                     undefined : value);
         }, this);
     },
 
     /**
-     * Method: setStage
-     * Change the stage,
+     * Method: setFloor
+     * Change the floor,
      */
-    setStage: function(stage) {
+    setFloor: function(floor) {
         Ext.each(this.mapPanel.map.layers, function(layer) {
-            if (layer.setStage) {
-                layer.setStage(stage);
+            if (layer.setFloor) {
+                layer.setFloor(floor);
                 layer.redraw();
             }
             else if (layer.params) { // WMS or WMTS
-                if (stage !== undefined) {
-                    layer.params.STAGE = stage;
+                if (floor !== undefined) {
+                    layer.params.floor = floor;
                 }
                 else {
-                    delete layer.params.STAGE;
+                    delete layer.params.floor;
                 }
                 layer.redraw();
             }
@@ -196,12 +196,12 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
      */
     applyState: function(state) {
         if (state.val) {
-            var stage = parseInt(state.val);
-            this.slider.setValue(stage);
-            this.setStage(stage);
+            var floor = parseInt(state.val);
+            this.slider.setValue(floor);
+            this.setFloor(floor);
         }
     }
 });
 
-/** api: xtype = cgxp_stageslider */
-Ext.reg(cgxp.StageSlider.prototype.xtype, cgxp.StageSlider);
+/** api: xtype = cgxp_floorslider */
+Ext.reg(cgxp.FloorSlider.prototype.xtype, cgxp.FloorSlider);

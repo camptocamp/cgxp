@@ -17,18 +17,18 @@
 
 /*
  * @requires plugins/Tool.js
- * @include CGXP/widgets/StageSlider.js
+ * @include CGXP/widgets/FloorSlider.js
  */
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = StageSlider
+ *  class = FloorSlider
  */
 
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing how to add a StageSlider plugin to a
+ *  Sample code showing how to add a FloorSlider plugin to a
  *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
@@ -36,7 +36,7 @@ Ext.namespace("cgxp.plugins");
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
- *              ptype: 'cgxp_stageslider',
+ *              ptype: 'cgxp_floorslider',
  *              minValue: -2,
  *              maxValue: 4
  *          }]
@@ -45,35 +45,35 @@ Ext.namespace("cgxp.plugins");
  */
 
 /** api: constructor
- *  .. class:: StageSlider(config)
+ *  .. class:: FloorSlider(config)
  *
  */   
-cgxp.plugins.StageSlider = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_stageslider */
-    ptype: "cgxp_stageslider",
+    /** api: ptype = cgxp_floorslider */
+    ptype: "cgxp_floorslider",
 
     /** api: config[minValue]
      *  ``int``
-     *  The fist stage value.
+     *  The fist floor value.
      */
     minValue: 0,
 
     /** api: config[value]
      *  ``int``
-     *  The default stage value, default is 0.
+     *  The default floor value, default is 0.
      */
     value: 0,
 
     /** api: config[maxValue]
      *  ``int``
-     *  The max stage value.
+     *  The max floor value.
      */
     maxValue: 10,
 
     /** api: config[maxMeanAll]
      * ``Boolean``
-     * Max value mean all stage, default is true.
+     * Max value mean all floor, default is true.
      */
     maxMeanAll: true,
 
@@ -89,7 +89,7 @@ cgxp.plugins.StageSlider = Ext.extend(gxp.plugins.Tool, {
     addActions: function(config) {
         this.target.addListener('ready', function() {
             var mapPanel = this.target.mapPanel;
-            var stageSlider = new cgxp.StageSlider(Ext.apply({
+            var floorSlider = new cgxp.FloorSlider(Ext.apply({
                 minValue: this.minValue,
                 maxValue: this.maxValue,
                 value: this.value,
@@ -100,4 +100,4 @@ cgxp.plugins.StageSlider = Ext.extend(gxp.plugins.Tool, {
     }
 });
 
-Ext.preg(cgxp.plugins.StageSlider.prototype.ptype, cgxp.plugins.StageSlider);
+Ext.preg(cgxp.plugins.FloorSlider.prototype.ptype, cgxp.plugins.FloorSlider);

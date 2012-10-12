@@ -479,17 +479,17 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     font-size: 12px;
 }
 
-/* cgxp stage slider */
-.stage-window {
+/* cgxp floor slider */
+.floor-window {
     width: 55px;
 }
-.stage-window .x-window-mc {
+.floor-window .x-window-mc {
     background-color: white
 }
-.stage-window ul {
+.floor-window ul {
     line-height: 13px;
     text-align: right;
 }
-.stage-window ul li, .stage-window .x-slider-thumb {
+.floor-window ul li, .floor-window .x-slider-thumb {
     cursor: pointer;
 }
