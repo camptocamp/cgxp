@@ -42,12 +42,29 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
+ *  Than you have two chose, having some layers with a setFloor method.
+ *  Or having a WMTS or WMS layer that support a floor param, than it
+ *  you use mapserver you can should in the where close of your query
+ *  (your table should have a floor column):
+ *
+ *  .. code-block::
+ *
+ *      (floor = %floor% OR %floor% ID NULL OR floor IS NULL) AND ...
+ *
+ *  and ini the METADATA section:
+ *
+ *  .. code-block::
+ *
+ *      "default_floor" "NULL"
+ *      "floor_validation_pattern" "^-?[0-9]$" # For secured and floor layers
+ *
  */
 
 /** api: constructor
  *  .. class:: FloorSlider(config)
  *
- */   
+ */
 cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_floorslider */
