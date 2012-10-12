@@ -180,6 +180,11 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.QueryBuilder.prototype": {
         layerText: "Couche"
+    },
+
+    "cgxp.StageSlider.prototype": {
+        skyText: "Ciel",
+        levelText: "Étages"
     }
 });
 

@@ -70,7 +70,7 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
     /** api: config[anchorOffsets]
      *  ``Array[int]``
      *  The offsets from the anchor, default to [45, 10].
-     */    
+     */
     anchorOffsets: [45, 10],
 
     /** private: property[stateEvents]
@@ -79,17 +79,17 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
      */
     stateEvents: ['stagechange'],
 
-    /** public: config[sky_text] 
+    /** api: config[skyText]
      *  ``String``
-     *  l10n 
+     *  L10n text for the sky.
      */
-    sky_text: 'Sky',
+    skyText: 'Sky',
 
-    /** public: config[level_text] 
+    /** api: config[levelText]
      *  ``String``
-     *  l10n 
+     *  L10n text for the window title.
      */
-    level_text: 'Level',
+    levelText: 'Level',
 
     /**
      * private: method[constructor]
@@ -99,8 +99,8 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
         for (var i = config.maxValue; i >= config.minValue; i--) {
             var li = Ext.DomHelper.append(ul, {
                 tag: 'li',
-                html: config.maxMeanAll && i == config.maxValue ? 
-                        this.sky_text : i.toString()
+                html: config.maxMeanAll && i == config.maxValue ?
+                        this.skyText : i.toString()
             }, true);
             li.on({
                 click: (function(i) {
@@ -124,7 +124,7 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
             closable: false,
             resizable: false,
             draggable: false,
-            title: this.level_text,
+            title: this.levelText,
             layout: 'hbox',
             cls: 'stage-window',
             items: [this.slider,
@@ -138,7 +138,7 @@ cgxp.StageSlider = Ext.extend(Ext.Window, {
         cgxp.StageSlider.superclass.constructor.call(this, config);
 
         this.show();
-        this.anchorTo.defer(100, this, [this.mapPanel.body, 
+        this.anchorTo.defer(100, this, [this.mapPanel.body,
                 this.anchorPosition, this.anchorOffsets]);
     },
 
