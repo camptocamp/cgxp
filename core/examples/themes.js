@@ -10,39 +10,35 @@ App.themes = {
                 "name": "Features",
                 "isExpanded": true,
                 "children": [{
-                    "name": "Rivers",
+                    "name": "drain_fn",
                     "legend": true,
                     "isChecked": true
                 }, {
-                    "name": "Waterbodies",
+                    "name": "drainage",
                     "legend": true,
                     "isChecked": true,
-                    "legendRule": "default"
+                    "legendRule": "Water"
                 }, {
                     "name": "Others",
                     "children": [{
-                        "name": "Spot elevations",
+                        "name": "rail",
                         "legend": true,
                         "isChecked": true,
                         "minResolutionHint": 0.00005,
                         "maxResolutionHint": 0.002
                     }, {
-                        "name": "Streams",
+                        "name": "road",
                         "isChecked": true,
                         "legend": true
                     }]
                 }]
             }, {
-                "name": "Hillshading",
-                "isChecked": true,
-                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/communes.png"
-            }, {
-                "name": "Topography",
+                "name": "fedlimit",
                 "isChecked": true,
                 "legend": true,
                 "maxResolutionHint": 0.1
             }, {
-                "name": "Bathymetry",
+                "name": "bathymetry",
                 "isChecked": true,
                 "metadataUrl": "http://yahoo.fr",
                 "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
@@ -52,7 +48,7 @@ App.themes = {
         "icon": "http://sitn.ne.ch/mapfish/app/images/themes/environnement.png"
     }, {
         "children": [{
-            "name": "Bathymetry",
+            "name": "bathymetry",
             "isChecked": true
         }],
         "name": "Group with only one level"
@@ -63,15 +59,13 @@ App.themes = {
             "name": "Theme 2 - Group a - Cultural",
             "isBaseLayer": false,
             "children": [{
-                "name": "Settlements"
-            }, {
-                "name": "Railroads"
+                "name": "prov_bound"
             }, {
                 "name": "roads",
                 "children": [{
-                    "name": "Highways"
+                    "name": "rail"
                 }, {
-                    "name": "Roads"
+                    "name": "roads"
                 }]
             }]
         },{
@@ -80,7 +74,7 @@ App.themes = {
             "name": "Theme 2 - Group b",
             "isBaseLayer": false,
             "children": [{
-                "name": "Cities"
+                "name": "popplace"
             }]
         }],
         "name": "Theme 2",
@@ -89,15 +83,14 @@ App.themes = {
     "external": [{
         "children": [{
             "isExpanded": false,
-            "isInternalWMS": true,
             "name": "Theme ext 1 - Group a",
             "isBaseLayer": false,
             "children": [{
-                "name": "Countries"
+                "name": "grid"
             }]
         }],
         "name": "Theme external 1",
         "icon": "http://sitn.ne.ch/mapfish/app/images/themes/environnement.png"
     }]
 };
-App.default_themes = ["Theme 1", "Theme external 1"];
+App.default_themes = ["Theme external 1", "Theme 1"];
