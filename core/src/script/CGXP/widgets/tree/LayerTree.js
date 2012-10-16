@@ -221,6 +221,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         this.mapPanel.map.events.on({
             'zoomend': function() {
+                this.requestUpdateLegends();
                 this.getRootNode().cascade(this.checkInRange);
             },
             scope: this
@@ -375,12 +376,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var config = {};
         nodeConfig.actions = nodeConfig.actions || [];
         if (item.icon) {
-            config.icon = item.icon;
+            config.iconLegendUrl = item.icon;
         }
         else if (item.legendRule) {
             // there is only one class in the mapfile layer
             // we use a rule so that legend shows the icon only (no label)
-            config.icon = this.getLegendGraphicUrl(item.layer, item.name, item.legendRule);
+            config.iconLegendUrl = this.getLegendGraphicUrl(
+                    item.layer, item.name, item.legendRule);
         }
 
         if (item.legend) {
@@ -392,7 +394,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 config.legend = new Ext.Container({
                     items: [{
                         xtype: 'box',
-                        html: '<img src="' + src + '" />',
+                        html: '<img/>',
                         cls: 'legend_level_' + level.toString()
                     }],
                     listeners: {
@@ -402,14 +404,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         }
                     }
                 });
-
+                config.componentLegendUrl = src;
                 nodeConfig.actions.push({
                     action: "legend",
                     qtip: this.showhidelegendText
                 });
             }
         }
-        if (config.icon) {
+        if (config.iconLegendUrl) {
             config.iconCls = "x-tree-node-icon-wms";
         }
         Ext.apply(nodeConfig, config);
@@ -1060,6 +1062,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
+        this.requestAddLegends();
+
         return groupNode;
     },
 
@@ -1278,15 +1282,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 zoomToScale.hide();
             }
 
-            Ext.select('img', false, n.getUI().elNode).each(function(image) {
-                image = image.dom;
-                if (image.src.indexOf('GetLegendGraphic') != -1) {
-                    var url = image.src.split('?');
-                    var params = Ext.urlDecode(url[1]);
-                    params.scale = n.layer.map.getScale();
-                    image.src = url[0] + '?' + Ext.urlEncode(params);
-                }
-            });
         }
     },
 
@@ -1320,6 +1315,100 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             });
         }
         this.fireEvent('removegroup');
+    },
+
+    /** private: method[requestUpdateLegends]
+     *  Use setTimeout to request the update of legends.
+     */
+    requestUpdateLegends: function() {
+        if (this._addLegendsTimeoutId) {
+            // bail out if legends haven't been added yet, and
+            // are about to be added.
+            return;
+        }
+        if (this.updateLegendsTimeoutId) {
+            window.clearTimeout(this.updateLegendsTimeoutId);
+        }
+        this.updateLegendsTimeoutId = window.setTimeout(function() {
+            delete this.updateLegendsTimeoutId;
+            this.updateLegends();
+        }.createDelegate(this), 2000);
+    },
+
+    /** private: method[updateLegends]
+     *  Update legends in the tree.
+     */
+    updateLegends: function() {
+        this.getRootNode().cascade(function(n) {
+            if (n.layer instanceof OpenLayers.Layer.WMS) {
+                this.updateNodeLegends(n);
+            }
+        }, this);
+    },
+
+    /** private: method[updateNodeLegends]
+     *  Update the WMS legend images of a given tree node.
+     *  :arg node: ``Ext.tree.TreeNode``
+     */
+    updateNodeLegends: function(node) {
+        Ext.select('img', false, node.getUI().elNode).each(function(img) {
+            img.dom.src = this.addScaleToGetLegendGraphicUrl(img.dom.src);
+        }, this);
+    },
+
+    /** private: method[requestAddLegends]
+     *  Use setTimeout to request the addition of legends.
+     */
+    requestAddLegends: function() {
+        if (this._addLegendsTimeoutId) {
+            window.clearTimeout(this._addLegendsTimeoutId);
+        }
+        this._addLegendsTimeoutId = window.setTimeout(function() {
+            delete this._addLegendsTimeoutId;
+            this.addLegends();
+        }.createDelegate(this), 2000);
+    },
+
+    /** private: method[addLegends]
+     *  Add legends in the tree.
+     */
+    addLegends: function() {
+        this.getRootNode().cascade(function(n) {
+            if (n.layer) {
+                this.addNodeLegends(n);
+            }
+        }, this);
+    },
+
+    /** private: method[addNodeLegends]
+     *  Add the WMS legend images for a given tree node.
+     *  :arg node: ``Ext.tree.TreeNode``
+     */
+    addNodeLegends: function(node) {
+        var iconLegendUrl = node.attributes.iconLegendUrl;
+        if (iconLegendUrl) {
+            iconLegendUrl = this.addScaleToGetLegendGraphicUrl(iconLegendUrl);
+            node.setIcon(iconLegendUrl);
+        }
+        var componentLegendUrl = node.attributes.componentLegendUrl;
+        if (componentLegendUrl) {
+            var selector = '.legend-component img';
+            var img = Ext.select(selector, false, node.getUI().elNode).item(0);
+            img.dom.src = this.addScaleToGetLegendGraphicUrl(componentLegendUrl);
+        }
+    },
+
+    /** private: method[addScaleToGetLegendGraphicUrl]
+     *  :arg url: ``String``
+     */
+    addScaleToGetLegendGraphicUrl: function(url) {
+        if (url.indexOf('GetLegendGraphic') != -1) {
+            var parts = url.split('?');
+            var params = Ext.urlDecode(parts[1]);
+            params.scale = this.mapPanel.map.getScale();
+            url = parts[0] + '?' + Ext.urlEncode(params);
+        }
+        return url;
     }
 });
 
