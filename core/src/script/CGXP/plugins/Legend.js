@@ -19,6 +19,7 @@
  * @requires plugins/Tool.js
  * @include CGXP/widgets/tool/Button.js
  * @include CGXP/widgets/tool/Window.js
+ * @include CGXP/widgets/LegendImage.js
  * @include GeoExt/widgets/LegendPanel.js
  * @include GeoExt/widgets/WMSLegend.js
  * @include GeoExt/widgets/UrlLegend.js
@@ -99,7 +100,8 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             defaults: {
                 baseParams: {
                     FORMAT: 'image/png'
-                }
+                },
+                itemXType: 'cgxp_legendimage'
             }
         });
 

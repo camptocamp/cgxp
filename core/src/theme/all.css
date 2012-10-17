@@ -310,6 +310,10 @@ div.legend label {
     font-size: 1.2em;
     font-weight: bold;
 }
+div.legend label.layerparam-label {
+    font-size: 1em;
+    font-weight: normal;
+}
 
 .pdf-window .x-window-mc {
     font-weight: normal;
