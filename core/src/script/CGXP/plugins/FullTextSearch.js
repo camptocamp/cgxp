@@ -290,9 +290,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
                 this.vectorLayer.addFeatures([feature]);
 
-                // zoom onto the feature
-                if (this.pointRecenterZoom &&
-                    feature.geometry instanceof OpenLayers.Geometry.Point) {
+                // center the map on the feature (and eventually zoom to it)
+                if (feature.geometry instanceof OpenLayers.Geometry.Point) {
                     map.setCenter(new OpenLayers.LonLat(feature.geometry.x,
                                                         feature.geometry.y),
                                   this.pointRecenterZoom);
@@ -341,7 +340,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             },
             'specialkey': function(field, event) {
                 if (this.position && event.getKey() == event.ENTER) {
-                    map.setCenter(this.position);
+                    map.setCenter(this.position, this.pointRecenterZoom);
                     this.applyPosition.cancel();
                 }
             },
