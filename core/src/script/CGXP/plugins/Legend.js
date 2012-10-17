@@ -91,7 +91,7 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             closeAction: 'hide',
             autoScroll: true,
             cls: 'legend toolwindow'
-        }); 
+        });
 
         this.legendPanel = new GeoExt.LegendPanel({
             unstyled: true,
@@ -99,9 +99,9 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             defaults: {
                 baseParams: {
                     FORMAT: 'image/png'
-                }   
-            }   
-        }); 
+                }
+            }
+        });
 
         // _gx_legendpanel should be available only when window is open
         legendWin.on({
@@ -109,7 +109,7 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
                 if (!this.legendPanelAdded) {
                     legendWin.add(this.legendPanel);
                     legendWin.doLayout();
-                }   
+                }
             },
             scope: this
         });
