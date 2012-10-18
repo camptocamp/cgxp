@@ -71,7 +71,8 @@ describe('cgxp.tree.LayerTree', function() {
                 mapPanel: mapPanel,
                 themes: themes,
                 wmsURL: 'http://fake.wms',
-                defaultThemes: ['theme1']
+                defaultThemes: ['theme1'],
+                updateLegendDelay: 1000
             });
         });
 
@@ -91,7 +92,7 @@ describe('cgxp.tree.LayerTree', function() {
             expect(requestAddLegendsSpy.calls.length).toEqual(2);
             expect(addLegendsSpy).not.toHaveBeenCalled();
 
-            clock.tick(2000);
+            clock.tick(1000);
             expect(addLegendsSpy.calls.length).toEqual(1);
         });
     });
@@ -103,12 +104,13 @@ describe('cgxp.tree.LayerTree', function() {
                 mapPanel: mapPanel,
                 themes: themes,
                 wmsURL: 'http://fake.wms',
-                defaultThemes: ['theme1']
+                defaultThemes: ['theme1'],
+                updateLegendDelay: 1000
             });
             layerTree.loadDefaultThemes();
 
             // trigger addLegends
-            clock.tick(2000);
+            clock.tick(1000);
         });
 
         it('defers legends update', function() {
@@ -120,7 +122,7 @@ describe('cgxp.tree.LayerTree', function() {
             expect(requestUpdateLegendsSpy.calls.length).toEqual(1);
             expect(updateLegendsSpy).not.toHaveBeenCalled();
 
-            clock.tick(2000);
+            clock.tick(1000);
             expect(updateLegendsSpy.calls.length).toEqual(1);
         });
     });

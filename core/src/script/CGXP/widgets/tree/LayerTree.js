@@ -84,6 +84,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     wmsOptions: null,
 
+    /** api: config[updateLegendDelay]
+     *  ``Number``
+     *  The number of milliseconds the update of legends is deferred by.
+     *  Defaults to 2000.
+     */
+    updateLegendDelay: 2000,
+
     moveupText: "Raise",
     movedownText: "Move down",
     moreinfoText: "More information",
@@ -1332,7 +1339,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.updateLegendsTimeoutId = window.setTimeout(function() {
             delete this.updateLegendsTimeoutId;
             this.updateLegends();
-        }.createDelegate(this), 2000);
+        }.createDelegate(this), this.updateLegendDelay);
     },
 
     /** private: method[updateLegends]
@@ -1366,7 +1373,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this._addLegendsTimeoutId = window.setTimeout(function() {
             delete this._addLegendsTimeoutId;
             this.addLegends();
-        }.createDelegate(this), 2000);
+        }.createDelegate(this), this.updateLegendDelay);
     },
 
     /** private: method[addLegends]
