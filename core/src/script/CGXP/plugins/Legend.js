@@ -19,6 +19,7 @@
  * @requires plugins/Tool.js
  * @include CGXP/widgets/tool/Button.js
  * @include CGXP/widgets/tool/Window.js
+ * @include CGXP/widgets/LegendImage.js
  * @include GeoExt/widgets/LegendPanel.js
  * @include GeoExt/widgets/WMSLegend.js
  * @include GeoExt/widgets/UrlLegend.js
@@ -91,7 +92,7 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             closeAction: 'hide',
             autoScroll: true,
             cls: 'legend toolwindow'
-        }); 
+        });
 
         this.legendPanel = new GeoExt.LegendPanel({
             unstyled: true,
@@ -99,9 +100,10 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             defaults: {
                 baseParams: {
                     FORMAT: 'image/png'
-                }   
-            }   
-        }); 
+                },
+                itemXType: 'cgxp_legendimage'
+            }
+        });
 
         // _gx_legendpanel should be available only when window is open
         legendWin.on({
@@ -109,7 +111,7 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
                 if (!this.legendPanelAdded) {
                     legendWin.add(this.legendPanel);
                     legendWin.doLayout();
-                }   
+                }
             },
             scope: this
         });
