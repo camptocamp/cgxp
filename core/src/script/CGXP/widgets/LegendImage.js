@@ -50,7 +50,11 @@ cgxp.LegendImage = Ext.extend(GeoExt.LegendImage, {
     /** private: method[getImgEl]
      */
     getImgEl: function() {
-        return Ext.select('img', false, this.getEl().dom).first();
+        if (this.getEl()) {
+            return Ext.select('img', false, this.getEl().dom).first();
+        } else {
+            return false;
+        }
     }
 });
 Ext.reg('cgxp_legendimage', cgxp.LegendImage);
