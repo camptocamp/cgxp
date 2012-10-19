@@ -19,6 +19,7 @@
 
     var jsfiles = [
         "widgets/MapPanel.js",
+        "widgets/WMSLegend.js",
         "widgets/tree/LayerTree.js",
         "widgets/tree/TreeNodeComponent.js",
         "widgets/tree/TreeNodeLoading.js",
