@@ -1366,7 +1366,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /** private: methode[setLegendComponent]
+    /** private: method[setLegendComponent]
      *  Sets the legend image src (for component element only)
      * :arg node: ``Ext.tree.TreeNode``
      * :arg force: ``Boolean`` Tells whether to set it even if not visible
