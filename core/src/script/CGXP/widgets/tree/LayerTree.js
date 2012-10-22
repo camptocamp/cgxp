@@ -1319,15 +1319,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         this.updateLegendsTimeoutId = window.setTimeout(function() {
             delete this.updateLegendsTimeoutId;
-            this.updateLegends();
+            this.updateLegends(this.getRootNode());
         }.createDelegate(this), this.updateLegendDelay);
     },
 
     /** private: method[updateLegends]
      *  Update legends in the tree.
      */
-    updateLegends: function() {
-        this.getRootNode().cascade(function(n) {
+    updateLegends: function(node) {
+        node.cascade(function(n) {
+            if (!n.isExpanded() && !n.isLeaf()) {
+                n.on('expand', function onExpand() {
+                    this.updateLegends(n);
+                    n.un('expand', onExpand, this);
+                }, this);
+                return false;
+            }
             if (n.layer instanceof OpenLayers.Layer.WMS && n.isLeaf()) {
                 this.updateNodeLegends(n);
             }
