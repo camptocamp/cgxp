@@ -29,7 +29,8 @@ App.themes = {
                     }, {
                         "name": "road",
                         "isChecked": true,
-                        "legend": true
+                        "legend": true,
+                        "legendRule": "Roads"
                     }]
                 }]
             }, {
