@@ -681,7 +681,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (key) {
             var actionImg = evt.getTarget('.' + action, 10, true);
             var cls = action + "-on";
-            if (!node[key].getEl().isVisible()) {
+            function show() {
                 actionImg.addClass(cls);
                 node[key].el.setVisibilityMode(Ext.Element.DISPLAY);
                 node[key].el.slideIn('t', {
@@ -695,6 +695,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         }
                     }
                 });
+            }
+            if (!node[key].getEl().isVisible()) {
+                if (key == 'legend') {
+                    var img = this.setLegendComponent(node, true);
+                    img.on('load', function _show() {
+                        show();
+                        img.un('load', _show, this);
+                    }, this);
+                } else {
+                    show();
+                }
             } else {
                 actionImg.removeClass(cls);
                 node[key].el.setVisibilityMode(Ext.Element.DISPLAY);
@@ -1351,12 +1362,25 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 attr.name, attr.legendRule));
         }
         if (attr.legend) {
-            var selector = '.legend-component img';
-            var img = Ext.select(selector, false, node.getUI().elNode).item(0);
+            this.setLegendComponent(node);
+        }
+    },
+
+    /** private: methode[setLegendComponent]
+     *  Sets the legend image src (for component element only)
+     * :arg node: ``Ext.tree.TreeNode``
+     * :arg force: ``Boolean`` Tells whether to set it even if not visible
+     */
+    setLegendComponent: function(node, force) {
+        var attr = node.attributes;
+        var selector = '.legend-component img';
+        var img = Ext.select(selector, false, node.getUI().elNode).item(0);
+        if (img.isVisible(true) || force) {
             img.dom.src = (attr.legendImage) ?
                 item.legendImage :
                 this.getLegendGraphicUrl(attr.layer, attr.name);
         }
+        return img;
     }
 });
 
