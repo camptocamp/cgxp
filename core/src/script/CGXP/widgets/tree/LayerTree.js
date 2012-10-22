@@ -698,7 +698,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
             if (!node[key].getEl().isVisible()) {
                 if (key == 'legend') {
-                    var img = this.setLegendComponent(node, true);
+                    var img = this.updateComponentLegend(node, true);
                     img.on('load', function _show() {
                         show();
                         img.un('load', _show, this);
@@ -1362,22 +1362,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 attr.name, attr.legendRule));
         }
         if (attr.legend) {
-            this.setLegendComponent(node);
+            this.updateComponentLegend(node);
         }
     },
 
-    /** private: method[setLegendComponent]
+    /** private: method[updateComponentLegend]
      *  Sets the legend image src (for component element only)
      * :arg node: ``Ext.tree.TreeNode``
      * :arg force: ``Boolean`` Tells whether to set it even if not visible
      */
-    setLegendComponent: function(node, force) {
+    updateComponentLegend: function(node, force) {
         var attr = node.attributes;
         var selector = '.legend-component img';
         var img = Ext.select(selector, false, node.getUI().elNode).item(0);
         if (img.isVisible(true) || force) {
             img.dom.src = (attr.legendImage) ?
-                item.legendImage :
+                attr.legendImage :
                 this.getLegendGraphicUrl(attr.layer, attr.name);
         }
         return img;
