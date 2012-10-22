@@ -431,7 +431,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var idx = layerNames.indexOf(layerName);
         var styleName = styleNames && styleNames[idx];
 
-        var url = layer.getFullRequestString({
+        return layer.getFullRequestString({
             REQUEST: "GetLegendGraphic",
             WIDTH: null,
             HEIGHT: null,
@@ -442,18 +442,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             STYLES: null,
             SRS: null,
             FORMAT: layer.format,
-            RULE: rule
+            RULE: rule,
+            SCALE: layer.map.getScale()
         });
-
-        // add scale parameter - also if we have the url from the record's
-        // styles data field and it is actually a GetLegendGraphic request.
-        if(this.useScaleParameter === true &&
-                url.toLowerCase().indexOf("request=getlegendgraphic") != -1) {
-            var scale = layer.map.getScale();
-            url = Ext.urlAppend(url, "SCALE=" + scale);
-        }
-
-        return url;
     },
 
     /** private method[addMetadata]
