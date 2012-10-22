@@ -65,6 +65,14 @@ cgxp.WMSLegend = Ext.extend(GeoExt.WMSLegend, {
                 originalUpdate.apply(this, arguments);
             }.createDelegate(this), this.updateDelay);
         }.createDelegate(this);
+    },
+
+    beforeDestroy: function() {
+        if (this._timeoutId) {
+            window.clearTimeout(this._timeoutId);
+            delete this._timeoutId;
+        }
+        cgxp.WMSLegend.superclass.beforeDestroy.call(this);
     }
 });
 
@@ -80,3 +88,9 @@ GeoExt.LayerLegend.types.cgxp_wmslegend = cgxp.WMSLegend;
 
 /** api: xtype = cgxp_wmslegend */
 Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
+
+/**
+ * Register cgxp_wmslegend as a legends encoder.
+ */
+GeoExt.data.PrintProvider.prototype.encoders.legends.cgxp_wmslegend =
+    GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend;
