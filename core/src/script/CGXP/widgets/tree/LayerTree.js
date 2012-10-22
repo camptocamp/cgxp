@@ -1309,11 +1309,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  Use setTimeout to request the update of legends.
      */
     requestUpdateLegends: function() {
-        if (this._addLegendsTimeoutId) {
-            // bail out if legends haven't been added yet, and
-            // are about to be added.
-            return;
-        }
         if (this.updateLegendsTimeoutId) {
             window.clearTimeout(this.updateLegendsTimeoutId);
         }
