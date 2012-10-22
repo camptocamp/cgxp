@@ -80,3 +80,9 @@ GeoExt.LayerLegend.types.cgxp_wmslegend = cgxp.WMSLegend;
 
 /** api: xtype = cgxp_wmslegend */
 Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
+
+/**
+ * Register cgxp_wmslegend as a legends encoder.
+ */
+GeoExt.data.PrintProvider.prototype.encoders.legends.cgxp_wmslegend =
+    GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend;
