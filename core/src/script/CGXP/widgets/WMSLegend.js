@@ -65,6 +65,14 @@ cgxp.WMSLegend = Ext.extend(GeoExt.WMSLegend, {
                 originalUpdate.apply(this, arguments);
             }.createDelegate(this), this.updateDelay);
         }.createDelegate(this);
+    },
+
+    beforeDestroy: function() {
+        if (this._timeoutId) {
+            window.clearTimeout(this._timeoutId);
+            delete this._timeoutId;
+        }
+        cgxp.WMSLegend.superclass.beforeDestroy.call(this);
     }
 });
 

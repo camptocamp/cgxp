@@ -32,4 +32,14 @@ describe('cgxp.WMSLegend', function() {
             expect(updateSpy).toHaveBeenCalled();
         });
     });
+
+    describe('destroy', function() {
+
+        it('clears the update legend timeout', function() {
+            legend.update();
+            legend.destroy();
+            clock.tick(10);
+            expect(updateSpy).not.toHaveBeenCalled();
+        });
+    });
 });
