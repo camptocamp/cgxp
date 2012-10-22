@@ -1320,6 +1320,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     /** private: method[updateLegends]
      *  Update legends in the tree.
+     *  :arg node: ``Ext.tree.TreeNode`` The code from which to cascade down
+     *  the tree.
      */
     updateLegends: function(node) {
         node.cascade(function(n) {
