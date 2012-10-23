@@ -42,4 +42,19 @@ describe('cgxp.WMSLegend', function() {
             expect(updateSpy).not.toHaveBeenCalled();
         });
     });
+
+    describe('print', function() {
+        var print;
+
+        beforeEach(function() {
+            print = new GeoExt.data.PrintProvider({url: ''});
+        });
+
+        it('updates the legends first', function() {
+            print.encoders.legends.cgxp_wmslegend.apply(
+                print, [legend, 1000]);
+            expect(updateSpy).toHaveBeenCalled();
+        });
+
+    });
 });

@@ -92,5 +92,10 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
 /**
  * Register cgxp_wmslegend as a legends encoder.
  */
-GeoExt.data.PrintProvider.prototype.encoders.legends.cgxp_wmslegend =
-    GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend;
+(function() {
+    var encoders = GeoExt.data.PrintProvider.prototype.encoders;
+    encoders.legends.cgxp_wmslegend = function(cmp, scale) {
+        GeoExt.WMSLegend.prototype.update.call(this);
+        this.encoders.legends.gx_wmslegend.apply(this, [cmp, scale]);
+    };
+})();
