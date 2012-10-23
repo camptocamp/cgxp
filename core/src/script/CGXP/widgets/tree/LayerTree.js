@@ -391,6 +391,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (item.icon || item.legendRule) {
             config.iconCls = "x-tree-node-icon-wms";
         }
+        if (item.legendImage) {
+            config.legendImage = item.legendImage;
+        }
 
         if (item.legend) {
             config.legend = new Ext.Container({
