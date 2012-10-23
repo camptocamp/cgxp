@@ -383,7 +383,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var config = {};
         nodeConfig.actions = nodeConfig.actions || [];
         if (item.icon) {
-            config.icon = item.icon;
+            config.iconUrl = item.icon;
         }
         if (item.legendRule) {
             config.legendRule = item.legendRule;
@@ -1363,6 +1363,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (attr.legendRule) {
             node.setIcon(this.getLegendGraphicUrl(attr.layer,
                 attr.name, attr.legendRule));
+        }
+        if (attr.iconUrl) {
+            node.setIcon(attr.iconUrl);
         }
         if (attr.legend) {
             this.updateComponentLegend(node);
