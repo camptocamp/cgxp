@@ -54,6 +54,8 @@ describe('cgxp.WMSLegend', function() {
             print.encoders.legends.cgxp_wmslegend.apply(
                 print, [legend, 1000]);
             expect(updateSpy).toHaveBeenCalled();
+            expect(updateSpy.calls.length).toEqual(1);
+            expect(updateSpy.calls[0].object).toBe(legend);
         });
 
     });
