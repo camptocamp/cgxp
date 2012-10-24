@@ -109,6 +109,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         this.slider = new Ext.slider.SingleSlider({
             increment: 1,
             vertical: true,
+            value: config.value,
             minValue: config.minValue,
             maxValue: config.maxValue,
             clickToChange: false,
