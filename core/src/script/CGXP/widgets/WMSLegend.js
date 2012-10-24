@@ -92,5 +92,15 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
 /**
  * Register cgxp_wmslegend as a legends encoder.
  */
-GeoExt.data.PrintProvider.prototype.encoders.legends.cgxp_wmslegend =
-    GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend;
+(function() {
+    // We need to call the non-deferred version of the "update"
+    // function, to deal with the case where the legend panel
+    // does not yet include legend images. This effectively
+    // happens when the legend panel is not rendered at print
+    // time.
+    var encoders = GeoExt.data.PrintProvider.prototype.encoders;
+    encoders.legends.cgxp_wmslegend = function(cmp, scale) {
+        GeoExt.WMSLegend.prototype.update.call(cmp);
+        return this.encoders.legends.gx_wmslegend.apply(this, [cmp, scale]);
+    };
+})();
