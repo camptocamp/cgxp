@@ -72,15 +72,15 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[scaleStoreListeners]
      *  ``Object``
-     *  Ext listener config to be applied on the scale store
-     *  for example:
-     *  scaleStoreListeners: {
-     *      load: function(store, records, index) {
-     *          store.each(function(record) {
-     *              // bla
+     *  Ext listener config to be applied on the scale store. For example::
+     *
+     *      scaleStoreListeners: {
+     *          load: function(store, records, index) {
+     *              store.each(function(record) {
+     *                  // bla
+     *              }
      *          }
      *      }
-     *  }
      */
     scaleStoreListeners: {},
 

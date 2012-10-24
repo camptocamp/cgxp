@@ -27,20 +27,6 @@
 /** api: (define)
  *  module = cgxp.plugins
  *  class = WFSGetFeature
- *
- *  This plugin adds a toggle button to a toolbar. When the button is
- *  pressed the map changes to "query" mode - user can click and draw
- *  boxes to query the map. WFS GetFeature is used for queries.
- *
- *  Only the currently visible layers are queried.
- *
- *  For a WMS layer the feature types sent in the WFS GetFeature query
- *  are obtained from its "layers" parameter.
- *
- *  For a layer of another type (layer that does not have a "layers"
- *  parameter), the feature types are obtained from the layer's
- *  "queryLayers" option if it is defined, and from its
- *  "mapserverLayers" option if "queryLayers" is not defined.
  */
 
 Ext.namespace("cgxp.plugins");
@@ -67,20 +53,6 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *      });
  *
- *  Here's an example on how to configure the queryLayers option.
- *
- *  .. code-block:: javascript
- *
- *      ...
- *      queryLayers: [{
- *          name: "buildings",
- *          maxResolutionHint: 6.6145797614602611
- *      }, {
- *          name: "parcels",
- *          maxScaleDenominator: 10000
- *      }]
- *      ...
- *
  *  The min/maxResolutionHint can be computed with the following rule:
  *
  *  .. code-block:: javascript
@@ -95,10 +67,35 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: WFSGetFeature(config)
  *
- *    Map queries (with WFS GetFeature)
+ *  This plugin adds a toggle button to a toolbar. When the button is
+ *  pressed the map changes to "query" mode - user can click and draw
+ *  boxes to query the map. WFS GetFeature is used for queries.
  *
- *    Options:
- *    * events - ``Ext.util.Observable`` The application events manager.
+ *  Only the currently visible layers are queried.
+ *
+ *  For a WMS layer the feature types sent in the WFS GetFeature query
+ *  are obtained from its ``layers`` parameter.
+ *
+ *  For a layer of another type (layer that does not have a ``layers``
+ *  parameter), the feature types are obtained from the layer's
+ *  ``queryLayers`` option if it is defined, and from its
+ *  ``mapserverLayers`` option if ``queryLayers`` is not defined.
+ *
+ *  Here's an example on how to use the ``queryLayers`` option
+ *  in a layer config:
+ *
+ *  .. code-block:: javascript
+ *
+ *      ...
+ *      queryLayers: [{
+ *          name: "buildings",
+ *          maxResolutionHint: 6.6145797614602611
+ *      }, {
+ *          name: "parcels",
+ *          maxScaleDenominator: 10000
+ *      }]
+ *      ...
+ *
  */
 cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
 
