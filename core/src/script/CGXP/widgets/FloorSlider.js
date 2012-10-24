@@ -134,6 +134,10 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         }, config);
         cgxp.FloorSlider.superclass.constructor.call(this, config);
 
+        this.mapPanel.map.events.register('addlayer', this, function(e) {
+            this.setLayerFloor(e.layer, this.getFloor());
+        });
+
         this.show();
         this.anchorTo.defer(100, this, [this.mapPanel.body,
                 this.anchorPosition, this.anchorOffsets]);
@@ -152,10 +156,16 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
         this.slider.on('change', function() {
             this.fireEvent('floorchange');
-            var value = this.slider.getValue();
-            this.setFloor(this.maxMeanAll && value == this.maxValue ?
-                    undefined : value);
+            this.setFloor(this.getFloor());
         }, this);
+    },
+
+    /** public: method[getFloor]
+     *  Get the floor.
+     */
+    getFloor: function() {
+        var value = this.slider.getValue();
+        return this.maxMeanAll && value == this.maxValue ? undefined : value;
     },
 
     /** private: method[setFloor]
@@ -163,13 +173,24 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     setFloor: function(floor) {
         Ext.each(this.mapPanel.map.layers, function(layer) {
-            if (layer.setFloor) {
-                layer.setFloor(floor);
-            }
-            else if (layer.mergeNewParams) { // WMS or WMTS
-                layer.mergeNewParams({floor: floor || null});
-            }
+            this.setLayerFloor(layer, floor);
         }, this);
+    },
+
+    /** private_ method[setLayerFloor]
+     *  set a floor to a layer.
+     */
+    setLayerFloor: function(layer, floor) {
+        if (layer.setFloor) {
+            layer.setFloor(floor);
+        }
+        else if (layer.mergeNewParams) { // WMS or WMTS
+            // floor || null don't works for floor = 0
+            if (floor === undefined) {
+                floor = null;
+            }
+            layer.mergeNewParams({floor: floor});
+        }
     },
 
     /** private: method[saveState]
