@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Camptocamp
+ * Copyright (c) 2012 Camptocamp
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,12 +31,12 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
     xtype: 'cgxp_floorslider',
 
     /** api: config[minValue]
-     *  ``int``
+     *  ``Number``
      *  The fist floor value.
      */
 
     /** api: config[maxValue]
-     *  ``int``
+     *  ``Number``
      *  The max floor value.
      */
 
@@ -64,7 +64,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
     anchorPosition: 'tl-tl',
 
     /** api: config[anchorOffsets]
-     *  ``Array[int]``
+     *  ``Array(Number)``
      *  The offsets from the anchor, default to [45, 10].
      */
     anchorOffsets: [45, 10],
@@ -138,18 +138,13 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
                 this.anchorPosition, this.anchorOffsets]);
     },
 
-    /**
-     * private: method[initComponent]
-     * Creates the map toolbar.
-     *
-     * Returns:
-     * {Ext.Toolbar} The toolbar.
+    /** private: method[initComponent]
      */
     initComponent: function() {
         cgxp.FloorSlider.superclass.initComponent.call(this);
         this.addEvents(
             /** private: event[floorchange]
-             * Throws when the floor change.
+             *  Throws when the floor change.
              */
             'floorchange'
         );
@@ -162,24 +157,16 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         }, this);
     },
 
-    /**
-     * Method: setFloor
-     * Change the floor,
+    /** private: method[setFloor]
+     *  Change the floor in the layers.
      */
     setFloor: function(floor) {
         Ext.each(this.mapPanel.map.layers, function(layer) {
             if (layer.setFloor) {
                 layer.setFloor(floor);
-                layer.redraw();
             }
-            else if (layer.params) { // WMS or WMTS
-                if (floor !== undefined) {
-                    layer.params.floor = floor;
-                }
-                else {
-                    delete layer.params.floor;
-                }
-                layer.redraw();
+            else if (layer.mergeNewParams) { // WMS or WMTS
+                layer.mergeNewParams({floor: floor || null});
             }
         }, this);
     },

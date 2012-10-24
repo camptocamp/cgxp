@@ -185,7 +185,7 @@ GeoExt.Lang.add("en", {
 
     "cgxp.FloorSlider.prototype": {
         skyText: "Sky",
-        levelText: "Level"
+        floorText: "Floor"
     }
 });
 

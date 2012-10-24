@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Camptocamp
+ * Copyright (c) 2012 Camptocamp
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,21 +43,24 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *      });
  *
- *  Than you have two chose, having some layers with a setFloor method.
- *  Or having a WMTS or WMS layer that support a floor param, than it
- *  you use mapserver you can should in the where close of your query
- *  (your table should have a floor column):
+ *  When the floor is changed if it exists `setFloor(floor)` is called
+ *  on OpenLayers layers, or a floor parameter is changed for
+ *  layers with parameters (WMS and WMTS).
+ *
+ *  Mapserver layers should be ready to receive a floor parameters
+ *  in the query string, than add the following code in the where
+ *  close of your query (your table should have a floor column):
  *
  *  .. code-block::
  *
- *      (floor = %floor% OR %floor% ID NULL OR floor IS NULL) AND ...
+ *      (floor = %floor% OR %floor% IS NULL OR floor IS NULL) AND ...
  *
- *  and ini the METADATA section:
+ *  and add in the METADATA section:
  *
  *  .. code-block::
  *
  *      "default_floor" "NULL"
- *      "floor_validation_pattern" "^-?[0-9]$" # For secured and floor layers
+ *      "floor_validation_pattern" "^-?[0-9]$"
  *
  */
 
@@ -71,39 +74,40 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_floorslider",
 
     /** api: config[minValue]
-     *  ``int``
+     *  ``Number``
      *  The fist floor value.
      */
     minValue: 0,
 
     /** api: config[value]
-     *  ``int``
+     *  ``Number``
      *  The default floor value, default is 0.
      */
     value: 0,
 
     /** api: config[maxValue]
-     *  ``int``
+     *  ``Number``
      *  The max floor value.
      */
     maxValue: 10,
 
     /** api: config[maxMeanAll]
-     * ``Boolean``
-     * Max value mean all floor, default is true.
+     *  ``Boolean``
+     *  Max value mean all floor, it is used to display all features.
+     *  Default is true.
      */
     maxMeanAll: true,
 
     /** api: config[widgetOptions]
-     * ``Object``
-     * Additional slider options.
+     *  ``Object``
+     *  Additional slider options.
      */
     widgetOptions: {},
 
-    /** public: method[addActions]
-     *  :arg config: ``Object``
+    /** public: method[init]
      */
-    addActions: function(config) {
+    init: function() {
+        cgxp.plugins.FloorSlider.superclass.init.apply(this, arguments);
         this.target.addListener('ready', function() {
             var mapPanel = this.target.mapPanel;
             var floorSlider = new cgxp.FloorSlider(Ext.apply({
