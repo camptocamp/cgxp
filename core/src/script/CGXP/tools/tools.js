@@ -15,16 +15,12 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** api: (define)
- *  module = cgxp.tools
- */
-
 Ext.namespace("cgxp.tools");
 
 /** 
-* Open an external url in a Ext windows
-* This is a replacement for the usual 'window.open(...)'
-*/
+ * Open an external url in a Ext windows
+ * This is a replacement for the usual 'window.open(...)'
+ */
 cgxp.tools.openInfoWindow = function(url, title, width, height) {
     var content = {
         xtype: 'box',
@@ -40,8 +36,8 @@ cgxp.tools.openInfoWindow = function(url, title, width, height) {
 };
 
 /** 
-* Generic Ext windows handler
-*/
+ * Generic Ext windows handler
+ */
 cgxp.tools.openWindow = function(content, title, width, height) {
     if (cgxp.tools.popupWindow) {
         cgxp.tools.popupWindow.destroy();
