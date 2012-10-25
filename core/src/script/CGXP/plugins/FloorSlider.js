@@ -48,7 +48,7 @@ Ext.namespace("cgxp.plugins");
  *  layers with parameters (WMS and WMTS).
  *
  *  Mapserver layers should be ready to receive a floor parameters
- *  in the query string, than add the following code in the where
+ *  in the query string, then add the following code in the where
  *  close of your query (your table should have a floor column):
  *
  *  .. code-block::
