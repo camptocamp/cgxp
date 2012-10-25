@@ -214,7 +214,9 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             var detail = [],
                 attributes = feature.attributes;
             detail.push('<table class="detail">');
+            var hasAttributes = false;
             for (var k in attributes) {
+                hasAttributes = true;
                 if (attributes.hasOwnProperty(k) && attributes[k]) {
                     detail = detail.concat([
                         '<tr>',
@@ -229,25 +231,27 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             detail.push('</table>');
-            feature.attributes[this.formatedAttributesId] = detail.join('');
-            feature.attributes.type = OpenLayers.i18n(feature.type); 
+            if (hasAttributes) {
+                feature.attributes[this.formatedAttributesId] = detail.join('');
+                feature.attributes.type = OpenLayers.i18n(feature.type); 
 
-            if (feature.type != previousLayer) {
-                previousLayer = feature.type;
-                i = 0;
-            }
+                if (feature.type != previousLayer) {
+                    previousLayer = feature.type;
+                    i = 0;
+                }
 
-            // store original id in backup attribute
-            if (feature.attributes.id) {
-                feature.attributes[this.originalIdRef] = feature.attributes.id;
-            }
-            if (this.layers[feature.type] &&
-                this.layers[feature.type].identifierAttribute) {
-                // use the identifierAttribute field if set
-                var identifier = this.layers[feature.type].identifierAttribute;
-                feature.attributes.id = feature.attributes[identifier];
-            } else {
-                feature.attributes.id = feature.attributes.type + ' ' + (++i);
+                // store original id in backup attribute
+                if (feature.attributes.id) {
+                    feature.attributes[this.originalIdRef] = feature.attributes.id;
+                }
+                if (this.layers[feature.type] &&
+                    this.layers[feature.type].identifierAttribute) {
+                    // use the identifierAttribute field if set
+                    var identifier = this.layers[feature.type].identifierAttribute;
+                    feature.attributes.id = feature.attributes[identifier];
+                } else {
+                    feature.attributes.id = feature.attributes.type + ' ' + (++i);
+                }
             }
         }, this);
     },
@@ -257,6 +261,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     showWindow: function(features) {
         this.extendFeaturesAttributes(features);
+        var featuresWithAttributes = [];
+        Ext.each(features, function(feature) {
+            if (feature.attributes[this.formatedAttributesId]) {
+                featuresWithAttributes.push(feature);
+            }
+        }, this)
+        features = featuresWithAttributes;
 
         if (!this.grid) {
             this.createGrid();
