@@ -493,3 +493,13 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
 .floor-window ul li, .floor-window .x-slider-thumb {
     cursor: pointer;
 }
+.floor-window ul li a {
+    color: black;
+}
+.floor-window ul li a:hover {
+    text-decoration: none;
+}
+.floor-window ul li a:focus {
+    color: white;
+    background-color: black;
+}

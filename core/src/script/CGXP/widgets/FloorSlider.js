@@ -94,11 +94,15 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         var ul = document.createElement('ul');
         for (var i = config.maxValue; i >= config.minValue; i--) {
             var li = Ext.DomHelper.append(ul, {
-                tag: 'li',
+                tag: 'li'
+            }, true);
+            var a = Ext.DomHelper.append(li, {
+                tag: 'a',
+                'href': 'javascript:',
                 html: config.maxMeanAll && i == config.maxValue ?
                         this.skyText : i.toString()
             }, true);
-            li.on({
+            a.on({
                 click: (function(i) {
                     this.setFloor(i);
                     this.slider.setValue(i);
