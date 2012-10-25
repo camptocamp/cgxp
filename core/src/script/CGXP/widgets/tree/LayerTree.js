@@ -792,6 +792,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.mapPanel.layers.insert(currentIndex, [
                         new this.recordType({
                             disclaimer: child.disclaimer,
+                            legendURL: child.legendImage,
                             layer: child.layer
                         }, child.layer.id)]);
                     return 1;
@@ -847,6 +848,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             this.mapPanel.layers.insert(indexToAdd.currentIndex, [
                                 new this.recordType({
                                     disclaimer: child.disclaimer,
+                                    legendURL: child.legendImage,
                                     layer: layer
                                 }, layer.id)]);
                             Ext.each(this.indexesToAdd, function(idx) {
