@@ -1340,10 +1340,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     updateLegends: function(node) {
         node.cascade(function(n) {
             if (!n.isExpanded() && !n.isLeaf()) {
-                n.on('expand', function onExpand() {
+                n.on('expand', function() {
                     this.updateLegends(n);
-                    n.un('expand', onExpand, this);
-                }, this);
+                }, this, {single: true});
                 return false;
             }
             if (n.layer instanceof OpenLayers.Layer.WMS && n.isLeaf()) {
