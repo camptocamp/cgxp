@@ -171,12 +171,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         });
         cgxp.tree.LayerTree.superclass.initComponent.call(this, arguments);
-        this.on({
-            "beforeexpandnode": function(node) {
-                node.eachChild(this.checkVisibility);
-            },
-            scope: this
-        });
         this.getSelectionModel().on({
             "beforeselect": function() {
                 return false;
@@ -717,20 +711,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     duration: 0.2
                 });
             }
-        }
-    },
-
-    /** private: method[checkVisibility]
-     *  Checks layer visibility for the node (in case the node was previously hidden).
-     *
-     *  :arg node: ``Ext.tree.TreeNode``
-     */
-    checkVisibility: function(node) {
-        // if node is LayerParamNode, set the node check correctly
-        if (node.attributes.nodeType == 'gx_layerparam') {
-            //node.attributes.checked =
-                //node.layer.getVisibility() &&
-                //node.getItemsFromLayer().indexOf(node.item) >= 0;
         }
     },
 
