@@ -156,7 +156,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
 
-        var themes = Ext.apply(this.themes.local, this.themes.external);
         var layers = {};
         function browseThemes(node) {
             for (var i=0, len=node.length; i<len; i++) {
@@ -168,7 +167,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        browseThemes(themes);
+        browseThemes(this.themes.external);
+        browseThemes(this.themes.local);
         this.layers = layers;
     },
 
