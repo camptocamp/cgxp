@@ -32,14 +32,18 @@ describe('cgxp.tree.LayerTree', function() {
                 "name": "theme1",
                 "children": [{
                     "name": "layer1",
+                    "isExpanded": true,
                     "children": [{
                         "name": "layer11",
+                        "legendRule": "rule1",
                         "isChecked": true
                     }, {
-                        "name": "layer12"
+                        "name": "layer12",
+                        "legend": true
                     }]
                 }, {
                     "name": "layer2",
+                    "expanded": false,
                     "children": [{
                         "name": "layer21"
                     }, {
@@ -84,16 +88,38 @@ describe('cgxp.tree.LayerTree', function() {
         });
 
         it('defers legends creation', function() {
-            var requestAddLegendsSpy = spyOn(
-                layerTree, 'requestAddLegends').andCallThrough();
-            var addLegendsSpy = spyOn(layerTree, 'addLegends');
+            var requestUpdateLegendsSpy = spyOn(
+                layerTree, 'requestUpdateLegends').andCallThrough();
+            var updateLegendsSpy = spyOn(
+                layerTree, 'updateLegends').andCallThrough();
+            var updateNodeLegendsSpy = spyOn(
+                layerTree, 'updateNodeLegends').andCallThrough();
+            var countLegendGraphics = function() {
+                var images = Ext.select('img', layerTree.getRootNode());
+                var count = 0;
+                images.each(function(image) {
+                    if (image.dom.src.indexOf('GetLegendGraphic') != -1) {
+                        count++;
+                    }
+                });
+                return count;
+            };
 
             layerTree.loadDefaultThemes();
-            expect(requestAddLegendsSpy.calls.length).toEqual(2);
-            expect(addLegendsSpy).not.toHaveBeenCalled();
+            expect(requestUpdateLegendsSpy.calls.length).toEqual(2);
+            expect(updateLegendsSpy).not.toHaveBeenCalled();
+            expect(countLegendGraphics()).toEqual(0); // no request done yet
 
             clock.tick(1000);
-            expect(addLegendsSpy.calls.length).toEqual(1);
+            expect(updateLegendsSpy.calls.length).toEqual(1);
+            expect(updateNodeLegendsSpy.calls.length).toEqual(2); // layer1, layer2
+            expect(countLegendGraphics()).toEqual(1); // layer1 icon
+
+            // now we simulate a click on a legend action
+            var node = layerTree.root.findChild("text", "layer2");
+            Ext.select('.legend', node.ui.getEl()).first().dom.click();
+            legendGraphics = 0;
+            expect(countLegendGraphics()).toEqual(2); // layer1 icon + layer2 legend
         });
     });
 

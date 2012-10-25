@@ -29,7 +29,8 @@ App.themes = {
                     }, {
                         "name": "road",
                         "isChecked": true,
-                        "legend": true
+                        "legend": true,
+                        "legendRule": "Roads"
                     }]
                 }]
             }, {
@@ -41,7 +42,9 @@ App.themes = {
                 "name": "bathymetry",
                 "isChecked": true,
                 "metadataUrl": "http://yahoo.fr",
-                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
+                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png",
+                "legend": true,
+                "legendImage": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
             }]
         }],
         "name": "Theme 1",
