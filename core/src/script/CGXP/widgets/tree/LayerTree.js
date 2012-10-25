@@ -383,43 +383,36 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var config = {};
         nodeConfig.actions = nodeConfig.actions || [];
         if (item.icon) {
-            config.iconLegendUrl = item.icon;
+            config.iconUrl = item.icon;
         }
-        else if (item.legendRule) {
-            // there is only one class in the mapfile layer
-            // we use a rule so that legend shows the icon only (no label)
-            config.iconLegendUrl = this.getLegendGraphicUrl(
-                    item.layer, item.name, item.legendRule);
+        if (item.legendRule) {
+            config.legendRule = item.legendRule;
+        }
+        if (item.icon || item.legendRule) {
+            config.iconCls = "x-tree-node-icon-wms";
+        }
+        if (item.legendImage) {
+            config.legendImage = item.legendImage;
         }
 
         if (item.legend) {
-            var src = (item.legendImage) ?
-                item.legendImage :
-                this.getLegendGraphicUrl(item.layer, item.name);
-
-            if (src) {
-                config.legend = new Ext.Container({
-                    items: [{
-                        xtype: 'box',
-                        html: '<img/>',
-                        cls: 'legend_level_' + level.toString()
-                    }],
-                    listeners: {
-                        render: function(cmp) {
-                            cmp.getEl().setVisibilityMode(Ext.Element.DISPLAY);
-                            cmp.getEl().hide.defer(1, cmp.getEl(), [false]);
-                        }
+            config.legend = new Ext.Container({
+                items: [{
+                    xtype: 'box',
+                    html: '<img/>',
+                    cls: 'legend_level_' + level.toString()
+                }],
+                listeners: {
+                    render: function(cmp) {
+                        cmp.getEl().setVisibilityMode(Ext.Element.DISPLAY);
+                        cmp.getEl().hide.defer(1, cmp.getEl(), [false]);
                     }
-                });
-                config.componentLegendUrl = src;
-                nodeConfig.actions.push({
-                    action: "legend",
-                    qtip: this.showhidelegendText
-                });
-            }
-        }
-        if (config.iconLegendUrl) {
-            config.iconCls = "x-tree-node-icon-wms";
+                }
+            });
+            nodeConfig.actions.push({
+                action: "legend",
+                qtip: this.showhidelegendText
+            });
         }
         Ext.apply(nodeConfig, config);
     },
@@ -441,7 +434,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var idx = layerNames.indexOf(layerName);
         var styleName = styleNames && styleNames[idx];
 
-        var url = layer.getFullRequestString({
+        return layer.getFullRequestString({
             REQUEST: "GetLegendGraphic",
             WIDTH: null,
             HEIGHT: null,
@@ -452,18 +445,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             STYLES: null,
             SRS: null,
             FORMAT: layer.format,
-            RULE: rule
+            RULE: rule,
+            SCALE: layer.map.getScale()
         });
-
-        // add scale parameter - also if we have the url from the record's
-        // styles data field and it is actually a GetLegendGraphic request.
-        if(this.useScaleParameter === true &&
-                url.toLowerCase().indexOf("request=getlegendgraphic") != -1) {
-            var scale = layer.map.getScale();
-            url = Ext.urlAppend(url, "SCALE=" + scale);
-        }
-
-        return url;
     },
 
     /** private method[addMetadata]
@@ -700,7 +684,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (key) {
             var actionImg = evt.getTarget('.' + action, 10, true);
             var cls = action + "-on";
-            if (!node[key].getEl().isVisible()) {
+            function show() {
                 actionImg.addClass(cls);
                 node[key].el.setVisibilityMode(Ext.Element.DISPLAY);
                 node[key].el.slideIn('t', {
@@ -714,6 +698,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         }
                     }
                 });
+            }
+            if (!node[key].getEl().isVisible()) {
+                if (key == 'legend') {
+                    var img = this.updateComponentLegend(node, true);
+                    img.on('load', function _show() {
+                        show();
+                        img.un('load', _show, this);
+                    }, this);
+                } else {
+                    show();
+                }
             } else {
                 actionImg.removeClass(cls);
                 node[key].el.setVisibilityMode(Ext.Element.DISPLAY);
@@ -1069,7 +1064,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
-        this.requestAddLegends();
+        this.requestUpdateLegends();
 
         return groupNode;
     },
@@ -1328,26 +1323,29 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  Use setTimeout to request the update of legends.
      */
     requestUpdateLegends: function() {
-        if (this._addLegendsTimeoutId) {
-            // bail out if legends haven't been added yet, and
-            // are about to be added.
-            return;
-        }
         if (this.updateLegendsTimeoutId) {
             window.clearTimeout(this.updateLegendsTimeoutId);
         }
         this.updateLegendsTimeoutId = window.setTimeout(function() {
             delete this.updateLegendsTimeoutId;
-            this.updateLegends();
+            this.updateLegends(this.getRootNode());
         }.createDelegate(this), this.updateLegendDelay);
     },
 
     /** private: method[updateLegends]
      *  Update legends in the tree.
+     *  :arg node: ``Ext.tree.TreeNode`` The code from which to cascade down
+     *  the tree.
      */
-    updateLegends: function() {
-        this.getRootNode().cascade(function(n) {
-            if (n.layer instanceof OpenLayers.Layer.WMS) {
+    updateLegends: function(node) {
+        node.cascade(function(n) {
+            if (!n.isExpanded() && !n.isLeaf()) {
+                n.on('expand', function() {
+                    this.updateLegends(n);
+                }, this, {single: true});
+                return false;
+            }
+            if (n.layer instanceof OpenLayers.Layer.WMS && n.isLeaf()) {
                 this.updateNodeLegends(n);
             }
         }, this);
@@ -1358,64 +1356,36 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg node: ``Ext.tree.TreeNode``
      */
     updateNodeLegends: function(node) {
-        Ext.select('img', false, node.getUI().elNode).each(function(img) {
-            img.dom.src = this.addScaleToGetLegendGraphicUrl(img.dom.src);
-        }, this);
-    },
-
-    /** private: method[requestAddLegends]
-     *  Use setTimeout to request the addition of legends.
-     */
-    requestAddLegends: function() {
-        if (this._addLegendsTimeoutId) {
-            window.clearTimeout(this._addLegendsTimeoutId);
+        var attr = node.attributes;
+        // there is only one class in the mapfile layer
+        // we use a rule so that legend shows the icon only (no label)
+        if (attr.legendRule) {
+            node.setIcon(this.getLegendGraphicUrl(attr.layer,
+                attr.name, attr.legendRule));
         }
-        this._addLegendsTimeoutId = window.setTimeout(function() {
-            delete this._addLegendsTimeoutId;
-            this.addLegends();
-        }.createDelegate(this), this.updateLegendDelay);
-    },
-
-    /** private: method[addLegends]
-     *  Add legends in the tree.
-     */
-    addLegends: function() {
-        this.getRootNode().cascade(function(n) {
-            if (n.layer) {
-                this.addNodeLegends(n);
-            }
-        }, this);
-    },
-
-    /** private: method[addNodeLegends]
-     *  Add the WMS legend images for a given tree node.
-     *  :arg node: ``Ext.tree.TreeNode``
-     */
-    addNodeLegends: function(node) {
-        var iconLegendUrl = node.attributes.iconLegendUrl;
-        if (iconLegendUrl) {
-            iconLegendUrl = this.addScaleToGetLegendGraphicUrl(iconLegendUrl);
-            node.setIcon(iconLegendUrl);
+        if (attr.iconUrl) {
+            node.setIcon(attr.iconUrl);
         }
-        var componentLegendUrl = node.attributes.componentLegendUrl;
-        if (componentLegendUrl) {
-            var selector = '.legend-component img';
-            var img = Ext.select(selector, false, node.getUI().elNode).item(0);
-            img.dom.src = this.addScaleToGetLegendGraphicUrl(componentLegendUrl);
+        if (attr.legend) {
+            this.updateComponentLegend(node);
         }
     },
 
-    /** private: method[addScaleToGetLegendGraphicUrl]
-     *  :arg url: ``String``
+    /** private: method[updateComponentLegend]
+     *  Sets the legend image src (for component element only)
+     * :arg node: ``Ext.tree.TreeNode``
+     * :arg force: ``Boolean`` Tells whether to set it even if not visible
      */
-    addScaleToGetLegendGraphicUrl: function(url) {
-        if (url.indexOf('GetLegendGraphic') != -1) {
-            var parts = url.split('?');
-            var params = Ext.urlDecode(parts[1]);
-            params.scale = this.mapPanel.map.getScale();
-            url = parts[0] + '?' + Ext.urlEncode(params);
+    updateComponentLegend: function(node, force) {
+        var attr = node.attributes;
+        var selector = '.legend-component img';
+        var img = Ext.select(selector, false, node.getUI().elNode).item(0);
+        if (img.isVisible(true) || force) {
+            img.dom.src = (attr.legendImage) ?
+                attr.legendImage :
+                this.getLegendGraphicUrl(attr.layer, attr.name);
         }
-        return url;
+        return img;
     }
 });
 
