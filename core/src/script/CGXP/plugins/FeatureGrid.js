@@ -563,19 +563,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     });
                 }
             }
-            var firstType;
-            for (type in this.gridByType) {
-                if (this.gridByType.hasOwnProperty(type)) {
-                    if (currentType[type]) {
-                        firstType = type;
-                        continue;
-                    }
-                }
-            }
             // select new tab only if it's the first receive
-            if (previouslyNoFeature && firstType) {
-                this.currentGrid = this.gridByType[firstType];
-                this.tabpan.setActiveTab(this.currentGrid.id);
+            if (previouslyNoFeature) {
+                this.tabpan.setActiveTab(0);
                 this.tabpan.ownerCt.setVisible(true);
                 this.tabpan.ownerCt.expand();
                 this.tabpan.ownerCt.ownerCt.doLayout();
