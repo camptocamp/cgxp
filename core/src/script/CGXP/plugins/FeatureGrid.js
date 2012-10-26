@@ -51,7 +51,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: "cgxp_featuregrid",
  *              id: "featureGrid",
- *              csvURL: "$${request.route_url('csvecho')}",
+ *              csvURL: "${request.route_url('csvecho')}",
  *              maxFeatures: 200,
  *              outputTarget: "featuregrid-container",
  *              events: EVENTS

@@ -48,7 +48,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_editing',
  *              layerTreeId: 'layertree',
- *              layersURL: "$${request.route_url('layers_root')}"
+ *              layersURL: "${request.route_url('layers_root')}"
  *          }, {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
