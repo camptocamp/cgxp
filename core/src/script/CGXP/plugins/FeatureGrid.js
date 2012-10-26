@@ -129,7 +129,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     quote: '"',
 
     /** api: config[events]
-     *  ``Ext.util.Observable``  An ``Ext.util.Observable`` instance used
+     *  ``Ext.util.Observable`` An ``Ext.util.Observable`` instance used
      *  to receive events from other plugins.
      *
      *  * ``queryopen``: sent on open query tool.
