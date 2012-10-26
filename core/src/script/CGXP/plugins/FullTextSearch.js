@@ -40,7 +40,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_fulltextsearch",
- *              url: "$${request.route_url('fulltextsearch', path='')}",
+ *              url: "${request.route_url('fulltextsearch', path='')}",
  *              actionTarget: "center.tbar"
  *          }]
  *          ...
