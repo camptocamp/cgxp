@@ -151,13 +151,19 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      */
     defaultThemes: null,
 
+    /** private: property[tree]
+     */
     tree: null,
 
+    /** private: method[init]
+     */
     init: function() {
         cgxp.plugins.LayerTree.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
     },
 
+    /** private: method[viewerReady]
+     */
     viewerReady: function() {
         this.tree.delayedApplyState();
         this.tree.loadDefaultThemes();
