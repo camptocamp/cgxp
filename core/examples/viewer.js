@@ -33,11 +33,9 @@ Ext.onReady(function() {
             ptype: 'cgxp_layertree',
             id: "layertree",
             outputTarget: "layerpanel",
-            outputConfig: {
-                wmsURL: 'http://www2.dmsolutions.ca/cgi-bin/mswms_gmap',
-                themes: App.themes,
-                defaultThemes: App.default_themes
-            }
+            wmsURL: 'http://www2.dmsolutions.ca/cgi-bin/mswms_gmap',
+            themes: App.themes,
+            defaultThemes: App.default_themes
         }],
         map: {
             id: "mymap",
