@@ -37,10 +37,6 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
             "insert": this.onAppendNode,
             scope: this
         });
-        tree.on({
-            "beforedestroy": this.onBeforeDestroy,
-            scope: this
-        });
     },
     
     /** private: method[onAppendNode]
@@ -61,12 +57,6 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
                 }
             });
         }
-    },
-    
-    /** private: method[onBeforeDestroy]
-     */
-    onBeforeDestroy: function(tree) {
-        tree.un("beforedestroy", this.onBeforeDestroy, this);
     }
 });
 
