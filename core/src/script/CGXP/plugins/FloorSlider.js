@@ -91,12 +91,14 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
      */
     maxValue: 10,
 
-    /** api: config[maxMeanAll]
+    /** api: config[maxIsSky]
      *  ``Boolean``
-     *  Max value mean all floor, it is used to display all features.
-     *  Default is true.
+     *  If set to ``true`` the label for the slider's max value will be 
+     *  the value of the ``skyText`` config option,
+     *  and no floor param will be set in the query string of requests.
+     *  Default is ``true``.
      */
-    maxMeanAll: true,
+    maxIsSky: true,
 
     /** api: config[widgetOptions]
      *  ``Object``
@@ -114,7 +116,7 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
                 minValue: this.minValue,
                 maxValue: this.maxValue,
                 value: this.value,
-                maxMeanAll: this.maxMeanAll,
+                maxIsSky: this.maxIsSky,
                 mapPanel: mapPanel
             }, this.widgetOptions));
         }, this);

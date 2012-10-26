@@ -40,7 +40,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      *  The max floor value.
      */
 
-    /** api: config[maxMeanAll]
+    /** api: config[maxIsSky]
      *  ``Boolean``
      *  Max value mean all floor, default is true.
      */
@@ -77,7 +77,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
     /** api: config[skyText]
      *  ``String``
-     *  L10n text for the sky.
+     *  L10n text for the sky, only used if ``maxIsSky`` is ``true``.
      */
     skyText: 'Sky',
 
@@ -99,7 +99,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             var a = Ext.DomHelper.append(li, {
                 tag: 'a',
                 'href': 'javascript:',
-                html: config.maxMeanAll && i == config.maxValue ?
+                html: config.maxIsSky && i == config.maxValue ?
                         this.skyText : i.toString()
             }, true);
             a.on({
@@ -169,7 +169,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     getFloor: function() {
         var value = this.slider.getValue();
-        return this.maxMeanAll && value == this.maxValue ? undefined : value;
+        return this.maxIsSky && value == this.maxValue ? undefined : value;
     },
 
     /** private: method[setFloor]
