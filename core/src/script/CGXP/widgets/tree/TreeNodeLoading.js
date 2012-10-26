@@ -37,10 +37,6 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
             "insert": this.onAppendNode,
             scope: this
         });
-        tree.on({
-            "beforedestroy": this.onBeforeDestroy,
-            scope: this
-        });
     },
     
     /** private: method[onAppendNode]
@@ -52,21 +48,17 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
             var layer = node.layer;
             layer.events.on({
                 'loadstart': function() {
-                    if (node.ui.isChecked()) {
+                    if (node && node.ui && node.ui.isChecked()) {
                         Ext.get(node.ui.elNode).addClass('gx-tree-node-loading');
                     }
                 },
                 'loadend': function() {
-                    Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
+                    if (node && node.ui && node.ui.elNode) {
+                        Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
+                    }
                 }
             });
         }
-    },
-    
-    /** private: method[onBeforeDestroy]
-     */
-    onBeforeDestroy: function(tree) {
-        tree.un("beforedestroy", this.onBeforeDestroy, this);
     }
 });
 
