@@ -48,12 +48,14 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
             var layer = node.layer;
             layer.events.on({
                 'loadstart': function() {
-                    if (node.ui.isChecked()) {
+                    if (node && node.ui && node.ui.isChecked()) {
                         Ext.get(node.ui.elNode).addClass('gx-tree-node-loading');
                     }
                 },
                 'loadend': function() {
-                    Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
+                    if (node && node.ui && node.ui.elNode) {
+                        Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
+                    }
                 }
             });
         }
