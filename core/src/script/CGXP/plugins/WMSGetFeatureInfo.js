@@ -99,6 +99,8 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      * {OpenLayers.Control.WMSGetFeatureInfo}
      */
     createControl: function() {
+        var events = this.events;
+
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
         return new OpenLayers.Control.WMSGetFeatureInfo({
@@ -124,6 +126,7 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             // copied from OpenLayers.Control.WMSGetFeatureInfo and updated as
             // stated in comments
             request: function(clickPosition, options) {
+                events.fireEvent('querystarts');
                 var layers = this.findLayers();
                 if (layers.length === 0) {
                     this.globalEvents.fireEvent("nogetfeatureinfo");
@@ -160,9 +163,6 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             },
 
             eventListeners: {
-                beforegetfeatureinfo: function() {
-                    this.events.fireEvent('querystarts');
-                },
                 getfeatureinfo: function(e) {
                     this.events.fireEvent('queryresults', e.features);
                 },

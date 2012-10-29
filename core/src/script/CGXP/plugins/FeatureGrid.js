@@ -129,7 +129,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     quote: '"',
 
     /** api: config[events]
-     *  ``Ext.util.Observable``  An ``Ext.util.Observable`` instance used
+     *  ``Ext.util.Observable`` An ``Ext.util.Observable`` instance used
      *  to receive events from other plugins.
      *
      *  * ``queryopen``: sent on open query tool.
@@ -415,14 +415,14 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 alwaysInRange: true
         });
 
-        this.events.on('queryopen', function() {
+        this.events.on('querystarts', function() {
             if (this.currentGrid) {
                 this.currentGrid.getSelectionModel().clearSelections();
             }
             this.currentGrid = null;
             this.vectorLayer.destroyFeatures();
 
-            /* this is important, if the grid are not cleared and created anew,
+            /* this is important, if the grid are not cleared and created a new,
                the event viewready is not triggered and we fall on an ext bug
                when we try to act on the grid before it is ready to be modified */
             for (var gridName in this.gridByType) {
@@ -440,6 +440,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 }.createDelegate(this));
                 this.tabpan.doLayout();
             }
+
+            this.textItem.setText('');
         }, this);
 
         this.events.on('queryclose', function() {
@@ -449,8 +451,15 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.events.on('queryresults', function(features, selectAll) {
             this.selectAll = selectAll;
 
+            var previouslyNoFeature = this.vectorLayer.features.length === 0;
+
             // if no feature do nothing
             if (!features || features.length === 0) {
+                // if relay no feature close panel)
+                if (previouslyNoFeature) {
+                    this.tabpan.ownerCt.setVisible(false);
+                    this.tabpan.ownerCt.ownerCt.doLayout();
+                }
                 return;
             }
 
@@ -554,21 +563,14 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     });
                 }
             }
-            var firstType;
-            for (type in this.gridByType) {
-                if (this.gridByType.hasOwnProperty(type)) {
-                    if (currentType[type]) {
-                        firstType = type;
-                        continue;
-                    }
-                }
+            // select new tab only if it's the first receive
+            if (previouslyNoFeature) {
+                this.tabpan.setActiveTab(0);
+                this.tabpan.ownerCt.setVisible(true);
+                this.tabpan.ownerCt.expand();
+                this.tabpan.ownerCt.ownerCt.doLayout();
             }
-            this.currentGrid = this.gridByType[firstType];
-            this.tabpan.setActiveTab(this.currentGrid.id);
             this.textItem.setText(this.getCount());
-            this.tabpan.ownerCt.setVisible(true);
-            this.tabpan.ownerCt.expand();
-            this.tabpan.ownerCt.ownerCt.doLayout();
         }, this);
 
         this.textItem = new Ext.Toolbar.TextItem({
