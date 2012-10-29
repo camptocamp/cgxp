@@ -181,6 +181,11 @@ GeoExt.Lang.add("en", {
 
     "cgxp.plugins.QueryBuilder.prototype": {
         layerText: "Layer"
+    },
+
+    "cgxp.FloorSlider.prototype": {
+        skyText: "Sky",
+        floorText: "Floor"
     }
 });
 
