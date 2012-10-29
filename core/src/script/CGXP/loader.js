@@ -51,6 +51,7 @@
         // </redlining dependencies>
         "plugins/Redlining.js",
         "plugins/ScaleChooser.js",
+        "plugins/FloorSlider.js",
         "plugins/StreetView.js",
         "plugins/SwitchableWMTSSource.js",
         "plugins/ThemeSelector.js",
