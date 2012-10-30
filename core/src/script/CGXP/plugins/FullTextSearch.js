@@ -135,7 +135,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     projections: null,
 
-    /** api_ config[vectorLayerConfig]
+    /** api: config[vectorLayerConfig]
      *  ``Object``
      *  Optional configuration of the vector layer.
      */
