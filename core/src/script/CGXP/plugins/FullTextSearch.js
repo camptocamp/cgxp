@@ -135,6 +135,12 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     projections: null,
 
+    /** api_ config[vectorLayerConfig]
+     *  ``Object``
+     *  Optional configuration of the vector layer.
+     */
+    vectorLayerConfig: {},
+
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
 
@@ -147,10 +153,10 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         // a Search object has its own vector layer, which is added
         // to the map once for good
         this.vectorLayer = new OpenLayers.Layer.Vector(
-            OpenLayers.Util.createUniqueID("cgxp"), {
+            OpenLayers.Util.createUniqueID("cgxp"), Ext.apply({
             displayInLayerSwitcher: false,
             alwaysInRange: true
-        });
+        }, this.vectorLayerConfig));
 
         this.target.on('ready', this.viewerReady, this);
     },
