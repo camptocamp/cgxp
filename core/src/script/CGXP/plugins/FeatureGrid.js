@@ -563,11 +563,19 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     });
                 }
             }
+
+            var hasFeature = this.vectorLayer.features.length !== 0;
+
             // select new tab only if it's the first receive
-            if (previouslyNoFeature) {
+            if (hasFeature && previouslyNoFeature) {
                 this.tabpan.setActiveTab(0);
                 this.tabpan.ownerCt.setVisible(true);
                 this.tabpan.ownerCt.expand();
+                this.tabpan.ownerCt.ownerCt.doLayout();
+            }
+            else if (!hasFeature) {
+                // if we get only features without attribute
+                this.tabpan.ownerCt.setVisible(false);
                 this.tabpan.ownerCt.ownerCt.doLayout();
             }
             this.textItem.setText(this.getCount());

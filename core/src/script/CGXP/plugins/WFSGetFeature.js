@@ -266,6 +266,10 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
                 deactivate: function() {
                     this.events.fireEvent('queryclose');
                 },
+                clickout: function() {
+                    // the GetFeature control converts empty result to clickout.
+                    this.events.fireEvent('queryresults', []);
+                },
                 scope: this
             },
             request: function() {
