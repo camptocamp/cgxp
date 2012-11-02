@@ -167,7 +167,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        browseThemes(this.themes.external);
+        browseThemes(this.themes.external || {});
         browseThemes(this.themes.local);
         this.layers = layers;
     },
