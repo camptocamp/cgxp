@@ -315,6 +315,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         this.filterBuilder = new Styler.FilterBuilder({
             flex: 1,
             border: true,
+            cls: 'filter-builder',
             preComboText: OpenLayers.i18n("QueryBuilder.match"),
             postComboText: OpenLayers.i18n("QueryBuilder.of"),
             comboConfig: {
