@@ -484,3 +484,10 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     color: white;
     background-color: black;
 }
+
+/* cgxp query builder */
+.x-panel-tbar .invisible-toolbar {
+  background: none !important;
+  border: 0px none #ffffff !important;
+  margin: 5px 0px;
+}
