@@ -182,27 +182,6 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "layertree": "Themen",
     "querier": "Attributabfrage",
 
-    // styler internal
-    "any": "eine",
-    "all": "alle",
-    "none": "keine",
-    "not all": "nicht alle",
-    "condition": "Bedingung",
-    "spatial condition": "Räumliche Bedingung",
-    "group": "Gruppe",
-    "based on a point": "Punkt zeichnen",
-    "based on a line": "Linie zeichnen",
-    "based on a polygon": "Fläche zeichnen",
-    "based on a stored geometry": "gespeicherte Geometrien",
-    "Delete this condition": "Bedingung entfernen",
-    "This field is mandatory": "Eingabe erforderlich. Es kann nach Text mit * und ? gesucht werden. z.B.",
-    "intersects": "schneidet",
-    "inside": "innerhalb",
-    "contains": "beinhaltet",
-    "Modify geometry": "Geometrie editieren",
-    "Save this geometry": "Geometrie speichern",
-    "spatialfilterpanel.geometry.saved": "Die Geometrie ist für 30 Tage mit diesem Browser abgespeichert.",
-
     // query builder
     "QueryBuilder.loading": "Lade Daten...",
     "QueryBuilder.incomplete_form": "Bitte alle erforderlichen Felder ausfüllen.",
