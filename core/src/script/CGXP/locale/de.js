@@ -190,9 +190,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "QueryBuilder.alert_no_geom_field": "Es wurde kein Geometriefeld in dieser Ebene gefunden.",
     "QueryBuilder.describefeaturetype_exception": "Es ist ein Fehler aufgetreten.",
     "QueryBuilder.getfeature_exception": "Es ist ein Fehler aufgetreten.",
-    "QueryBuilder.match": "Trifft auf",
-    "QueryBuilder.of": "die folgenden Bedingungen zu:",
-     
+
     'Search.ToolTip': 'In diesem Feld können Sie nach verschiedenen geografischen <br />Orten und Objekten suchen: <br /><b>Amtliche Vermessung:</b> Adressen, Parzellen, Assekuranznummern z.B. <b>wohlen 1716</b><br /><b>Werkplan Elektro:</b> Trafostationen, Verteilkabinen z.B. <b>ts 41</b><br /><b>Werkplan Wasser:</b> Hydranten, Reservoir z.B. <b>hydr 5612 102</b><br /><b>Werkplan Gas:</b> Druckreduzierstationen z.B. <b>drs 15</b><br /><b>Werkplan Abwasser:</b> KontrollschÃ¤chte z.B. <b>k 150</b>', //deprecated?
     
     "Tools.maxextentactiontooltip": "Gesamtübersicht", //deprecated?
