@@ -200,9 +200,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "QueryBuilder.alert_no_geom_field": "Pas de résultat trouvé",
     "QueryBuilder.describefeaturetype_exception": "Une erreur est survenue.",
     "QueryBuilder.getfeature_exception": "Une erreur est survenue.",
-    "QueryBuilder.match": "Correspondre à",
-    "QueryBuilder.of": "ces conditions :",
-     
+
     "Tools.maxextentactiontooltip": "Aller à la couverture initiale", //deprecated?
     "Tools.measurelengthactiontooltip": "Mesure une distance", //deprecated?
     "Tools.measureareaactiontooltip": "Mesure une surface", //deprecated?
