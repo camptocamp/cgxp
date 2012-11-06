@@ -192,27 +192,6 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "layertree": "Thèmes",
     "querier": "Requêteur",
 
-    // styler internal
-    "any": "une de",
-    "all": "toutes",
-    "none": "aucune de",
-    "not all": "pas toutes",
-    "condition": "Condition",
-    "spatial condition": "Condition spatiale",
-    "group": "Groupe",
-    "based on a point": "sur la base d'un point",
-    "based on a line": "sur la base d'une ligne",
-    "based on a polygon": "sur la base d'un polygone",
-    "based on a stored geometry": "sur la base d'une géométrie stockée",
-    "Delete this condition": "Supprimer cette condition",
-    "This field is mandatory": "Champ obligatoire",
-    "intersects": "intersecte",
-    "inside": "à l'intérieur",
-    "contains": "contient",
-    "Modify geometry": "Éditer la géométrie",
-    "Save this geometry": "Enregistrer la géométrie",
-    "spatialfilterpanel.geometry.saved": "La géométrie a bien été enregistrée.",
-
     // query builder
     "QueryBuilder.loading": "Chargement...",
     "QueryBuilder.incomplete_form": "Formulaire incomplet.",
