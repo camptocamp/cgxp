@@ -141,6 +141,12 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     vectorLayerConfig: {},
 
+    /** api: config[grouping]
+     *  ``Boolean``
+     *  Tells whether to group the results by `layer_name`.
+     */
+    grouping: false,
+
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
 
@@ -196,7 +202,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             },
             reader: new cgxp.data.FeatureReader({
                 format: new OpenLayers.Format.GeoJSON()
-            }, ['label', 'layer_name'])
+            }, ['label', 'layer_name']),
+            sortInfo: {field: 'layer_name', direction: 'ASC'}
         });
 
         store.on('beforeload', function(store, options) {
@@ -254,7 +261,9 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             '{label}',
             '</div></tpl>'
         );
-        var combo = new Ext.ux.form.TwinTriggerComboBox(Ext.apply({
+        var comboClass = this.grouping ?
+            Ext.ux.form.GroupComboBox : Ext.form.TwinTriggerComboBox;
+        var combo = new comboClass(Ext.apply({
             store: this.createStore(),
             tpl: tpl,
             minChars: 1,
