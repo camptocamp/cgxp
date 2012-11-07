@@ -118,6 +118,12 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     rotateStyle: {},
 
+    /** api: config[checkLegend]
+     *  ``Boolean``
+     *  Initial activation status of the legend (default is true).
+     */
+    checkLegend: true,
+
     /** api: config[encodeLayer]
      * ``Object``
      * Additional attribute used on encode layer.
@@ -150,7 +156,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config) {
         
-        this.includeLegend = !!(this.legendPanelId);
+        this.includeLegend = this.checkLegend && !!(this.legendPanelId);
 
         // create a print provider
         var printProvider = new GeoExt.data.PrintProvider({
@@ -426,9 +432,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 fieldLabel: this.includelegendText,
                 hideLabel: true,
                 boxLabel: this.includelegendText,
-                checked: this.includeLegend,
+                checked: this.checkLegend,
                 // deactivate the checkbox if no legend panel is available
-                hidden: !this.includeLegend, 
+                hidden: !(this.legendPanelId), 
                 handler: function(cb, checked) {
                     this.includeLegend = checked;
                 },
