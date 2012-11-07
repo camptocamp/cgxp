@@ -153,6 +153,21 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     /** api: config[azimuthTemplate]
      *  ``String``
      *  The template string to be used to display the azimut (i18n).
+     *
+     *  Here is an example of how it can look like:
+     *  [...]
+     *  azimuthTemplate: '<table class="measure">' +
+     *      '<tr><td>Distance : </td><td>{distance} {units}</td></tr>' +
+     *      '<tr><td>Azimut : </td><td>{azimuth}&deg;</td></tr>' +
+     *      '<tr><td>Altitude diff. : </td>' +
+     *      '<tpl if="raster != false">' +
+     *          '<td>{[Math.round(values.raster[1].mnt - values.raster[0].mnt, 2)]} {mapUnits}</td></tr>' +
+     *      '</tpl>' +
+     *      '<tpl if="raster == false">' +
+     *          '<td> ... </td></tr>' +
+     *      '</tpl>' +
+     *      '</table>'
+     *   [...]
      */
     azimuthTemplate: null,
 
