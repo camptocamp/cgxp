@@ -432,7 +432,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 fieldLabel: this.includelegendText,
                 hideLabel: true,
                 boxLabel: this.includelegendText,
-                checked: this.checkLegend,
+                checked: this.includeLegend,
                 // deactivate the checkbox if no legend panel is available
                 hidden: !(this.legendPanelId), 
                 handler: function(cb, checked) {
