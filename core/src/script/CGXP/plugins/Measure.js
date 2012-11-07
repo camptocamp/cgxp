@@ -109,12 +109,14 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     /** api: config[distanceText]
      *  ``String``
      *  Text to display in point azimuth tooltip.
+     *  Not taken into account if azimuthTemplate is set.
      */
     distanceText: "Distance: ",
 
     /** api: config[azimuthText]
      *  ``String``
      *  Text to display in point azimuth tooltip.
+     *  Not taken into account if azimuthTemplate is set.
      */
     azimuthText: "Azimuth: ",
 
@@ -147,6 +149,27 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      *  Text for measure action tooltip (i18n).
      */
     measureTooltip: "Measure",
+
+    /** api: config[azimuthTemplate]
+     *  ``String``
+     *  The template string to be used to display the azimut (i18n).
+     *
+     *  Here is an example of how it can look like:
+     *  [...]
+     *  azimuthTemplate: '<table class="measure">' +
+     *      '<tr><td>Distance : </td><td>{distance} {units}</td></tr>' +
+     *      '<tr><td>Azimut : </td><td>{azimuth}&deg;</td></tr>' +
+     *      '<tr><td>Altitude diff. : </td>' +
+     *      '<tpl if="raster != false">' +
+     *          '<td>{[Math.round(values.raster[1].mnt - values.raster[0].mnt, 2)]} {mapUnits}</td></tr>' +
+     *      '</tpl>' +
+     *      '<tpl if="raster == false">' +
+     *          '<td> ... </td></tr>' +
+     *      '</tpl>' +
+     *      '</table>'
+     *   [...]
+     */
+    azimuthTemplate: null,
 
     popup: null,
 
@@ -268,7 +291,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (!order || measure > 0) {
             if (order == 2) {
                 geom = geom.getCentroid();
-            } else if (order == 1 || event.azimuth) {
+            } else if (order == 1 || event.azimuth !== undefined) {
                 geom = geom.components[geom.components.length - 1];
             }
             this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
@@ -315,15 +338,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         var styleMap = new OpenLayers.StyleMap({"default": style});
         var control = new cgxp.plugins.Measure.SegmentMeasureControl({
             geodesic: true,
-            elevationServiceUrl: this.elevationServiceUrl,
+            rasterServiceUrl: this.rasterServiceUrl,
             handlerOptions: {
                 layerOptions: {styleMap: styleMap}
             }
         });
         control.events.on({
-            "measurepartial": function(event) {
-                this.popup && this.popup.hide();
-            },
             "measure": function(event) {
                 this.showPopup(event, this.azimuthTooltip);
             },
@@ -370,21 +390,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
     makeAzimuthString: function(e) {
         e.distance = e.distance.toFixed(3);
-        if (e.elevations) {
-            e.el_delta = Math.round(elevations[1] - elevations[0], 2);
-        } else {
-            e.el_delta = false;
-        }
-        var tpl = new Ext.XTemplate(
-            '<table class="measure"><tr>',
-            '<td>', this.distanceText, '</td>',
-            '<td>{distance} {units}</td>',
-            '</tr>',
-            '<tr><td>', this.azimuthText, '</td>',
-            '<td>{azimuth}&deg;</td></tr>',
-            '<tpl if="el_delta != false">',
-                '<tr><td>{el_delta} {units}</td></tr>',
-            '</tpl>',
+        var tpl = new Ext.XTemplate(this.azimuthTemplate ||
+            '<table class="measure">' +
+            '<tr><td>' + this.distanceText + '</td><td>{distance} {units}</td></tr>' +
+            '<tr><td>' + this.azimuthText + '</td><td>{azimuth}&deg;</td></tr>' +
             '</table>'
         );
         return tpl.apply(e);
@@ -396,7 +405,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
         if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
             return this.makePointString(metric, metricUnit);
-        } else if (metricData.azimuth) {
+        } else if (metricData.azimuth !== undefined) {
             return this.makeAzimuthString(metricData);
         }
 
@@ -635,16 +644,16 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
     persist: true,
 
     /**
-     * APIProperty: elevationServiceUrl
+     * APIProperty: rasterServiceUrl
      * {String} The url to the elevation service
      */
-    elevationServiceUrl: null,
+    rasterServiceUrl: null,
 
     /**
-     * Property: elevations
-     * {Array} Elevation service responses
+     * Property: raster
+     * {Array} Raster service responses
      */
-    elevations: null,
+    raster: null,
 
     /**
      * Property: measuring
@@ -652,6 +661,12 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
      *     starts when the first point of the segment is added.
      */
     measuring: false,
+
+    /**
+     * Property: pendingRequests
+     * {Array} the raster service pending requests
+     */
+    pendingRequests: null,
 
     /**
      * Constructor: cgxp.plugins.Measure.SegmentMeasureControl
@@ -669,6 +684,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
             done: this.measureDone,
             cancel: this.measureCancel
         };
+        this.pendingRequests = new Array(2);
         OpenLayers.Control.Measure.prototype.initialize.call(
                 this, handler, options);
     },
@@ -687,7 +703,7 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         if (this.measuring) {
             var geometry = feature.geometry.clone();
             this.measure(geometry);
-            this.elevations = new Array(2);
+            this.raster = new Array(2);
         }
     },
 
@@ -695,42 +711,8 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
      * Method: measureDone
      */
     measureDone: function(geometry) {
-        function onElevationResponse(index, response) {
-            this.elevations[index] = response.responseText;
-            if (this.elevations[0] && this.elevations[1]) {
-                onMeasure.call(this, [this.elevations]);
-            }
-        }
-        function onMeasure(elevations) {
-            var stat = this.getBestLength(geometry),
-                azimuth = this.getAzimuth(geometry),
-                values = {
-                    distance: stat[0],
-                    units: stat[1],
-                    azimuth: azimuth,
-                    geometry: geometry
-                };
-            if (elevations) {
-                values.elevations = elevations;
-            }
-            this.events.triggerEvent('measure', values);
-        }
         this.measuring = false;
-        if (this.elevationServiceUrl) {
-            for (var i = 0; i <=1; i++) {
-                OpenLayers.Request.GET({
-                    url: this.elevationServiceUrl,
-                    params: {
-                        lon: geometry.components[i].x,
-                        lat: geometry.components[i].y
-                    },
-                    callback: OpenLayers.Function.bind(
-                                    onElevationResponse, this, i)
-                });
-            }
-        } else {
-            onMeasure.call(this);
-        }
+        this.measure(geometry);
     },
 
     /**
@@ -747,14 +729,48 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
      * geometry - {<OpenLayers.Geometry>}
      */
     measure: function(geometry) {
-        var stat = this.getBestLength(geometry),
-            azimuth = this.getAzimuth(geometry);
-        if (azimuth !== undefined) {
-            this.events.triggerEvent('measurepartial', {
-                distance: stat[0],
-                units: stat[1],
-                azimuth: azimuth
-            });
+        function onRasterResponse(index, response) {
+            this.raster[index] = Ext.util.JSON.decode(response.responseText);
+            if (this.raster[0] && this.raster[1]) {
+                onMeasure.call(this, this.raster);
+            }
+        }
+        function onMeasure(raster) {
+            var stat = this.getBestLength(geometry),
+                azimuth = this.getAzimuth(geometry),
+                distance = stat[0],
+                values = {
+                    distance: distance,
+                    units: stat[1],
+                    mapUnits: this.map.getUnits(),
+                    azimuth: azimuth,
+                    geometry: geometry
+                };
+            if (raster) {
+                values.raster = raster;
+            } else {
+                values.raster = false;
+            }
+            if (distance !== 0 && !isNaN(azimuth)) {
+                this.events.triggerEvent('measure', values);
+            }
+        }
+        onMeasure.call(this);
+        if (this.rasterServiceUrl) {
+            for (var i = 0; i <=1; i++) {
+                Ext.Ajax.abort(this.pendingRequests[i]);
+                this.pendingRequests[i] = Ext.Ajax.request({
+                    url: this.rasterServiceUrl,
+                    method: 'GET',
+                    params: {
+                        lon: geometry.components[i].x,
+                        lat: geometry.components[i].y
+                    },
+                    success: OpenLayers.Function.bind(
+                        onRasterResponse, this, i),
+                    scope: this
+                });
+            }
         }
     },
 
