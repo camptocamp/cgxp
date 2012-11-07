@@ -51,13 +51,13 @@ Ext.namespace("cgxp.plugins");
  *  in the query string, then add the following code in the where
  *  close of your query (your table should have a floor column):
  *
- *  .. code-block::
+ *  .. code-block:: none
  *
  *      (floor = %floor% OR %floor% IS NULL OR floor IS NULL) AND ...
  *
  *  and add in the METADATA section:
  *
- *  .. code-block::
+ *  .. code-block:: none
  *
  *      "default_floor" "NULL"
  *      "floor_validation_pattern" "^-?[0-9]$"
