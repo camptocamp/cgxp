@@ -276,7 +276,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         if (!order || measure > 0) {
             if (order == 2) {
                 geom = geom.getCentroid();
-            } else if (order == 1 || typeof event.azimuth != 'undefined') {
+            } else if (order == 1 || event.azimuth !== undefined) {
                 geom = geom.components[geom.components.length - 1];
             }
             this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
@@ -390,7 +390,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
         if (metricData.geometry.CLASS_NAME.indexOf("Point") > -1) {
             return this.makePointString(metric, metricUnit);
-        } else if (typeof metricData.azimuth != 'undefined') {
+        } else if (metricData.azimuth !== undefined) {
             return this.makeAzimuthString(metricData);
         }
 
