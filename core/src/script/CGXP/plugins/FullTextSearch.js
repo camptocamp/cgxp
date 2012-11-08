@@ -143,7 +143,9 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[grouping]
      *  ``Boolean``
-     *  Tells whether to group the results by `layer_name`.
+     *  Tells whether to group the results by ``layer_name``. If set to true,
+     *  the data returned by the service is intended to include such a field.
+     *  Defaults to ``false``.
      */
     grouping: false,
 
