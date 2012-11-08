@@ -16,7 +16,7 @@
  */
 
 /**
- * @include Ext/ux/form/TwinTriggerComboBox.js
+ * @requires Ext/ux/form/TwinTriggerComboBox.js
  * @include Ext/ux/form/GroupingView.js
  */
 Ext.ux.form.GroupComboBox = Ext.extend(Ext.ux.form.TwinTriggerComboBox, {
