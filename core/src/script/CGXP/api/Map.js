@@ -76,7 +76,7 @@ cgxp.api.Map.prototype = {
         OpenLayers.Util.extend(config, this.userConfig);
         for (var i = 0; i < config.layers.length; i++) {
             var layer = config.layers[i];
-            config.layers[i] = this.createLayerFromConfig(layer);
+            config.layers[i] = this.createBaseLayerFromConfig(layer);
         }
         this.map = new OpenLayers.Map(config);
         if (config.showMarker) {
@@ -84,10 +84,10 @@ cgxp.api.Map.prototype = {
         }
     },
 
-    /** private: method[createLayerFromConfig]
+    /** private: method[createBaseLayerFromConfig]
      *  Convenience to create a layer from a layer source.
      */
-    createLayerFromConfig: function(config) {
+    createBaseLayerFromConfig: function(config) {
         // get class based on type in config
         var Class = window;
         var parts = config.type.split(".");
