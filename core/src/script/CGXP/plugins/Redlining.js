@@ -24,7 +24,7 @@
  * @include FeatureEditing/ux/data/FeatureEditingDefaultStyleStore.js
  * @include Styler/ux/LayerStyleManager.js
  * @include Styler/ux/widgets/StyleSelectorComboBox.js
- * @requires LayerManager/ux/widgets/LayerManagerExportWindow.js
+ * @include LayerManager/ux/widgets/LayerManagerExportWindow.js
  */
 
 /** api: (define)
@@ -73,13 +73,17 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     actionConfig: null,
 
+    /** api: config[layerManagerUrl]
+     *  ``String``
+     *  set base url of resources in GeoExt.ux.LayerManagerExportWindow widget
+     */
+    layerManagerUrl: null,
+
     redliningPanel: null,
 
     redliningWindow: null,
 
     redliningText: "Redlining",
-
-    layerManagerUrl: null,
 
     init: function() {
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
