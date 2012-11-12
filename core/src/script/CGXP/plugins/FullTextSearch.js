@@ -145,9 +145,9 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      *  ``Boolean``
      *  Tells whether to group the results by ``layer_name``. If set to ``true``,
      *  the data returned by the service is intended to include such a field.
-     *  Defaults to ``true``.
+     *  Defaults to ``false``.
      */
-    grouping: true,
+    grouping: false,
 
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
