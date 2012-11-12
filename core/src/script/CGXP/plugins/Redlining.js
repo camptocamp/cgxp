@@ -45,7 +45,8 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_redligning',
  *              actionTarget: 'center.tbar',
- *              toggleGroup: 'maptools'
+ *              toggleGroup: 'maptools',
+ *              layerManagerUrl: "${request.static_url('<package>:static/lib/cgxp/sandbox/LayerManager/ux/')}"
  *          }]
  *          ...
  *      });
