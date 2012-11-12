@@ -1,9 +1,11 @@
 var MAX_EXTENT = [420000, 30000, 900000, 350000];
 var INITIAL_EXTENT = [515000, 180000, 580000, 230000];
 var RESTRICTED_EXTENT = [420000, 30000, 900000, 350000];
+var WMS_PROXY_URL = "http://sitn-proto-c2cgeoportail.demo-camptocamp.com/elemoine/wsgi/mapserv_proxy";
 // example of a class inherited from cgxp.api.Map
 // This one does not need ExtJS at all. It's an OpenLayers only example.
 var Api = function() {
+    this.wmsURL = WMS_PROXY_URL;
     return cgxp.api.Map.apply(this, arguments);
 };
 OpenLayers.inherit(Api, cgxp.api.Map, {
@@ -43,6 +45,7 @@ OpenLayers.inherit(Api, cgxp.api.Map, {
 
 // example of a class inherited from cgxp.api.Map which creates a viewer.
 var Xapi = function() {
+    this.wmsURL = WMS_PROXY_URL;
     return cgxp.api.Map.apply(this, arguments);
 };
 OpenLayers.inherit(Xapi, cgxp.api.Map, {
@@ -123,14 +126,16 @@ OpenLayers.inherit(Xapi, cgxp.api.Map, {
 window.onload = function() {
     var api1 = new Api({
         div: 'map1',
-        center: [545000, 210000],
-        zoom: 5,
-        showMarker: true
+        center: [544500, 210100],
+        zoom: 8,
+        showMarker: true,
+        layers: ['parcelles', 'batiments_ofs']
     });
     var api2 = new Xapi({
         div: 'map2',
-        center: [545000, 210000],
-        zoom: 5,
-        showMarker: true
+        center: [544500, 210100],
+        zoom: 8,
+        showMarker: true,
+        layers: ['parcelles', 'batiments_ofs']
     });
 };

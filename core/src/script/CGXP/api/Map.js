@@ -24,10 +24,20 @@ if (!cgxp.api) {
 
 cgxp.api.Map = function(config) {
     this.userConfig = config;
+    if (this.userConfig.layers) {
+        // don't overwrite mapConfig layers with userConfig layers
+        this.userConfig.overlays = this.userConfig.layers;
+        delete this.userConfig.layers;
+    }
     this.initMap();
 };
 
 cgxp.api.Map.prototype = {
+
+    /** api: config[wmsURL]
+     *  The URL to the WMS service.
+     */
+    wmsURL: null,
 
     /** private: config[userConfig]
      *  The config as set by the end user.
@@ -63,6 +73,7 @@ cgxp.api.Map.prototype = {
     onViewerReady: function(viewer) {
         var config = this.userConfig;
 
+        this.addOverlayerLayers(config.overlays);
         if (config.showMarker) {
             this.showMarker();
         }
@@ -73,12 +84,15 @@ cgxp.api.Map.prototype = {
      *  :arg config:  ``Object``
      */
     createMapFromConfig: function(config) {
-        OpenLayers.Util.extend(config, this.userConfig);
-        for (var i = 0; i < config.layers.length; i++) {
+        var i;
+        for (i = 0; i < config.layers.length; i++) {
             var layer = config.layers[i];
             config.layers[i] = this.createBaseLayerFromConfig(layer);
         }
+        OpenLayers.Util.extend(config, this.userConfig);
         this.map = new OpenLayers.Map(config);
+
+        this.addOverlayerLayers(config.overlays);
         if (config.showMarker) {
             this.showMarker();
         }
@@ -139,5 +153,37 @@ cgxp.api.Map.prototype = {
             graphicYOffset: -25/2
         });
         vector.addFeatures([feature]);
+    },
+
+    /** private: method[createOverlayLayer]
+     * :arg layer ``String`` The name of the layer to add.
+     * :arg external ``Boolean`` Whether it is an external layer or not.
+     */
+    createOverlayLayer: function(layer, external) {
+        var params = {
+            layers: layer,
+            format: 'image/png'
+        };
+        if (external) {
+            params.external = true;
+        }
+        return new OpenLayers.Layer.WMS(OpenLayers.i18n(layer),
+            this.wmsURL, params, {
+            isBaseLayer: false,
+            singleTile: true,
+            ratio: 1,
+            visibility: true
+        });
+    },
+
+    /** private: method[addOverlayerLayers]
+     */
+    addOverlayerLayers: function(overlays) {
+        if (overlays) {
+            for (i = 0; i < overlays.length; i++) {
+                var layer = this.createOverlayLayer(overlays[i]);
+                this.map.addLayer(layer);
+            }
+        }
     }
 };
