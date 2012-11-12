@@ -15,84 +15,122 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * @include GeoExt/widgets/tree/LayerParamNode.js
- */
+if (!window.cgxp) {
+    cgxp = {};
+}
+if (!cgxp.api) {
+    cgxp.api = {};
+}
 
-Ext.namespace('cgxp.api');
+cgxp.api.Map = function(config) {
+    this.userConfig = config;
+    this.initMap();
+};
 
-cgxp.api.Map = Ext.extend(Object, {
+cgxp.api.Map.prototype = {
 
-    /**
-     * Constructor
-     * see apihelp.html page to see hoe to use the API.
+    /** private: config[userConfig]
+     *  The config as set by the end user.
      */
-    constructor: function(config) {
-        this.initializeViewer({
-            width: config.width,
-            height: config.height,
-            renderTo: config.div
-        });
+    userConfig: null,
 
-        this.viewer.on('ready', function() {
-            if (config.easting != undefined && config.northing != undefined 
-                    && config.zoom != undefined) {
-                var center = new OpenLayers.LonLat(config.easting, config.northing);
-                this.viewer.mapPanel.map.setCenter(center, config.zoom);
-            }
+    /** api: method[initMap]
+     *  Is intended to be overriden in inherited classes.
+     *  :arg config:  ``Object``
+     */
+    initMap: function() { },
 
-            if (config.overlays) {
-                var hasLocal = config.overlays.local;
-                var hasExternal = config.overlays.external;
-                if (hasLocal) {
-                    this.viewer.mapPanel.map.addLayer(
-                            this.createApiOverlays(config.overlays.local, 'local'));
-                }
-                if (hasExternal) {
-                    this.viewer.mapPanel.map.addLayer(
-                            this.createApiOverlays(config.overlays.external, 'external'));
-                }
-                // if local/external is not specified, take overlays as local
-                if (!hasLocal && !hasExternal) {
-                    this.viewer.mapPanel.map.addLayer(
-                            this.createApiOverlays(config.overlays, 'local'));
-                }
-            }
-
-            if (config.showMarker) {
-                var vectorLayer = new OpenLayers.Layer.Vector(
-                    OpenLayers.Util.createUniqueID("c2cgeoportal"), {
-                        displayInLayerSwitcher: false,
-                        alwaysInRange: true
-                });
-                this.viewer.mapPanel.map.addLayer(vectorLayer);
-                this.showMarker(vectorLayer, center || map.mapPanel.map.getCenter());
-            }
-        }, this);
+    /** api: method[adaptConfigForViewer]
+     *  Convenience method to add some required options to mapConfig before
+     *  using it to create a viewer.
+     *  :arg config: ``Object`` the map config
+     *  :returns ``Object`` The new config to be used for the map option of the
+     *      viewer
+     */
+    adaptConfigForViewer: function(config) {
+        var newConfig = OpenLayers.Util.extend({}, config);
+        OpenLayers.Util.extend(newConfig , this.userConfig);
+        // we use the dom id also to give an id to the mappanel in the viewer
+        newConfig.id = config.div + "-map";
+        newConfig.tbar = [];
+        return newConfig;
     },
 
-    /**
-     * Method: initializeViewer
-     * Initialize the gxp viewer object
+    /** api: method[onViewerReady]
+     *  Method to be called as CGXP.Viewer ready event callback.
+     *  :arg viewer: ``GXP.widgets.Viewer`` the viewer
      */
-    initializeViewer: function(viewerConfig, apiConfig) {
-        // should be overwritten
+    onViewerReady: function(viewer) {
+        var config = this.userConfig;
 
-        // thoses properties should be defined
-        // this.mapserverproxyURL
-        // this.themes
-        // this.viewer
+        if (config.showMarker) {
+            this.showMarker();
+        }
     },
 
-    /**
-     * Method: showMarker
-     * Add a marker to the map at a specific location.
-     *
-     * Parameters:
-     * vector - {OpenLayers.Layer.Vector} The vector layer.
-     * loc - {OpenLayers.LonLat} The location.
+    /** api: method[initializeViewer]
+     *  Convenience method to create a map from a config.
+     *  :arg config:  ``Object``
+     */
+    createMapFromConfig: function(config) {
+        OpenLayers.Util.extend(config, this.userConfig);
+        for (var i = 0; i < config.layers.length; i++) {
+            var layer = config.layers[i];
+            config.layers[i] = this.createLayerFromConfig(layer);
+        }
+        this.map = new OpenLayers.Map(config);
+        if (config.showMarker) {
+            this.showMarker();
+        }
+    },
+
+    /** private: method[createLayerFromConfig]
+     *  Convenience to create a layer from a layer source.
+     */
+    createLayerFromConfig: function(config) {
+        // get class based on type in config
+        var Class = window;
+        var parts = config.type.split(".");
+        for (var i=0, ii=parts.length; i<ii; ++i) {
+            Class = Class[parts[i]];
+            if (!Class) {
+                break;
+            }
+        }
+
+        if (Class && Class.prototype && Class.prototype.initialize) {
+
+            // create a constructor for the given layer type
+            var Constructor = function() {
+                // this only works for args that can be serialized as JSON
+                Class.prototype.initialize.apply(this, config.args);
+            };
+            Constructor.prototype = Class.prototype;
+
+            // create a new layer given type and args
+            return new Constructor();
+        } else {
+            throw new Error("Cannot construct OpenLayers layer from given type: " + config.type);
+        }
+    },
+
+    /** private: method[showMarker]
+     *  Adds a marker to the map at a specific location.
+     *  :arg vector  ``OpenLayers.Layer.Vector`` The vector layer.
+     *  :arg loc ``OpenLayers.LonLat`` The location.
      */
     showMarker: function(vector, loc) {
+        if (!vector) {
+            vector = new OpenLayers.Layer.Vector(
+                OpenLayers.Util.createUniqueID("cgxp"), {
+                    displayInLayerSwitcher: false,
+                    alwaysInRange: true
+            });
+            this.map.addLayer(vector);
+        }
+        if (!loc) {
+            loc = this.map.getCenter();
+        }
         var geometry = new OpenLayers.Geometry.Point(loc.lon, loc.lat);
         var feature = new OpenLayers.Feature.Vector(geometry, {}, {
             externalGraphic: OpenLayers.Util.getImagesLocation() + 'marker.png',
@@ -101,97 +139,5 @@ cgxp.api.Map = Ext.extend(Object, {
             graphicYOffset: -25/2
         });
         vector.addFeatures([feature]);
-    },
-
-    /**
-     * Method: createApiOverlays
-     * Return WMS overlays for the map.
-     *
-     * Returns:
-     * {OpenLayers.Layer.WMS} overlay layer instance.
-     */
-    createApiOverlays: function(overlays, type) {
-        var layers = [], themes = this.themes[type];
-        if (themes) {
-            uppermost: for (var i = 0, len = overlays.length; i < len; i++) {
-                var name = overlays[i];
-                for (var j = 0, lenj = themes.length; j < lenj; j++) {
-                    var theme = themes[j];
-                    if (theme.name == name) {
-                        layers = layers.concat(this._getNodeChildren(theme));
-                        continue uppermost;
-                    }
-                }
-                layers.push(name);
-            }
-        }
-        var params = {
-            layers: layers,
-            format: 'image/png'
-        };
-        if (type == 'external') {
-            params.external = true;
-        }
-        return new OpenLayers.Layer.WMS("overlays_" + type, 
-            this.mapserverproxyURL, params, {
-            isBaseLayer: false,
-            singleTile: true,
-            ratio: 1,
-            visibility: true
-        });
-    },
-
-    /**
-     * Method: _getNodeChildren
-     * Gets the Mapserver layers associated to given theme node 
-     *
-     * Returns:
-     * Array
-     */
-    _getNodeChildren: function(node) {
-        var children = [];
-        if (node.children) {
-            for (var i = 0, len = node.children.length; i < len; i++) {
-                children = children.concat(this._getNodeChildren(node.children[i]));
-            }
-        } else {
-            children.push(node.name);
-        }
-        return children;
-    },
-
-    /**
-     * Method: recenterCb
-     * The recenter callback function.
-     *
-     * Parameters:
-     * geojson - {String} The GeoJSON string.
-     */
-    recenterCb: function(geojson) {
-        var format = new OpenLayers.Format.GeoJSON();
-        var feature = format.read(geojson, "Feature");
-        this.viewer.mapPanel.map.zoomToExtent(feature.bounds);
-    },
-
-    /**
-     * APIMethod: recenter
-     * Center the map on a specific feature.
-     *
-     * Parameters:
-     * fid - {String} The id of the feature.
-     */
-    recenter: function(fid) {
-        var url = 'changeme/' + fid + '.json';
-        Ext.ux.JSONP.request(url, {
-            callbackKey: "cb",
-            params: {
-                no_geom: true
-            },
-            callback: recenterCb,
-            scope: this
-        });
     }
-
-
-});
-
+};
