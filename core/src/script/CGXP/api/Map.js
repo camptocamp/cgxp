@@ -80,7 +80,7 @@ cgxp.api.Map.prototype = {
             var layer = this.map.layers[i];
             layer.displayInLayerSwitcher = false;
         }
-        this.addOverlayerLayers(this.userConfig.overlays);
+        this.addOverlayLayers(this.userConfig.overlays);
         this.onMapCreated();
     },
 
@@ -97,7 +97,7 @@ cgxp.api.Map.prototype = {
         OpenLayers.Util.extend(config, this.userConfig);
         this.map = new OpenLayers.Map(config);
 
-        this.addOverlayerLayers(this.userConfig.overlays);
+        this.addOverlayLayers(this.userConfig.overlays);
         this.onMapCreated();
     },
 
@@ -199,9 +199,9 @@ cgxp.api.Map.prototype = {
         });
     },
 
-    /** private: method[addOverlayerLayers]
+    /** private: method[addOverlayLayers]
      */
-    addOverlayerLayers: function(overlays) {
+    addOverlayLayers: function(overlays) {
         if (overlays) {
             for (i = 0; i < overlays.length; i++) {
                 var layer = this.createOverlayLayer(overlays[i]);
