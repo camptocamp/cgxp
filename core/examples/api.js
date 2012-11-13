@@ -180,6 +180,7 @@ window.onload = function() {
         zoom: 8,
         showMarker: true,
         layerSwitcher: true,
+        layerSwitcherExpanded: true,
         layers: ['parcelles', 'batiments_ofs'],
         overview: true,
         overviewExpanded: true
@@ -190,6 +191,7 @@ window.onload = function() {
         zoom: 8,
         showMarker: true,
         layerSwitcher: true,
+        layerSwitcherExpanded: true,
         layers: ['parcelles', 'batiments_ofs'],
         overview: true,
         overviewExpanded: true

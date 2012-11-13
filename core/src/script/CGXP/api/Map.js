@@ -115,6 +115,9 @@ cgxp.api.Map.prototype = {
             this.map.removeControl(layerSwitcher);
         } else {
             layerSwitcher && layerSwitcher.redraw();
+            if (config.layerSwitcherExpanded) {
+                layerSwitcher && layerSwitcher.maximizeControl();
+            }
         }
 
         var overview = this.map.
