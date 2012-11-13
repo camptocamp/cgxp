@@ -24,6 +24,7 @@
  * @include FeatureEditing/ux/data/FeatureEditingDefaultStyleStore.js
  * @include Styler/ux/LayerStyleManager.js
  * @include Styler/ux/widgets/StyleSelectorComboBox.js
+ * @include LayerManager/ux/widgets/LayerManagerExportWindow.js
  */
 
 /** api: (define)
@@ -44,7 +45,8 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_redligning',
  *              actionTarget: 'center.tbar',
- *              toggleGroup: 'maptools'
+ *              toggleGroup: 'maptools',
+ *              layerManagerUrl: "${request.static_url('<package>:static/lib/cgxp/sandbox/LayerManager/ux/')}"
  *          }]
  *          ...
  *      });
@@ -71,6 +73,12 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     actionConfig: null,
 
+    /** api: config[layerManagerUrl]
+     *  ``String``
+     *  set base url of resources in GeoExt.ux.LayerManagerExportWindow widget
+     */
+    layerManagerUrl: null,
+
     redliningPanel: null,
 
     redliningWindow: null,
@@ -80,6 +88,8 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
     init: function() {
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
+
+        GeoExt.ux.LayerManagerExportWindow.prototype.baseUrl = this.layerManagerUrl;
     },
 
     viewerReady: function() {
