@@ -482,3 +482,31 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
 Ext.preg(cgxp.plugins.Print.prototype.ptype, cgxp.plugins.Print);
 
+// add the layer name in print
+GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend = 
+        function(legend, scale) {
+    var enc = this.encoders.legends.base.call(this, legend);
+    var icons = [];
+    for (var i = 1, len = legend.items.getCount() ; i < len ; ++i) {
+        var url = legend.items.get(i).url;
+        if (url.toLowerCase().indexOf('request=getlegendgraphic') != -1) {
+            var split = url.split("?");
+            var params = Ext.urlDecode(split[1]);
+            if (legend.useScaleParameter === true {
+                params['SCALE'] = scale;
+            }
+            url = split[0] + "?" + Ext.urlEncode(params);
+            enc[0].classes.push({
+                name: OpenLayers.i18n(params.LAYER),
+                icons: [this.getAbsoluteUrl(url)]
+            });
+        }
+        else {
+            enc[0].classes.push({
+                name: "",
+                icons: [this.getAbsoluteUrl(url)]
+            });
+        }
+    }
+    return enc;
+};
