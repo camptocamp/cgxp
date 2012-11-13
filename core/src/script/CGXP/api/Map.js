@@ -63,6 +63,7 @@ cgxp.api.Map.prototype = {
         // we use the dom id also to give an id to the mappanel in the viewer
         newConfig.id = config.div + "-map";
         newConfig.tbar = [];
+
         return newConfig;
     },
 
@@ -73,10 +74,14 @@ cgxp.api.Map.prototype = {
     onViewerReady: function(viewer) {
         var config = this.userConfig;
 
-        this.addOverlayerLayers(config.overlays);
-        if (config.showMarker) {
-            this.showMarker();
+        // viewer mappanel works with alloverlays, then we don't want the base
+        // layers to appear in the layerSwitcher
+        for (var i = 0; i < this.map.layers.length; i++) {
+            var layer = this.map.layers[i];
+            layer.displayInLayerSwitcher = false;
         }
+        this.addOverlayerLayers(this.userConfig.overlays);
+        this.onMapCreated();
     },
 
     /** api: method[initializeViewer]
@@ -92,7 +97,25 @@ cgxp.api.Map.prototype = {
         OpenLayers.Util.extend(config, this.userConfig);
         this.map = new OpenLayers.Map(config);
 
-        this.addOverlayerLayers(config.overlays);
+        this.addOverlayerLayers(this.userConfig.overlays);
+        this.onMapCreated();
+    },
+
+    /** private: method[onMapCreated]
+     *  Called both for basic or viewer powered versions after the map is
+     *  created.
+     */
+    onMapCreated: function() {
+        var config = this.userConfig;
+
+        var layerSwitcher = this.map.
+            getControlsByClass("OpenLayers.Control.LayerSwitcher")[0];
+
+        if (!config.layerSwitcher) {
+            this.map.removeControl(layerSwitcher);
+        } else {
+            layerSwitcher && layerSwitcher.redraw();
+        }
         if (config.showMarker) {
             this.showMarker();
         }

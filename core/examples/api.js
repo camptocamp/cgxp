@@ -16,10 +16,14 @@ OpenLayers.inherit(Api, cgxp.api.Map, {
             restrictedExtent: RESTRICTED_EXTENT,
             projection: "EPSG:21781",
             resolutions: [250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.125,0.0625],
-            //controls: [
-                //new OpenLayers.Control.Navigation(),
-                //new OpenLayers.Control.KeyboardDefaults()
-            //],
+            controls: [
+                new OpenLayers.Control.Navigation(),
+                new OpenLayers.Control.LayerSwitcher(),
+                new OpenLayers.Control.PanZoomBar({
+                    panIcons: false,
+                    zoomWorldIcon: true
+                })
+            ],
             layers: [{
                 source: 'olsource',
                 type: "OpenLayers.Layer.TMS",
@@ -58,7 +62,11 @@ OpenLayers.inherit(Xapi, cgxp.api.Map, {
             resolutions: [250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.125,0.0625],
             controls: [
                 new OpenLayers.Control.Navigation(),
-                new OpenLayers.Control.KeyboardDefaults()
+                new OpenLayers.Control.LayerSwitcher(),
+                new OpenLayers.Control.PanZoomBar({
+                    panIcons: false,
+                    zoomWorldIcon: true
+                })
             ],
             layers: [{
                 source: 'olsource',
@@ -129,6 +137,7 @@ window.onload = function() {
         center: [544500, 210100],
         zoom: 8,
         showMarker: true,
+        layerSwitcher: true,
         layers: ['parcelles', 'batiments_ofs']
     });
     var api2 = new Xapi({
@@ -136,6 +145,7 @@ window.onload = function() {
         center: [544500, 210100],
         zoom: 8,
         showMarker: true,
+        layerSwitcher: true,
         layers: ['parcelles', 'batiments_ofs']
     });
 };
