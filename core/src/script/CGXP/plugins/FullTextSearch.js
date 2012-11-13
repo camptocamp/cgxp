@@ -266,7 +266,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             '</div></tpl>'
         );
         var comboClass = this.grouping ?
-            Ext.ux.form.GroupComboBox : Ext.form.TwinTriggerComboBox;
+            Ext.ux.form.GroupComboBox : Ext.ux.form.TwinTriggerComboBox;
         var combo = new comboClass(Ext.apply({
             store: this.createStore(),
             tpl: tpl,
