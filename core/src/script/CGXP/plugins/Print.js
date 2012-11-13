@@ -66,9 +66,9 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: Print(config)
  *
- */   
+ */
 cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = cgxp_print */
     ptype: "cgxp_print",
 
@@ -155,7 +155,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
-        
+
         this.includeLegend = this.checkLegend && !!this.legendPanelId;
 
         // create a print provider
@@ -273,7 +273,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
-            options.legend = this.includeLegend ? 
+            options.legend = this.includeLegend ?
                              this.target.tools[this.legendPanelId].legendPanel : null;
 
             // need to define the table object even for page0 as java expects it
@@ -299,7 +299,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     for (dataset in printExport) {
                         if (printExport.hasOwnProperty(dataset)) {
                             // TODO, implement paging in case of too many result to display on only one page
-                            if (printExport[dataset].table.data.length > 0 && 
+                            if (printExport[dataset].table.data.length > 0 &&
                                 printExport[dataset].table.data[0].col0 != '') {
                                 var page = new GeoExt.data.PrintPage({
                                     printProvider: printProvider
@@ -434,7 +434,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 boxLabel: this.includelegendText,
                 checked: this.includeLegend,
                 // deactivate the checkbox if no legend panel is available
-                hidden: !this.legendPanelId, 
+                hidden: !this.legendPanelId,
                 handler: function(cb, checked) {
                     this.includeLegend = checked;
                 },
@@ -468,7 +468,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             }
         });
         printProvider.loadCapabilities();
-      
+
         this.printPanel = cgxp.plugins.Print.superclass.addOutput.call(this, printPanel);
 
         Ext.getCmp(this.outputTarget).on('expand', function() {
@@ -483,7 +483,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 Ext.preg(cgxp.plugins.Print.prototype.ptype, cgxp.plugins.Print);
 
 // add the layer name in print
-GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend = 
+GeoExt.data.PrintProvider.prototype.encoders.legends.gx_wmslegend =
         function(legend, scale) {
     var enc = this.encoders.legends.base.call(this, legend);
     var icons = [];
