@@ -93,14 +93,39 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
  * Register cgxp_wmslegend as a legends encoder.
  */
 (function() {
-    // We need to call the non-deferred version of the "update"
-    // function, to deal with the case where the legend panel
-    // does not yet include legend images. This effectively
-    // happens when the legend panel is not rendered at print
-    // time.
     var encoders = GeoExt.data.PrintProvider.prototype.encoders;
     encoders.legends.cgxp_wmslegend = function(cmp, scale) {
+        // We need to call the non-deferred version of the "update"
+        // function, to deal with the case where the legend panel
+        // does not yet include legend images. This effectively
+        // happens when the legend panel is not rendered at print
+        // time.
         GeoExt.WMSLegend.prototype.update.call(cmp);
-        return this.encoders.legends.gx_wmslegend.apply(this, [cmp, scale]);
+
+        // Add a name for all WMS layers
+        var enc = encoders.legends.base.call(this, cmp);
+        var icons = [];
+        for (var i = 1, len = cmp.items.getCount() ; i < len ; ++i) {
+            var url = cmp.items.get(i).url;
+            if (url.toLowerCase().indexOf('request=getlegendgraphic') != -1) {
+                var split = url.split("?");
+                var params = Ext.urlDecode(split[1]);
+                if (cmp.useScaleParameter === true) {
+                    params['SCALE'] = scale;
+                }
+                url = split[0] + "?" + Ext.urlEncode(params);
+                enc[0].classes.push({
+                    name: OpenLayers.i18n(params.LAYER),
+                    icons: [this.getAbsoluteUrl(url)]
+                });
+            }
+            else {
+                enc[0].classes.push({
+                    name: "",
+                    icons: [this.getAbsoluteUrl(url)]
+                });
+            }
+        }
+        return enc;
     };
 })();
