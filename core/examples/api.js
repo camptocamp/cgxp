@@ -22,6 +22,27 @@ OpenLayers.inherit(Api, cgxp.api.Map, {
                 new OpenLayers.Control.PanZoomBar({
                     panIcons: false,
                     zoomWorldIcon: true
+                }),
+                new OpenLayers.Control.OverviewMap({
+                    layers: [
+                        new OpenLayers.Layer.Image(
+                            "overview",
+                            "http://sitn-proto-c2cgeoportail.demo-camptocamp.com/elemoine/wsgi/proj/images/keymap_sitn.png",
+                            new OpenLayers.Bounds(522000, 180000, 575000, 225000),
+                            new OpenLayers.Size(150, 126)
+                        )
+                    ],
+                    size: new OpenLayers.Size(150, 126),
+                    maximized: false,
+                    isSuitableOverview: function() {
+                        return true;
+                    },
+                    mapOptions: {
+                        projection: new OpenLayers.Projection("EPSG:21781"),
+                        displayProjection: new OpenLayers.Projection("EPSG:21781"),
+                        units: "m",
+                        theme: null
+                    }
                 })
             ],
             layers: [{
@@ -66,6 +87,27 @@ OpenLayers.inherit(Xapi, cgxp.api.Map, {
                 new OpenLayers.Control.PanZoomBar({
                     panIcons: false,
                     zoomWorldIcon: true
+                }),
+                new OpenLayers.Control.OverviewMap({
+                    layers: [
+                        new OpenLayers.Layer.Image(
+                            "overview",
+                            "http://sitn-proto-c2cgeoportail.demo-camptocamp.com/elemoine/wsgi/proj/images/keymap_sitn.png",
+                            new OpenLayers.Bounds(522000, 180000, 575000, 225000),
+                            new OpenLayers.Size(150, 126)
+                        )
+                    ],
+                    size: new OpenLayers.Size(150, 126),
+                    maximized: false,
+                    isSuitableOverview: function() {
+                        return true;
+                    },
+                    mapOptions: {
+                        projection: new OpenLayers.Projection("EPSG:21781"),
+                        displayProjection: new OpenLayers.Projection("EPSG:21781"),
+                        units: "m",
+                        theme: null
+                    }
                 })
             ],
             layers: [{
@@ -138,7 +180,9 @@ window.onload = function() {
         zoom: 8,
         showMarker: true,
         layerSwitcher: true,
-        layers: ['parcelles', 'batiments_ofs']
+        layers: ['parcelles', 'batiments_ofs'],
+        overview: true,
+        overviewExpanded: true
     });
     var api2 = new Xapi({
         div: 'map2',
@@ -146,6 +190,8 @@ window.onload = function() {
         zoom: 8,
         showMarker: true,
         layerSwitcher: true,
-        layers: ['parcelles', 'batiments_ofs']
+        layers: ['parcelles', 'batiments_ofs'],
+        overview: true,
+        overviewExpanded: true
     });
 };

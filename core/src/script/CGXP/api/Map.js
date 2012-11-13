@@ -116,6 +116,17 @@ cgxp.api.Map.prototype = {
         } else {
             layerSwitcher && layerSwitcher.redraw();
         }
+
+        var overview = this.map.
+            getControlsByClass("OpenLayers.Control.OverviewMap")[0];
+        if (!config.overview) {
+            this.map.removeControl(overview);
+        } else {
+            if (config.overviewExpanded) {
+                overview.maximizeControl();
+            }
+        }
+
         if (config.showMarker) {
             this.showMarker();
         }
