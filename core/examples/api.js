@@ -185,8 +185,8 @@ window.onload = function() {
         zoom: 8,
         layerSwitcher: true,
         //layerSwitcherExpanded: true,
-        layers: ['parcelles', 'batiments_ofs'],
-        overview: true
+        layers: ['parcelles', 'batiments_ofs']
+        //overview: true
         //overviewExpanded: true
     });
     // show a maker with default icon at the center of the map

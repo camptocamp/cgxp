@@ -55,6 +55,31 @@ cgxp.api.Map.prototype = {
      */
     initMap: function() { },
 
+    /** private: method[adaptConfig]
+     *  Adapts the config before creating the map.
+     *  :arg config ``Object`` the map config
+     */
+    adaptConfig: function(config) {
+        // remove any controls if not used by user
+        function getBy(array, property, match) {
+            var test = (typeof match.test == "function");
+            var found = OpenLayers.Array.filter(array, function(item) {
+                return item[property] == match || (test && match.test(item[property]));
+            });
+            return found;
+        }
+        var switcher = getBy(config.controls, "CLASS_NAME",
+            'OpenLayers.Control.LayerSwitcher')[0];
+        if (!this.userConfig.layerSwitcher) {
+            OpenLayers.Util.removeItem(config.controls, switcher);
+        }
+        var overview = getBy(config.controls, "CLASS_NAME",
+            'OpenLayers.Control.OverviewMap')[0];
+        if (!this.userConfig.overview) {
+            OpenLayers.Util.removeItem(config.controls, overview);
+        }
+    },
+
     /** api: method[adaptConfigForViewer]
      *  Convenience method to add some required options to mapConfig before
      *  using it to create a viewer.
@@ -68,6 +93,8 @@ cgxp.api.Map.prototype = {
         // we use the dom id also to give an id to the mappanel in the viewer
         newConfig.id = config.div + "-map";
         newConfig.tbar = [];
+
+        this.adaptConfig(config);
 
         return newConfig;
     },
@@ -99,7 +126,11 @@ cgxp.api.Map.prototype = {
             var layer = config.layers[i];
             config.layers[i] = this.createBaseLayerFromConfig(layer);
         }
+
+        this.adaptConfig(config);
+
         OpenLayers.Util.extend(config, this.userConfig);
+
         this.map = new OpenLayers.Map(config);
 
         this.addOverlayLayers(this.userConfig.overlays);
@@ -113,26 +144,18 @@ cgxp.api.Map.prototype = {
     onMapCreated: function() {
         var config = this.userConfig;
 
-        var layerSwitcher = this.map.
-            getControlsByClass("OpenLayers.Control.LayerSwitcher")[0];
-
-        if (!config.layerSwitcher) {
-            this.map.removeControl(layerSwitcher);
-        } else {
-            layerSwitcher && layerSwitcher.redraw();
-            if (config.layerSwitcherExpanded) {
-                layerSwitcher && layerSwitcher.maximizeControl();
-            }
+        var layerSwitcher = this.map
+            .getControlsByClass("OpenLayers.Control.LayerSwitcher")[0];
+        // redraw the switcher for the viewer version
+        layerSwitcher && layerSwitcher.redraw();
+        if (config.layerSwitcherExpanded) {
+            layerSwitcher && layerSwitcher.maximizeControl();
         }
 
-        var overview = this.map.
-            getControlsByClass("OpenLayers.Control.OverviewMap")[0];
-        if (!config.overview) {
-            this.map.removeControl(overview);
-        } else {
-            if (config.overviewExpanded) {
-                overview.maximizeControl();
-            }
+        var overview = this.map
+            .getControlsByClass("OpenLayers.Control.OverviewMap")[0];
+        if (config.overviewExpanded) {
+            overview && overview.maximizeControl();
         }
     },
 
