@@ -217,7 +217,7 @@ cgxp.api.Map.prototype = {
      */
     addOverlayLayers: function(overlays) {
         if (overlays) {
-            for (i = 0; i < overlays.length; i++) {
+            for (var i = 0; i < overlays.length; i++) {
                 var layer = this.createOverlayLayer(overlays[i]);
                 this.map.addLayer(layer);
             }
