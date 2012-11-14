@@ -134,10 +134,6 @@ cgxp.api.Map.prototype = {
                 overview.maximizeControl();
             }
         }
-
-        if (config.showMarker) {
-            this.addMarker();
-        }
     },
 
     /** private: method[createBaseLayerFromConfig]

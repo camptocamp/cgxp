@@ -183,13 +183,14 @@ window.onload = function() {
         div: 'map1',
         center: [544500, 210100],
         zoom: 8,
-        showMarker: true,
         layerSwitcher: true,
         //layerSwitcherExpanded: true,
         layers: ['parcelles', 'batiments_ofs'],
         overview: true
         //overviewExpanded: true
     });
+    // show a maker with default icon at the center of the map
+    api1.addMarker();
     for (var i = 0; i < markers.length; i++) {
         var m = markers[i];
         api1.addMarker({
@@ -198,11 +199,11 @@ window.onload = function() {
             icon: m[4]
         });
     }
+
     var api2 = new Xapi({
         div: 'map2',
         center: [544500, 210100],
         zoom: 8,
-        showMarker: true,
         layerSwitcher: true,
         layerSwitcherExpanded: true,
         layers: ['parcelles', 'batiments_ofs'],
