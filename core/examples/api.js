@@ -64,7 +64,7 @@ OpenLayers.inherit(Map, cgxp.api.Map, {
             }]
         };
 
-        this.createMapFromConfig(mapConfig);
+        this.initMapFromConfig(mapConfig);
     }
 });
 
@@ -169,7 +169,6 @@ OpenLayers.inherit(XMap, cgxp.api.Map, {
         });
         app.on('ready',
             this.onViewerReady.createDelegate(this, [app]));
-        this.map = app.mapPanel.map;
     }
 });
 

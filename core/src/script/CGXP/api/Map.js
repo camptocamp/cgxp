@@ -104,6 +104,8 @@ cgxp.api.Map.prototype = {
      *  :arg viewer: ``GXP.widgets.Viewer`` the viewer
      */
     onViewerReady: function(viewer) {
+        this.map = viewer.mapPanel.map;
+
         var config = this.userConfig;
 
         // viewer mappanel works with alloverlays, then we don't want the base
@@ -116,11 +118,11 @@ cgxp.api.Map.prototype = {
         this.onMapCreated();
     },
 
-    /** api: method[initializeViewer]
+    /** api: method[initMapFromConfig]
      *  Convenience method to create a map from a config.
      *  :arg config:  ``Object``
      */
-    createMapFromConfig: function(config) {
+    initMapFromConfig: function(config) {
         var i;
         for (i = 0; i < config.layers.length; i++) {
             var layer = config.layers[i];
