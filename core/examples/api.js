@@ -4,11 +4,11 @@ var RESTRICTED_EXTENT = [420000, 30000, 900000, 350000];
 var WMS_PROXY_URL = "http://sitn-proto-c2cgeoportail.demo-camptocamp.com/elemoine/wsgi/mapserv_proxy";
 // example of a class inherited from cgxp.api.Map
 // This one does not need ExtJS at all. It's an OpenLayers only example.
-var Api = function() {
+var Map = function() {
     this.wmsURL = WMS_PROXY_URL;
     return cgxp.api.Map.apply(this, arguments);
 };
-OpenLayers.inherit(Api, cgxp.api.Map, {
+OpenLayers.inherit(Map, cgxp.api.Map, {
     initMap: function() {
         var mapConfig = {
             maxExtent: MAX_EXTENT,
@@ -69,11 +69,11 @@ OpenLayers.inherit(Api, cgxp.api.Map, {
 });
 
 // example of a class inherited from cgxp.api.Map which creates a viewer.
-var Xapi = function() {
+var XMap = function() {
     this.wmsURL = WMS_PROXY_URL;
     return cgxp.api.Map.apply(this, arguments);
 };
-OpenLayers.inherit(Xapi, cgxp.api.Map, {
+OpenLayers.inherit(XMap, cgxp.api.Map, {
     initMap: function() {
         var mapConfig = {
             maxExtent: MAX_EXTENT,
@@ -179,7 +179,7 @@ window.onload = function() {
         [544450, 210000, 18, 18, 'images/essence.png'],
         [544310, 210200, 14, 14, 'images/parking.png']
     ];
-    var api1 = new Api({
+    var map1 = new Map({
         div: 'map1',
         center: [544500, 210100],
         zoom: 8,
@@ -190,17 +190,17 @@ window.onload = function() {
         //overviewExpanded: true
     });
     // show a maker with default icon at the center of the map
-    api1.addMarker();
+    map1.addMarker();
     for (var i = 0; i < markers.length; i++) {
         var m = markers[i];
-        api1.addMarker({
+        map1.addMarker({
             position: [m[0], m[1]],
             size: [m[2], m[3]],
             icon: m[4]
         });
     }
 
-    var api2 = new Xapi({
+    var map2 = new XMap({
         div: 'map2',
         center: [544500, 210100],
         zoom: 8,
