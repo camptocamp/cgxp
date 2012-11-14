@@ -141,10 +141,6 @@ OpenLayers.inherit(XMap, cgxp.api.Map, {
             // configuration of all tool plugins for this application
             tools: [
             {
-                ptype: "cgxp_disclaimer",
-                outputTarget: config.id
-            },
-            {
                 ptype: "gxp_zoomtoextent",
                 actionTarget: "map.tbar",
                 closest: true,
