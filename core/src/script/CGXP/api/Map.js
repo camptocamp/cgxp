@@ -44,6 +44,11 @@ cgxp.api.Map.prototype = {
      */
     userConfig: null,
 
+    /** private: config[markersLayer]
+     *  The markers layer.
+     */
+    markersLayer: null,
+
     /** api: method[initMap]
      *  Is intended to be overriden in inherited classes.
      *  :arg config:  ``Object``
@@ -131,7 +136,7 @@ cgxp.api.Map.prototype = {
         }
 
         if (config.showMarker) {
-            this.showMarker();
+            this.addMarker();
         }
     },
 
@@ -165,33 +170,6 @@ cgxp.api.Map.prototype = {
         }
     },
 
-    /** private: method[showMarker]
-     *  Adds a marker to the map at a specific location.
-     *  :arg vector  ``OpenLayers.Layer.Vector`` The vector layer.
-     *  :arg loc ``OpenLayers.LonLat`` The location.
-     */
-    showMarker: function(vector, loc) {
-        if (!vector) {
-            vector = new OpenLayers.Layer.Vector(
-                OpenLayers.Util.createUniqueID("cgxp"), {
-                    displayInLayerSwitcher: false,
-                    alwaysInRange: true
-            });
-            this.map.addLayer(vector);
-        }
-        if (!loc) {
-            loc = this.map.getCenter();
-        }
-        var geometry = new OpenLayers.Geometry.Point(loc.lon, loc.lat);
-        var feature = new OpenLayers.Feature.Vector(geometry, {}, {
-            externalGraphic: OpenLayers.Util.getImagesLocation() + 'marker.png',
-            graphicWidth: 21,
-            graphicHeight: 25,
-            graphicYOffset: -25/2
-        });
-        vector.addFeatures([feature]);
-    },
-
     /** private: method[createOverlayLayer]
      * :arg layer ``String`` The name of the layer to add.
      * :arg external ``Boolean`` Whether it is an external layer or not.
@@ -222,5 +200,37 @@ cgxp.api.Map.prototype = {
                 this.map.addLayer(layer);
             }
         }
+    },
+
+    /** api: method[addMarker]
+     *  :arg options ``Object`` List of marker options
+     */
+    addMarker: function(options) {
+        options = options || {};
+        var lonlat = (options.position) ?
+            new OpenLayers.LonLat(options.position[0], options.position[1]) :
+            this.map.getCenter();
+
+        var iconPath = options.icon || (OpenLayers.Util.getImagesLocation() + 'marker.png');
+        var iconWidth = options.size && options.size[0] || 21;
+        var iconHeight = options.size && options.size[1] || 25;
+        var size = new OpenLayers.Size(iconWidth, iconHeight);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        var icon = new OpenLayers.Icon(iconPath, size, offset);
+
+        this.getMarkersLayer().addMarker(
+            new OpenLayers.Marker(lonlat, icon)
+        );
+    },
+
+    /** private: method[getMarkersLayer]
+     */
+    getMarkersLayer: function() {
+        if (!this.markersLayer) {
+            this.markersLayer = new OpenLayers.Layer.Markers("Markers");
+            this.map.addLayer(this.markersLayer);
+        }
+
+        return this.markersLayer;
     }
 };

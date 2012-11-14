@@ -174,17 +174,30 @@ OpenLayers.inherit(Xapi, cgxp.api.Map, {
 });
 
 window.onload = function() {
+    var markers = [
+        [544410, 210100, 14, 14, 'images/info.png'],
+        [544450, 210000, 18, 18, 'images/essence.png'],
+        [544310, 210200, 14, 14, 'images/parking.png']
+    ];
     var api1 = new Api({
         div: 'map1',
         center: [544500, 210100],
         zoom: 8,
         showMarker: true,
         layerSwitcher: true,
-        layerSwitcherExpanded: true,
+        //layerSwitcherExpanded: true,
         layers: ['parcelles', 'batiments_ofs'],
-        overview: true,
-        overviewExpanded: true
+        overview: true
+        //overviewExpanded: true
     });
+    for (var i = 0; i < markers.length; i++) {
+        var m = markers[i];
+        api1.addMarker({
+            position: [m[0], m[1]],
+            size: [m[2], m[3]],
+            icon: m[4]
+        });
+    }
     var api2 = new Xapi({
         div: 'map2',
         center: [544500, 210100],
