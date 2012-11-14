@@ -61,6 +61,23 @@ OpenLayers.inherit(Map, cgxp.api.Map, {
                         group: 'background'
                     }
                 ]
+            },{
+                source: "olsource",
+                type: "OpenLayers.Layer.TMS",
+                args: [
+                    OpenLayers.i18n('Orthophoto'),
+                    ['http://tile1-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile2-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile3-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile4-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile5-sitn.ne.ch/tilecache_new/tilecache.cgi/'],
+                    {
+                        layername: 'ortho2011',
+                        ref: 'ortho',
+                        //layername: 'Orthophoto',
+                        type:'png; mode=24bit',
+                        serverResolutions: [250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.125,0.0625],
+                        maxExtent: new OpenLayers.Bounds(420000,30000,900000,360000),
+                        tileOrigin: new OpenLayers.LonLat(420000,30000),
+                        opacity: 0
+                    }
+                ]
             }]
         };
 
@@ -124,6 +141,23 @@ OpenLayers.inherit(XMap, cgxp.api.Map, {
                         tileOrigin: new OpenLayers.LonLat(420000,30000),
                         ref: 'plan',
                         group: 'background'
+                    }
+                ]
+            },{
+                source: "olsource",
+                type: "OpenLayers.Layer.TMS",
+                args: [
+                    OpenLayers.i18n('Orthophoto'),
+                    ['http://tile1-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile2-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile3-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile4-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile5-sitn.ne.ch/tilecache_new/tilecache.cgi/'],
+                    {
+                        layername: 'ortho2011',
+                        ref: 'ortho',
+                        //layername: 'Orthophoto',
+                        type:'png; mode=24bit',
+                        serverResolutions: [250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.125,0.0625],
+                        maxExtent: new OpenLayers.Bounds(420000,30000,900000,360000),
+                        tileOrigin: new OpenLayers.LonLat(420000,30000),
+                        opacity: 0
                     }
                 ]
             }]

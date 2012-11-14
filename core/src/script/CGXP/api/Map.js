@@ -127,6 +127,7 @@ cgxp.api.Map.prototype = {
         for (i = 0; i < config.layers.length; i++) {
             var layer = config.layers[i];
             config.layers[i] = this.createBaseLayerFromConfig(layer);
+            config.layers[i].opacity = 1;
         }
 
         this.adaptConfig(config);
