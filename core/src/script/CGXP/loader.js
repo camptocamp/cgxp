@@ -38,6 +38,7 @@
         "plugins/LayerTree.js",
         "plugins/Legend.js",
         "plugins/Login.js",
+        "widgets/MapOpacitySlider.js",
         "plugins/MapOpacitySlider.js",
         "plugins/MapQuery.js",
         "plugins/Measure.js",
