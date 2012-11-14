@@ -164,11 +164,10 @@ OpenLayers.inherit(XMap, cgxp.api.Map, {
         };
 
         var config = this.adaptConfigForViewer(mapConfig);
-        var div = config.div;
         var app = new gxp.Viewer({
             portalConfig: {
-                renderTo: div,
-                height: Ext.get(div).getHeight(),
+                renderTo: config.div,
+                height: Ext.get(config.div).getHeight(),
                 layout: "fit",
                 items: [config.id]
             },
