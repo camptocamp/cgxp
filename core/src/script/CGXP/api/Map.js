@@ -42,17 +42,17 @@ cgxp.api.Map = function(config) {
 
 cgxp.api.Map.prototype = {
 
-    /** api: config[wmsURL]
+    /** private: property[wmsURL]
      *  The URL to the WMS service.
      */
     wmsURL: null,
 
-    /** private: config[userConfig]
+    /** private: property[userConfig]
      *  The config as set by the end user.
      */
     userConfig: null,
 
-    /** private: config[markersLayer]
+    /** private: property[markersLayer]
      *  The markers layer.
      */
     markersLayer: null,
