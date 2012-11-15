@@ -83,7 +83,7 @@ cgxp.api.Map.prototype = {
         }
         var overview = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.OverviewMap')[0];
-        if (!this.userConfig.overview && switcher) {
+        if (!this.userConfig.overview && overview) {
             OpenLayers.Util.removeItem(config.controls, overview);
         }
     },
