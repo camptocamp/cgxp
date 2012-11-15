@@ -18,9 +18,9 @@
 /**
  * @include OpenLayers/Map.js
  * @include OpenLayers/Layer/WMS.js
- * @include OpenLayers/Icon.js
- * @include OpenLayers/Marker.js
- * @include OpenLayers/Layer/Markers.js
+ * @include OpenLayers/Geometry/Point.js
+ * @include OpenLayers/Feature/Vector.js
+ * @include OpenLayers/Layer/Vector.js
  */
 
 if (!window.cgxp) {
@@ -52,10 +52,10 @@ cgxp.api.Map.prototype = {
      */
     userConfig: null,
 
-    /** private: property[markersLayer]
-     *  The markers layer.
+    /** private: property[vectorLayer]
+     *  The vector layer.
      */
-    markersLayer: null,
+    vectorLayer: null,
 
     /** api: method[initMap]
      *  Is intended to be overriden in inherited classes.
@@ -241,26 +241,38 @@ cgxp.api.Map.prototype = {
             new OpenLayers.LonLat(options.position[0], options.position[1]) :
             this.map.getCenter();
 
-        var iconPath = options.icon || (OpenLayers.Util.getImagesLocation() + 'marker.png');
-        var iconWidth = options.size && options.size[0] || 21;
-        var iconHeight = options.size && options.size[1] || 25;
-        var size = new OpenLayers.Size(iconWidth, iconHeight);
-        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-        var icon = new OpenLayers.Icon(iconPath, size, offset);
+        var path = options.icon || (OpenLayers.Util.getImagesLocation() + 'marker.png');
+        var width = options.size && options.size[0] || 21;
+        var height = options.size && options.size[1] || 25;
 
-        this.getMarkersLayer().addMarker(
-            new OpenLayers.Marker(lonlat, icon)
-        );
+        var style = OpenLayers.Util.applyDefaults({
+            externalGraphic: path,
+            graphicWidth: width,
+            graphicHeight: height,
+            graphicXOffset: -width/2,
+            graphicYOffset: -height/2,
+            graphicOpacity: 1
+        }, OpenLayers.Feature.Vector.style['default']);
+
+        this.getVectorLayer().addFeatures([
+            new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat),
+                null,
+                style
+            )
+        ]);
     },
 
-    /** private: method[getMarkersLayer]
+    /** private: method[getVectorLayer]
      */
-    getMarkersLayer: function() {
-        if (!this.markersLayer) {
-            this.markersLayer = new OpenLayers.Layer.Markers("Markers");
-            this.map.addLayer(this.markersLayer);
+    getVectorLayer: function() {
+        if (!this.vectorLayer) {
+            this.vectorLayer = new OpenLayers.Layer.Vector("Vector", {
+                displayInLayerSwitcher: false
+            });
+            this.map.addLayer(this.vectorLayer);
         }
 
-        return this.markersLayer;
+        return this.vectorLayer;
     }
 };
