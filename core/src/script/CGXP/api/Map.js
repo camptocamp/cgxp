@@ -15,6 +15,14 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @include OpenLayers/Map.js
+ * @include OpenLayers/Layer/WMS.js
+ * @include OpenLayers/Icon.js
+ * @include OpenLayers/Marker.js
+ * @include OpenLayers/Layer/Markers.js
+ */
+
 if (!window.cgxp) {
     cgxp = {};
 }
