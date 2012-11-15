@@ -70,12 +70,12 @@ cgxp.api.Map.prototype = {
         }
         var switcher = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.LayerSwitcher')[0];
-        if (!this.userConfig.layerSwitcher) {
+        if (!this.userConfig.layerSwitcher && switcher) {
             OpenLayers.Util.removeItem(config.controls, switcher);
         }
         var overview = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.OverviewMap')[0];
-        if (!this.userConfig.overview) {
+        if (!this.userConfig.overview && switcher) {
             OpenLayers.Util.removeItem(config.controls, overview);
         }
     },
