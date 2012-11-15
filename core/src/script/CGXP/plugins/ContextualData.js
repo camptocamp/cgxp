@@ -161,6 +161,24 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      */
     actionTooltipText: 'Contextual Data Tooltips',
 
+    /** api: config[mouseoverWindowConfig]
+     *  ``Object``
+     *  Allow to override the default values of the mouseover window
+     *  mouseoverWindowConfig: {
+     *    width: 245
+     *  }
+     */
+    mouseoverWindowConfig: {},
+
+    /** api: config[rightclickWindowConfig]
+     *  ``Object``
+     *  Allow to override the default values of the rightclick window
+     *  rightclickWindowConfig: {
+     *    width: 500
+     *  }
+     */
+    rightclickWindowConfig: {},
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -179,7 +197,8 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
                 zoomWheelEnabled:false,
                 tpl: this.tpls.rightclickTpl,
                 handleServerData: this.handleServerData,
-                streetViewLink: this.streetViewLink
+                streetViewLink: this.streetViewLink,
+                rightclickWindowConfig: this.rightclickWindowConfig
             });
             this.target.mapPanel.map.addControl(control);
         }
@@ -189,7 +208,8 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
             control = new cgxp.plugins.ContextualData.Tooltip({
                 serviceUrl: this.url,
                 tpl: this.tpls.mouseoverTpl,
-                handleServerData: this.handleServerData
+                handleServerData: this.handleServerData,
+                mouseoverWindowConfig: this.mouseoverWindowConfig
             });
             this.target.mapPanel.map.addControl(control);
             var action = new GeoExt.Action(Ext.applyIf({
@@ -443,7 +463,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
 
         this.tpl = OpenLayers.i18n(this.tpl);
 
-        this.win = new Ext.Window({
+        this.win = new Ext.Window(Ext.apply({
             layout:'fit',
             width:225,
             closable:false,
@@ -453,7 +473,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
             bodyStyle: 'padding:3px;',
             html: '<div style="background-color: rgb(255, 255, 208);" id="' +
                   this.popupId + '"></div>'
-        });
+        }, options.mouseoverWindowConfig));
         this.win.render(Ext.getBody());
     },
 
@@ -665,6 +685,11 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
         'stopDouble': false
     },
 
+    /** private: config[rightclickWindowConfig]
+     *  ``Object`` Override default window config
+     */
+    rightclickWindowConfig: {},
+
     /** private: method[initialize]
      *  :arg options: ``Object``
      */
@@ -747,7 +772,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
         if (this.popup) {
             this.popup.destroy();
         }
-        this.popup = new GeoExt.Popup({
+        this.popup = new GeoExt.Popup(Ext.apply({
             cls: 'positionPopup',
             title: this.popupTitleText,
             location: this.map.getLonLatFromPixel(this.xy),
@@ -758,7 +783,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
             maximizable: false,
             collapsible: false,
             unpinnable: false
-        });
+        },this.rightclickWindowConfig));
         this.popup.show();
     },
 
