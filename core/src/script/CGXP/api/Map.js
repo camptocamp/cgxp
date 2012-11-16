@@ -21,6 +21,8 @@
  * @include OpenLayers/Layer/WMS.js
  * @include OpenLayers/Geometry/Point.js
  * @include OpenLayers/Feature/Vector.js
+ * @include OpenLayers/Renderer/SVG.js
+ * @include OpenLayers/Renderer/VML.js
  * @include OpenLayers/Layer/Vector.js
  * @include OpenLayers/Protocol/Script.js
  * @include OpenLayers/Control/GetFeature.js
