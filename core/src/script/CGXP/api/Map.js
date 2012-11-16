@@ -105,10 +105,10 @@ cgxp.api.Map.prototype = {
         var newConfig = OpenLayers.Util.extend({}, config);
         OpenLayers.Util.extend(newConfig , this.userConfig);
         // we use the dom id also to give an id to the mappanel in the viewer
-        newConfig.id = config.div + "-map";
+        newConfig.id = this.userConfig.div + "-map";
         newConfig.tbar = [];
 
-        this.adaptConfig(config);
+        this.adaptConfig(newConfig);
 
         return newConfig;
     },
