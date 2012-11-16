@@ -16,11 +16,15 @@
  */
 
 /**
+ * @include CGXP/api/Click.js
  * @include OpenLayers/Map.js
  * @include OpenLayers/Layer/WMS.js
  * @include OpenLayers/Geometry/Point.js
  * @include OpenLayers/Feature/Vector.js
  * @include OpenLayers/Layer/Vector.js
+ * @include OpenLayers/Protocol/Script.js
+ * @include OpenLayers/Control/GetFeature.js
+ * @include OpenLayers/Format/WMSGetFeatureInfo.js
  */
 
 if (!window.cgxp) {
@@ -168,6 +172,8 @@ cgxp.api.Map.prototype = {
         if (config.overviewExpanded) {
             overview && overview.maximizeControl();
         }
+
+        this.createQueryControl();
     },
 
     /** private: method[createBaseLayerFromConfig]
@@ -274,5 +280,95 @@ cgxp.api.Map.prototype = {
         }
 
         return this.vectorLayer;
+    },
+
+    /** private: method[createQueryControl]
+     *
+     */
+    createQueryControl: function() {
+        var map = this.map;
+        var protocol = new OpenLayers.Protocol.Script({
+            url: this.wmsURL,
+            format: new OpenLayers.Format.WMSGetFeatureInfo(),
+            filterToParams: function (params) {
+                var layers = map.layers;
+                var layerNames = [];
+                for (var i = 0, len = layers.length; i < len; i++) {
+                    var layer = layers[i];
+                    if (layer instanceof OpenLayers.Layer.WMS &&
+                        layer.getVisibility() &&
+                        layer.params.LAYERS != null) {
+                        layerNames = layerNames.concat(layer.params.LAYERS);
+                    }
+                }
+
+                if (layerNames.length != 0) {
+                    return {
+                        service: "WMS",
+                        version: "1.1.1",
+                        request: "GetFeatureInfo",
+                        bbox: map.getExtent().toBBOX(),
+                        feature_count: 1,
+                        height: map.getSize().h,
+                        width: map.getSize().w,
+                        info_format: "application/vnd.ogc.gml",
+                        srs: map.getProjection(),
+                        x: params.xy.x,
+                        y: params.xy.y,
+                        layers: layerNames,
+                        query_layers: layerNames,
+                        styles: 'default'
+                    }
+                }
+            }
+        });
+        var click = new cgxp.api.Click({
+            protocol: protocol
+        });
+        this.map.addControl(click);
+        click.activate();
+        click.events.on({
+            featureselected: function(obj) {
+                this.showPopup(obj.feature, obj.event.xy);
+            },
+            scope: this
+        });
+    },
+
+    /** private: method[showPopup]
+     *  :args feature ``OpenLayers.Feature.Vector``
+     *  :args position ``OpenLayers.Pixel``
+     */
+    showPopup: function(feature, position) {
+        var detail = [],
+            attributes = feature.attributes;
+        detail.push('<table class="detail">');
+        var hasAttributes = false;
+        for (var k in attributes) {
+            if (attributes.hasOwnProperty(k) && attributes[k]) {
+                hasAttributes = true;
+                detail = detail.concat([
+                    '<tr>',
+                    '<th>',
+                    OpenLayers.i18n(k),
+                    '</th>',
+                    '<td>',
+                    attributes[k],
+                    '</td>',
+                    '</tr>'
+                ]);
+            }
+        }
+        detail.push('</table>');
+        var popup = new OpenLayers.Popup.FramedCloud(
+            "featurePopup",
+            this.map.getLonLatFromPixel(position),
+            null,
+            detail.join(''),
+            null,
+            true,
+            null // on close
+        );
+        this.map.addPopup(popup);
     }
 };
