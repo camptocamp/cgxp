@@ -17,6 +17,7 @@
 
 /*
  * @requires GeoExt/widgets/WMSLegend.js
+ * @requires GeoExt/data/PrintProvider.js
  * @include OpenLayers/Layer/WMS.js
  */
 
