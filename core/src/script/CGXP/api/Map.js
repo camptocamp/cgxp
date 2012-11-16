@@ -43,6 +43,7 @@ cgxp.api.Map = function(config) {
         this.userConfig.overlays = this.userConfig.layers;
         delete this.userConfig.layers;
     }
+    this.delayedCalls = [];
     this.initMap();
 };
 
@@ -62,6 +63,12 @@ cgxp.api.Map.prototype = {
      *  The vector layer.
      */
     vectorLayer: null,
+
+    /** private: property[delayedCalls]
+     *  List of calls to method delayed while (viewer's) map is not ready yet.
+     *  Those methods are supposed to be called again after the viewer is ready.
+     */
+    delayedCalls: null,
 
     /** api: method[initMap]
      *  Is intended to be overriden in inherited classes.
@@ -118,18 +125,22 @@ cgxp.api.Map.prototype = {
      *  :arg viewer: ``GXP.widgets.Viewer`` the viewer
      */
     onViewerReady: function(viewer) {
+        var i;
         this.map = viewer.mapPanel.map;
 
         var config = this.userConfig;
 
         // viewer mappanel works with alloverlays, then we don't want the base
         // layers to appear in the layerSwitcher
-        for (var i = 0; i < this.map.layers.length; i++) {
+        for (i = 0; i < this.map.layers.length; i++) {
             var layer = this.map.layers[i];
             layer.displayInLayerSwitcher = false;
         }
         this.addOverlayLayers(this.userConfig.overlays);
         this.onMapCreated();
+        for (i = 0; i < this.delayedCalls.length; i++) {
+            this.delayedCalls[i][0].apply(this, this.delayedCalls[i][1]);
+        }
     },
 
     /** api: method[initMapFromConfig]
@@ -244,6 +255,10 @@ cgxp.api.Map.prototype = {
      *  :arg options ``Object`` List of marker options
      */
     addMarker: function(options) {
+        if (!this.map) {
+            this.delayedCalls.push([this.addMarker, arguments]);
+            return;
+        }
         options = options || {};
         var lonlat = (options.position) ?
             new OpenLayers.LonLat(options.position[0], options.position[1]) :
