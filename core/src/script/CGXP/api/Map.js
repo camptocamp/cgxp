@@ -189,6 +189,10 @@ cgxp.api.Map.prototype = {
         }
 
         this.createQueryControl();
+
+        if (!this.map.getCenter()) {
+            this.map.zoomToMaxExtent();
+        }
     },
 
     /** private: method[createBaseLayerFromConfig]
@@ -251,6 +255,14 @@ cgxp.api.Map.prototype = {
                 this.map.addLayer(layer);
             }
         }
+    },
+
+    /** api: method[recenter]
+     *  :arg center ``Array(Number)`` Center coordinates
+     *  :arg zoom ``Number``
+     */
+    recenter: function(center, zoom) {
+        this.map.setCenter(new OpenLayers.LonLat(center[0], center[1]), zoom);
     },
 
     /** api: method[addMarker]
