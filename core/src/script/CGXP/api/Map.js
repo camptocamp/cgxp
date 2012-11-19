@@ -43,7 +43,7 @@ cgxp.api.Map = function(config) {
         this.userConfig.overlays = this.userConfig.layers;
         delete this.userConfig.layers;
     }
-    this.delayedCalls = [];
+    this.deferedCalls = [];
     this.initMap();
 };
 
@@ -64,11 +64,11 @@ cgxp.api.Map.prototype = {
      */
     vectorLayer: null,
 
-    /** private: property[delayedCalls]
-     *  List of calls to method delayed while (viewer's) map is not ready yet.
+    /** private: property[deferedCalls]
+     *  List of calls to method defered while (viewer's) map is not ready yet.
      *  Those methods are supposed to be called again after the viewer is ready.
      */
-    delayedCalls: null,
+    deferedCalls: null,
 
     /** api: method[initMap]
      *  Is intended to be overriden in inherited classes.
@@ -138,8 +138,8 @@ cgxp.api.Map.prototype = {
         }
         this.addOverlayLayers(this.userConfig.overlays);
         this.onMapCreated();
-        for (i = 0; i < this.delayedCalls.length; i++) {
-            this.delayedCalls[i][0].apply(this, this.delayedCalls[i][1]);
+        for (i = 0; i < this.deferedCalls.length; i++) {
+            this.deferedCalls[i]();
         }
     },
 
@@ -256,7 +256,8 @@ cgxp.api.Map.prototype = {
      */
     addMarker: function(options) {
         if (!this.map) {
-            this.delayedCalls.push([this.addMarker, arguments]);
+            this.deferedCalls.push(
+                OpenLayers.Function.bind(this.addMarker, this, options));
             return;
         }
         options = options || {};
