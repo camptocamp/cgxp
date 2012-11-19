@@ -27,6 +27,7 @@
  * @include OpenLayers/Protocol/Script.js
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
+ * @include OpenLayers/Format/GML.js
  */
 
 if (!window.cgxp) {
