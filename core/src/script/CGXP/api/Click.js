@@ -20,7 +20,7 @@
  * @include OpenLayers/Handler/Click.js
  * @include OpenLayers/Geometry/Point.js
  */
-cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {                
+cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
 
     /** api: config[protocol]
      */
@@ -40,13 +40,13 @@ cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
         );
         OpenLayers.Control.prototype.initialize.apply(
             this, arguments
-        ); 
+        );
         this.handler = new OpenLayers.Handler.Click(
             this, {
                 'click': this.trigger
             }, this.handlerOptions
         );
-    }, 
+    },
 
     trigger: function(e) {
         var params = this.protocol.filterToParams(e);
@@ -82,7 +82,7 @@ cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
             feature = features[i];
             if(feature.bounds) {
                 var ll = feature.bounds.getCenterLonLat();
-                var point2 = new OpenLayers.Geometry.Point(ll.lon, ll.lat); 
+                var point2 = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
                 dist = point.distanceTo(point2);
                 if(dist < minDist) {
                     minDist = dist;
