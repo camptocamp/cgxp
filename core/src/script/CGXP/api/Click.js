@@ -57,8 +57,10 @@ cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
                     if(result.success()) {
                         if(result.features.length) {
                             var lonlat = this.map.getLonLatFromPixel(e.xy);
-                            var feature = this.selectBestFeature(result.features,
-                                lonlat);
+                            var feature = this.selectBestFeature(
+                                result.features,
+                                lonlat
+                            );
                             this.events.triggerEvent("featureselected",
                                 {feature: feature, event: e});
                         }
@@ -78,7 +80,7 @@ cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
             clickPosition.lat);
         var feature, resultFeature, dist;
         var minDist = Number.MAX_VALUE;
-        for(var i=0; i<features.length; ++i) {
+        for(var i=0; i<features.length; i++) {
             feature = features[i];
             if(feature.bounds) {
                 var ll = feature.bounds.getCenterLonLat();

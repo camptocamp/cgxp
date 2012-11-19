@@ -76,13 +76,13 @@ cgxp.api.Map.prototype = {
     vectorLayer: null,
 
     /** private: property[deferedCalls]
-     *  List of calls to method defered while (viewer's) map is not ready yet.
+     *  List of methods called while (viewer's) map is not ready yet.
      *  Those methods are supposed to be called again after the viewer is ready.
      */
     deferedCalls: null,
 
     /** api: method[initMap]
-     *  Is intended to be overriden in inherited classes.
+     *  Is intended to be overriden in inheriting classes.
      *  :arg config:  ``Object``
      */
     initMap: function() { },
