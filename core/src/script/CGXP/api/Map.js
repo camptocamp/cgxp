@@ -106,6 +106,11 @@ cgxp.api.Map.prototype = {
         if (!this.userConfig.addMiniMap && overview) {
             OpenLayers.Util.removeItem(config.controls, overview);
         }
+        var mousePos = getBy(config.controls, "CLASS_NAME",
+            'OpenLayers.Control.MousePosition')[0];
+        if (!this.userConfig.showCoords && mousePos) {
+            OpenLayers.Util.removeItem(config.controls, mousePos);
+        }
     },
 
     /** api: method[adaptConfigForViewer]
