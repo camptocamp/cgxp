@@ -276,6 +276,11 @@ cgxp.api.Map.prototype = {
      *  :arg zoom ``Number``
      */
     recenter: function(center, zoom) {
+        if (!this.map) {
+            this.deferedCalls.push(
+                OpenLayers.Function.bind(this.recenter, this, center, zoom));
+            return;
+        }
         this.map.setCenter(new OpenLayers.LonLat(center[0], center[1]), zoom);
     },
 
@@ -286,6 +291,11 @@ cgxp.api.Map.prototype = {
      *      Defaults to false.
      */
     recenterOnObjects: function(layer, ids, highlight) {
+        if (!this.map) {
+            this.deferedCalls.push(
+                OpenLayers.Function.bind(this.recenterOnObjects, this, layer, ids, highlight));
+            return;
+        }
         highlight = !!highlight;
         var protocol = new OpenLayers.Protocol.Script({
             url: this.wmsURL,
@@ -479,6 +489,12 @@ cgxp.api.Map.prototype = {
      *      properties (ie. strokeColor, strokeWidth, strokeOpacity)
      */
     addCustomLayer: function (layerType, layerName, layerUrl, options) {
+        if (!this.map) {
+            this.deferedCalls.push(
+                OpenLayers.Function.bind(this.addCustomLayer, this,
+                    layerType, layerName, layerUrl, options));
+            return;
+        }
         options = options || {};
 
         if (layerType=="gpx") {
