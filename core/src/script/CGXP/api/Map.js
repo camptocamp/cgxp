@@ -28,6 +28,7 @@
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
  * @include OpenLayers/Format/GML.js
+ * @include OpenLayers/Popup/FramedCloud.js
  */
 
 if (!window.cgxp) {
