@@ -56,6 +56,11 @@ cgxp.api.Map.prototype = {
      */
     wmsURL: null,
 
+    /** private: property[queryableLayers]
+     *  The list of layers (names) declared as queryable.
+     */
+    queryableLayers: null,
+
     /** private: property[userConfig]
      *  The config as set by the end user.
      */
@@ -318,7 +323,9 @@ cgxp.api.Map.prototype = {
      *
      */
     createQueryControl: function() {
-        var map = this.map;
+        var map = this.map,
+            queryableLayers = this.queryableLayers || [];
+
         var protocol = new OpenLayers.Protocol.Script({
             url: this.wmsURL,
             format: new OpenLayers.Format.WMSGetFeatureInfo(),
@@ -330,7 +337,11 @@ cgxp.api.Map.prototype = {
                     if (layer instanceof OpenLayers.Layer.WMS &&
                         layer.getVisibility() &&
                         layer.params.LAYERS != null) {
-                        layerNames = layerNames.concat(layer.params.LAYERS);
+                        for (var j = 0; j < queryableLayers.length; j++) {
+                            if (layer.params.LAYERS.indexOf(queryableLayers[j]) != -1){
+                                layerNames.push(queryableLayers[j]);
+                            }
+                        }
                     }
                 }
 
