@@ -270,6 +270,52 @@ cgxp.api.Map.prototype = {
         this.map.setCenter(new OpenLayers.LonLat(center[0], center[1]), zoom);
     },
 
+    /** api: method[recenterOnObjects]
+     *  :arg layer ``String`` The layer name
+     *  :arg ids ``Array(String)`` The ids of the feature to recenter on.
+     *  :arg highlight ``Boolean`` Tells whether to hilight the features or not.
+     *      Defaults to false.
+     */
+    recenterOnObjects: function(layer, ids, highlight) {
+        highlight = !!highlight;
+        var protocol = new OpenLayers.Protocol.Script({
+            url: this.wmsURL,
+            format: new OpenLayers.Format.GML()
+        });
+
+        var featureIds = [];
+        for (var i = 0; i < ids.length; i++) {
+            featureIds.push(layer + '.' + ids[i]);
+        }
+        var params = {
+            service: 'WFS',
+            request: 'getfeature',
+            version: '1.0.0',
+            typename: layer,
+            featureid: featureIds.join(','),
+            maxFeatures: ids.length
+        };
+        var response = protocol.read({
+            params: params,
+            callback: function(result) {
+                if(result.success()) {
+                    if(result.features.length) {
+                        var bounds = new OpenLayers.Bounds();
+                        for (var i = 0; i < result.features.length; i++) {
+                            bounds.extend(result.features[i].geometry.getBounds());
+                            if (highlight) {
+                                this.getVectorLayer().addFeatures(
+                                    [result.features[i]]);
+                            }
+                        }
+                        this.map.zoomToExtent(bounds);
+                    }
+                }
+            },
+            scope: this
+        });
+    },
+
     /** api: method[addMarker]
      *  :arg options ``Object`` List of marker options
      */
