@@ -93,12 +93,12 @@ cgxp.api.Map.prototype = {
         }
         var switcher = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.LayerSwitcher')[0];
-        if (!this.userConfig.layerSwitcher && switcher) {
+        if (!this.userConfig.addLayerSwitcher && switcher) {
             OpenLayers.Util.removeItem(config.controls, switcher);
         }
         var overview = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.OverviewMap')[0];
-        if (!this.userConfig.overview && overview) {
+        if (!this.userConfig.addMiniMap && overview) {
             OpenLayers.Util.removeItem(config.controls, overview);
         }
     },
@@ -184,7 +184,7 @@ cgxp.api.Map.prototype = {
 
         var overview = this.map
             .getControlsByClass("OpenLayers.Control.OverviewMap")[0];
-        if (config.overviewExpanded) {
+        if (config.miniMapExpanded) {
             overview && overview.maximizeControl();
         }
 
