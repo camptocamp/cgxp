@@ -24,11 +24,15 @@
  * @include OpenLayers/Renderer/SVG.js
  * @include OpenLayers/Renderer/VML.js
  * @include OpenLayers/Layer/Vector.js
+ * @include OpenLayers/Protocol/HTTP.js
  * @include OpenLayers/Protocol/Script.js
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
  * @include OpenLayers/Format/GML.js
+ * @include OpenLayers/Format/GPX.js
+ * @include OpenLayers/Format/Text.js
  * @include OpenLayers/Popup/FramedCloud.js
+ * @include OpenLayers/Control/SelectFeature.js
  */
 
 if (!window.cgxp) {
@@ -464,5 +468,106 @@ cgxp.api.Map.prototype = {
             null // on close
         );
         this.map.addPopup(popup);
+    },
+
+    /** api: ethod: addLayer
+     *  arg: layerType ``String`` A text description of the layer format
+     *      (either "text" or "gpx")
+     *  arg: layerName ``String`` A text description for the layer
+     *  arg: layerUrl ``String`` The url the file to load
+     *  arg: options ``Object`` Optional (only if layerType="gpx") styling
+     *      properties (ie. strokeColor, strokeWidth, strokeOpacity)
+     */
+    addCustomLayer: function (layerType, layerName, layerUrl, options) {
+        options = options || {};
+
+        if (layerType=="gpx") {
+            var protocol = new OpenLayers.Protocol.HTTP({
+                url: layerUrl,
+                format: new OpenLayers.Format.GPX({
+                    externalProjection: new OpenLayers.Projection("EPSG:4326"),
+                    internalProjection: this.map.getProjection()
+                })
+            });
+            protocol.read({
+                callback: function(result) {
+                    if(result.success()) {
+                        var features = result.features;
+                        if(features.length) {
+                            for (var i = 0; i < features.length; i++) {
+                                features[i].style = OpenLayers.Util.applyDefaults({
+                                    strokeColor: options.strokeColor || 'red',
+                                    strokeWidth: options.strokeWidth || 3,
+                                    strokeOpacity: options.strokeOpacity || 0.8
+                                }, OpenLayers.Feature.Vector.style['default']);
+                            }
+                            this.getVectorLayer().addFeatures(features);
+                            this.map.zoomToExtent(
+                                this.getVectorLayer().getDataExtent());
+                        }
+                    }
+                },
+                scope: this
+            });
+        } else if (layerType=="text") {
+            var protocol = new OpenLayers.Protocol.HTTP({
+                url: layerUrl,
+                format: new OpenLayers.Format.Text()
+            });
+            protocol.read({
+                callback: function(result) {
+                    if(result.success()) {
+                        var features = result.features;
+                        this.getVectorLayer().addFeatures(features);
+                        this.map.zoomToExtent(
+                            this.getVectorLayer().getDataExtent());
+                    }
+                },
+                scope: this
+            });
+            var control = new OpenLayers.Control.SelectFeature(this.getVectorLayer());
+
+            this.map.addControl(control);
+            control.activate();
+
+            var popup;
+            function onPopupClose(evt) {
+                control.unselectAll();
+            }
+            function onFeatureSelect(evt) {
+                var feature = evt.feature;
+                if (feature.attributes.title && feature.attributes.description) {
+                    popup = new OpenLayers.Popup.FramedCloud(
+                        "featurePopup",
+                        feature.geometry.getBounds().getCenterLonLat(),
+                        new OpenLayers.Size(200,120),
+                        "<b>"+feature.attributes.title + "</b><br />" +
+                            feature.attributes.description,
+                        null,
+                        true,
+                        onPopupClose
+                    );
+                    this.map.addPopup(popup);
+                }
+            }
+            function onFeatureUnselect(evt) {
+                if (popup) {
+                    popup.destroy();
+                    popup = null;
+                }
+            }
+            this.getVectorLayer().events.on({
+                'featureselected': OpenLayers.Function.bind(onFeatureSelect, this),
+                'featureunselected': OpenLayers.Function.bind(onFeatureUnselect, this),
+                'featuresadded': function(obj) {
+                    for (var i=0;i<obj.features.length;i++) {
+                        var feature = obj.features[i];
+                        feature.style.cursor = 'pointer';
+                    }
+                    this.getVectorLayer().redraw();
+                },
+                scope: this
+            });
+        }
     }
 };
