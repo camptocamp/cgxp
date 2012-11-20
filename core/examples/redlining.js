@@ -12,6 +12,9 @@ Ext.onReady(function() {
             items: ["mymap"]
         },
         tools: [{
+            ptype: "cgxp_menushortcut",
+            type: "->"
+        },{
             ptype: "cgxp_redlining",
             toggleGroup: 'maptools'
         }],
