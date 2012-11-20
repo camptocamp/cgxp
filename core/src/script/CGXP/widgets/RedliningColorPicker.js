@@ -19,6 +19,8 @@
  * @requires FeatureEditing/ux/widgets/form/FeaturePanel.js
  * @include CGXP/plugins/Redlining.js
  * @include CGXP/widgets/Ext.ux.ColorField.js
+ * @include Ext/examples/ux/Spinner.js
+ * @include Ext/examples/ux/SpinnerField.js
  */
 
 // some more redlining patch
@@ -44,6 +46,29 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
         defaults: this.defaults,
         defaultType: this.defaultType
     };  
+
+    if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Point" ) {
+        if (!feature.isLabel) {
+            oGroupItems.push({
+                xtype: 'spinnerfield',
+                name: 'pointRadius',
+                fieldLabel: OpenLayers.i18n('Graphic size'),
+                value: feature.style.pointRadius || 10,
+                width: 40,
+                minValue: 6,
+                maxValue: 20,
+                listeners: {
+                    spin: function(spinner) {
+                        feature.style = OpenLayers.Util.extend(feature.style,  {
+                            pointRadius: spinner.field.getValue()
+                        });
+                        feature.layer.drawFeature(feature);
+                    },
+                    scope: this
+                }
+            });
+        }
+    }
 
     if (feature.isLabel) {
         oGroupItems.push({
