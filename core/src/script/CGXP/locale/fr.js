@@ -185,6 +185,14 @@ GeoExt.Lang.add("fr", {
     "cgxp.FloorSlider.prototype": {
         skyText: "Ciel",
         floorText: "Étages"
+    },
+
+    "GeoExt.ux.form.FeaturePanel.prototype": {
+        pointRadiusFieldText: "Taille ",
+        colorFieldText: "Couleur ",
+        strokeWidthFieldText: "Epaisseur du trait ",
+        labelFieldText: "Étiquette ",
+        fontSizeFieldText: "Taille "
     }
 });
 

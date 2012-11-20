@@ -22,6 +22,11 @@
  * @include Ext/examples/ux/Spinner.js
  * @include Ext/examples/ux/SpinnerField.js
  */
+GeoExt.ux.form.FeaturePanel.prototype.pointRadiusFieldText = "Point size";
+GeoExt.ux.form.FeaturePanel.prototype.labelFieldText = "Label";
+GeoExt.ux.form.FeaturePanel.prototype.colorFieldText = "Color";
+GeoExt.ux.form.FeaturePanel.prototype.strokeWidthFieldText = "Stroke width";
+GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Font size";
 
 // some more redlining patch
 GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
@@ -32,10 +37,10 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
         return;
     } else {
         feature = this.features[0];
-    }   
-    oItems = []; 
-    oGroupItems = []; 
-    oGroup = { 
+    }
+    oItems = [];
+    oGroupItems = [];
+    oGroup = {
         id: this.attributeFieldSetId,
         xtype: 'fieldset',
         title: OpenLayers.i18n('Attributes'),
@@ -45,7 +50,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
         autoWidth: this.autoWidth,
         defaults: this.defaults,
         defaultType: this.defaultType
-    };  
+    };
 
     if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Point" ) {
         if (!feature.isLabel) {
@@ -53,7 +58,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             oGroupItems.push({
                 xtype: 'spinnerfield',
                 name: 'pointRadius',
-                fieldLabel: OpenLayers.i18n('Graphic size'),
+                fieldLabel: this.pointRadiusFieldText,
                 value: feature.style.pointRadius || 10,
                 width: 40,
                 minValue: 6,
@@ -74,7 +79,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
     if (feature.isLabel) {
         oGroupItems.push({
             name: 'name',
-            fieldLabel: OpenLayers.i18n('name'),
+            fieldLabel: this.labelFieldText,
             id: 'name',
             value: feature.attributes['name']
         });
@@ -84,7 +89,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
     var colorpicker = new Ext.ux.ColorField({
         value: feature.style[(feature.isLabel ? 'fontColor' : 'fillColor')] ||
             '#ff0000',
-        fieldLabel: OpenLayers.i18n('color'),
+        fieldLabel: this.colorFieldText,
         width: 100
     });
     colorpicker.on('select', function(cm, color) {
@@ -104,7 +109,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
     oGroupItems.push({
         xtype: 'spinnerfield',
         name: 'stroke',
-        fieldLabel: OpenLayers.i18n('mymaps.' + attribute),
+        fieldLabel: this[attribute + 'FieldText'],
         value: feature.style[attribute] || ((feature.isLabel) ? 12 : 1),
         width: 40,
         minValue: feature.isLabel ? 10 : 1,
