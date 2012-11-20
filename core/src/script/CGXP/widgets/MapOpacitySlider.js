@@ -34,13 +34,13 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
 
     /** api: config[orthoRef]
      *  ``String``
-     *  Referance of the ortho layer.
+     *  Reference of the ortho layer.
      */
     orthoRef: 'ortho',
 
     /** api: config[defaultBaseLayerRef]
      *  ``String``
-     *  Referance of the default base layer.
+     *  Reference of the default base layer.
      */
     defaultBaseLayerRef: 'plan',
 
