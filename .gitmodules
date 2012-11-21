@@ -10,3 +10,6 @@
 [submodule "styler"]
 	path = styler
 	url = https://github.com/georchestra/styler.git
+[submodule "URLCompressed"]
+	path = URLCompressed
+	url = git@github.com:sbrunner/OpenLayers-URLCompressed.git
