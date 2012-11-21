@@ -529,7 +529,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 scrollOffset: 2 // the grid will never have scrollbars
             },
             modifyControlOptions: {
-                vertexRenderIntent: 'vertices'
+                vertexRenderIntent: 'vertices',
+                mode: OpenLayers.Control.ModifyFeature.RESHAPE |
+                      OpenLayers.Control.ModifyFeature.DRAG
             },
             listeners: {
                 done: function(panel, e) {
