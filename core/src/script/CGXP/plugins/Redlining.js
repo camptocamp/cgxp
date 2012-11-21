@@ -46,6 +46,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_redligning',
  *              actionTarget: 'center.tbar',
  *              toggleGroup: 'maptools',
+ *              stateId: 'rl', // to save the drawing in the permalink
  *              layerManagerUrl: "${request.static_url('<package>:static/lib/cgxp/sandbox/LayerManager/ux/')}"
  *          }]
  *          ...
