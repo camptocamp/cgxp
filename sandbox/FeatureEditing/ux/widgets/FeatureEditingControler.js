@@ -365,8 +365,17 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     initFeatureControl: function(layer) {
         var control, actionOptions;
 
-        control = new OpenLayers.Control.ModifyFeature(
-                layer, this.selectControlOptions);
+        var options = OpenLayers.Util.applyDefaults({
+            selectFeature: function(feature) {
+                var MF = OpenLayers.Control.ModifyFeature;
+                this.mode = MF.RESHAPE | MF.DRAG;
+                if (feature.isCircle){
+                    this.mode = MF.RESIZE | MF.DRAG;
+                }
+                MF.prototype.selectFeature.apply(this, arguments);
+            }
+        }, this.selectControlOptions);
+        control = new OpenLayers.Control.ModifyFeature(layer, options);
 
         this.featureControl = control;
 
@@ -479,6 +488,13 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             if (geometryType == OpenLayers.i18n("Label")) {
                 control.events.on({
                     "featureadded": this.onLabelAdded,
+                    scope: this
+                });
+            }
+
+            if (geometryType == OpenLayers.i18n("Circle")) {
+                control.events.on({
+                    "featureadded": this.onCircleAdded,
                     scope: this
                 });
             }
@@ -660,6 +676,16 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     onLabelAdded: function(event) {
         var feature = event.feature;
         feature.isLabel = true;
+    },
+
+    /** private: method[onCircleAdded]
+     *  :param event: ``event``
+     *  Called when a new circle feature is added to the activeLayer.  Set a flag
+     *  to let the controler know it's a circle.
+     */
+    onCircleAdded: function(event) {
+        var feature = event.feature;
+        feature.isCircle = true;
     },
 
     /** private: method[onFeatureAdded]
