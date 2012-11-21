@@ -207,7 +207,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             reader: new cgxp.data.FeatureReader({
                 format: new OpenLayers.Format.GeoJSON()
             }, ['label', 'layer_name']),
-            sortInfo: {field: 'layer_name', direction: 'ASC'}
+            sortInfo: this.grouping ? {field: 'layer_name', direction: 'ASC'} : null
         });
 
         store.on('beforeload', function(store, options) {
