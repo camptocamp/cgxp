@@ -104,28 +104,31 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
 
     oGroupItems.push(colorpicker);
 
-    // font size or stroke width
-    var attribute = feature.isLabel ? 'fontSize' : 'strokeWidth';
-    oGroupItems.push({
-        xtype: 'spinnerfield',
-        name: 'stroke',
-        fieldLabel: this[attribute + 'FieldText'],
-        value: feature.style[attribute] || ((feature.isLabel) ? 12 : 1),
-        width: 40,
-        minValue: feature.isLabel ? 10 : 1,
-        maxValue: feature.isLabel ? 20 : 10,
-        listeners: {
-            spin: function(spinner) {
-                var f = feature;
-                var style = {};
-                style[attribute] = spinner.field.getValue() +
-                    (f.isLabel ? 'px' : '');
-                f.style = OpenLayers.Util.extend(f.style, style);
-                f.layer.drawFeature(f);
-            },
-            scope: this
-        }
-    });
+    if (feature.geometry.CLASS_NAME !== "OpenLayers.Geometry.Point" ||
+        feature.isLabel) {
+        // font size or stroke width
+        var attribute = feature.isLabel ? 'fontSize' : 'strokeWidth';
+        oGroupItems.push({
+            xtype: 'spinnerfield',
+            name: 'stroke',
+            fieldLabel: this[attribute + 'FieldText'],
+            value: feature.style[attribute] || ((feature.isLabel) ? 12 : 1),
+            width: 40,
+            minValue: feature.isLabel ? 10 : 1,
+            maxValue: feature.isLabel ? 20 : 10,
+            listeners: {
+                spin: function(spinner) {
+                    var f = feature;
+                    var style = {};
+                    style[attribute] = spinner.field.getValue() +
+                        (f.isLabel ? 'px' : '');
+                    f.style = OpenLayers.Util.extend(f.style, style);
+                    f.layer.drawFeature(f);
+                },
+                scope: this
+            }
+        });
+    }
 
     oGroup.items = oGroupItems;
 
