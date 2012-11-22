@@ -63,6 +63,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     windowTitle: "Permalink",
     openlinkText: "Open Link",
     closeText: "Close",
+    incompatibleWithIeText: "Carful: This URL is too long for Microsoft Internet Explorer!",
 
     /** api: method[addActions]
      */
@@ -77,17 +78,31 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                 'focus': function() {
                     this.selectText();
                 }
-            }
+            },
+            layout: 'fit',
+            width: '97%'
+        });
+
+        var warningLabel = new Ext.Panel({
+            html: this.incompatibleWithIeText,
+            hidden: true,
+            layout: 'fit',
+            unstyled: true
         });
 
         var permalinkWindow = new Ext.Window({
-            layout: 'fit',
+            layout: 'form',
             renderTo: Ext.getBody(),
             width: 400,
             closeAction: 'hide',
             plain: true,
             title: this.windowTitle,
-            items: permalinkTextField,
+            resizable: false,
+            cls: 'permalink',
+            items: [
+                permalinkTextField,
+                warningLabel
+            ],
             buttons: [{
                 text: this.openlinkText,
                 handler: function() {
@@ -118,6 +133,17 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                 }
                 link = provider.getLink(base);
                 permalinkTextField.setValue(link);
+
+                var splittedURL = link.split(/\/+/g);
+                var path = "/" + splittedURL[splittedURL.length - 1];
+                // IE limits, see: http://support.microsoft.com/kb/208427
+                if (link.length > 2083 || path.length > 2048) {
+                    warningLabel.show();
+                }
+                else {
+                    warningLabel.hide();
+                }
+                permalinkWindow.doLayout();
             }
         });
 
