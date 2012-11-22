@@ -1,4 +1,4 @@
-This file includes migration steps for each release of cgxp.
+This file includes migration steps for each release of CGXP.
 
 Version 1.2
 ===========

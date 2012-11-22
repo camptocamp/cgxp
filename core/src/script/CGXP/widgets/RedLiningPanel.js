@@ -61,7 +61,7 @@ cgxp.RedLiningPanel = Ext.extend(
                 'fillColor': true,
                 'strokeColor': true,
                 'fontColor': true,
-                'graphic': function(val) { return val == 'true' },
+                'graphic': function(val) { return val == 'true'; },
                 'label': true
             },
             line: {
@@ -82,7 +82,7 @@ cgxp.RedLiningPanel = Ext.extend(
         cgxp.RedLiningPanel.superclass.initComponent.apply(this, arguments);
         this.addEvents(
             /** private: event[featuresadded]
-             *  Throws new object is drawed.
+             *  Thrown new object is drawed.
              */
             'featuresadded',
 
