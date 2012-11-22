@@ -49,12 +49,20 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
  */
 
 /** api: constructor
  *  .. class:: Profile(config)
  *
  *  This plugin provides an "Profile" button.
+ *
+ *  This plugin is based on the dygraph lib. This lib requires the following
+ *  ``meta`` tag for IE::
+ *
+ *      <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+ *
+ *  See http://dygraphs.com/.
  */
 cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
 
