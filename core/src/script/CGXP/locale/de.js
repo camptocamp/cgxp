@@ -175,6 +175,14 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.QueryBuilder.prototype": {
         layerText: "Layer"
+    },
+
+    "GeoExt.ux.form.FeaturePanel.prototype": {
+        pointRadiusFieldText: "Grösse",
+        colorFieldText: "Farbe",
+        strokeWidthFieldText: "Breite",
+        labelFieldText: "Text",
+        fontSizeFieldText: "Grösse"
     }
 });
 

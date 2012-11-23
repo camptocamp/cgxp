@@ -24,6 +24,8 @@
         "widgets/tree/TreeNodeComponent.js",
         "widgets/tree/TreeNodeLoading.js",
         "widgets/tree/TreeNodeTriStateUI.js",
+        "widgets/tool/Button.js",
+        "widgets/tool/Window.js",
 
         "plugins/AddKMLFile.js",
         "plugins/ContextualData.js",
