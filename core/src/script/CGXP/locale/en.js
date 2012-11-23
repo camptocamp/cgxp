@@ -186,6 +186,14 @@ GeoExt.Lang.add("en", {
     "cgxp.FloorSlider.prototype": {
         skyText: "Sky",
         floorText: "Floor"
+    },
+
+    "GeoExt.ux.form.FeaturePanel.prototype": {
+        pointRadiusFieldText: "Size",
+        colorFieldText: "Color",
+        strokeWidthFieldText: "Stroke width",
+        labelFieldText: "Label",
+        fontSizeFieldText: "Size"
     }
 });
 
