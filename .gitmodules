@@ -13,3 +13,6 @@
 [submodule "URLCompressed"]
 	path = URLCompressed
 	url = https://github.com/sbrunner/OpenLayers-URLCompressed.git
+[submodule "openlayers.addins/URLCompressed"]
+	path = openlayers.addins/URLCompressed
+	url = https://github.com/sbrunner/OpenLayers-URLCompressed.git
