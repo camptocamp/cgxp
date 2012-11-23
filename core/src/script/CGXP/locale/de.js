@@ -178,11 +178,11 @@ GeoExt.Lang.add("de", {
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {
-        pointRadiusFieldText: "Grösse ",
-        colorFieldText: "Farbe ",
-        strokeWidthFieldText: "Breite ",
-        labelFieldText: "Text ",
-        fontSizeFieldText: "Grösse "
+        pointRadiusFieldText: "Grösse",
+        colorFieldText: "Farbe",
+        strokeWidthFieldText: "Breite",
+        labelFieldText: "Text",
+        fontSizeFieldText: "Grösse"
     }
 });
 

@@ -188,11 +188,11 @@ GeoExt.Lang.add("fr", {
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {
-        pointRadiusFieldText: "Taille ",
-        colorFieldText: "Couleur ",
-        strokeWidthFieldText: "Epaisseur du trait ",
-        labelFieldText: "Étiquette ",
-        fontSizeFieldText: "Taille "
+        pointRadiusFieldText: "Taille",
+        colorFieldText: "Couleur",
+        strokeWidthFieldText: "Epaisseur du trait",
+        labelFieldText: "Étiquette",
+        fontSizeFieldText: "Taille"
     }
 });
 
