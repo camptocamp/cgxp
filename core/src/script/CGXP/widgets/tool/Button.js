@@ -37,9 +37,18 @@ Ext.extend(cgxp.tool.Button, Ext.Button, {
         this.on('toggle', function(button) {
             if (button.pressed) {
                 this.window.show();
-                // we suppose the button is in a toolbar
-                var toolbar = this.ownerCt;
-                this.window.anchorTo(toolbar.getEl(), 'tr-br');
+                // by default we suppose the button is in a toolbar
+                var anchoring = {
+                    enabled: true,
+                    element: this.ownerCt.getEl(),
+                    position: 'tr-br'
+                };
+                if (this.window.anchoring) {
+                    Ext.apply(anchoring, this.window.anchoring)
+                }
+                if (anchoring.enabled) {
+                    this.window.anchorTo(anchoring.element, anchoring.position);
+                }
             } else {
                 this.window.hide();
             }
