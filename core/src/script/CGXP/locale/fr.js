@@ -3,6 +3,10 @@
  */
 
 GeoExt.Lang.add("fr", {
+    "Ext.layout.FormLayout.prototype": {
+        labelSeparator: "&nbsp;:"
+    },
+
     "cgxp.plugins.Measure.prototype": {
         pointMenuText: "Point",
         pointTooltip: "Mesure de point",
