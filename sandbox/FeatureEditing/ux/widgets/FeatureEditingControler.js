@@ -443,7 +443,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                 case OpenLayers.i18n("Circle"):
                     handler = OpenLayers.Handler.RegularPolygon;
                     options.handlerOptions = {
-                        sides: 64,
+                        sides: 32,
                         irregular: false
                     };
                     iconCls = "gx-featureediting-draw-circle";

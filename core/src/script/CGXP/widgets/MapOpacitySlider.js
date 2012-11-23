@@ -78,7 +78,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      * {Ext.Toolbar} The toolbar.
      */
     initComponent: function() {
-        GeoExt.MapPanel.superclass.initComponent.call(this);
+        cgxp.MapOpacitySlider.superclass.initComponent.call(this);
         this.addEvents(
             /** private: event[opacitychange]
              * Throws when the opacity change.
