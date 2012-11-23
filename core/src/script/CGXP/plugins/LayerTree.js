@@ -106,17 +106,17 @@ Ext.namespace("cgxp.plugins");
  *          {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
+ *              themes: THEMES,,
+ *              // default themes works only with theme groups
+ *              defaultThemes: ["default_theme_to_load"],
+ *              wmsURL: "${request.route_url('mapserverproxy', path='')}",
+ *              outputTarget: "layerpanel"
  *              outputConfig: {
  *                  header: false,
  *                  flex: 1,
  *                  layout: "fit",
- *                  autoScroll: true,
- *                  themes: THEMES,
- *                  // default themes works only with theme groups
- *                  defaultThemes: ["default_theme_to_load"],
- *                  wmsURL: "${request.route_url('mapserverproxy', path='')}"
- *              },
- *              outputTarget: "layerpanel"
+ *                  autoScroll: true
+ *              }
  *          }, 
  *          ...
  *          ]
@@ -135,17 +135,35 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[themes]
      *  ``Object``
-     *  List of internal and external themes and layers.
+     *  List of internal and external themes. Mandatory.
      */
     themes: null,
 
+    /** api: config[wmsURL]
+     *  ``String``
+     *  The URL of the WMS. Mandatory.
+     */
+    wmsURL: null,
+
+    /** api: config[defaultThemes]
+     *  ``Array(String)``
+     *  The themes to load at init time. Optional.
+     */
+    defaultThemes: null,
+
+    /** private: property[tree]
+     */
     tree: null,
 
+    /** private: method[init]
+     */
     init: function() {
         cgxp.plugins.LayerTree.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
     },
 
+    /** private: method[viewerReady]
+     */
     viewerReady: function() {
         this.tree.delayedApplyState();
         this.tree.loadDefaultThemes();
@@ -158,7 +176,10 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
         config = Ext.apply({
             xtype: "cgxp_layertree",
-            mapPanel: this.target.mapPanel
+            mapPanel: this.target.mapPanel,
+            themes: this.themes,
+            wmsURL: this.wmsURL,
+            defaultThemes: this.defaultThemes
         }, config || {});
         
         this.tree = cgxp.plugins.LayerTree.superclass.addOutput.call(this, config);
