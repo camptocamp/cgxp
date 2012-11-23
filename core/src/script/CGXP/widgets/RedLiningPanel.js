@@ -45,7 +45,7 @@ cgxp.RedLiningPanel = Ext.extend(
      */
     stateEvents: ['featuresadded', 'featuremodified', 'featuresremoved'],
 
-    /** private: attrivute[urlCompressed]
+    /** private: property[urlCompressed]
      *  The used format to create geom in permalink
      */
     urlCompressed: new OpenLayers.Format.URLCompressed({
@@ -82,17 +82,17 @@ cgxp.RedLiningPanel = Ext.extend(
         cgxp.RedLiningPanel.superclass.initComponent.apply(this, arguments);
         this.addEvents(
             /** private: event[featuresadded]
-             *  Thrown new object is drawed.
+             *  Thrown when a new object is drawn.
              */
             'featuresadded',
 
             /** private: event[featuremodified]
-             *  Throws when some objects are modified.
+             *  Thrown when an object is modified.
              */
             'featuremodified',
 
             /** private: event[featuresremoved]
-             *  Throws when some objects are removed.
+             *  Thrown when objects are removed.
              */
             'featuresremoved'
         );
