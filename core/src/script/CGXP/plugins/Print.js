@@ -133,6 +133,14 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         useNativeAngle: true
     },
 
+    /** api: config[actionTarget]
+     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
+     *  (e.g. buttons or menus)?
+     *  As opposite to CGXP.plugins.Tool, we don't want it to be set by default
+     *  to the mapPanel top toolbar.
+     */
+    actionTarget: null,
+
     printTitle: "Printing",
     titlefieldText: "Title",
     titlefieldvalueText: "Map title",
@@ -143,6 +151,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     scalefieldText: "Scale",
     rotationfieldText: "Rotation",
     printbuttonText: "Print",
+    printbuttonTooltip: "Print",
     exportpngbuttonText: "Export in PNG",
     waitingText: "Printing...",
     downloadText: 'Download',
@@ -155,7 +164,94 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
+        var printPanel = this.createPrintPanel({
+            title: this.printTitle,
+            bodyStyle: {
+                'padding': '10px'
+            },
+            style: {
+                'border-color': '#D0D0D0',
+                'border-style': 'none solid solid',
+                'border-width': '0 1px 1px'
+            }
+        });
 
+        // the print panel auto-shows the print extent when
+        // the capabilities are loaded. We work around that
+        // by listening to loadcapabilities and hiding the
+        // extent when the capabilities are loaded.
+        printPanel.printProvider.on({
+            'loadcapabilities': function() {
+                printPanel.hideExtent();
+            }
+        });
+
+        this.printPanel = cgxp.plugins.Print.superclass.addOutput.call(this, printPanel);
+
+        Ext.getCmp(this.outputTarget).on('expand', function() {
+            printPanel.printExtent.fitPage();
+        }, this);
+
+        return this.printPanel;
+    },
+
+    /** api: method[addActions]
+     */
+    addActions: function() {
+        var button;
+
+        if (this.actionTarget) {
+            var printWin = new cgxp.tool.Window({
+                width: 250,
+                bodyStyle: 'padding: 5px',
+                title: this.printwindowTitle,
+                border: false,
+                layout: 'fit',
+                autoHeight: false,
+                height: 350,
+                closeAction: 'hide',
+                autoScroll: true,
+                cls: 'toolwindow'
+            });
+
+            printWin.on({
+                'show': function() {
+                    var printPanel = this.createPrintPanel({
+                        header: false,
+                        unstyled: true
+                    });
+                    printWin.add(printPanel);
+                    printPanel.printProvider.on({
+                        'loadcapabilities': function() {
+                            printWin.doLayout();
+                            printPanel.printExtent.fitPage();
+                        }
+                    });
+                },
+                'beforehide': function() {
+                    printWin.removeAll();
+                },
+                scope: this
+            });
+
+            button = new cgxp.tool.Button(Ext.apply({
+                text: this.printbuttonText,
+                tooltip: this.printbuttonTooltip,
+                enableToggle: true,
+                toggleGroup: this.toggleGroup,
+                window: printWin
+            }, this.actionConfig));
+        }
+
+        return cgxp.plugins.Print.superclass.addActions.apply(this, [button]);
+    },
+
+    /** private: method[createPrintPanel]
+     *  Creates the print panel
+     *  :arg panelOptions: ``Object`` Additional specific options to create the
+     *      panel.
+     */
+    createPrintPanel: function(panelOptions) {
         this.includeLegend = this.checkLegend && !!this.legendPanelId;
 
         // create a print provider
@@ -326,17 +422,18 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             record.set('label', OpenLayers.i18n(record.get('name')));
         };
 
+        var printPanel;
         printProvider.on('loadcapabilities', function(printProvider, capabilities) {
             // if png is supported, add a button into the print panel
             if (Ext.pluck(capabilities.outputFormats, 'name').indexOf('png') != -1) {
-                if (this.printPanel) {
-                    this.printPanel.addButton({
+                if (printPanel) {
+                    printPanel.addButton({
                         text: this.exportpngbuttonText
                     }, function() {
                         printProvider.customParams.outputFormat = 'png';
                         this.printExtent.print(this.printOptions);
                         delete printProvider.customParams.outputFormat;
-                    }, this.printPanel);
+                    }, printPanel);
                 }
             }
 
@@ -399,32 +496,27 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             },
             border: false,
             width: '100%',
-            bodyStyle: {
-                'padding': '10px'
-            },
-            style: {
-                'border-color': '#D0D0D0',
-                'border-style': 'none solid solid',
-                'border-width': '0 1px 1px'
-            },
             layoutConfig: {
                 labelSeparator: ''
             },
             printProvider: printProvider,
-            title: this.printTitle,
             items: [{
                 xtype: 'textfield',
                 name: 'title',
                 fieldLabel: this.titlefieldText,
                 emptyText: this.titlefieldvalueText,
-                plugins: new GeoExt.plugins.PrintProviderField(),
+                plugins: new GeoExt.plugins.PrintProviderField({
+                    printProvider: printProvider
+                }),
                 autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
             }, {
                 xtype: 'textarea',
                 name: 'comment',
                 fieldLabel: this.commentfieldText,
                 emptyText: this.commentfieldvalueText,
-                plugins: new GeoExt.plugins.PrintProviderField(),
+                plugins: new GeoExt.plugins.PrintProviderField({
+                    printProvider: printProvider
+                }),
                 autoCreate: {tag: "textarea", maxLength: "100"}
             }, {
                 xtype: 'checkbox',
@@ -451,6 +543,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             layoutText: this.layoutText,
             creatingPdfText: this.waitingText
         }, this.options);
+
+
+        Ext.apply(options, panelOptions);
+
         printPanel = new GeoExt.ux.SimplePrint(options);
 
         printProvider.on('printexception', function(printProvider, response) {
@@ -458,26 +554,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             Ext.Msg.alert(this.failureTitle, this.failureText);
         });
 
-        // the print panel auto-shows the print extent when
-        // the capabilities are loaded. We work around that
-        // by listening to loadcapabilities and hiding the
-        // extent when the capabilities are loaded.
-        printProvider.on({
-            'loadcapabilities': function() {
-                printPanel.hideExtent();
-            }
-        });
         printProvider.loadCapabilities();
 
-        this.printPanel = cgxp.plugins.Print.superclass.addOutput.call(this, printPanel);
-
-        Ext.getCmp(this.outputTarget).on('expand', function() {
-            printPanel.printExtent.fitPage();
-        }, this);
-
-        return this.printPanel;
+        return printPanel;
     }
-
 });
 
 Ext.preg(cgxp.plugins.Print.prototype.ptype, cgxp.plugins.Print);

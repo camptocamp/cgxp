@@ -46,10 +46,14 @@
         "plugins/Measure.js",
         "plugins/MenuShortcut.js",
         "plugins/Permalink.js",
+        // <print dependencies>
+        "../../../../geoext.ux/ux/SimplePrint/lib/loader.js",
+        // </print dependencies>
         "plugins/Print.js",
         "plugins/Profile.js",
         "plugins/QueryBuilder.js",
         // <redlining dependencies>
+        "../../../../sandbox/FeatureEditing/ux/widgets/form/FeaturePanel.js",
         "../../../../sandbox/FeatureEditing/ux/widgets/FeatureEditingControler.js",
         // </redlining dependencies>
         "plugins/Redlining.js",

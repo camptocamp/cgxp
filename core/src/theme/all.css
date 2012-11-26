@@ -257,6 +257,10 @@ div.baseLayersOpacitySlider .opacityToolbar {
     background: none;
     border-width: 0 !important;
 }
+.toolwindow .x-tool-close {
+    position: absolute;
+    right: 2px;
+}
 
 .loading {
     background-image: url(img/loading.gif) !important;
