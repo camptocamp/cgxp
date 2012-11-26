@@ -19,8 +19,8 @@
  * @requires plugins/Tool.js
  * @include CGXP/widgets/tool/Button.js
  * @include CGXP/widgets/tool/Window.js
+ * @include CGXP/widgets/RedLiningPanel.js
  * @requires FeatureEditing/ux/widgets/FeatureEditingControler.js
- * @include FeatureEditing/ux/widgets/form/RedLiningPanel.js
  * @include FeatureEditing/ux/data/FeatureEditingDefaultStyleStore.js
  * @include Styler/ux/LayerStyleManager.js
  * @include Styler/ux/widgets/StyleSelectorComboBox.js
@@ -46,6 +46,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_redligning',
  *              actionTarget: 'center.tbar',
  *              toggleGroup: 'maptools',
+ *              stateId: 'rl', // to save the drawing in the permalink
  *              layerManagerUrl: "${request.static_url('<package>:static/lib/cgxp/sandbox/LayerManager/ux/')}"
  *          }]
  *          ...
@@ -61,6 +62,11 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_redlining */
     ptype: "cgxp_redlining",
+
+    /** api: config[stateId]
+     *  Used to generate the permalink.
+     */
+    stateId: null,
 
     /** api: config[toggleGroup]
      *  The group this toggle button is member of.
@@ -96,7 +102,8 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
         /* instanciating the RedLiningPanel at the 'ready' stage because the 
            actions depends of the existence of the layer, which can only be
            added now to be correctly placed above the background layers */
-        this.redliningPanel = new GeoExt.ux.form.RedLiningPanel({
+        this.redliningPanel = new cgxp.RedLiningPanel({
+            stateId: this.stateId,
             map: this.target.mapPanel.map,
             popupOptions: {
                 unpinnable: false,

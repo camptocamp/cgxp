@@ -40,7 +40,8 @@ GeoExt.Lang.add("de", {
         toolTitle: "Permalink",
         windowTitle: "Die aktuelle Seite kann mit folgender URL aufgerufen werden:",
         openlinkText: "Link in neuem Tab öffnen",
-        closeText: "Schliessen"
+        closeText: "Schliessen",
+        incompatibleWithIeText: "Achtung: diese URL ist zu lang für Microsoft Internet Explorer!"
     },
 
     "cgxp.plugins.FeatureGrid.prototype": {

@@ -491,3 +491,11 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
   border: 0px none #ffffff !important;
   margin: 5px 0px;
 }
+.permalink .x-window-body {
+    border: none;
+    background: none;
+}
+.permalink .x-window-mc {
+    border: none;
+    background: #f4f4f4;
+}
