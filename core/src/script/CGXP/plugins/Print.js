@@ -136,7 +136,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     /** api: config[actionTarget]
      *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
      *  (e.g. buttons or menus)?
-     *  As opposite to CGXP.plugins.Tool, we don't want it to be set by default
+     *  As opposed to CGXP.plugins.Tool, we don't want it to be set by default
      *  to the mapPanel top toolbar.
      */
     actionTarget: null,
