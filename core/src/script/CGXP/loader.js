@@ -53,7 +53,6 @@
         "plugins/Profile.js",
         "plugins/QueryBuilder.js",
         // <redlining dependencies>
-        "../../../../sandbox/FeatureEditing/ux/widgets/form/FeaturePanel.js",
         "../../../../sandbox/FeatureEditing/ux/widgets/FeatureEditingControler.js",
         // </redlining dependencies>
         "plugins/Redlining.js",
