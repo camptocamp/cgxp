@@ -47,7 +47,7 @@
         "plugins/MenuShortcut.js",
         "plugins/Permalink.js",
         // <print dependencies>
-        "../../../../geoext.ux/ux/SimplePrint/lib/loader.js",
+        "../../../../geoext.ux/ux/SimplePrint/lib/GeoExt.ux/SimplePrint.js",
         // </print dependencies>
         "plugins/Print.js",
         "plugins/Profile.js",
