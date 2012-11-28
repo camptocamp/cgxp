@@ -21,11 +21,11 @@
  */
 
 /** api: (define)
- * module = cgxp.widgets
+ * module = cgxp
  * class = RedLiningPanel
  */
 
-Ext.namespace("cgxp.widgets");
+Ext.namespace("cgxp");
 
 /** api: constructor
  *  .. class:: RedLiningPanel(config)
