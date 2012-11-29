@@ -196,14 +196,14 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     },
 
     createStore: function() {
+        var baseParams = this.grouping ? {limit: 40, partitionlimit: 10} :
+                                         {limit: 20};
         var store = new GeoExt.data.FeatureStore({
             proxy: new Ext.data.ScriptTagProxy({
                 url: this.url,
                 callbackParam: 'callback'
             }),
-            baseParams: {
-                "limit": 20
-            },
+            baseParams: baseParams,
             reader: new cgxp.data.FeatureReader({
                 format: new OpenLayers.Format.GeoJSON()
             }, ['label', 'layer_name']),
