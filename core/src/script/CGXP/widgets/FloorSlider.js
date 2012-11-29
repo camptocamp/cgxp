@@ -81,11 +81,11 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     skyText: 'Sky',
 
-    /** api: config[levelText]
+    /** api: config[floorText]
      *  ``String``
      *  L10n text for the window title.
      */
-    levelText: 'Level',
+    floorText: 'Floor',
 
     /**
      * private: method[constructor]
@@ -125,7 +125,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             closable: false,
             resizable: false,
             draggable: false,
-            title: this.levelText,
+            title: this.floorText,
             layout: 'hbox',
             cls: 'floor-window',
             items: [this.slider,

@@ -113,7 +113,20 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
     /** api: config[layerText]
      *  ``String`` Label for the layer chooser (i18n)
      */
-    layerText: null,
+    layerText: "Layer",
+
+    /** api: config[querierText]
+     *  ``String`` Title for the panel (i18n)
+     */
+    querierText: "Querier",
+
+    /* i18n */
+    incompleteFormText: 'Incomplete form.',
+    errorText: 'Unexpected error.',
+    noResultText: 'No result found',
+    queryButtonText: 'Query',
+    noGeomFieldError: 'No geometry field found.',
+    loadingText: 'Loading...',
 
     /** private: property[panel]
      *  ``Ext.Panel`` The panel included in accordion panel with a card layout
@@ -159,7 +172,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             data: layers
         });
         this.panel = new Ext.Panel(Ext.apply({
-            title: OpenLayers.i18n("querier"),
+            title: this.querierText,
             layout: 'vbox',
             layoutConfig: {
                 align: 'stretch',
@@ -174,7 +187,8 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     cls: 'invisible-toolbar',
                     items: [{
                         xtype: 'tbtext',
-                        text: this.layerText + ' : '
+                        text: this.layerText + Ext.layout.FormLayout.
+                                prototype.labelSeparator
                     }, {
                         xtype: "combo",
                         store: store,
@@ -229,7 +243,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 }
             } else if (!(f.value && f.type &&
                 (f.property || f.CLASS_NAME == "OpenLayers.Filter.Spatial"))) {
-                alert(OpenLayers.i18n("QueryBuilder.incomplete_form"));
+                alert(this.incompleteFormText);
                 return false;
             } else if (f.CLASS_NAME == "OpenLayers.Filter.Comparison") {
                 f.matchCase = this.matchCase;
@@ -262,7 +276,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             callback: function(response) {
                 btn.setIconClass(btn.initialConfig.iconCls);
                 if (!response.success()) {
-                    alert(OpenLayers.i18n('QueryBuilder.getfeature_exception'));
+                    alert(this.errorText);
                     return;
                 }
                 if (response.features && response.features.length) {
@@ -273,7 +287,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     }
                     this.events.fireEvent("queryresults", fs);
                 } else {
-                    alert(OpenLayers.i18n('QueryBuilder.no_result'));
+                    alert(this.noResultText);
                 }
             },
             scope: this
@@ -342,7 +356,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             deactivable: true,
             autoScroll: true,
             buttons: [{
-                text: OpenLayers.i18n('QueryBuilder.query_btn_text'),
+                text: this.queryButtonText,
                 iconCls: 'query',
                 handler: function(b, e) {
                     this.search(b);
@@ -383,7 +397,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
             this.geometryName = r.get('name');
             store.remove(r);
         } else {
-            alert(OpenLayers.i18n("QueryBuilder.alert_no_geom_field"));
+            alert(this.noGeomFieldError);
             return;
         }
 
@@ -407,7 +421,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         if (!this.mask) {
             window.setTimeout(function() {
                 this.mask = new Ext.LoadMask(this.panel.body.dom, {
-                    msg: OpenLayers.i18n('QueryBuilder.loading')
+                    msg: this.loadingText
                 });
                 this.mask.show();
             }.createDelegate(this), 10);
@@ -441,7 +455,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     if (this.mask) {
                         this.mask.hide();
                     }
-                    alert(OpenLayers.i18n("QueryBuilder.describefeaturetype_exception"));
+                    alert(this.errorText);
                 },
                 scope: this
             },

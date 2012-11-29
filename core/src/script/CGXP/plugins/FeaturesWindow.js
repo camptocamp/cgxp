@@ -118,11 +118,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     /** api: config[itemsText]
      *  ``String`` Text for the "number of items" label (plural) (i18n).
      */
-    itemsText: "Items",
+    itemsText: "items",
     /** api: config[itemText]
      *  ``String`` Text for the "number of items" label (singular) (i18n).
      */
-    itemText: "Item",
+    itemText: "item",
 
     /** private: attribute[store]
      *  ``Ext.data.Store``

@@ -93,7 +93,8 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Redlining.prototype": {
-        redliningText: "Zeichnen"
+        redliningText: "Zeichnen",
+        attributesText: 'Attribute'
     },
 
     "cgxp.MapOpacitySlider.prototype": {
@@ -126,7 +127,8 @@ GeoExt.Lang.add("de", {
         zoomtoscaleText: "Der Layer ist nicht sichtbar in diesem Massstab.",
         opacitylabelText: "Transparenz",
         showhidelegendText: "Legende anzeigen/verstecken",
-        themealreadyloadedText: "Dieses Thema ist schon geladen."
+        themealreadyloadedText: "Dieses Thema ist schon geladen.",
+        showIn3dText: 'Ansicht in 3D'
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
@@ -157,7 +159,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.ContextualData.ContextPopup.prototype": {
         popupTitleText: "Location",
-        coordTpl: "<tr><td width=\"150\">Suisses  Coord.</td>" +
+        coordTpl: "<tr><td width=\"150\">Lokal Coord.</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
         elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
@@ -176,7 +178,27 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
-        layerText: "Layer"
+        layerText: "Layer",
+        querierText: "Attributabfrage",
+        loadingText: 'Lade Daten...',
+        incompleteFormText: 'Bitte alle erforderlichen Felder ausfüllen.',
+        noResultText: 'Es wurde kein Resultat gefunden.',
+        queryButtonText: 'Abfrage',
+        errorText: 'Bitte alle erforderlichen Felder ausfüllen.',
+        noGeomFieldError: 'Es wurde kein Geometriefeld in dieser Ebene gefunden.'
+    },
+
+    "cgxp.plugins.MapQuery.prototype": {
+        actionTooltip: 'Informationen in der Karte abfragen'
+    },
+
+    "cgxp.plugins.WFSGetFeature.prototype": {
+        actionTooltip: 'Informationen in der Karte abfragen'
+    },
+
+    "cgxp.plugins.WMSGetFeatureInfo.prototype": {
+        actionTooltip: 'Informationen in der Karte abfragen',
+        noLayerSelectedMessage: 'Keine Ebene ausgewählt'
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {
@@ -186,33 +208,4 @@ GeoExt.Lang.add("de", {
         labelFieldText: "Text",
         fontSizeFieldText: "Grösse"
     }
-});
-
-OpenLayers.Util.extend(OpenLayers.Lang.de, {
-    "layertree": "Themen",
-    "querier": "Attributabfrage",
-
-    // query builder
-    "QueryBuilder.loading": "Lade Daten...",
-    "QueryBuilder.incomplete_form": "Bitte alle erforderlichen Felder ausfüllen.",
-    "QueryBuilder.no_result": "Es wurde kein Resultat gefunden.",
-    "QueryBuilder.query_btn_text": "Abfrage",
-    "QueryBuilder.alert_no_geom_field": "Es wurde kein Geometriefeld in dieser Ebene gefunden.",
-    "QueryBuilder.describefeaturetype_exception": "Es ist ein Fehler aufgetreten.",
-    "QueryBuilder.getfeature_exception": "Es ist ein Fehler aufgetreten.",
-
-    'Search.ToolTip': 'In diesem Feld können Sie nach verschiedenen geografischen <br />Orten und Objekten suchen: <br /><b>Amtliche Vermessung:</b> Adressen, Parzellen, Assekuranznummern z.B. <b>wohlen 1716</b><br /><b>Werkplan Elektro:</b> Trafostationen, Verteilkabinen z.B. <b>ts 41</b><br /><b>Werkplan Wasser:</b> Hydranten, Reservoir z.B. <b>hydr 5612 102</b><br /><b>Werkplan Gas:</b> Druckreduzierstationen z.B. <b>drs 15</b><br /><b>Werkplan Abwasser:</b> KontrollschÃ¤chte z.B. <b>k 150</b>', //deprecated?
-    
-    "Tools.maxextentactiontooltip": "Gesamtübersicht", //deprecated?
-    "Tools.measurelengthactiontooltip": "Strecke messen", //deprecated?
-    "Tools.measureareaactiontooltip": "Fläche messen", //deprecated?
-    "Tools.measurepositionactiontooltip": "Koordinaten eines Punktes abfragen", //deprecated?
-
-    // toolbar
-    "Locator.easting": "Rechtswert:", //deprecated?
-    "Locator.northing": "Hochwert:", //deprecated?
-
-    "Query.countertext": "Element {0} von {1}",
-    "Query.actiontooltip": "Informationen in der Karte abfragen",
-    "Query.nolayerselectedmsg": "Keine Ebene ausgewählt"
 });

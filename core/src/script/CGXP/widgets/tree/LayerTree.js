@@ -91,6 +91,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     updateLegendDelay: 2000,
 
+    /* i18n */
     moveupText: "Raise",
     movedownText: "Move down",
     moreinfoText: "More information",
@@ -100,6 +101,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     opacitylabelText: "Opacity",
     showhidelegendText: "Show/hide legend",
     themealreadyloadedText: "This theme is already loaded",
+    showIn3dText: 'Show in 3D',
 
     /** private: property[stateEvents]
      *  ``Array(String)`` Array of state events
@@ -500,7 +502,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             nodeConfig.actions = nodeConfig.actions || [];
             nodeConfig.actions.push({
                 action: "showin3d",
-                qtip: OpenLayers.i18n("Tree.showin3d")
+                qtip: this.showIn3dText
             });
             nodeConfig.kml = item.kml;
         }

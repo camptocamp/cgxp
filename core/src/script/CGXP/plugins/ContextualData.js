@@ -159,7 +159,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  The text displayed as qtips on the tool button (i18n).
      */
-    actionTooltipText: 'Contextual Data Tooltips',
+    actionTooltipText: 'Contextual Informations Tooltips',
 
     /** api: config[mouseoverWindowConfig]
      *  ``Object``
@@ -263,7 +263,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
      *  ``String``
      *  Text for the error title for userValueErrorText (i18n).
      */
-    userValueErrorTitleText: 'Error notice',
+    userValueErrorTitleText: 'Error',
 
     /** private: method[getContent]
      *  Process server response and generate the popup html content

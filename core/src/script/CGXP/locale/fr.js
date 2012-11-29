@@ -97,7 +97,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Redlining.prototype": {
-        redliningText: "Surlignage"
+        redliningText: "Surlignage",
+        attributesText: 'Attributs'
     },
 
     "cgxp.MapOpacitySlider.prototype": {
@@ -130,7 +131,8 @@ GeoExt.Lang.add("fr", {
         zoomtoscaleText: "Cette couche n'est pas visible à ce niveau de zoom.",
         opacitylabelText: "Opacité",
         showhidelegendText: "Afficher/masquer la légende",
-        themealreadyloadedText: "Ce thème est déjà chargé."
+        themealreadyloadedText: "Ce thème est déjà chargé.",
+        showIn3dText: 'Afficher en 3D'
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
@@ -166,7 +168,7 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.ContextualData.ContextPopup.prototype": {
         popupTitleText: "Position",
-        coordTpl: "<tr><td width=\"150\">Coordonnées suisses</td>" +
+        coordTpl: "<tr><td width=\"150\">Coordonnées locales</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
         elevationTpl: "<tr><td>Élevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
@@ -185,7 +187,27 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
-        layerText: "Couche"
+        layerText: "Couche",
+        querierText: "Requêteur",
+        loadingText: 'Chargement...',
+        incompleteFormText: 'Formulaire incomplet.',
+        noResultText: 'Pas de résultat trouvé.',
+        queryButtonText: 'Effectuer la requête',
+        errorText: 'Une erreur est survenue.',
+        noGeomFieldError: 'Pas de champs géometrique trouvé.'
+    },
+
+    "cgxp.plugins.MapQuery.prototype": {
+        actionTooltip: 'Questionne la carte'
+    },
+
+    "cgxp.plugins.WFSGetFeature.prototype": {
+        actionTooltip: 'Questionne la carte'
+    },
+
+    "cgxp.plugins.WMSGetFeatureInfo.prototype": {
+        actionTooltip: 'Questionne la carte',
+        noLayerSelectedMessage: 'Pas de couche sélectionnée'
     },
 
     "cgxp.FloorSlider.prototype": {
@@ -200,31 +222,4 @@ GeoExt.Lang.add("fr", {
         labelFieldText: "Étiquette",
         fontSizeFieldText: "Taille"
     }
-});
-
-OpenLayers.Util.extend(OpenLayers.Lang.fr, {
-    "layertree": "Thèmes",
-    "querier": "Requêteur",
-
-    // query builder
-    "QueryBuilder.loading": "Chargement...",
-    "QueryBuilder.incomplete_form": "Formulaire incomplet.",
-    "QueryBuilder.no_result": "Pas de résultat.",
-    "QueryBuilder.query_btn_text": "Effectuer la requête",
-    "QueryBuilder.alert_no_geom_field": "Pas de résultat trouvé",
-    "QueryBuilder.describefeaturetype_exception": "Une erreur est survenue.",
-    "QueryBuilder.getfeature_exception": "Une erreur est survenue.",
-
-    "Tools.maxextentactiontooltip": "Aller à la couverture initiale", //deprecated?
-    "Tools.measurelengthactiontooltip": "Mesure une distance", //deprecated?
-    "Tools.measureareaactiontooltip": "Mesure une surface", //deprecated?
-    "Tools.measurepositionactiontooltip": "Obtenir les coordonnées d'un point", //deprecated?
-
-    // toolbar
-    "Locator.easting": "Abscisse :", //deprecated?
-    "Locator.northing": "Ordonnée :", //deprecated?
-
-    "Query.countertext": "Élément {0} sur {1}",
-    "Query.actiontooltip": "Questionne la carte",
-    "Query.nolayerselectedmsg": "Pas de couche sélectionnée"
 });
