@@ -236,6 +236,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
             button = new cgxp.tool.Button(Ext.apply({
                 text: this.printbuttonText,
+                iconCls: "print",
                 tooltip: this.printbuttonTooltip,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
