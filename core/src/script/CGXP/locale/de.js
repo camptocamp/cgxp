@@ -9,11 +9,11 @@ GeoExt.Lang.add("de", {
         lengthMenuText: "Länge",
         areaMenuText: "Fläche",
         azimuthMenuText: "Azimut",
-        coordinateText: "Koordinaten : ",
-        easternText: "Östlich : ",
-        northernText: "Nordlich : ",
-        distanceText: "Distanz : ",
-        azimuthText: "Azimut : ",
+        coordinateText: "Koordinaten: ",
+        easternText: "Östlich: ",
+        northernText: "Nordlich: ",
+        distanceText: "Distanz: ",
+        azimuthText: "Azimut: ",
         lengthTooltip: "Länge messen",
         areaTooltip: "Fläche messen",
         azimuthTooltip: "Azimut messen",
@@ -114,7 +114,7 @@ GeoExt.Lang.add("de", {
         helpText: "Klicken Sie auf die Karten um <b>ein bestehendes Element zu editieren</b>, oder",
         layerMenuText: "Wählen Sie eine Ebene",
         createBtnText: "Erstellen Sie ein neues Element",
-        forbiddenText: "Diese Aktion ist nicht erlaubt !"
+        forbiddenText: "Diese Aktion ist nicht erlaubt!"
     },
 
     "cgxp.tree.LayerTree.prototype": {
@@ -148,11 +148,11 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
         popupTitleText: "Location",
-        defaultTpl: "Suisses  Coord. : {coord_x} {coord_y}<br />" +
-            "WGS 84 : {wsg_x} {wsg_y}<br />",
-        defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" +
-            "Elevation (Surface) : {elevation_dsm} [m]<br />" +
-            "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
+        defaultTpl: "Lokal Coord.: {coord_x} {coord_y}<br />" +
+            "WGS 84: {wsg_x} {wsg_y}<br />",
+        defaultTplElevation: "Elevation (Terrain): {elevation_dtm} [m]<br />" +
+            "Elevation (Surface): {elevation_dsm} [m]<br />" +
+            "Height (Surface-Terrain): {elevation_dhm} [m]<br />"
     },
 
     "cgxp.plugins.ContextualData.ContextPopup.prototype": {
@@ -160,10 +160,10 @@ GeoExt.Lang.add("de", {
         coordTpl: "<tr><td width=\"150\">Suisses  Coord.</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
-        elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" +
-        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
-        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
-        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>"
+        elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
+        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
+        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +
+        "<tr><td>Slope</td><td>{elevation_slope} [° dég.]</td></tr>"
     },
 
     "cgxp.plugins.Profile.prototype": {
