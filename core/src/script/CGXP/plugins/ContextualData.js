@@ -397,9 +397,9 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
      *  ``String`` Used to generate the Ext.Template for popup content with
      *  server elevation data
      */
-    defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" +
-        "Elevation (Surface) : {elevation_dsm} [m]<br />" +
-        "Height (Surface-Terrain) : {elevation_dhm} [m]<br />",
+    defaultTplElevation: "Elevation (Terrain): {elevation_dtm} [m]<br />" +
+        "Elevation (Surface): {elevation_dsm} [m]<br />" +
+        "Height (Surface-Terrain): {elevation_dhm} [m]<br />",
 
     /** private: config[serviceUrl]
      *  ``String`` URL to access the profile service
@@ -612,17 +612,17 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      *  popup content
      */
     coordTpl: "<tr><td width=\"150\">Swiss coordinate</td>" +
-            "<td>{coord_x} {coord_y}</td></tr>" +
-            "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+        "<td>{coord_x} {coord_y}</td></tr>" +
+        "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
 
     /** private: config[elevationTpl]
      *  ``String`` Used to generate the base Ext.Template used for elevation in
      *  popup content
      */
-    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" +
-        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
-        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
-        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>",
+    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
+        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
+        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +
+        "<tr><td>Slope</td><td>{elevation_slope} [°]</td></tr>",
 
     /** private: config[streetViewTpl]
      *  ``String`` Used to generate the base Ext.Template used streetview link in

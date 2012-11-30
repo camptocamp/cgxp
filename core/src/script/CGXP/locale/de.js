@@ -163,9 +163,9 @@ GeoExt.Lang.add("de", {
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
         elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
-        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
-        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +
-        "<tr><td>Slope</td><td>{elevation_slope} [° dég.]</td></tr>"
+            "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
+            "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +
+            "<tr><td>Slope</td><td>{elevation_slope} [°]</td></tr>"
     },
 
     "cgxp.plugins.Profile.prototype": {
