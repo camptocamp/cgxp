@@ -198,15 +198,15 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.MapQuery.prototype": {
-        actionTooltip: 'Questionne la carte'
+        actionTooltip: 'Interroge la carte'
     },
 
     "cgxp.plugins.WFSGetFeature.prototype": {
-        actionTooltip: 'Questionne la carte'
+        actionTooltip: 'Interroge la carte'
     },
 
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: 'Questionne la carte',
+        actionTooltip: 'Interroge la carte',
         noLayerSelectedMessage: 'Pas de couche sélectionnée'
     },
 
