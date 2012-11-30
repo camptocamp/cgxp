@@ -159,7 +159,7 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
         popupTitleText: "Position",
-        defaultTpl: "Coordonnées locales&nbsp;: {coord_x} {coord_y}<br />" +
+        defaultTpl: "Coordonnées suisses&nbsp;: {coord_x} {coord_y}<br />" +
             "WGS 84&nbsp;: {wsg_x} {wsg_y}<br />",
         defaultTplElevation: "Élevation (Terrain)&nbsp;: {elevation_dtm} [m]<br />" +
             "Élevation (Surface)&nbsp;: {elevation_dsm} [m]<br />" +
@@ -168,7 +168,7 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.ContextualData.ContextPopup.prototype": {
         popupTitleText: "Position",
-        coordTpl: "<tr><td width=\"150\">Coordonnées locales</td>" +
+        coordTpl: "<tr><td width=\"150\">Coordonnées suisses</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
         elevationTpl: "<tr><td>Élevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +

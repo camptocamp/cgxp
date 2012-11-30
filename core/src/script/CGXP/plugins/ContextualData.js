@@ -390,7 +390,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
     /** private: config[defaultTpl]
      *  ``String`` Used to generate the Ext.Template for popup content
      */
-    defaultTpl: "Local Coordinates : {coord_x} {coord_y}<br />" +
+    defaultTpl: "Swiss coordinates: {coord_x} {coord_y}<br />" +
         "WGS 84 : {wsg_x} {wsg_y}<br />",
 
     /** private: config[defaultTplElevation]
@@ -611,7 +611,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      *  ``String`` Used to generate the base Ext.Template used for coordinates in
      *  popup content
      */
-    coordTpl: "<tr><td width=\"150\">Local Coord.</td>" +
+    coordTpl: "<tr><td width=\"150\">Swiss coordinate</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
 

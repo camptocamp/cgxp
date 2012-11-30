@@ -150,7 +150,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
         popupTitleText: "Location",
-        defaultTpl: "Lokal Coord.: {coord_x} {coord_y}<br />" +
+        defaultTpl: "Schweizer Koordinaten: {coord_x} {coord_y}<br />" +
             "WGS 84: {wsg_x} {wsg_y}<br />",
         defaultTplElevation: "Elevation (Terrain): {elevation_dtm} [m]<br />" +
             "Elevation (Surface): {elevation_dsm} [m]<br />" +
@@ -159,7 +159,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.ContextualData.ContextPopup.prototype": {
         popupTitleText: "Location",
-        coordTpl: "<tr><td width=\"150\">Lokal Coord.</td>" +
+        coordTpl: "<tr><td width=\"150\">Schweizer Koordinaten</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
             "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
         elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
