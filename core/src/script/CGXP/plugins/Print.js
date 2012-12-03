@@ -168,6 +168,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: null,
 
+    /* i18n */
     printTitle: "Printing",
     titlefieldText: "Title",
     titlefieldvalueText: "Map title",

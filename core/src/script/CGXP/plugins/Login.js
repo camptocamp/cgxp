@@ -95,6 +95,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     button: null,
     loginForm: null,
 
+    /* i18n */
     authenticationFailureText: "Impossible to connect.",
     loggedAsText: "Logged in as ${user}",
     logoutText: "Logout",

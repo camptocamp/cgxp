@@ -203,6 +203,9 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      *  The mapserver proxy URL
      */
 
+    /* i18n */
+    actionTooltip: 'Query the map',
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -212,7 +215,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             allowDepress: true,
             enableToggle: true,
             iconCls: 'info',
-            tooltip: OpenLayers.i18n("Query.actiontooltip"),
+            tooltip: this.actionTooltip,
             toggleGroup: this.toggleGroup,
             control: control
         }, this.options));

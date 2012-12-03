@@ -75,16 +75,20 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      */
     events: null,
 
+    /* i18n */
+    actionTooltip: 'Query the map',
+    noLayerSelectedMessage: 'No layer selected',
+
     /** api: method[addActions]
      */
     addActions: function() {
-        var control =  this.createControl();
+        var control = this.createControl();
         this.target.mapPanel.map.addControl(control);
         var action = new GeoExt.Action(Ext.applyIf({
             allowDepress: true,
             enableToggle: true,
             iconCls: 'info',
-            tooltip: OpenLayers.i18n("Query.actiontooltip"),
+            tooltip: this.actionTooltip,
             toggleGroup: this.toggleGroup,
             control: control
         }, this.options));
@@ -118,8 +122,7 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         return GFI.prototype.findLayers.apply(this, arguments);
                     }
                 }
-                Ext.MessageBox.alert("Info",
-                        OpenLayers.i18n("Query.nolayerselectedmsg"));
+                Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
                 return [];
             },
 

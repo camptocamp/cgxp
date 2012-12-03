@@ -92,37 +92,37 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  The translated tool help html text (i18n).
      */
-    helpText: null,
+    helpText: "<h1>Elevation profile</h1>Draw a line on the map. Double-click to terminate and show the profile.",
 
     /** api: config[waitMsgText]
      *  ``String``
      *  The loading message (i18n).
      */
-    waitMsgText: null,
+    waitMsgText: "Loading elevation profile...",
 
     /** api: config[xLabelText]
      *  ``String``
      *  The translated x label text (i18n).
      */
-    xLabelText: null,
+    xLabelText: "Distance (m)",
 
     /** api: config[yLabelText]
      *  ``String``
      *  The translated y label text (i18n).
      */
-    yLabelText: null,
+    yLabelText: "Elevation (m)",
 
     /** api: config[exportCsvText]
      *  ``String``
      *  The translated "export as csv" text (i18n).
      */
-    exportCsvText: null,
+    exportCsvText: "Export as CSV",
 
     /** api: config[errorMsg]
      *  ``String``
      *  The translated error message (i18n).
      */
-    errorMsg: null,
+    errorMsg: "An error occured. Please try again.",
 
     /** api: config[style]
      *  ``Object``

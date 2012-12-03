@@ -74,6 +74,7 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
     legendPanel: null,
     legendPanelAdded: false,
 
+    /* i18n */
     legendbuttonText: "Legend",
     legendbuttonTooltip: "Display the map legend",
     legendwindowTitle: "Legend",
