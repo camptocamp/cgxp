@@ -74,6 +74,7 @@ GeoExt.Lang.add("fr", {
         scalefieldText: "Échelle",
         rotationfieldText: "Rotation",
         printbuttonText: "Imprimer",
+        printbuttonTooltip: "Imprimer",
         exportpngbuttonText: "Exporter en PNG",
         waitingText: "Impression...",
         downloadText: "Télécharger",
