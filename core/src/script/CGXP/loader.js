@@ -46,6 +46,9 @@
         "plugins/Measure.js",
         "plugins/MenuShortcut.js",
         "plugins/Permalink.js",
+        // <print dependencies>
+        "../../../../geoext.ux/ux/SimplePrint/lib/GeoExt.ux/SimplePrint.js",
+        // </print dependencies>
         "plugins/Print.js",
         "plugins/Profile.js",
         "plugins/QueryBuilder.js",
