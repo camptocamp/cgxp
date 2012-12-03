@@ -38,7 +38,7 @@ Ext.namespace("cgxp.plugins");
 
 /** api: example
  *  Sample code showing how to add a Print plugin to a
- *  `gxp.Viewer`:
+ *  ``gxp.Viewer`` in a existing container:
  *
  *  .. code-block:: javascript
  *
@@ -49,6 +49,33 @@ Ext.namespace("cgxp.plugins");
  *              legendPanelId: "legendPanel",
  *              featureProvider: "featureGrid",
  *              outputTarget: "left-panel",
+ *              printURL: "${request.route_url('printproxy', path='')}",
+ *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              options: {
+ *                  labelAlign: 'top',
+ *                  defaults: {
+ *                      anchor: '100%'
+ *                  },
+ *                  autoFit: true
+ *              }
+ *          }]
+ *          ...
+ *      });
+ *
+ *  Sample code showing how to add a Print plugin to a
+ *  ``gxp.Viewer`` via an icon in a toolbar. The print form will show up in
+ *  a ``CGXP.tool.Window`` below the toolbar:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_print',
+ *              legendPanelId: "legendPanel",
+ *              featureProvider: "featureGrid",
+ *              actionTarget: "center.tbar",
+ *              toggleGroup: "maptools",
  *              printURL: "${request.route_url('printproxy', path='')}",
  *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
  *              options: {
