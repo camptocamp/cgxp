@@ -159,7 +159,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  The text displayed as qtips on the tool button (i18n).
      */
-    actionTooltipText: 'Contextual Data Tooltips',
+    actionTooltipText: 'Contextual Information Tooltips',
 
     /** api: config[mouseoverWindowConfig]
      *  ``Object``
@@ -263,7 +263,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
      *  ``String``
      *  Text for the error title for userValueErrorText (i18n).
      */
-    userValueErrorTitleText: 'Error notice',
+    userValueErrorTitleText: 'Error',
 
     /** private: method[getContent]
      *  Process server response and generate the popup html content
@@ -390,16 +390,16 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
     /** private: config[defaultTpl]
      *  ``String`` Used to generate the Ext.Template for popup content
      */
-    defaultTpl: "Local Coordinates : {coord_x} {coord_y}<br />" +
+    defaultTpl: "Swiss coordinates: {coord_x} {coord_y}<br />" +
         "WGS 84 : {wsg_x} {wsg_y}<br />",
 
     /** private: config[defaultTplElevation]
      *  ``String`` Used to generate the Ext.Template for popup content with
      *  server elevation data
      */
-    defaultTplElevation: "Elevation (Terrain) : {elevation_dtm} [m]<br />" +
-        "Elevation (Surface) : {elevation_dsm} [m]<br />" +
-        "Height (Surface-Terrain) : {elevation_dhm} [m]<br />",
+    defaultTplElevation: "Elevation (Terrain): {elevation_dtm} [m]<br />" +
+        "Elevation (Surface): {elevation_dsm} [m]<br />" +
+        "Height (Surface-Terrain): {elevation_dhm} [m]<br />",
 
     /** private: config[serviceUrl]
      *  ``String`` URL to access the profile service
@@ -611,18 +611,18 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      *  ``String`` Used to generate the base Ext.Template used for coordinates in
      *  popup content
      */
-    coordTpl: "<tr><td width=\"150\">Local Coord.</td>" +
-            "<td>{coord_x} {coord_y}</td></tr>" +
-            "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+    coordTpl: "<tr><td width=\"150\">Swiss coordinate</td>" +
+        "<td>{coord_x} {coord_y}</td></tr>" +
+        "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
 
     /** private: config[elevationTpl]
      *  ``String`` Used to generate the base Ext.Template used for elevation in
      *  popup content
      */
-    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m] </td></tr>" +
-        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m] </td></tr>" +
-        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m] </td></tr>" +
-        "<tr><td>Slope</td><td>{elevation_slope} [° dég.] </td></tr>",
+    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
+        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
+        "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +
+        "<tr><td>Slope</td><td>{elevation_slope} [°]</td></tr>",
 
     /** private: config[streetViewTpl]
      *  ``String`` Used to generate the base Ext.Template used streetview link in

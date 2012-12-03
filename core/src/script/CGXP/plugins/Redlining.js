@@ -89,7 +89,9 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
 
     redliningWindow: null,
 
+    /* i18n*/
     redliningText: "Redlining",
+    attributesText: 'Attributes',
 
     init: function() {
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
@@ -180,11 +182,11 @@ GeoExt.ux.FeatureEditingControler.prototype.reactivateDrawControl = Ext.emptyFn;
  * @include Ext/examples/ux/Spinner.js
  * @include Ext/examples/ux/SpinnerField.js
  */
-GeoExt.ux.form.FeaturePanel.prototype.pointRadiusFieldText = "Point size";
+GeoExt.ux.form.FeaturePanel.prototype.pointRadiusFieldText = "Size";
 GeoExt.ux.form.FeaturePanel.prototype.labelFieldText = "Label";
 GeoExt.ux.form.FeaturePanel.prototype.colorFieldText = "Color";
 GeoExt.ux.form.FeaturePanel.prototype.strokeWidthFieldText = "Stroke width";
-GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Font size";
+GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Size";
 
 // some more redlining patch
 GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
@@ -201,7 +203,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
     oGroup = {
         id: this.attributeFieldSetId,
         xtype: 'fieldset',
-        title: OpenLayers.i18n('Attributes'),
+        title: this.attributesText,
         layout: 'form',
         collapsible: true,
         autoHeight: this.autoHeight,

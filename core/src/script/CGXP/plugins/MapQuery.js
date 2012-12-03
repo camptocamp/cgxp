@@ -77,6 +77,9 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
      */
     highlightLayerOptions: null,
 
+    /* i18n */
+    actionTooltip: 'Query the map',
+
     init: function() {
         cgxp.plugins.MapQuery.superclass.init.apply(this, arguments);
 
@@ -115,7 +118,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
                 allowDepress: true,
                 enableToggle: true,
                 iconCls: 'info',
-                tooltip: OpenLayers.i18n("Query.actiontooltip"),
+                tooltip: this.actionTooltip,
                 toggleGroup: this.toggleGroup,
                 control: this.createControl()
             }, this.options);

@@ -44,6 +44,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     defaultBaseLayerRef: 'plan',
 
+    /* i18n */
     orthoText: 'Orthophoto',
 
     /** api: config[stateId]

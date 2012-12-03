@@ -52,6 +52,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
+    /* i18n */
     localTitle: "Local layers",
     externalTitle: "External layers",
     toolTitle: "Themes",
