@@ -197,8 +197,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
             return config;
         };
-        var themes = Array.concat(
-            this.themes.local || [],
+        var themes = (this.themes.local || []).concat(
             this.themes.external || []);
         this.layersConfig = browse(themes)
 
