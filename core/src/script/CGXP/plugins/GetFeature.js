@@ -253,6 +253,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     buildWMSControl: function() {
         var events = this.events;
+        var self = this;
 
         // we overload findLayers to avoid sending requests
         // when we have no sub-layers selected
@@ -305,6 +306,25 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         var url = layer.url instanceof Array ? layer.url[0] : layer.url;
                         var wmsOptions = this.buildWMSOptions(url, [layer],
                             clickPosition, layer.params.FORMAT);
+                        var queryLayers = [];
+                        // Add only queryable layer or sublayer.
+                        Ext.each(wmsOptions.params.QUERY_LAYERS, function(queryLayer) {
+                            if (queryLayer in this.layersConfig) {
+                                if (this.layersConfig[queryLayer].queryable) {
+                                    queryLayers.push(queryLayer);
+                                }
+                                Ext.each(this.layersConfig[queryLayer]
+                                        .childLayers, function(childLayer) {
+                                    if (childLayer.queryable) {
+                                        queryLayers.push(childLayer.name);
+                                    }
+                                });
+                            }
+                            else {
+                                queryLayers.push(queryLayer);
+                            }
+                        }, self);
+                        wmsOptions.params.QUERY_LAYERS = queryLayers;
                         OpenLayers.Request.GET(wmsOptions);
                     }
                 }
