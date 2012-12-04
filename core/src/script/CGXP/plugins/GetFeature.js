@@ -69,10 +69,11 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: GetFeature(config)
  *
- *  TODO update TODO
- *  This plugin adds a toggle button to a toolbar. When the button is
- *  pressed the map changes to "query" mode - user can click and draw
- *  boxes to query the map. WFS GetFeature is used for queries.
+ *  With this plugin we can query the map with a simple click
+ *  (WMS GetFeatureInfo) or with a CTRL-Drag for a box query
+ *  (WFS GetFeature).
+ *  We can optionally (with actionTarget) add a toggle button
+ *  to a toolbar to do a box query without the pressing the CTRL.
  *
  *  Only the currently visible layers are queried.
  *
@@ -111,48 +112,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /** api: config[actionTarget]
-     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions 
-     *  (e.g. buttons or menus)? 
-     *
-     *  In case of a string, this can be any string that references an 
-     *  ``Ext.Container`` property on the portal, or a unique id configured on a 
-     *  component.
-     *
-     *  In case of an object, the object has a "target" and an "index" property, 
-     *  so that the tool can be inserted at a specified index in the target. 
-     *               
-     *  actionTarget can also be an array of strings or objects, if the action is 
-     *  to be put in more than one place (e.g. a button and a context menu item).
-     *
-     *  To reference one of the toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or 
-     *  ".fbar" has to be appended. The default is "map.tbar". The viewer's main 
-     *  MapPanel can always be accessed with "map" as actionTarget. Set to null if 
-     *  no actions should be created.
-     *
-     *  Some tools provide a context menu. To reference this context menu as
-     *  actionTarget for other tools, configure an id in the tool's
-     *  outputConfig, and use the id with ".contextMenu" appended. In the
-     *  snippet below, a layer tree is created, with a "Remove layer" action
-     *  as button on the tree's top toolbar, and as menu item in its context
-     *  menu:
-     *
-     *  .. code-block:: javascript
-     *
-     *     {
-     *         xtype: "gxp_layertree",
-     *         outputConfig: {
-     *             id: "tree",
-     *             tbar: []
-     *         }
-     *     }, {
-     *         xtype: "gxp_removelayer",
-     *         actionTarget: ["tree.tbar", "tree.contextMenu"]
-     *     }
-     *
-     *  If a tool has both actions and output, and you want to force it to
-     *  immediately output to a container, set actionTarget to null. If you
-     *  want to hide the actions, set actionTarget to false. In this case, you
-     *  should configure a defaultAction to make sure that an action is active.
+     *  ``String`` or ``Null`` Where to place the optional tool's actions.
      */
 
     /** api: config[actionOptions]
