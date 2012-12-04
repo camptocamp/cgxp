@@ -168,15 +168,17 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.buildControls();
-        var action = new GeoExt.Action(Ext.applyIf({
-            allowDepress: true,
-            enableToggle: true,
-            iconCls: 'info',
-            tooltip: this.actionTooltip,
-            toggleGroup: this.toggleGroup,
-            control: this.toolWFSControl
-        }, this.actionOptions));
-        return cgxp.plugins.GetFeature.superclass.addActions.apply(this, [[action]]);
+        if (this.actionTarget) {
+            var action = new GeoExt.Action(Ext.applyIf({
+                allowDepress: true,
+                enableToggle: true,
+                iconCls: 'info',
+                tooltip: this.actionTooltip,
+                toggleGroup: this.toggleGroup,
+                control: this.toolWFSControl
+            }, this.actionOptions));
+            return cgxp.plugins.GetFeature.superclass.addActions.apply(this, [[action]]);
+        }
     },
 
     /** private: method[buildControls]
@@ -201,11 +203,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         this.layersConfig = browse(themes)
 
         this.buildWMSControl();
-        this.target.mapPanel.map.addControl(this.clickWMSControl);
-
         this.buildWFSControls();
-        this.target.mapPanel.map.addControl(this.ctrlWFSControl);
-        this.target.mapPanel.map.addControl(this.toolWFSControl);
     },
 
     /** private method[createWMSControl]
@@ -307,6 +305,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
+        this.target.mapPanel.map.addControl(this.clickWMSControl);
     },
 
     /** private method[createWFSControls]
@@ -364,21 +363,24 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
         };
 
-        // we overload findLayers to avoid sending requests
-        // when we have no sub-layers selected
-        this.toolWFSControl = new OpenLayers.Control.GetFeature({
-            target: this.target,
-            box: true, 
-            click: false, 
-            single: false, 
-            eventListeners: listners,
-            request: request
-        });
+        if (this.actionTarget) {
+            // we overload findLayers to avoid sending requests
+            // when we have no sub-layers selected
+            this.toolWFSControl = new OpenLayers.Control.GetFeature({
+                target: this.target,
+                box: true,
+                click: false,
+                single: false,
+                eventListeners: listners,
+                request: request
+            });
+            this.target.mapPanel.map.addControl(this.toolWFSControl);
+        }
         this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
             target: this.target,
-            box: true, 
-            click: false, 
-            single: false, 
+            box: true,
+            click: false,
+            single: false,
             handlerOptions: {
                 box: {
                     keyMask: OpenLayers.Handler.MOD_CTRL
@@ -388,6 +390,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             eventListeners: listners,
             request: request
         });
+        this.target.mapPanel.map.addControl(this.ctrlWFSControl);
     },
 
     /** private: method[getLayers]
