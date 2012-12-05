@@ -304,6 +304,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
+        // on click reset the down value wrong value
+        this.clickWMSControl.handler.click = function() {
+            var result = OpenLayers.Handler.Click.prototype.click
+                    .apply(this, arguments);
+            this.down = null;
+            return result;
+        }
         this.target.mapPanel.map.addControl(this.clickWMSControl);
     },
 
@@ -373,6 +380,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 eventListeners: listners,
                 request: request
             });
+            // don't convert pixel to box, let the WFS GetFeature to query
+            this.toolWFSControl.click = true;
             this.target.mapPanel.map.addControl(this.toolWFSControl);
         }
         this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
