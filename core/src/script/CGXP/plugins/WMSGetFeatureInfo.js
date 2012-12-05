@@ -167,7 +167,7 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
             eventListeners: {
                 getfeatureinfo: function(e) {
-                    this.events.fireEvent('queryresults', e.features);
+                    this.events.fireEvent('queryresults', {features: e.features});
                 },
                 activate: function() {
                     this.events.fireEvent('queryopen');
