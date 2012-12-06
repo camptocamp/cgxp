@@ -65,6 +65,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     openlinkText: "Open Link",
     closeText: "Close",
     incompatibleWithIeText: "Warning: this URL is too long for Microsoft Internet Explorer!",
+    menuText: "Permalink",
 
     /** api: method[addActions]
      */
@@ -152,6 +153,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             allowDepress: false,
             iconCls: 'permalink',
             tooltip: this.toolTitle,
+            menuText: this.menuText,
             handler: function() {
                 // reset the link in case the user deleted/modified it by error
                 permalinkTextField.setValue(link);

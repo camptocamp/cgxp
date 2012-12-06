@@ -71,6 +71,9 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
      */
     helpactionText: null,
 
+    /** i18n */
+    menuText: 'Help',
+
     /** api: config[options]
      *  ``Object``
      *  Config options for the ``Ext.Action`` created by this plugin.
@@ -85,6 +88,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
             iconCls: "help",
             tooltip: this.helpactiontooltipText,
             text: this.helpactionText,
+            menuText: this.menuText,
             handler: function() {
                 window.open(this.url);
             },

@@ -99,12 +99,16 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     * The list of WMS services urls to be displayed in the layer combobox.
     */
     defaultUrls: null,
+
+    /** i18n */
+    menuText: 'Add WMS layers',
     
     /** private: method[addActions]
      */
     addActions: function() {
         var btn = Ext.apply({
             text: this.buttonText,
+            menuText: this.menuText,
             handler: Ext.createDelegate(this.showPopup, this)
         }, this.actionConfig);
         return cgxp.plugins.WMSBrowser.superclass.addActions.apply(this,[btn]);

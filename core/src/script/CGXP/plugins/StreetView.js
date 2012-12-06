@@ -93,6 +93,10 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
      *  The Street View panel.
      */
 
+    /** i18n */
+    tooltipText: 'StreetView',
+    menuText: 'StreetView',
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -101,6 +105,8 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             iconCls: "cgxp-icon-streetview",
+            tooltip: this.tooltipText,
+            menuText: this.menuText,
             listeners: {
                 "toggle": function(button) {
                     if (button.pressed) {

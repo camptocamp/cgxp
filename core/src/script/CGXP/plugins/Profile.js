@@ -143,6 +143,10 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     nbPoints: 100,
 
+    /** i18n */
+    tooltipText: 'Profile',
+    menuText: 'Profile',
+
     /** api: config[markerStyle]
      *  ``Object``
      *  The style to be applied to the marker when hovering the chart
@@ -228,6 +232,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             toggleGroup: this.toggleGroup,
             text: this.buttonText,
             iconCls: "cgxp-icon-profile",
+            tooltip: this.tooltipText,
+            menuText: this.menuText,
             control: control
         });
         return cgxp.plugins.Profile.superclass.addActions.apply(this,[btn]);

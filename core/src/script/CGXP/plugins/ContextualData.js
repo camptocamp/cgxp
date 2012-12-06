@@ -179,6 +179,9 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      */
     rightclickWindowConfig: {},
 
+    /** i18n */
+    menuText: 'Contextual data',
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -217,6 +220,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
                 enableToggle: true,
                 iconCls: 'infotooltip',
                 tooltip: this.actionTooltipText,
+                menuText: this.menuText,
                 toggleGroup: this.toggleGroup,
                 control: control
             }, this.options));

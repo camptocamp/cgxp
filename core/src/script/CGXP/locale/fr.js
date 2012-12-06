@@ -45,7 +45,8 @@ GeoExt.Lang.add("fr", {
         windowTitle: "Permalien",
         openlinkText: "Ouvrir le lien",
         closeText: "Fermer",
-        incompatibleWithIeText: "Attention&nbsp;: cette URL est trop longue pour Microsoft Internet Explorer%nbsp;!"
+        incompatibleWithIeText: "Attention&nbsp;: cette URL est trop longue pour Microsoft Internet Explorer%nbsp;!",
+        menuText: 'Permalien'
     },
     
     "cgxp.plugins.FeatureGrid.prototype": {
@@ -93,7 +94,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Help.prototype": {
-        helpactiontooltipText: "Aide"
+        helpactiontooltipText: "Aide",
+        menuText: 'Aide'
     },
 
     "cgxp.plugins.Redlining.prototype": {
@@ -144,6 +146,7 @@ GeoExt.Lang.add("fr", {
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "Ajouter WMS",
         windowTitleText: "Ajouter des couches WMS"
+        menuText: "Ajouter WMS"
     },
 
     "cgxp.plugins.AddKMLFile.prototype": {
@@ -152,7 +155,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.ContextualData.prototype": {
-        actionTooltipText: "Tooltips d'informations contextuelles"
+        actionTooltipText: "Tooltips d'informations contextuelles",
+        menuText: 'Informations contextuel'
     },
 
     "cgxp.plugins.ContextualData.Control.prototype": {
@@ -188,7 +192,19 @@ GeoExt.Lang.add("fr", {
         xLabelText: "Distance (m)",
         yLabelText: "Altitude (m)",
         errorMsg: "Une erreur s'est produite. Veuillez recommencer.",
-        exportCsvText: "Exporter en CSV"
+        exportCsvText: "Exporter en CSV",
+        tooltipText: 'Profil altimétrique',
+        menuText: 'Profil altimétrique'
+    },
+
+    "cgxp.plugins.GoogleEarth.prototype": {
+        tooltipText: 'GoogleEarth',
+        menuText: 'GoogleEarth'
+    },
+
+    "cgxp.plugins.StreetView.prototype": {
+        tooltipText: 'StreetView',
+        menuText: 'StreetView'
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
@@ -203,7 +219,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.MapQuery.prototype": {
-        actionTooltip: 'Interroge la carte'
+        actionTooltip: 'Interroge la carte',
+        menuText: 'Interroge la carte'
     },
 
     "cgxp.plugins.WFSGetFeature.prototype": {

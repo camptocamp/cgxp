@@ -79,6 +79,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
 
     /* i18n */
     actionTooltip: 'Query the map',
+    menuText: 'Query the map',
 
     init: function() {
         cgxp.plugins.MapQuery.superclass.init.apply(this, arguments);
@@ -119,6 +120,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
                 enableToggle: true,
                 iconCls: 'info',
                 tooltip: this.actionTooltip,
+                menuText: this.menuText,
                 toggleGroup: this.toggleGroup,
                 control: this.createControl()
             }, this.options);

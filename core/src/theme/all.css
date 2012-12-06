@@ -4,6 +4,31 @@ div.x-panel a {
 div.x-panel a:hover {
     text-decoration: underline;
 }
+
+/* gxp_zoomtoextent */
+.x-toolbar .gxp-icon-zoomtoextent, .x-menu .gxp-icon-zoomtoextent {
+    background-image: url(../../../gxp/src/theme/img/silk/arrow_inout.png);
+}
+
+/* gxp_navigationhistory */
+.x-toolbar .gxp-icon-zoom-previous, .x-menu .gxp-icon-zoom-previous {
+    background-image: url(../../../gxp/src/theme/img/silk/arrow_left.png);
+}
+.x-toolbar .gxp-icon-zoom-next, .x-menu .gxp-icon-zoom-next {
+    background-image: url(../../../gxp/src/theme/img/silk/arrow_right.png);
+}
+
+/* gxp_zoom */
+.x-toolbar .gxp-icon-zoom, .x-menu .gxp-icon-zoom {
+    background-image: url(../../../gxp/src/theme/img/silk/magnifier.png);
+}
+.x-toolbar .gxp-icon-zoom-in, .x-menu .gxp-icon-zoom-in {
+    background-image: url(../../../gxp/src/theme/img/silk/magnifier_zoom_in.png);
+}
+.x-toolbar .gxp-icon-zoom-out, .x-menu .gxp-icon-zoom-out {
+    background-image: url("../../../gxp/src/theme/img/silk/magnifier_zoom_out.png");
+}
+
 /* fix button position for ie */
 .x-form-file-wrap table.x-form-file-btn {
     top: 0;
@@ -30,42 +55,43 @@ div.x-panel a:hover {
 
 /* cgxp_measure */
 .x-btn .cgxp-icon-measure-point, .x-menu-item .cgxp-icon-measure-point, .x-tree-node .cgxp-icon-measure-point {
-    background-image: url('img/bullet_orange.png') !important;
+    background-image: url('img/bullet_orange.png');
 }
 .x-btn .cgxp-icon-measure-length, .x-menu-item .cgxp-icon-measure-length, .x-tree-node .cgxp-icon-measure-length {
-    background-image: url(img/ruler.png) !important;
+    background-image: url(img/ruler.png);
 }
 .x-btn .cgxp-icon-measure-area, .x-menu-item .cgxp-icon-measure-area, .x-tree-node .cgxp-icon-measure-area {
-   background-image: url(img/ruler_square.png) !important;
+   background-image: url(img/ruler_square.png);
 }
 .x-btn .cgxp-icon-measure-azimuth, .x-menu-item .cgxp-icon-measure-azimuth, .x-tree-node .cgxp-icon-measure-azimuth {
-   background-image: url(img/ruler_triangle.png) !important;
+   background-image: url(img/ruler_triangle.png);
 }
 
+/*.x-btn .cgxp-icon-googleearthview, .x-tree-node .cgxp-icon-googleearthview {*/
 /* cgxp_googleearthview */
-.x-btn .cgxp-icon-googleearthview {
-    background-image: url(img/google_earth.png) !important;
+.x-toolbar .cgxp-icon-googleearthview, .x-menu .cgxp-icon-googleearthview {
+    background-image: url(img/google_earth.png);
 }
 
 /* cgxp_streetview */
-.x-btn .cgxp-icon-streetview {
-    background-image: url(img/streetview.png) !important;
-}
+/*.x-toolbar .cgxp-icon-streetview, .x-menu .cgxp-icon-streetview {
+    background-image: url(img/streetview.png);
+}*/
 
-.x-toolbar .permalink {
-    background: url('img/permalink.png') top left no-repeat;
+.x-toolbar .permalink, .x-menu .permalink {
+    background: url(img/permalink.png) top left no-repeat;
 }
-.x-toolbar .info {
-    background: url('img/information.png') top left no-repeat;
+.x-toolbar .info, .x-menu .info {
+    background: url(img/information.png) top left no-repeat;
 }
-.x-toolbar .infotooltip {
-    background: url('img/cursor.png') top left no-repeat;
+.x-toolbar .infotooltip, .x-menu .infotooltip {
+    background: url(img/cursor.png) top left no-repeat;
 }
-.x-toolbar .help {
-    background: url('img/help.png') top left no-repeat;
+.x-toolbar .help, .x-menu .help {
+    background: url(img/help.png) top left no-repeat;
 }
-.x-toolbar .print {
-    background: url('img/printer.png') top left no-repeat;
+.x-toolbar .print, .x-menu .print {
+    background: url(img/printer.png) top left no-repeat;
 }
 
 div.olControlOverviewMapElement {
@@ -245,7 +271,7 @@ div.baseLayersOpacitySlider .opacityToolbar {
 }
 
 .loading {
-    background-image: url(img/loading.gif) !important;
+    background-image: url(img/loading.gif);
 }
 
 .opacityToolbar {
