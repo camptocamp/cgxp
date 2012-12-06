@@ -161,7 +161,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /* i18n */
-    actionTooltip: 'Query the map',
+    tooltipText: 'Query the map',
+    menuText: 'Query the map',
     noLayerSelectedMessage: 'No layer selected',
 
     /** api: method[addActions]
@@ -173,7 +174,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 allowDepress: true,
                 enableToggle: true,
                 iconCls: 'info',
-                tooltip: this.actionTooltip,
+                tooltip: this.tooltipText,
+                menuText: this.menuText,
                 toggleGroup: this.toggleGroup,
                 control: this.toolWFSControl
             }, this.actionOptions));

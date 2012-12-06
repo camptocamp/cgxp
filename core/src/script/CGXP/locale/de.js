@@ -227,6 +227,11 @@ GeoExt.Lang.add("de", {
         noLayerSelectedMessage: 'Keine Ebene ausgewählt'
     },
 
+    "cgxp.plugins.GetFeature.prototype": {
+        actionTooltip: 'Informationen in der Karte abfragen',
+        menuText: 'Abfragen der Karte'
+    },
+
     "GeoExt.ux.form.FeaturePanel.prototype": {
         pointRadiusFieldText: "Grösse",
         colorFieldText: "Farbe",

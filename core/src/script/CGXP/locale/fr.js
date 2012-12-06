@@ -232,6 +232,11 @@ GeoExt.Lang.add("fr", {
         noLayerSelectedMessage: 'Pas de couche sélectionnée'
     },
 
+    "cgxp.plugins.GetFeature.prototype": {
+        tooltipText: 'Interroge la carte',
+        menuText: 'Interroge la carte'
+    },
+
     "cgxp.FloorSlider.prototype": {
         skyText: "Ciel",
         floorText: "Étages"
