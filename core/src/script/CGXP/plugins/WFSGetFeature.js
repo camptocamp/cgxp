@@ -261,7 +261,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             clickTolerance: this.clickTolerance, 
             eventListeners: {
                 featuresselected: function(e) {
-                    this.events.fireEvent('queryresults', {features: e.features);
+                    this.events.fireEvent('queryresults', {features: e.features});
                 },
                 activate: function() {
                     this.events.fireEvent('queryopen');
