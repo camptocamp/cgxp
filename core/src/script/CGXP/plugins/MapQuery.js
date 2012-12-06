@@ -77,6 +77,11 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
      */
     highlightLayerOptions: null,
 
+    /** api: config[actionConfig]
+     *  ``Object``
+     *  Configuration object for the action created by this plugin.
+     */
+
     /* i18n */
     actionTooltip: 'Query the map',
     menuText: 'Query the map',
@@ -123,7 +128,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
                 menuText: this.menuText,
                 toggleGroup: this.toggleGroup,
                 control: this.createControl()
-            }, this.options);
+            }, this.actionConfig);
             var action = new GeoExt.Action(options);
             return cgxp.plugins.MapQuery.superclass.addActions.apply(this, [[action]]);
         }

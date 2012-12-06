@@ -74,12 +74,10 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
     /** i18n */
     menuText: 'Help',
 
-    /** api: config[options]
+    /** api: config[actionConfig]
      *  ``Object``
-     *  Config options for the ``Ext.Action`` created by this plugin.
-     *  Default is ``null``.
+     *  Configuration object for the action created by this plugin.
      */
-    options: null,
 
     /** api: method[addActions]
      */
@@ -93,7 +91,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
                 window.open(this.url);
             },
             scope: this
-        }, this.options));
+        }, this.actionConfig));
         return cgxp.plugins.Help.superclass.addActions.apply(this, [action]);
     }
 });

@@ -220,13 +220,18 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     container: null,
 
+    /** api: config[actionConfig]
+     *  ``Object``
+     *  Configuration object for the action created by this plugin.
+     */
+
     /** private: method[addActions]
      */
     addActions: function() {
         var control =  this.createControl();
         this.control = control;
         this.target.mapPanel.map.addControl(control);
-        var btn = new GeoExt.Action({
+        var btn = new GeoExt.Action(Ext.Apply({
             allowDepress: true,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
@@ -235,8 +240,8 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             tooltip: this.tooltipText,
             menuText: this.menuText,
             control: control
-        });
-        return cgxp.plugins.Profile.superclass.addActions.apply(this,[btn]);
+        }, this.actionConfig));
+        return cgxp.plugins.Profile.superclass.addActions.apply(this, [btn]);
     },
 
     /** private: method[addOutput]

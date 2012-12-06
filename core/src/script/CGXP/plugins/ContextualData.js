@@ -105,6 +105,11 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
         rightclickTpl: null
     },
 
+    /** api: config[actionConfig]
+     *  ``Object``
+     *  Configuration object for the action created by this plugin.
+     */
+
     /** api: method[handleServerData]
      *  Method intended to be overriden at config level, so users can specify
      *  specific treatments on server data
@@ -223,7 +228,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
                 menuText: this.menuText,
                 toggleGroup: this.toggleGroup,
                 control: control
-            }, this.options));
+            }, this.actionConfig));
             return cgxp.plugins.ContextualData.superclass.addActions.apply(this, [[action]]);
         } else {
             return null;

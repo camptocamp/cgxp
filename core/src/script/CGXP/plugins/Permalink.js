@@ -53,11 +53,10 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_permalink */
     ptype: "cgxp_permalink",
 
-    /** api: config[options]
+    /** api: config[actionConfig]
      *  ``Object``
-     *  parameters for the tool
+     *  Configuration object for the action created by this plugin.
      */
-    options: null,
 
     /* i18n */
     toolTitle: "Permalink",
@@ -149,7 +148,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        var action = new Ext.Action(Ext.apply({
+        var action = Ext.apply({
             allowDepress: false,
             iconCls: 'permalink',
             tooltip: this.toolTitle,
@@ -159,7 +158,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                 permalinkTextField.setValue(link);
                 permalinkWindow.show();
             }
-        }, this.options));
+        }, this.actionConfig);
 
         return cgxp.plugins.Permalink.superclass.addActions.apply(this, [action]);
     }
