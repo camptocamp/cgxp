@@ -227,7 +227,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[csvExport]
-     *  Export as a SCV by default using the rfc4180 recommendation.
+     *  Export as a CSV by default using the rfc4180 recommendation.
      *  http://tools.ietf.org/html/rfc4180
      */
     csvExport: function() {
