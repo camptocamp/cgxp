@@ -291,7 +291,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
             eventListeners: {
                 getfeatureinfo: function(e) {
-                    this.events.fireEvent('queryresults', e.features);
+                    this.events.fireEvent('queryresults', {
+                        features: e.features
+                    });
                 },
                 activate: function() {
                     this.events.fireEvent('queryopen');
@@ -301,7 +303,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 },
                 clickout: function() {
                     // the GetFeature control converts empty result to clickout.
-                    this.events.fireEvent('queryresults', []);
+                    this.events.fireEvent('queryresults', {
+                        features: []
+                    });
                 },
                 scope: this
             }
@@ -341,7 +345,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
         var listners = {
             featuresselected: function(e) {
-                this.events.fireEvent('queryresults', e.features);
+                this.events.fireEvent('queryresults', {
+                    features: e.features,
+                    unqueriedLayerText: [] // TODO
+                });
             },
             activate: function() {
                 this.events.fireEvent('queryopen');
@@ -351,7 +358,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             },
             clickout: function() {
                 // the GetFeature control converts empty result to clickout.
-                this.events.fireEvent('queryresults', []);
+                this.events.fireEvent('queryresults', {
+                    features: []
+                });
             },
             scope: this
         };
