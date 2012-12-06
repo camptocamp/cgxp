@@ -31,6 +31,10 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** 
+ * THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
+ */
+
 /** api: example
  *  Sample code showing how to add a WFSGetFeature plugin to a
  *  `gxp.Viewer`:
