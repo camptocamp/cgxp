@@ -234,7 +234,10 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.GetFeature.prototype": {
         tooltipText: 'Interroge la carte',
-        menuText: 'Interroge la carte'
+        menuText: 'Interroge la carte',
+        unqueriedLayerTitle: "Impossible d'interroger cette couche",
+        unqueriedLayerText: "Cette couche ne supporte la l'interrogation " +
+                "boîte (WFS GetFeature)."
     },
 
     "cgxp.FloorSlider.prototype": {

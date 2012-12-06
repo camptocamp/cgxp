@@ -164,6 +164,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     tooltipText: 'Query the map',
     menuText: 'Query the map',
     noLayerSelectedMessage: 'No layer selected',
+    unqueriedLayerTitle: 'Unable to query this layer',
+    unqueriedLayerText: "This Layer don't support box query (WFS GetFeature).",
 
     /** api: method[addActions]
      */
@@ -205,6 +207,30 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
         this.buildWMSControl();
         this.buildWFSControls();
+    },
+
+    /** private method[getQueryableWMSLayers]
+     */
+    getQueryableWMSLayers: function(layers) {
+        var queryLayers = [];
+        // Add only queryable layer or sublayer.
+        Ext.each(layers, function(queryLayer) {
+            if (queryLayer in this.layersConfig) {
+                if (this.layersConfig[queryLayer].queryable) {
+                    queryLayers.push(queryLayer);
+                }
+                Ext.each(this.layersConfig[queryLayer]
+                        .childLayers, function(childLayer) {
+                    if (childLayer.queryable) {
+                        queryLayers.push(childLayer.name);
+                    }
+                });
+            }
+            else {
+                queryLayers.push(queryLayer);
+            }
+        }, this);
+        return queryLayers;
     },
 
     /** private method[createWMSControl]
@@ -265,25 +291,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         var url = layer.url instanceof Array ? layer.url[0] : layer.url;
                         var wmsOptions = this.buildWMSOptions(url, [layer],
                             clickPosition, layer.params.FORMAT);
-                        var queryLayers = [];
-                        // Add only queryable layer or sublayer.
-                        Ext.each(wmsOptions.params.QUERY_LAYERS, function(queryLayer) {
-                            if (queryLayer in this.layersConfig) {
-                                if (this.layersConfig[queryLayer].queryable) {
-                                    queryLayers.push(queryLayer);
-                                }
-                                Ext.each(this.layersConfig[queryLayer]
-                                        .childLayers, function(childLayer) {
-                                    if (childLayer.queryable) {
-                                        queryLayers.push(childLayer.name);
-                                    }
-                                });
-                            }
-                            else {
-                                queryLayers.push(queryLayer);
-                            }
-                        }, self);
-                        wmsOptions.params.QUERY_LAYERS = queryLayers;
+                        wmsOptions.params.QUERY_LAYERS =
+                                self.getQueryableWMSLayers(
+                                wmsOptions.params.QUERY_LAYERS);
                         OpenLayers.Request.GET(wmsOptions);
                     }
                 }
@@ -346,8 +356,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var listners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
-                    features: e.features,
-                    unqueriedLayerText: [] // TODO
+                    features: e.features
                 });
             },
             activate: function() {
@@ -377,6 +386,12 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 externalProtocol.format.featureType = l.externalLayers;
                 this.protocol = externalProtocol;
                 OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
+            }
+            if (l.unqueriedLayers.length > 0) {
+                self.events.fireEvent('queryresults', {
+                    features: [],
+                    unqueriedLayers: l.unqueriedLayers
+                });
             }
         };
 
@@ -446,6 +461,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         }
         var internalLayers = [];
         var externalLayers = [];
+        var unqueriedLayers = [];
 
         var currentRes = map.getResolution();
         Ext.each(olLayers, function(layer) {
@@ -457,6 +473,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 if (!layers) {
                     return;
                 }
+                layers = this.getQueryableWMSLayers(layers);
 
                 if (!Ext.isArray(layers)) {
                     layers = layers.split(',');
@@ -498,13 +515,19 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             break;
                         }
                     }
+                    unqueriedLayers.push({
+                        unqueriedLayerId: filteredLayers[j],
+                        unqueriedLayerTitle: this.unqueriedLayerTitle,
+                        unqueriedLayerText: this.unqueriedLayerText
+                    });
                 }
             }
         }, this);
 
         return {
             internalLayers: internalLayers,
-            externalLayers: externalLayers
+            externalLayers: externalLayers,
+            unqueriedLayers: unqueriedLayers
         };
     }
 });

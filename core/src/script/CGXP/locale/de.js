@@ -229,7 +229,10 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.GetFeature.prototype": {
         actionTooltip: 'Informationen in der Karte abfragen',
-        menuText: 'Abfragen der Karte'
+        menuText: 'Abfragen der Karte',
+        unqueriedLayerTitle: 'Unfähig, die Schicht abfragen',
+        unqueriedLayerText: "Diese Schicht unterstützt die Abfrage " +
+                "box (WFS GetFeature)."
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {
