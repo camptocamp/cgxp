@@ -134,16 +134,16 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-            
+
         var menu = new Ext.menu.Menu({
             id: this.id,
             getItem: function(item) {
                 if (self.splitButton || item.initialConfig.enableToggle) {
-                    if (self.splitButton) { 
+                    if (self.splitButton) {
                         item.addListener('checkchange', setActiveItem);
                     }
                     else {
-                        item.addListener('checkchange', 
+                        item.addListener('checkchange',
                                 function(item, checked) {
                             // for backward compatibility to toggle button
                             item.fireEvent('toggle', item);
@@ -155,7 +155,7 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                              }
                              Ext.menu.CheckItem.superclass.handleClick
                                     .apply(this, arguments);
-                         }; 
+                         };
                     }
                     return item
                 }
@@ -165,18 +165,18 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                         group: item.initialConfig.toggleGroup,
                         listeners: {}
                     }, item.initialConfig);
-                    if (self.splitButton) { 
+                    if (self.splitButton) {
                         config.listeners.checkchange = setActiveItem;
                     }
                     return config;
                 }
             },
             add: function(item) {
-                return Ext.menu.Menu.superclass.add.apply(this, 
+                return Ext.menu.Menu.superclass.add.apply(this,
                         [this.getItem(item)]);
             },
             insert: function(index, item) {
-                return Ext.menu.Menu.superclass.insert.apply(this, 
+                return Ext.menu.Menu.superclass.insert.apply(this,
                         [index, this.getItem(item)]);
             }
         })
