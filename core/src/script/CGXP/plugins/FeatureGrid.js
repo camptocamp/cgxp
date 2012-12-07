@@ -463,9 +463,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
             // if no feature do nothing
             if ((!features || features.length === 0) &&
-                    !queryResult.unqueriedLayers || 
-                    queryResult.unqueriedLayers.length === 0) {
-                // if relay no feature close panel)
+                    (!queryResult.unqueriedLayers || 
+                    queryResult.unqueriedLayers.length === 0)) {
+                // if really no feature close panel)
                 if (previouslyNoFeature) {
                     this.tabpan.ownerCt.setVisible(false);
                     this.tabpan.ownerCt.ownerCt.doLayout();
