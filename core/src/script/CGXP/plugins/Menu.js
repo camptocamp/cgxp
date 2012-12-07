@@ -119,8 +119,8 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
         var self = this;
         var listeners = {};
         var setActiveItem;
-        if (this.splitButton) { 
-            function setActiveItem(item, checked) {
+        if (this.splitButton) {
+            setActiveItem = function(item, checked) {
                 self.activeItem = item;
                 self.button.toggle(checked);
                 // for backward compatibility to toggle button
