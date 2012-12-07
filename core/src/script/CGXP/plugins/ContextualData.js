@@ -197,7 +197,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
         var control;
         if (this.enabledAction == 'all' || this.enabledAction == 'rightclick') {
-            // Right Clic-context menu
+            // Right Click-context menu
             control = new cgxp.plugins.ContextualData.ContextPopup({
                 handleRightClicks:true,
                 map: this.target.mapPanel.map,
