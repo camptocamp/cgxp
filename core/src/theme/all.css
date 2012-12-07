@@ -33,6 +33,9 @@ div.x-panel a:hover {
 .x-form-file-wrap table.x-form-file-btn {
     top: 0;
 }
+.x-panel-bwrap {
+    font-family: tahoma,arial,verdana,sans-serif;
+}
 
 /* cgxp_disclaimer */
 .disclaimer-ct {
@@ -395,6 +398,11 @@ div.legend label.layerparam-label {
 }
 .legend_level_3 {
     margin-left: 80px;
+}
+
+/* cgxp featuregrid */
+#featuregrid-container .x-panel-body {
+    font-size: 12px;
 }
 
 /* cgxp featureswindow */
