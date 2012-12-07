@@ -132,7 +132,7 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                         self.button.setText(item.text);
                     }
                 }
-            }
+            };
         }
 
         var menu = new Ext.menu.Menu({
