@@ -215,7 +215,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.MapQuery.prototype": {
         actionTooltip: 'Informationen in der Karte abfragen',
-        menuText: 'Informationen der Karte'
+        menuText: 'Informationen abfragen'
     },
 
     "cgxp.plugins.WFSGetFeature.prototype": {
