@@ -236,7 +236,7 @@ GeoExt.Lang.add("fr", {
         tooltipText: 'Interroge la carte',
         menuText: 'Interroge la carte',
         unqueriedLayerTitle: "Impossible d'interroger cette couche",
-        unqueriedLayerText: "Cette couche ne supporte la l'interrogation " +
+        unqueriedLayerText: "Cette couche ne supporte l'interrogation " +
                 "boîte (WFS GetFeature)."
     },
 
