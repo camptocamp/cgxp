@@ -210,6 +210,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     warningMsgStyle: 'warningmsg',
 
+    /** api: config[showUnqueriedLayersTabs]
+     *  ``Bool`` show or hide the unqueried layers in the tabpanel, default is true.
+     */
+    showUnqueriedLayersTabs: true,   
+
     /** private: property[selectAll]
      */
 
@@ -422,7 +427,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         });
 
         this.events.on('querystarts', function() {
-            if (this.currentGrid && this.currentGrid.getSelectionModel) {
+            if (this.currentGrid && this.currentGrid.getSelectionModel &&
+                this.currentGrid.getStore()) {
                 this.currentGrid.getSelectionModel().clearSelections();
             }
             this.currentGrid = null;
@@ -561,7 +567,20 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         scope: this
                     });
                     this.gridByType[feature.type] = grid;
-                    this.tabpan.add(grid);
+                    // add the grid tab before the unqueried layer tabs, if any
+                    var nbitems = this.tabpan.items.items.length;
+                    if (nbitems > 0) {
+                        var idx = 0;
+                        for (var j=0, itemslen=nbitems; j<itemslen; j++)  {
+                            if (this.tabpan.items.items[j].getXType() != 'grid') {
+                                idx = j;
+                                break;
+                            }
+                        }
+                        this.tabpan.insert(idx, grid);
+                    } else {
+                        this.tabpan.add(grid);
+                    }
                 } else {
                     grid = this.gridByType[feature.type];
                     // reset grid selection
@@ -598,7 +617,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.warningMsg.setText(queryResult.warningMsg);
             }
             // add extra tab for special empty layers, if set
-            if (queryResult.unqueriedLayers) {
+            if (queryResult.unqueriedLayers && this.showUnqueriedLayersTabs) {
                 for (var i=0, len=queryResult.unqueriedLayers.length; i<len; i++) {
                     // check if tab already exists
                     var tab = this.tabpan.find('title', queryResult.unqueriedLayers[i].unqueriedLayerId)
