@@ -47,7 +47,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              events: EVENTS,
  *              themes: THEMES,
- *              WFSURL: "${request.route_url('mapserverproxy', path='')}",
+ *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
  *              WFSTypes: ${WFSTypes | n},
  *              externalWFSTypes: ${externalWFSTypes | n},
  *              enableWMTSLayers: true
@@ -155,7 +155,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      *  The queryable type on the parent server.
      */
 
-    /** api: config[WFSURL]
+    /** api: config[mapserverURL]
      *  ``String``
      *  The mapserver proxy URL
      */
@@ -248,54 +248,90 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             queryVisible: true,
             drillDown: true,
             autoActivate: true,
+
             findLayers: function() {
-                var layers = OpenLayers.Control.WMSGetFeatureInfo
-                    .prototype.findLayers.apply(this, arguments);
-                if (layers.length == 0) {
-                    Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
+                // OpenLayers.Control.WMSGetFeatureInfo.prototype.findLayers
+                // modified to get BaseLayers and add a message on
+                // no layers selected
+                var candidates = this.layers || this.map.layers;
+                var layers = [];
+                var layer, url;
+                for (var i = candidates.length - 1; i >= 0; --i) {
+                    layer = candidates[i];
+                    if (!this.queryVisible || layer.getVisibility()) {
+                        if (layer instanceof OpenLayers.Layer.WMS) {
+                            url = OpenLayers.Util.isArray(layer.url) ? layer.url[0] : layer.url;
+                            // if the control was not configured with a url, set it
+                            // to the first layer url
+                            if (this.drillDown === false && !this.url) {
+                                this.url = url;
+                            }
+                            if (this.drillDown === true || this.urlMatches(url)) {
+                                layers.push(layer);
+                            }
+                        }
+                        else if (self.enableWMTSLayers &&
+                                (layer instanceof OpenLayers.Layer.WMTS ||
+                                typeof layer == 'OpenLayers.Layer.TMS')) {
+                            layers.push(layer);
+                        }
+                    }
                 }
                 return layers;
             },
 
-            // copied from OpenLayers.Control.WMSGetFeatureInfo and updated as
-            // stated in comments
             request: function(clickPosition, options) {
-                events.fireEvent('querystarts');
+                // OpenLayers.Control.WMSGetFeatureInfo.prototype.request
+                // modified to support WMTS layers, external parameter,
+                // add a message on no layers selected
+                // and lunch querystarts event
+                self.events.fireEvent('querystarts');
                 var layers = this.findLayers();
-                if (layers.length === 0) {
-                    this.events.fireEvent("nogetfeatureinfo");
+                if (layers.length == 0) {
+                    Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
+                    this.events.triggerEvent("nogetfeatureinfo");
                     // Reset the cursor.
                     OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
                     return;
                 }
 
                 options = options || {};
-                if (this.drillDown === false) {
-                    var wmsOptions = this.buildWMSOptions(this.url, layers,
-                        clickPosition, layers[0].params.FORMAT);
-                    var request = OpenLayers.Request.GET(wmsOptions);
-
-                    if (options.hover === true) {
-                        this.hoverRequest = request;
+                this._requestCount = 0;
+                this._numRequests = 0;
+                this.features = [];
+                // group according to service url to combine requests
+                var externalServices = {}, internalServices = {}, url;
+                for (var i=0, len=layers.length; i<len; i++) {
+                    var layer = layers[i];
+                    if (!(layer instanceof OpenLayers.Layer.WMS)) {
+                        // Create a fake WMS layer
+                        layer = {
+                            url: self.mapserverURL,
+                            projection:
+                                self.target.mapPanel.map.getProjectionObject(),
+                            reverseAxisOrder: function() { return false },
+                            params: Ext.apply({
+                                LAYERS: layer.queryLayers || layer.mapserverLayers,
+                                VERSION: '1.1.1'
+                            }, layer.mapserverParams)
+                        }
                     }
-                } else {
-                    // Following is specific code, updated from original
-                    // OpenLayers.Control.WMSGetFeatureInfo code to make
-                    // exactly one request by layer, so our mapserver proxy
-                    // don't get lost.
-                    this._requestCount = 0;
-                    this._numRequests = layers.length;
-                    this.features = [];
-                    for (var i=0, len=layers.length; i<len; i++) {
-                        var layer = layers[i];
-                        var url = layer.url instanceof Array ? layer.url[0] : layer.url;
-                        var wmsOptions = this.buildWMSOptions(url, [layer],
-                            clickPosition, layer.params.FORMAT);
-                        wmsOptions.params.QUERY_LAYERS =
-                                self.getQueryableWMSLayers(
-                                wmsOptions.params.QUERY_LAYERS);
-                        OpenLayers.Request.GET(wmsOptions);
+                    var services = layer.params.EXTERNAL ?
+                        externalServices : internalServices;
+                    url = OpenLayers.Util.isArray(layer.url) ? layer.url[0] : layer.url;
+                    if (url in services) {
+                        services[url].push(layer);
+                    } else {
+                        this._numRequests++;
+                        services[url] = [layer];
                     }
+                }
+                var layers;
+                for (var url in services) {
+                    layers = services[url];
+                    var wmsOptions = this.buildWMSOptions(url, layers,
+                        clickPosition, 'image/png');
+                    OpenLayers.Request.GET(wmsOptions);
                 }
             },
 
@@ -335,7 +371,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     buildWFSControls: function() {
         var protocol = new OpenLayers.Protocol.WFS({
-            url: this.WFSURL,
+            url: this.mapserverURL,
             geometryName: this.geometryName,
             srsName: this.target.mapPanel.map.getProjection(),
             formatOptions: {
@@ -344,7 +380,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
         });
         var externalProtocol = new OpenLayers.Protocol.WFS({
-            url: this.WFSURL + "?EXTERNAL=true",
+            url: this.mapserverURL + "?EXTERNAL=true",
             geometryName: this.geometryName,
             srsName: this.target.mapPanel.map.getProjection(),
             formatOptions: {
