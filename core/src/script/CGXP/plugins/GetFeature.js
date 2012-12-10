@@ -464,63 +464,66 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var unqueriedLayers = [];
 
         var currentRes = map.getResolution();
-        Ext.each(olLayers, function(layer) {
-            var j, lenj, l, k;
-            if (layer.getVisibility() === true) {
-                var layers = layer.params.LAYERS ||
-                             layer.queryLayers ||
-                             layer.mapserverLayers;
+        Ext.each(olLayers, function(olLayer) {
+            if (olLayer.getVisibility() === true) {
+                var layers = olLayer.params.LAYERS ||
+                             olLayer.queryLayers ||
+                             olLayer.mapserverLayers;
                 if (!layers) {
                     return;
                 }
-                layers = this.getQueryableWMSLayers(layers);
 
                 if (!Ext.isArray(layers)) {
                     layers = layers.split(',');
                 }
+                layers = this.getQueryableWMSLayers(layers);
 
                 var filteredLayers = [];
-                for (j = 0, lenj = layers.length; j < lenj; j++) {
-                    l = this.layersConfig[layers[j]];
+                Ext.each(layers, function(layer) {
+                    l = this.layersConfig[layer];
                     if (l) {
                         if (l.childLayers && l.childLayers.length > 0) {
                             // layer is a layergroup (as per Mapserver)
-                            for (k = 0, lenk = l.childLayers.length; k < lenk; k++) {
-                                var c = l.childLayers[k];
-                                if (inRange(c, currentRes)) {
+                            Ext.each(l.childLayers, function(child) {
+                                if (inRange(child, currentRes)) {
                                     filteredLayers.push(c.name);
                                 }
-                            }
+                            }, this);
                         } else {
                             // layer is not a layergroup
                             if (inRange(l, currentRes)) {
-                                filteredLayers.push(layers[j]);
+                                filteredLayers.push(layer);
                             }
                         }
-                    } else if (inRange(layers[j], currentRes)) {
-                        filteredLayers.push(layers[j].name || layers[j]);
+                    } else if (inRange(layer, currentRes)) {
+                        filteredLayers.push(layer.name || layer);
                     }
-                }
+                }, this);
 
-                for (j = 0, lenj = filteredLayers.length ; j < lenj ; j++) {
-                    for (var i = 0, leni = this.WFSTypes.length ; i < leni ; i++) {
-                        if (this.WFSTypes[i] === filteredLayers[j]) {
-                            internalLayers.push(this.WFSTypes[i]);
-                            break;
+                Ext.each(filteredLayers, function(layer) {
+                    var queryed = false;
+                    if (olLayer.mapserverParams &&
+                            olLayer.mapserverParams.EXTERNAL ||
+                            olLayer.params && olLayer.params.EXTERNAL) {
+                        if (this.externalWFSTypes.indexOf(layer) >= 0) {
+                            externalLayers.push(layer);
+                            queryed = true;
                         }
                     }
-                    for (k = 0, lenk = this.externalWFSTypes.length ; k < lenk ; k++) {
-                        if (this.externalWFSTypes[k] === filteredLayers[j]) {
-                            externalLayers.push(this.externalWFSTypes[k]);
-                            break;
+                    else {
+                        if (this.WFSTypes.indexOf(layer) >= 0) {
+                            internalLayers.push(layer);
+                            queryed = true;
                         }
                     }
-                    unqueriedLayers.push({
-                        unqueriedLayerId: filteredLayers[j],
-                        unqueriedLayerTitle: this.unqueriedLayerTitle,
-                        unqueriedLayerText: this.unqueriedLayerText
-                    });
-                }
+                    if (!queryed) {
+                        unqueriedLayers.push({
+                            unqueriedLayerId: layer,
+                            unqueriedLayerTitle: this.unqueriedLayerTitle,
+                            unqueriedLayerText: this.unqueriedLayerText
+                        });
+                    }
+                }, this);
             }
         }, this);
 
