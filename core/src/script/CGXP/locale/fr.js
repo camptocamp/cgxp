@@ -146,6 +146,11 @@ GeoExt.Lang.add("fr", {
         windowTitleText: "Ajouter un serveur WMS"
     },
 
+    "cgxp.plugins.AddKMLFile.prototype": {
+        buttonText: "Ajouter KML",
+        waitMsgText: "Chargement..."
+    },
+
     "cgxp.plugins.ContextualData.prototype": {
         actionTooltipText: "Tooltips d'informations contextuelles"
     },

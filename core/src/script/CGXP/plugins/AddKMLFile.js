@@ -64,7 +64,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
     /** api: config[buttonText]
      *  ``String`` The "add kml" button text (i18n).
      */
-    buttonText: "Add KML File",
+    buttonText: "Add KML",
 
     /** api: config[waitMsgText]
      *  ``String`` The "wait while loading" message text (i18n).

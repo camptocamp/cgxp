@@ -142,6 +142,11 @@ GeoExt.Lang.add("de", {
         windowTitleText: 'WMS-Layer hineinladen'
     },
 
+    "cgxp.plugins.AddKMLFile.prototype": {
+        buttonText: "KML hinzufügen",
+        waitMsgText: "Lade Daten..."
+    },
+
     "cgxp.plugins.ContextualData.prototype": {
         actionTooltipText: "Contextual Informations Tooltips"
     },
