@@ -508,6 +508,14 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     background: #f4f4f4;
 }
 
+/* CGXP add KML */
+.x-toolbar .x-form-file-btn {
+    margin-top: 2px;
+}
+.ext-ie .x-toolbar .x-form-file-btn {
+    margin-top: 1px;
+}
+
 /* WMS browser */
 .x-tree-node-leaf .x-tree-node-noicon {
     background-image: none;
