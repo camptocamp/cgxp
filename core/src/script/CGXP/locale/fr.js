@@ -142,8 +142,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
-        buttonText: "+ WMS",
-        windowTitleText: "Ajouter des couches WMS"
+        buttonText: "Ajouter WMS",
+        windowTitleText: "Ajouter un serveur WMS"
     },
 
     "cgxp.plugins.ContextualData.prototype": {
