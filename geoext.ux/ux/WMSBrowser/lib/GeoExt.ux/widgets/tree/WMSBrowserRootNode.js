@@ -114,6 +114,10 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
      */
     onWMSCapabilitiesLoad: function() {
         if (this.hasChildNodes()) {
+            // Expand WMS services
+            Ext.each(this.childNodes, function(node) {
+                node.expanded = true;
+            });
             this.wmsbrowser.fireEvent('getcapabilitiessuccess');
         } else if (this.loader.url != this.INIT_URL) {
             this.onWMSCapabilitiesStoreLoadException();
