@@ -518,3 +518,6 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
 .x-tree-node-leaf .x-tree-node-icon-queryable {
     background-image: url("img/information.png");
 }
+div.x-panel .olControlZoom a:hover {
+    text-decoration: none;
+}
