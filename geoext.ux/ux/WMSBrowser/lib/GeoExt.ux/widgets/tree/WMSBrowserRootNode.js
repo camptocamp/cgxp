@@ -43,16 +43,54 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
      */
     constructor: function(config) {
         Ext.apply(this, config);
-        Ext.apply(this, {loader: new GeoExt.tree.WMSCapabilitiesLoader({
+
+        var self = this;
+        var wmsBrowserTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
+            renderElements: function(n, a, targetNode, bulkRender) {
+                Ext.tree.TreeNodeUI.prototype.renderElements.apply(this, arguments);
+                if (n.childNodes.length === 0) {
+                    this.onIconClsChange(n);
+                }
+            },
+            onIconClsChange: function(node, cls, oldCls) {
+                if (this.rendered) {
+                    var iconCls = 'x-tree-node-noicon';
+                    var elem = Ext.fly(this.iconNode);
+                    elem.dom.title = '';
+
+                    var compatible = self.wmsbrowser.treePanel.isLayerCompatible(
+                        node.attributes.layer, true);
+                    if (!compatible.compatible) {
+                        iconCls = 'x-tree-node-icon-unsupported';
+                        var message = 
+                            self.wmsbrowser.layerCantBeAddedText + '\n' +
+                            compatible.reasons.join(',\n');
+                        elem.dom.title = message;
+                    }
+                    else if (node.attributes.layer.queryable) {
+                        iconCls = 'x-tree-node-icon-queryable';
+                        elem.dom.title = self.wmsbrowser.queryableTooltip;
+                    }
+
+                    elem.replaceClass(this.iconCls, iconCls);
+                    this.iconCls = iconCls;
+                }
+            }
+        });
+        this.loader = new GeoExt.tree.WMSCapabilitiesLoader({
             url: "__foo__",
             layerOptions: {buffer: 0, ratio: 1},
             layerParams: {'TRANSPARENT': 'TRUE'},
             // customize the createNode method to add a checkbox to nodes
             createNode: function(attr) {
                 attr.checked = attr.leaf ? false : undefined;
+                attr.uiProvider = 'wmsbrowser';
                 return GeoExt.tree.WMSCapabilitiesLoader.prototype.createNode.apply(this, [attr]);
+            },
+            uiProviders: {
+                wmsbrowser: wmsBrowserTreeNodeUI
             }
-        })});
+        });
 
         arguments.callee.superclass.constructor.call(this, config);
 

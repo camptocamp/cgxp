@@ -143,6 +143,11 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
 
     /** api: config[errorText] ``String`` i18n */
     errorText: "Error",
+
+    /** api: config[errorText] ``String`` i18n */
+    queryableTooltip: 'This is layer is querryable',
+
+
     /* end i18n */
 
     /** api: config[layerStore]
