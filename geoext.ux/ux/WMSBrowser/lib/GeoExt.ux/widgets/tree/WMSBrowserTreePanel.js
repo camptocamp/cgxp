@@ -54,7 +54,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
      */
     constructor: function(config) {
         Ext.apply(this, config);
-        Ext.apply(this, {listeners: {
+        Ext.apply(this, { listeners: {
             'checkchange': function(node, checked) {
                 if (checked === true) {
                     if (!this.isLayerCompatible(node.attributes.layer)) {

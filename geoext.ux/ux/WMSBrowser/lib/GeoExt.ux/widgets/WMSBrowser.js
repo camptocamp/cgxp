@@ -404,6 +404,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                         this.triggerGetCapabilities();
                     }
                 },
+                'select': function() {
+                    this.triggerGetCapabilities();
+                },
                 scope: this
             }
         });
