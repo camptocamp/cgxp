@@ -4,10 +4,6 @@ div.x-panel a {
 div.x-panel a:hover {
     text-decoration: underline;
 }
-div#header-out {
-    position: relative;
-    z-index: 20001;
-}
 .app-accordion-body {
     padding: 3px;
 }
