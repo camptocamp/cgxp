@@ -369,8 +369,11 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             selectFeature: function(feature) {
                 var MF = OpenLayers.Control.ModifyFeature;
                 this.mode = MF.RESHAPE | MF.DRAG;
-                if (feature.isCircle){
+                if (feature.attributes.isCircle){
                     this.mode = MF.RESIZE | MF.DRAG;
+                }
+                if (feature.attributes.isBox){
+                    this.mode = MF.RESHAPE | MF.RESIZE & ~MF.RESHAPE | MF.DRAG;
                 }
                 MF.prototype.selectFeature.apply(this, arguments);
             }
@@ -495,6 +498,13 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             if (geometryType == OpenLayers.i18n("Circle")) {
                 control.events.on({
                     "featureadded": this.onCircleAdded,
+                    scope: this
+                });
+            }
+
+            if (geometryType == OpenLayers.i18n("Box")) {
+                control.events.on({
+                    "featureadded": this.onBoxAdded,
                     scope: this
                 });
             }
@@ -685,7 +695,17 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      */
     onCircleAdded: function(event) {
         var feature = event.feature;
-        feature.isCircle = true;
+        feature.attributes.isCircle = true;
+    },
+
+    /** private: method[onBoxAdded]
+     *  :param event: ``event``
+     *  Called when a new box feature is added to the activeLayer.  Set a flag
+     *  to let the controler know it's a box.
+     */
+    onBoxAdded: function(event) {
+        var feature = event.feature;
+        feature.attributes.isBox = true;
     },
 
     /** private: method[onFeatureAdded]
