@@ -69,6 +69,14 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                     this.setLayerNameFromCheckedNodes();
                     this.wmsbrowser.resetCenterFormPanel();
                 }
+            },
+            'click': function(node) {
+                if (!node.hasChildNodes()) {
+                    this.loadLayerMetadata(node.attributes.layer);
+                }
+                else {
+                    this.loadLayerMetadata();
+                }
             }
         }});
 
