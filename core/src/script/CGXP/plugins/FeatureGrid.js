@@ -28,6 +28,7 @@
  * @include OpenLayers/Rule.js
  * @include OpenLayers/Feature/Vector.js
  * @include OpenLayers/Control/SelectFeature.js
+ * @include OpenLayers/Filter.js
  */
 
 /** api: (define)
@@ -511,7 +512,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
                     var store = new GeoExt.data.FeatureStore({
                         layer: this.vectorLayer,
-                        fields: fields
+                        fields: fields,
+                        featureFilter: new OpenLayers.Filter({
+                            evaluate: function(f) {
+                                return f.type == feature.type;
+                            }
+                        })
                     });
 
                     grid = new Ext.grid.GridPanel({
