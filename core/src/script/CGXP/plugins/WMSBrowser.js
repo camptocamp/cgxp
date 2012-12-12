@@ -47,7 +47,10 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_wmsbrowser',
  *              actionTarget: "center.tbar",
- *              layerTreeId: "layertree"
+ *              layerTreeId: "layertree",
+ *              defaultUrls: [
+ *                  'http://wms.geo.admin.ch'
+ *              ]
  *          }]
  *          ...
  *      });
