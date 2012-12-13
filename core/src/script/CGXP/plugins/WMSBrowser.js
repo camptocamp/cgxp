@@ -75,7 +75,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     /** api: config[windowTitleText]
      *  ``String`` The "Add WMS layers" window title text (i18n).
      */
-    windowTitleText: "Add a WMS server",
+    windowTitleText: "Add WMS layers",
 
     /** api: config[layerTreeId]
      *  ``String`` Id of the layertree tool (optional).
