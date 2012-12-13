@@ -84,7 +84,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     noText: "No",
 
     /** api: config[addLayerText] ``String`` i18n */
-    addLayerText: "Add layer",
+    addLayerText: "Add",
 
     /** api: config[addSelectedLayersText] ``String`` i18n */
     addSelectedLayersText: "Add currently selected layers as one single layer.",
@@ -121,7 +121,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     inputURLInvalidText: "The url address entered is not valid.",
 
     /** api: config[layerNameText] ``String`` i18n */
-    layerNameText: "Layer name",
+    layerNameText: "Layers name",
 
     /** api: config[noLayerReturnedText] ``String`` i18n */
     noLayerReturnedText: "The url address is valid but returned no layers.",
@@ -143,6 +143,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
 
     /** api: config[errorText] ``String`` i18n */
     errorText: "Error",
+
+    /** api: config[errorText] ``String`` i18n */
+    queryableTooltip: 'This layer is queryable',
     /* end i18n */
 
     /** api: config[layerStore]
@@ -398,6 +401,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                     if (e.keyCode == e.ENTER) {
                         this.triggerGetCapabilities();
                     }
+                },
+                'select': function() {
+                    this.triggerGetCapabilities();
                 },
                 scope: this
             }
