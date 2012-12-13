@@ -232,7 +232,12 @@ GeoExt.Lang.add("de", {
         menuText: 'Abfragen der Karte',
         unqueriedLayerTitle: 'Diese Ebene kann nicht abgefragt werden.',
         unqueriedLayerText: "Diese Ebene unterstützt die Abfrage mittels " +
-                "Rechteck nicht (WFS GetFeature)."
+                "Rechteck nicht (WFS GetFeature).",
+        wfsSuggestionShort: "Tipp",
+        wfsSuggestionLong: "Die Abfrage mit einfachem Klick (WMS GetFeatureInfo) " +
+            "gibt nur beschränkte informationen zurück. Um mehr Informationen zu " +
+            "erhalten, fragen Sie die Karte mit einem Rechteck per Ctrl-Click-and-Drag " +
+            "oder einfachem Drag-and-Click (falls Tool im Menu aktiv) ab (WFS GetFeature)."
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {

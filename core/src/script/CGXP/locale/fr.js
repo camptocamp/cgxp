@@ -236,8 +236,14 @@ GeoExt.Lang.add("fr", {
         tooltipText: 'Interroge la carte',
         menuText: 'Interroge la carte',
         unqueriedLayerTitle: "Impossible d'interroger cette couche",
-        unqueriedLayerText: "Cette couche ne supporte l'interrogation " +
-                "boîte (WFS GetFeature)."
+        unqueriedLayerText: "Cette couche ne supporte pas l'interrogation " +
+                "boîte (WFS GetFeature).",
+        wfsSuggestionShort: "Suggestion",
+        wfsSuggestionLong: "L'interrogation simple click (WMS GetFeatureInfo) " +
+            "ne fournit que des informations limitées. Pour obtenir plus " + 
+            "d'information, effectuez une interrogation boite (WFS GetFeature) " +
+            "à l'aide d'un ctrl-click-déplacé (ou simplement un click-déplacé " +
+            "si l'outil d'interrogation est activé dans la barre d'outils."
     },
 
     "cgxp.FloorSlider.prototype": {
