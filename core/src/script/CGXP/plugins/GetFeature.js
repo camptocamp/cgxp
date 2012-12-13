@@ -167,7 +167,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     unqueriedLayerTitle: 'Unable to query this layer',
     unqueriedLayerText: "This Layer don't support box query (WFS GetFeature).",
     wfsSuggestionShort: "Suggestion",
-    wfsSuggestionLong: "Single click query (WMS GetFeatureInfo) provides limited information. To obtain additional information, please perform a box query (WFS GetFeature) with ctrl-click-drag (or simply click-drag if the query tool is available in the toolbar.",
+    wfsSuggestionLong: "To obtain information on an area, please perform a box query (WFS GetFeature) with ctrl-click-drag (or simply click-drag if the query tool is available in the toolbar.",
 
     /** api: method[addActions]
      */

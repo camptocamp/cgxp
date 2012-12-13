@@ -234,10 +234,9 @@ GeoExt.Lang.add("de", {
         unqueriedLayerText: "Diese Ebene unterstützt die Abfrage mittels " +
                 "Rechteck nicht (WFS GetFeature).",
         wfsSuggestionShort: "Tipp",
-        wfsSuggestionLong: "Die Abfrage mit einfachem Klick (WMS GetFeatureInfo) " +
-            "gibt nur beschränkte informationen zurück. Um mehr Informationen zu " +
-            "erhalten, fragen Sie die Karte mit einem Rechteck per Ctrl-Click-and-Drag " +
-            "oder einfachem Drag-and-Click (falls Tool im Menu aktiv) ab (WFS GetFeature)."
+        wfsSuggestionLong: "Informationen in einem Rechteck können über " +
+            "Ctrl-click-drag (oder einfach click-and-drag falls die Abfrage " +
+            "in der Toolbar aktiv ist)  abgefragt werden."
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {

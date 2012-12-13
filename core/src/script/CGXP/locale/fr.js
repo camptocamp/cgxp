@@ -239,9 +239,8 @@ GeoExt.Lang.add("fr", {
         unqueriedLayerText: "Cette couche ne supporte pas l'interrogation " +
                 "boîte (WFS GetFeature).",
         wfsSuggestionShort: "Suggestion",
-        wfsSuggestionLong: "L'interrogation simple click (WMS GetFeatureInfo) " +
-            "ne fournit que des informations limitées. Pour obtenir plus " + 
-            "d'information, effectuez une interrogation boite (WFS GetFeature) " +
+        wfsSuggestionLong: "Pour obtenir des informations sur une zone, effectuez " +
+            "une interrogation boite (WFS GetFeature) " +
             "à l'aide d'un ctrl-click-déplacé (ou simplement un click-déplacé " +
             "si l'outil d'interrogation est activé dans la barre d'outils."
     },
