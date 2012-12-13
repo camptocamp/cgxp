@@ -161,9 +161,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     showUnqueriedLayers: true,
 
+    /** private: config[warningMsg]
+     *  ``String`` Content of the suggestion tooltips.
+     */
     warningMsg: null,
-
-    bbar: null,
 
     init: function(target) {
         this.highlightStyle = OpenLayers.Util.applyDefaults(
@@ -346,10 +347,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 text: '',
                 cls: this.warningMsgStyle
             });
-            //this.bbar = [this.warningMsg];
-            //this.bbar = new Ext.Toolbar({items: [this.warningMsg]});
             var bbar = new Ext.Toolbar({items: [this.warningMsg]});
-            //this.bbar.setVisibilityMode(Ext.Element.DISPLAY);
             if (queryResult.warningMsg) {
                 this.warningMsg.setText(queryResult.warningMsg);
             }
@@ -367,7 +365,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                     },
                     scope: this
                 },
-                //bbar: this.bbar
                 bbar: bbar
             });
             
