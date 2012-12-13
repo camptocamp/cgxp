@@ -68,7 +68,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_wmsbrowser",
 
     /** api: config[buttonText]
-     *  ``String`` The "Add WMS server" button text (i18n)
+     *  ``String`` The "Add WMS" button text (i18n)
      */
     buttonText: "Add WMS",
 
