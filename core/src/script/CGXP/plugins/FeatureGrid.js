@@ -210,10 +210,10 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     warningMsgStyle: 'warningmsg',
 
-    /** api: config[showUnqueriedLayersTabs]
+    /** api: config[showUnqueriedLayers]
      *  ``Bool`` show or hide the unqueried layers in the tabpanel, default is true.
      */
-    showUnqueriedLayersTabs: true,   
+    showUnqueriedLayers: true,
 
     /** private: property[selectAll]
      */
@@ -455,6 +455,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }
 
             this.textItem.setText('');
+            this.warningMsg.setText('');
         }, this);
 
         this.events.on('queryclose', function() {
@@ -617,7 +618,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.warningMsg.setText(queryResult.warningMsg);
             }
             // add extra tab for special empty layers, if set
-            if (queryResult.unqueriedLayers && this.showUnqueriedLayersTabs) {
+            if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
                 for (var i=0, len=queryResult.unqueriedLayers.length; i<len; i++) {
                     // check if tab already exists
                     var tab = this.tabpan.find('title', queryResult.unqueriedLayers[i].unqueriedLayerId)
@@ -626,7 +627,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     } else {
                         // create tab
                         var p = {
-                            title: queryResult.unqueriedLayers[i].unqueriedLayerId,
+                            title: OpenLayers.i18n(queryResult.unqueriedLayers[i].unqueriedLayerId),
                             html: [queryResult.unqueriedLayers[i].unqueriedLayerTitle,
                               queryResult.unqueriedLayers[i].unqueriedLayerText].join('<br />')
                         }
