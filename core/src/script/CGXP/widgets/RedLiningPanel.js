@@ -61,6 +61,7 @@ cgxp.RedLiningPanel = Ext.extend(
                 'fillColor': true,
                 'strokeColor': true,
                 'fontColor': true,
+                'fontSize': true,
                 'graphic': function(val) { return val == 'true'; },
                 'label': true
             },
