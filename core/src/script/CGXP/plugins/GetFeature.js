@@ -166,6 +166,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     noLayerSelectedMessage: 'No layer selected',
     unqueriedLayerTitle: 'Unable to query this layer',
     unqueriedLayerText: "This Layer don't support box query (WFS GetFeature).",
+    wfsSuggestionShort: "Suggestion",
+    wfsSuggestionLong: "Single click query (WMS GetFeatureInfo) provides limited information. To obtain additional information, please perform a box query (WFS GetFeature) with ctrl-click-drag (or simply click-drag if the query tool is available in the toolbar.",
 
     /** api: method[addActions]
      */
@@ -338,7 +340,14 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             eventListeners: {
                 getfeatureinfo: function(e) {
                     this.events.fireEvent('queryresults', {
-                        features: e.features
+                        features: e.features,
+                        warningMsg: [
+                          '<abbr title="',
+                          self.wfsSuggestionLong,
+                          '">',
+                          self.wfsSuggestionShort,
+                          '</abbr>'
+                          ].join('')
                     });
                 },
                 activate: function() {
@@ -356,9 +365,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        // on click reset the down value wrong value
-        this.clickWMSControl.handler.click = function() {
-            var result = OpenLayers.Handler.Click.prototype.click
+        // solve problem with drag before click where event has a none-empty 
+        // value for passesTolerance which bypass the click triggering
+        this.clickWMSControl.handler.mouseup = function() {
+            var result = OpenLayers.Handler.Click.prototype.mouseup
                     .apply(this, arguments);
             this.down = null;
             return result;
