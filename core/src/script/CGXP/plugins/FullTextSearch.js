@@ -151,6 +151,17 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     grouping: false,
 
+    /** api: config[limits]
+     *  ``Object``
+     *  Configure the search limits.
+     *  Defaults to
+     *  ``{ limit: 40, partitionlimit: 10 }``
+     *  when we use the ``grouping`` option,
+     *  ``{ limit: 20 }``
+     *  otherwise.
+     */
+    limits: {},
+
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
 
@@ -196,8 +207,9 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     },
 
     createStore: function() {
-        var baseParams = this.grouping ? {limit: 40, partitionlimit: 10} :
-                                         {limit: 20};
+        var baseParams = Ext.apply(this.grouping ? 
+                { limit: 40, partitionlimit: 10 } :
+                { limit: 20 }, this.limits);
         var store = new GeoExt.data.FeatureStore({
             proxy: new Ext.data.ScriptTagProxy({
                 url: this.url,
