@@ -629,7 +629,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         var p = {
                             title: OpenLayers.i18n(queryResult.unqueriedLayers[i].unqueriedLayerId),
                             html: [queryResult.unqueriedLayers[i].unqueriedLayerTitle,
-                              queryResult.unqueriedLayers[i].unqueriedLayerText].join('<br />')
+                              queryResult.unqueriedLayers[i].unqueriedLayerText].join('<br />');
                         }
                         this.tabpan.add(p);
                     }
