@@ -57,10 +57,8 @@ Ext.namespace("cgxp.plugins");
  *    {
  *        source: "google",
  *        name: "TERRAIN",
- *        layerOptions: {
- *            ref: "google_terrain",
- *            group: "background"
- *        }
+ *        ref: "google_terrain",
+ *        group: "background"
  *    }
  */
 cgxp.plugins.GoogleSource = Ext.extend(gxp.plugins.GoogleSource, {
@@ -77,7 +75,15 @@ cgxp.plugins.GoogleSource = Ext.extend(gxp.plugins.GoogleSource, {
     createLayerRecord: function(config) {
         var record = cgxp.plugins.GoogleSource.superclass
                          .createLayerRecord.apply(this, arguments);
-        Ext.apply(record.data.layer, config.layerOptions);
+        if (record) {
+            var layer = record.getLayer();
+            if (config.group) {
+                layer.group = config.group;
+            }
+            if (config.ref) {
+                layer.ref = config.ref;
+            }
+        } 
         return record;
     }
 });
