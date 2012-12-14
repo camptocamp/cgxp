@@ -40,6 +40,12 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      */
     vectorLayer: null,
 
+    /** api: property[crosshairStyle]
+     *  `object`
+     *  The crosshair style
+     */
+    crosshairStyle: {},
+
     /** private: property[initialState]
      */
 
@@ -48,6 +54,12 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     initComponent: function() {
         var result = cgxp.MapPanel.superclass.initComponent.call(this);
         this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
+        // The crosshair should always be on top 
+        this.map.events.register('addlayer', this, function(layer) {
+            if (this.vectorLayer) {
+                this.map.raiseLayer(this.vectorLayer, 1);
+            }
+        });
     },
 
     /** private: method[getState]
@@ -97,7 +109,13 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
                 new OpenLayers.Feature.Vector(
                     new OpenLayers.Geometry.Point(
                         state.x, state.y
-                    )
+                    ), {},
+                    Ext.apply({
+                        externalGraphic: OpenLayers.Util.getImagesLocation() +
+                            "crosshair.png",
+                        graphicWidth: 16,
+                        graphicHeight: 16
+                    }, this.crosshairStyle)
                 )
             ]);
         }
