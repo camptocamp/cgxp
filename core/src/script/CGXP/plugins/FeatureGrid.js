@@ -206,7 +206,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     resultsText: "Results",
 
     /** api: config[warningMsgStyle]
-     *  ``String`` CSS style used for the warning message (i18n).
+     *  ``String`` CSS style used for the warning message.
      */
     warningMsgStyle: 'warningmsg',
 
@@ -363,7 +363,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     getCount: function() {
         if (!this.currentGrid) {
-            return '';
+            return "0 " + this.resultText;
         }
         var count = this.currentGrid.getStore().getCount();
         var resultText = (count>1) ? this.resultsText : this.resultText;
@@ -454,7 +454,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.tabpan.doLayout();
             }
 
-            this.textItem.setText('');
+            this.textItem.setText(this.getCount());
             this.warningMsg.setText('');
         }, this);
 
@@ -621,7 +621,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
                 for (var i=0, len=queryResult.unqueriedLayers.length; i<len; i++) {
                     // check if tab already exists
-                    var tab = this.tabpan.find('title', queryResult.unqueriedLayers[i].unqueriedLayerId)
+                    var tab = this.tabpan.find('title', queryResult.unqueriedLayers[i].unqueriedLayerId);
                     if (tab.length == 1) {
                         this.tabpan.unhideTabStripItem(tab[0]);
                     } else {
@@ -736,9 +736,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
         this.selectionActionButton = {
             text: this.actionsText,
-            //iconCls: 'user',
             menu: new Ext.menu.Menu ({
-                //xtype: 'menu',
                 plain: true,
                 items: [{
                     text: this.zoomToSelectionText,
@@ -805,7 +803,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         });
                     } else {
                         // selected tab is not a grid, emptying the count
-                        this.textItem.setText('');
+                        this.currentGrid = null;
+                        this.textItem.setText(this.getCount());
                         // disable grid related buttons
                         this.selectionButton.disable(); 
                         Ext.each(this.selectionActionButton.menu.items.items, function(item) {
@@ -832,7 +831,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     text: this.clearAllText,
                     handler: function() {
                         this.vectorLayer.destroyFeatures();
-                        this.textItem.setText('');
+                        this.textItem.setText(this.getCount());
                         this.tabpan.ownerCt.setVisible(false);
                         this.tabpan.ownerCt.ownerCt.doLayout();
                     },
