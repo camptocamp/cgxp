@@ -4,9 +4,6 @@ div.x-panel a {
 div.x-panel a:hover {
     text-decoration: underline;
 }
-.app-accordion-body {
-    padding: 3px;
-}
 /* fix button position for ie */
 .x-form-file-wrap table.x-form-file-btn {
     top: 0;
