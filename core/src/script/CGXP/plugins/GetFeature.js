@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Camptocamp
+ * Copyright (c) 2012 Camptocamp
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -547,22 +547,22 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 }, this);
 
                 Ext.each(filteredLayers, function(layer) {
-                    var queryed = false;
+                    var queried = false;
                     if (olLayer.mapserverParams &&
                             olLayer.mapserverParams.EXTERNAL ||
                             olLayer.params && olLayer.params.EXTERNAL) {
                         if (this.externalWFSTypes.indexOf(layer) >= 0) {
                             externalLayers.push(layer);
-                            queryed = true;
+                            queried = true;
                         }
                     }
                     else {
                         if (this.WFSTypes.indexOf(layer) >= 0) {
                             internalLayers.push(layer);
-                            queryed = true;
+                            queried = true;
                         }
                     }
-                    if (!queryed) {
+                    if (!queried) {
                         unqueriedLayers.push({
                             unqueriedLayerId: layer,
                             unqueriedLayerTitle: this.unqueriedLayerTitle,
