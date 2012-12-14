@@ -147,7 +147,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     originalIdRef: 'originalId',
 
     /** api: config[warningMsgStyle]
-     *  ``String`` CSS style used for the warning message (i18n).
+     *  ``String`` CSS style used for the warning message.
      */
     warningMsgStyle: 'warningmsg',
 
@@ -317,7 +317,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                             text: unqueriedLayer.unqueriedLayerText
                         }
                     }
-                }
+                };
                 this.push(f);
             }, features);
         }
@@ -374,7 +374,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 this.warningMsg.setText(queryResult.warningMsg);
                 this.featuresWindow.bbar.show();
                 this.featuresWindow.syncSize();
-            }
+            };
             this.featuresWindow.doLayout();
         };
 
@@ -396,8 +396,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 this.featuresWindow.bbar.hide();
                 this.featuresWindow.syncSize();
                 this.featuresWindow.doLayout();
-            }
-        }
+            };
+        };
     },
 
     /** private: method[createGrid]
