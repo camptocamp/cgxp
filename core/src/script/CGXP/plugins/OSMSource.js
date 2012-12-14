@@ -54,7 +54,7 @@ Ext.namespace("cgxp.plugins");
  *    {
  *        source: "osm",
  *        name: "mapnik"
- *        options: {
+ *        layerOptions: {
  *            ref: "mapnik",
  *            group: "background"
  *        }
@@ -74,7 +74,7 @@ cgxp.plugins.OSMSource = Ext.extend(gxp.plugins.OSMSource, {
     createLayerRecord: function(config) {
         var record = cgxp.plugins.OSMSource.superclass
                          .createLayerRecord.apply(this, arguments);
-        Ext.apply(record.data.layer, config.options);
+        Ext.apply(record.data.layer, config.layerOptions);
         return record;
     }
 });
