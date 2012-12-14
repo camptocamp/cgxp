@@ -51,6 +51,14 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_mapopacityslider */
     ptype: "cgxp_mapopacityslider",
 
+    /** api: config[actionTarget]
+     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
+     *  (e.g. buttons or menus)?
+     *  As opposed to CGXP.plugins.Tool, we don't want it to be set by default
+     *  to the mapPanel top toolbar.
+     */
+    actionTarget: null,
+
     /** api: config[orthoRef]
      *  ``String``
      *  Reference to the ortho layer. If set to null or empty, no ortho layer
@@ -93,9 +101,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addActions: function(config) {
-        // If actionTarget is not provided in the plugin's config,
-        // it defaults to "map.tbar".
-        if (this.actionTarget.substring(0, 4) == 'map.') {
+        if (!this.actionTarget) {
             this.target.addListener('ready', function() {
                 var mapPanel = this.target.mapPanel;
                 var mapbar = this.createToolbar();
@@ -113,9 +119,11 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
                 container.setStyle({'marginLeft': (-totalWidth / 2) + 'px'});
             }, this);
         } else {
-            var container = {html: '<div id="baseLayersOpacitySlider"></div>'};
+            var containerId = Ext.id();
+            var container = {html: '<div id="' + containerId + '" ' +
+                                   'class="baseLayersOpacitySlider-toolbar"></div>'};
             this.target.addListener('ready', function() {
-                this.createToolbar({renderTo: 'baseLayersOpacitySlider'});
+                this.createToolbar({renderTo: containerId});
             }, this);
             return cgxp.plugins.MapOpacitySlider.superclass.addActions.apply(this, [container]);
         }
