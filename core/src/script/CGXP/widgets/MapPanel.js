@@ -40,6 +40,12 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      */
     vectorLayer: null,
 
+    /** api: property[crosshairStyle]
+     *  `object`
+     *  The crosshair style
+     */
+    crosshairStyle: {},
+
     /** private: property[initialState]
      */
 
@@ -103,7 +109,13 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
                 new OpenLayers.Feature.Vector(
                     new OpenLayers.Geometry.Point(
                         state.x, state.y
-                    )
+                    ), {},
+                    Ext.apply({
+                        externalGraphic: OpenLayers.Util.getImagesLocation() +
+                            "crosshair.png",
+                        graphicWidth: 16,
+                        graphicHeight: 16
+                    }, this.crosshairStyle)
                 )
             ]);
         }
