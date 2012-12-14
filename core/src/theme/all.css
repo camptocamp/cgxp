@@ -74,9 +74,9 @@ div.x-panel a:hover {
 }
 
 /* cgxp_streetview */
-/*.x-toolbar .cgxp-icon-streetview, .x-menu .cgxp-icon-streetview {
+.x-toolbar .cgxp-icon-streetview, .x-menu .cgxp-icon-streetview {
     background-image: url(img/streetview.png);
-}*/
+}
 
 .x-toolbar .permalink, .x-menu .permalink {
     background: url(img/permalink.png) top left no-repeat;
