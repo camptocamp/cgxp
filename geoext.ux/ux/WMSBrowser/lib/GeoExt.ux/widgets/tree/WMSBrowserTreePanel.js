@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -54,7 +54,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
      */
     constructor: function(config) {
         Ext.apply(this, config);
-        Ext.apply(this, {listeners: {
+        Ext.apply(this, { listeners: {
             'checkchange': function(node, checked) {
                 if (checked === true) {
                     if (!this.isLayerCompatible(node.attributes.layer)) {
@@ -68,6 +68,14 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                     this.removeLayerFromPreview(node.attributes.layer);
                     this.setLayerNameFromCheckedNodes();
                     this.wmsbrowser.resetCenterFormPanel();
+                }
+            },
+            'click': function(node) {
+                if (!node.hasChildNodes()) {
+                    this.loadLayerMetadata(node.attributes.layer);
+                }
+                else {
+                    this.loadLayerMetadata();
                 }
             }
         }});
@@ -242,7 +250,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
      *    - support the current map projection
      *    - must at least intersects the map maxextent
      */
-    isLayerCompatible: function(layer) {
+    isLayerCompatible: function(layer, getMessage) {
         var compatible = true;
         var reasons = [];
 
@@ -265,7 +273,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
         // validate extent
         var layerExtent = layer.metadata.llbbox;
         var extent;
-        if (layerExtent) 
+        if (layerExtent)
         {
             if (typeof layerExtent == "string") {
                 extent = OpenLayers.Bounds.fromString(layerExtent);
@@ -283,17 +291,23 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
         }
 
         // output a message if not valid
-        if (!compatible) {
+        if (!compatible && !getMessage) {
             var layerName = "";
-            if (layer.metadata.title != "") {
-                layerName = layer.metadata.title + " : ";
-            } else if (layer.metadata.name != "") {
-                layerName = layer.metadata.name + " : ";
+            if (layer.metadata.title) {
+                layerName = layer.metadata.title;
+            } else if (layer.metadata.name) {
+                layerName = layer.metadata.name;
             }
-            var message = layerName + this.wmsbrowser.layerCantBeAddedText + reasons.join(', ');
+
+            var message = layerName +
+                Ext.layout.FormLayout.prototype.labelSeparator + " " +
+                this.wmsbrowser.layerCantBeAddedText + reasons.join(', ');
             this.wmsbrowser.fireEvent('genericerror', message);
         }
 
-        return compatible;
+        return getMessage ? {
+            compatible: compatible,
+            reasons: reasons
+        } : compatible;
     }
 });

@@ -503,3 +503,25 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     border: none;
     background: #f4f4f4;
 }
+
+/* CGXP add KML */
+.x-toolbar .x-form-file-btn {
+    margin-top: 2px;
+}
+.ext-ie .x-toolbar .x-form-file-btn {
+    margin-top: 1px;
+}
+
+/* WMS browser */
+.x-tree-node-leaf .x-tree-node-noicon {
+    background-image: none;
+}
+.x-tree-node-leaf .x-tree-node-icon-unsupported {
+    background-image: url("../../../gxp/src/theme/img/decline.png");
+}
+.x-tree-node-leaf .x-tree-node-icon-queryable {
+    background-image: url("img/information.png");
+}
+div.x-panel .olControlZoom a:hover {
+    text-decoration: none;
+}

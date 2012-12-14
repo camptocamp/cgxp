@@ -47,7 +47,10 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_wmsbrowser',
  *              actionTarget: "center.tbar",
- *              layerTreeId: "layertree"
+ *              layerTreeId: "layertree",
+ *              defaultUrls: [
+ *                  'http://wms.geo.admin.ch'
+ *              ]
  *          }]
  *          ...
  *      });
@@ -65,9 +68,9 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_wmsbrowser",
 
     /** api: config[buttonText]
-     *  ``String`` The "+ WMS layers" button text (i18n).
+     *  ``String`` The "Add WMS" button text (i18n)
      */
-    buttonText: "+ WMS layers",
+    buttonText: "Add WMS",
 
     /** api: config[windowTitleText]
      *  ``String`` The "Add WMS layers" window title text (i18n).
@@ -79,7 +82,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
      *   If specified, layers are added to the layertree in a dedicated group
      */
     layerTreeId: null,
-    
+
     /** private: property[wmsBrowser]
      *  :class:`GeoExt.ux.WMSBrowser` a ref to the WMSBrowser instance.
      */
@@ -90,7 +93,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
      *  Config object for the action created by this plugin.
      */
     actionConfig: null,
-    
+
     /** api: config[defaultUrls]
     * ``Array(String)``
     * The list of WMS services urls to be displayed in the layer combobox.
