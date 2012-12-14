@@ -7,21 +7,6 @@ div.x-panel a:hover {
 .app-accordion-body {
     padding: 3px;
 }
-.x-toolbar .maxExtent {
-    background: url('img/map_magnify.png') top left no-repeat;
-}
-.x-toolbar .mapZoomIn {
-    background: url('img/zoom_in.png') top left no-repeat;
-}
-.x-toolbar .mapZoomOut {
-    background: url('img/zoom_out.png') top left no-repeat;
-}
-.x-toolbar .mapHistoryPrevious {
-    background: url('img/arrow_left.png') top left no-repeat;
-}
-.x-toolbar .mapHistoryNext {
-    background: url('img/arrow_right.png') top left no-repeat;
-}
 /* fix button position for ie */
 .x-form-file-wrap table.x-form-file-btn {
     top: 0;
