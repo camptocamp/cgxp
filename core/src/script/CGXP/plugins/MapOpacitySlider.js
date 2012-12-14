@@ -51,51 +51,82 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_mapopacityslider */
     ptype: "cgxp_mapopacityslider",
 
+    /** api: config[actionTarget]
+     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
+     *  (e.g. buttons or menus)?
+     *  As opposed to CGXP.plugins.Tool, we don't want it to be set by default
+     *  to the mapPanel top toolbar.
+     */
+    actionTarget: null,
+
     /** api: config[orthoRef]
      *  ``String``
-     *  Referance of the ortho layer.
+     *  Reference to the ortho layer. If set to null or empty, no ortho layer
+     *  will be added and the opacity slider will not be displayed.
+     *  Default is "ortho".
      */
     orthoRef: 'ortho',
 
     /** api: config[defaultBaseLayerRef]
      *  ``String``
-     *  Referance of the default base layer.
+     *  Reference to the default base layer. Default is "plan".
      */
     defaultBaseLayerRef: 'plan',
 
     /** api: config[stateId]
-     * ``String``
-     * Used for the permalink.
+     *  ``String``
+     *  Used for the permalink. Default is "baselayer".
      */
     stateId: 'baselayer',
+
+    /** private: method[createToolbar]
+     *  Create the toolbar containing the opacity slider and
+     *  the base layer combo.
+     *
+     *  :arg config: ``Object`` Some optional toolbar config.
+     *  Returns:
+     *  {Ext.Toolbar}
+     */
+    createToolbar: function(config) {
+        return new cgxp.MapOpacitySlider(Ext.apply({
+            cls: 'opacityToolbar',
+            orthoRef: this.orthoRef,
+            defaultBaseLayerRef: this.defaultBaseLayerRef,
+            stateId: this.stateId,
+            map: this.target.mapPanel.map
+        }, config || {}));
+    },
 
     /** public: method[addActions]
      *  :arg config: ``Object``
      */
     addActions: function(config) {
-        this.target.addListener('ready', function() {
-            var mapPanel = this.target.mapPanel;
-            var map = mapPanel.map;
-            var mapbar = new cgxp.MapOpacitySlider({
-                cls: 'opacityToolbar',
-                orthoRef: this.orthoRef,
-                defaultBaseLayerRef: this.defaultBaseLayerRef,
-                stateId: this.stateId,
-                map: map
-            });
-            var container = Ext.DomHelper.append(mapPanel.bwrap, {
-                tag: 'div',
-                cls: 'baseLayersOpacitySlider'
-            }, true /* returnElement */);
-            mapbar.render(container);
-            mapbar.doLayout();
-            var totalWidth = 0;
-            mapbar.items.each(function(item) {
-                totalWidth += item.getWidth() + 5;
-            });
-            container.setWidth(totalWidth);
-            container.setStyle({'marginLeft': (-totalWidth / 2) + 'px'});
-        }, this);
+        if (!this.actionTarget) {
+            this.target.addListener('ready', function() {
+                var mapPanel = this.target.mapPanel;
+                var mapbar = this.createToolbar();
+                var container = Ext.DomHelper.append(mapPanel.bwrap, {
+                    tag: 'div',
+                    cls: 'baseLayersOpacitySlider'
+                }, true /* returnElement */);
+                mapbar.render(container);
+                mapbar.doLayout();
+                var totalWidth = 0;
+                mapbar.items.each(function(item) {
+                    totalWidth += item.getWidth() + 5;
+                });
+                container.setWidth(totalWidth);
+                container.setStyle({'marginLeft': (-totalWidth / 2) + 'px'});
+            }, this);
+        } else {
+            var containerId = Ext.id();
+            var container = {html: '<div id="' + containerId + '" ' +
+                                   'class="baseLayersOpacitySlider-toolbar"></div>'};
+            this.target.addListener('ready', function() {
+                this.createToolbar({renderTo: containerId});
+            }, this);
+            return cgxp.plugins.MapOpacitySlider.superclass.addActions.apply(this, [container]);
+        }
     }
 });
 

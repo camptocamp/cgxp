@@ -100,12 +100,20 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             this.updateBaseLayer(baseLayer);
         }
 
-        this.opacitySlider = this.createOpacitySlider();
-        this.add([
-            this.createOrthoLabel(),
-            this.opacitySlider,
-            this.createBaselayerCombo()
-        ]);
+        this.map.events.register("changebaselayer", this, function(e) {
+            this.fireEvent('changebaselayer');
+        });
+
+        if (this.orthoRef) {
+            this.opacitySlider = this.createOpacitySlider();
+            this.add([
+                this.createOrthoLabel(),
+                this.opacitySlider,
+                this.createBaselayerCombo()
+            ]);
+        } else {
+            this.add(this.createBaselayerCombo());
+        }
     },
 
     /**
@@ -130,7 +138,6 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         this.map.events.register("changebaselayer", this, function(e) {
             slider.complementaryLayer = e.layer;
             slider.complementaryLayer.setVisibility(!(orthoLayer.opacity == 1));
-            this.fireEvent('changebaselayer');
         });
         slider.on('changecomplete', function() {
             this.fireEvent('opacitychange');
@@ -215,11 +222,13 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     /** private: method[saveState]
      */
     getState: function() {
-        var baselayer = this.map.baseLayer;
-        return {
-            opacity: this.opacitySlider.getValue(),
-            ref: this.map.baseLayer.ref
+        if (this.orthoRef) {
+            return {
+                opacity: this.opacitySlider.getValue(),
+                ref: this.map.baseLayer.ref
+            }
         }
+        return { ref: this.map.baseLayer.ref };
     },
 
     /** private: method[applyState]
@@ -227,11 +236,13 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     applyState: function(state) {
         var baselayer = this.map.getLayersBy('ref', state.ref)[0];
         this.updateBaseLayer(baselayer);
-        var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0]
-        if (state.opacity != 100) {
-            orthoLayer.setVisibility(true);
+        if (this.orthoRef) {
+            var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0]
+            if (state.opacity != 100) {
+                orthoLayer.setVisibility(true);
+            }
+            orthoLayer.setOpacity(1 - parseInt(state.opacity) / 100);
         }
-        orthoLayer.setOpacity(1 - parseInt(state.opacity) / 100);
     }
 });
 
