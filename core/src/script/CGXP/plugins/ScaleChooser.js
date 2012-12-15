@@ -45,6 +45,34 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
+ *
+ *  If we add:
+ *  .. code-block:: javascript
+ *
+ *              roundValues: [10, 20, 50, 100, 250, 500]
+ *
+ *  The following scales ``[4, 9, 22, 48, 103, 231, 478, 978]``
+ *  will be display as ``[10, 10, 20, 50, 100, 250, 500, 500]``
+ *
+ *
+ *  If we add:
+ *  .. code-block:: javascript
+ *
+ *              roundValues: [1, 2.5, 5, 10],
+ *              decade: true
+ *
+ *  The following scales ``[4, 9, 22, 48, 103, 231, 478, 978]``
+ *  will be display as ``[5, 10, 25, 50, 100, 250, 500, 1000]``
+ *
+ *
+ *  If you need something more specific, you can overwritten the
+ *  method ``round`` like this:
+ *  .. code-block:: javascript
+ *
+ *      round: function(value) {
+ *          // your code
+ *      }
  */
 
 /** api: constructor
@@ -52,7 +80,7 @@ Ext.namespace("cgxp.plugins");
  *
  * Tip: if this tool must be placed in the map.bbar, the bbar must be
  * initialized in the map object definition: "bbar: []".
- */   
+ */
 cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_scalechooser */
@@ -72,15 +100,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[scaleStoreListeners]
      *  ``Object``
-     *  Ext listener config to be applied on the scale store. For example::
-     *
-     *      scaleStoreListeners: {
-     *          load: function(store, records, index) {
-     *              store.each(function(record) {
-     *                  // bla
-     *              }
-     *          }
-     *      }
+     *  Ext listener config to be applied on the scale store.
      */
     scaleStoreListeners: {},
 
@@ -89,6 +109,22 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
      *  Ext template to format the scale value in the scale combobox.
      */
     tpl: '<tpl for="."><div class="x-combo-list-item">1 : {[parseInt(values.scale)]}</div></tpl>',
+
+    /** api: config[roundValues]
+     *  ``Array(Number)``
+     *  The possible values on witch we want to round.
+     *  Defaults to undefined (disabled).
+     */
+
+    /** api: config[decade]
+     *  ``Boolean``
+     *  If true the ``roundValues`` arent the possible values on each decade,
+     *  and they should start with 1 and ends with 10.
+     *  For example if it's ``true`` and ``roundValues`` is ``[1, 2.5, 5, 10]`` than
+     *  all the possible values are ``[..., 1, 2.5, 5, 10, 25, 50, 100, ...]``.
+     *  Defaults to false.
+     */
+    decade: false,
 
     /** api: config[formatValue]
      *  ``Function``
@@ -103,7 +139,11 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function(config) {
         var map = this.target.mapPanel.map;
-        var scaleStore = new GeoExt.data.ScaleStore({map: map, listeners: this.scaleStoreListeners});
+        var scaleStore = new GeoExt.data.ScaleStore({
+            map: map,
+            listeners: this.scaleStoreListeners
+        });
+        scaleStore.addListener('load', this.roundStore, this);
         var zoomSelector = new Ext.form.ComboBox({
             store: scaleStore,
             tpl: this.tpl,
@@ -112,9 +152,9 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
             triggerAction: 'all', // needed so that the combo box doesn't filter by its current content
             mode: 'local'
         });
-        
+
         // update zoom level when new scale is selected
-        zoomSelector.on('select', 
+        zoomSelector.on('select',
             function(combo, record, index) {
                 map.zoomTo(record.data.level);
             },
@@ -126,7 +166,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
             var scale = scaleStore.queryBy(function(record){
                 return this.map.getZoom() == record.data.level;
             });
-    
+
             if (scale.length > 0) {
                 scale = scale.items[0];
                 zoomSelector.setValue(this.formatValue(scale));
@@ -137,8 +177,56 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
         });
 
         var args = [this.labelText, zoomSelector];
-        
+
         return cgxp.plugins.ScaleChooser.superclass.addActions.apply(this, [args]);
+    },
+
+    /** api: method[roundStore]
+     *  :arg store: ``Ext.data.Store``
+     *  :arg records: ``Array(Ext.data.Record)``
+     *  :arg options: ``Object``
+     *
+     *  This method is used to round the voll store.
+     */
+    roundStore: function(store) {
+        store.each(function(record) {
+            var scale = record.get('scale');
+            scale = this.round(scale);
+            record.set('scale', scale);
+        }, this);
+    },
+
+    /** api: method[round]
+     *  :arg value: ``Number`` a scale value to round
+     *
+     *  This method is used to round a scale value.
+     */
+    round: function(value) {
+        if (this.roundValues) {
+            var base = 1;
+            var rest = value;
+            if (this.decade) {
+                var log = Math.log(value)/Math.log(10);
+                base = Math.pow(10, Math.floor(log));
+                rest = value / base;
+            }
+
+            var diff = Number.POSITIVE_INFINITY;
+            var roundRest = 1;
+            for (var i in this.roundValues) {
+                var v = this.roundValues[i];
+                var d = Math.abs(Math.log(v/rest))
+                if (d < diff) {
+                    diff = d;
+                    roundRest = v;
+                }
+            }
+
+            return base * roundRest;
+        }
+        else {
+            return value;
+        }
     }
 });
 

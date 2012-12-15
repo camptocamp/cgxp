@@ -91,5 +91,34 @@ describe('plugins.ScaleChooser', function() {
             expect(map.getZoom()).toEqual(2);
         });
     });
+    describe('round', function() {
+        beforeEach(function() {
+            s = new cgxp.plugins.ScaleChooser();
+        });
+        it('standard', function() {
+            expect(s.round(1)).toBe(1);
+            expect(s.round(3)).toBe(3);
+            expect(s.round(70)).toBe(70);
+            expect(s.round(71)).toBe(71);
+            expect(s.round(99)).toBe(99);
+        });
+        it('roundValues', function() {
+            s.roundValues = [1, 2, 5, 10, 20];
+            expect(s.round(1)).toBe(1);
+            expect(s.round(3)).toBe(2);
+            expect(s.round(70)).toBe(20);
+            expect(s.round(71)).toBe(20);
+            expect(s.round(99)).toBe(20);
+        });
+        it('roundValues and factor', function() {
+            s.roundValues = [1, 2.5, 5, 10];
+            s.factor = 10;
+            expect(s.round(1)).toBe(1);
+            expect(s.round(3)).toBe(2.5);
+            expect(s.round(70)).toBe(50);
+            expect(s.round(71)).toBe(100);
+            expect(s.round(99)).toBe(100);
+        });
+    });
 });
 
