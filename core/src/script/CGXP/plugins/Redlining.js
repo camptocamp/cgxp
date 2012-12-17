@@ -91,7 +91,6 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
 
     /* i18n*/
     redliningText: "Redlining",
-    attributesText: 'Attributes',
 
     init: function() {
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
@@ -187,6 +186,7 @@ GeoExt.ux.form.FeaturePanel.prototype.labelFieldText = "Label";
 GeoExt.ux.form.FeaturePanel.prototype.colorFieldText = "Color";
 GeoExt.ux.form.FeaturePanel.prototype.strokeWidthFieldText = "Stroke width";
 GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Size";
+GeoExt.ux.form.FeaturePanel.prototype.attributesText = "Attributes";
 
 // some more redlining patch
 GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
