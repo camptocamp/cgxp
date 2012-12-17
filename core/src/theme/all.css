@@ -386,6 +386,13 @@ div.legend label.layerparam-label {
 .x-grid3-row-body table.detail a:link {
     text-decoration: underline;
 }
+.warningmsg abbr {
+    color: red;
+}
+/* because IE doesnt assign any special style to abbr element by default, we need to add some visual aid */
+.ext-ie .warningmsg abbr {
+    text-decoration: underline;
+}
 
 /* cgxp layertree message */
 .layertree-msg {
