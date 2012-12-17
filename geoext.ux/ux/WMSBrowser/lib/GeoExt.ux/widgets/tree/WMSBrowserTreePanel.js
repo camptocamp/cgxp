@@ -54,7 +54,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
      */
     constructor: function(config) {
         Ext.apply(this, config);
-        Ext.apply(this, { listeners: {
+        Ext.apply(this, {listeners: {
             'checkchange': function(node, checked) {
                 if (checked === true) {
                     if (!this.isLayerCompatible(node.attributes.layer)) {
@@ -77,7 +77,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                 else {
                     this.loadLayerMetadata();
                 }
-            }
+             }
         }});
 
         this.root = new GeoExt.ux.tree.WMSBrowserRootNode(config);
@@ -205,7 +205,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                                               {'layer': newLayer});
                     layerAdded = true;
 
-                    if (this.wmsbrowser.zoomOnLayerAdded) {
+                    if(this.wmsbrowser.zoomOnLayerAdded) {
                         // zoom to added layer extent
                         // (in the current map projection)
                         var bounds = OpenLayers.Bounds.fromArray(
@@ -213,7 +213,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                         );
                         map.zoomToExtent(bounds.transform(
                             new OpenLayers.Projection("EPSG:4326"),
-                            map.getProjection()
+                            new OpenLayers.Projection(map.getProjection())
                         ));
                     }
                 }
@@ -250,24 +250,29 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
      *    - support the current map projection
      *    - must at least intersects the map maxextent
      */
-    isLayerCompatible: function(layer, getMessage) {
+    isLayerCompatible: function(layer, onlyGetMessage) {
         var compatible = true;
         var reasons = [];
 
         var srs = this.map.getProjection();
         var mapMaxExtent = this.map.getMaxExtent().clone().transform(
-            this.map.getProjection(),
+            new OpenLayers.Projection(this.map.getProjection()),
             new OpenLayers.Projection('EPSG:4326')
         );
 
         // validate srs
         if(!(layer.metadata.srs[srs] === true ||
             OpenLayers.Util.indexOf(layer.metadata.srs, srs) >= 0)) {
-            compatible = false;
-            reasons.push(
-                this.wmsbrowser.srsNotSupportedShortText +
-                " (" + this.map.getProjection() + ")"
-            );
+            if(srs == 'EPSG:900913' && layer.metadata.srs['EPSG:3857'] === true){
+                srs = 'EPSG:3857';
+            }
+            else {
+                compatible = false;
+                reasons.push(
+                    this.wmsbrowser.srsNotSupportedShortText +
+                    " (" + this.map.getProjection() + ")"
+                );
+            }
         }
 
         // validate extent
@@ -275,9 +280,9 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
         var extent;
         if (layerExtent)
         {
-            if (typeof layerExtent == "string") {
+            if(typeof layerExtent == "string") {
                 extent = OpenLayers.Bounds.fromString(layerExtent);
-            } else if (layerExtent instanceof Array) {
+            } else if(layerExtent instanceof Array) {
                 extent = OpenLayers.Bounds.fromArray(layerExtent);
             }
         }
@@ -291,21 +296,18 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
         }
 
         // output a message if not valid
-        if (!compatible && !getMessage) {
+        if (!compatible && !onlyGetMessage) {
             var layerName = "";
-            if (layer.metadata.title) {
-                layerName = layer.metadata.title;
-            } else if (layer.metadata.name) {
-                layerName = layer.metadata.name;
+            if (layer.metadata.title != "") {
+                layerName = layer.metadata.title + " : ";
+            } else if (layer.metadata.name != "") {
+                layerName = layer.metadata.name + " : ";
             }
-
-            var message = layerName +
-                Ext.layout.FormLayout.prototype.labelSeparator + " " +
-                this.wmsbrowser.layerCantBeAddedText + reasons.join(', ');
+            var message = layerName + this.wmsbrowser.layerCantBeAddedText + reasons.join(', ');
             this.wmsbrowser.fireEvent('genericerror', message);
         }
 
-        return getMessage ? {
+        return onlyGetMessage ? {
             compatible: compatible,
             reasons: reasons
         } : compatible;

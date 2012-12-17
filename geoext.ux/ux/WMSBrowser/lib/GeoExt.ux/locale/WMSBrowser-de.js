@@ -1,8 +1,3 @@
-Ext.namespace("GeoExt.ux")
-/*
- * @requires GeoExt/Lang.js
- */
-
 GeoExt.Lang.add("de", {
     "GeoExt.ux.WMSBrowser.prototype": {
         inputURLText: "Serveradresse eingeben (URL)",
@@ -37,11 +32,5 @@ GeoExt.Lang.add("de", {
         pleaseInputLayerNameText: "Bitte geben Sie den Layernamen im Textfeld an.",
         warningText: "Warnung",
         errorText: "Fehler"
-    },
-
-    "GeoExt.ux.WMSBrowserStatusBar.prototype": {
-        text: 'Bereit',
-        defaultText: 'Bereit',
-        busyText: 'Laden der Ebenen...'
     }
 });

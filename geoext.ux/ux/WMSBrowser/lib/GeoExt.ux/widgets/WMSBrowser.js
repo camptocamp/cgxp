@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -96,7 +96,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     layerCantBeAddedText: "This layer can't be added: ",
 
     /** api: config[srsNotSupportedText] ``String`` i18n */
-    srsNotSupportedText: "This layer can't be added to the current map" + 
+    srsNotSupportedText: "This layer can't be added to the current map" +
                          " because it doesn't support its projection.",
 
     /** api: config[srsNotSupportedShortText] ``String`` i18n */
@@ -195,7 +195,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
 
     /** api: config[capabilitiesParams]
      *  ``Object``  Hash of parameters for the GetCapabilities requests.  Each
-     *              defined parameter will overwrites the 
+     *              defined parameter will overwrites the
      *              DEFAULT_CAPABILITIES_PARAMS
      */
     capabilitiesParams: {},
@@ -272,14 +272,14 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
 
     /** api: config[layerBrowserXtype]
      * ``String`` The xtype of layer browser to use (component on the left).
-     *  Supported value are : 
+     *  Supported value are :
      *  - Ext.grid.GridPanel.xtype
      *  - Ext.tree.TreePanel.xtype
      */
     layerBrowserXtype: null,
 
     /** api: config[alertPopupTimeout]
-     * ``Integer`` The 'popupTimeout' property to set the 
+     * ``Integer`` The 'popupTimeout' property to set the
      * :class:`GeoExt.ux.plugins.WMSBrowserAlerts` plugin.  Only used if no
      * :class:`GeoExt.ux.WMSBrowserStatusBar` is set.
      */
@@ -289,7 +289,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
      *  ``String`` Used to keep track of the url while a query is processing.
      */
     currentUrl: null,
- 
+
     /** private: property[layerPreview]
      *  :class:`GeoExt.data.LayerRecord`  Used to create the layer preview
      */
@@ -302,7 +302,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
     mapPanelPreview: null,
 
     /** private: prperty[gridPanel]
-     *  :class:`Ext.grid.GridPanel`  The grid used to display the 
+     *  :class:`Ext.grid.GridPanel`  The grid used to display the
      *  :class:`GeoExt.data.LayerRecord` created inside the
      *  :class:`GeoExt.data.WMSCapabilitiesStore`.  Not used if treePanel is
      *  defined (see below).
@@ -348,11 +348,10 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
         Ext.apply(this, config);
 
         if (!this.serverStore) {
-            this.hideTrigger = true;
-            this.serverStore = 
+            this.serverStore =
                 new Ext.data.SimpleStore({fields: ['url'], data : []});
         }
-        
+
         Ext.applyIf(this.capabilitiesParams, this.DEFAULT_CAPABILITIES_PARAMS);
         this.layerBrowserXtype =
             this.layerBrowserXtype || this.DEFAULT_LAYER_BROWSER_XTYPE;
@@ -389,7 +388,6 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             mode: 'local',
             forceSelection: false,
             triggerAction: 'all',
-            hideTrigger: this.hideTrigger || false,
             allowBlank: false,
             validator: this.urlValidator,
             invalidText: this.inputURLInvalidText,
@@ -402,7 +400,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                         this.triggerGetCapabilities();
                     }
                 },
-                'select': function() {
+                select: function() {
                     this.triggerGetCapabilities();
                 },
                 scope: this
@@ -422,9 +420,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                 xtype: 'button',
                 text: this.connectText,
                 scope: this,
-                handler: function(b, e) {
-                    this.triggerGetCapabilities();
-                }
+                handler: function(b, e){this.triggerGetCapabilities();}
             }]
         });
 
@@ -436,7 +432,8 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                 region: 'south',
                 collapsible: true,
                 collapsed: true,
-                border: true,
+                cls: 'wms-browser-mappanel',
+                border: false,
                 height: 200,
                 floatable: false,
                 minSize: 100,
@@ -479,7 +476,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             layout: 'border',
             border: true,
             items: [
-                this.createFormPanel(), 
+                this.createFormPanel(),
                 this.mapPanelPreview
             ]
         });
@@ -652,7 +649,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
                 this.fireEvent('genericerror', this.pleaseInputURLText);
                 return;
             }
-            // if url is not blank and the widget don't allow invalid urls, 
+            // if url is not blank and the widget don't allow invalid urls,
             // throw error
             else if (!this.allowInvalidUrl){
                 this.fireEvent('genericerror', this.inputURLInvalidText);
@@ -667,7 +664,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
         this.currentUrl = url;
 
         // add the GetCapabilities parameters to the url
-        var params = OpenLayers.Util.getParameterString(this.capabilitiesParams);        
+        var params = OpenLayers.Util.getParameterString(this.capabilitiesParams);
         url = OpenLayers.Util.urlAppend(url, params);
 
         // check for local proxyHost setting, then OpenLayers.ProxyHost
@@ -696,11 +693,11 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
      */
     addLayer: function() {
         if(this.layerBrowser.addLayer()) {
-            if(this.closeOnLayerAdded && 
+            if(this.closeOnLayerAdded &&
                this.ownerCt.getXType() == Ext.Window.xtype) {
                 this.closeWindow();
             }
-        }        
+        }
     },
 
     /** private: method[onAfterRender]
@@ -768,7 +765,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             layerExtent = record.get("llbbox");
         }
 
-        if (layerExtent) 
+        if (layerExtent)
         {
             var extent;
             if(typeof layerExtent == "string") {
@@ -776,11 +773,13 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             } else if(layerExtent instanceof Array) {
                 extent = OpenLayers.Bounds.fromArray(layerExtent);
             }
-            
+
             if (extent) {
+                // convert WSG84 extent to map projection
                 extent = extent.transform(
-                        new OpenLayers.Projection("EPSG:4326"),
-                        this.mapPanelPreview.map.getProjection());
+                    new OpenLayers.Projection("EPSG:4326"),
+                    this.mapPanelPreview.map.getProjection()
+                );
                 this.mapPanelPreview.map.zoomToExtent(extent);
                 zoomed = true;
             }
@@ -834,7 +833,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
      */
     isLayerNameValid: function() {
         var validLayerName = true;
- 
+
         var layerName = this.layerNameField.getValue();
         if (!layerName || layerName == "") {
             this.fireEvent('genericerror', this.pleaseInputLayerNameText);

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -114,7 +114,7 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
             { header: this.wmsbrowser.nameText, scope: this,
               dataIndex: "name", sortable: true},
             { header: this.wmsbrowser.queryableText, scope: this,
-              dataIndex: "queryable", sortable: true, hidden: true, 
+              dataIndex: "queryable", sortable: true, hidden: true,
               renderer: this.boolRenderer, width: 30},
             { header: this.wmsbrowser.descriptionText, scope: this,
               dataIndex: "abstract", hidden: true}
@@ -223,7 +223,7 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
 
     /** private: method[setLayerNameFromSelectedRecords]
      *  Set the layerName field value to all the selected layer record 'title'
-     *  or 'name'. 
+     *  or 'name'.
      */
     setLayerNameFromSelectedRecords: function() {
         this.wmsbrowser.layerNameField.setValue(
@@ -341,7 +341,7 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
                 {'LAYERS': layersParam}
             );
 
-            newLayerRecord.get("layer").name = 
+            newLayerRecord.get("layer").name =
                 this.wmsbrowser.layerNameField.getValue();
 
             var addLayer = this.wmsbrowser.fireEvent(
