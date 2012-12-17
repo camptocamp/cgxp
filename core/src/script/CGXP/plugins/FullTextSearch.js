@@ -120,11 +120,11 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     comboWidth: 200,
 
-    /** api: config[comboConfig]
+    /** api: config[actionConfig]
      *  ``Object``
      *  Optional configuration of the ComboBox.
      */
-    comboConfig: null,
+    actionConfig: null,
 
     /** api: config[layerTreeId]
      *  ``String``
@@ -280,7 +280,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             trigger3Class: 'x-form-trigger-no-width x-hidden',
             width: this.comboWidth,
             selectOnFocus: true
-        }, this.comboConfig));
+        }, this.actionConfig));
         // used to close the loading panel
         this.closeLoading = new Ext.util.DelayedTask(function () {
             combo.list.hide();

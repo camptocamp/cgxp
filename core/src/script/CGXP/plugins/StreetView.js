@@ -93,17 +93,23 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
      *  The Street View panel.
      */
 
+    /** i18n */
+    tooltipText: 'StreetView',
+    menuText: 'StreetView',
+
     /** api: method[addActions]
      */
     addActions: function() {
         this.outputTarget = Ext.getCmp(this.outputTarget);
-        var button = new Ext.Button(Ext.apply({
+        var button = Ext.apply({
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             iconCls: "cgxp-icon-streetview",
+            tooltip: this.tooltipText,
+            menuText: this.menuText,
             listeners: {
-                "toggle": function(button) {
-                    if (button.pressed) {
+                "toggle": function(item) {
+                    if (item.pressed || item.checked) {
                         if (!this.panel) {
                             this.panel = new GeoExt.ux.StreetViewPanel({
                                 map: this.target.mapPanel.map,
@@ -143,7 +149,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                 },
                 scope: this
             }
-        }, this.actionConfig));
+        }, this.actionConfig);
         return cgxp.plugins.StreetView.superclass.addActions.apply(this, [button]);
     }
 });
