@@ -152,13 +152,33 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     grouping: false,
 
     /** api: config[limits]
-     *  ``Object``
-     *  Configure the search limits.
-     *  Defaults to
-     *  ``{ limit: 40, partitionlimit: 10 }``
-     *  when we use the ``grouping`` option,
-     *  ``{ limit: 20 }``
-     *  otherwise.
+     *  ``Object`` Option object to configure search
+     *  limit parameters sent to the text search
+     *  service. The possible properties are:
+     *
+     *  * ``limit`` - ``Number`` The maximum number of
+     *    results in the response.
+     *  * ``partitionlimit`` - ``Number`` The maximum number
+     *    of results per layer/group in the response.
+     *
+     *  ``partitionlimit`` is typically used when the ``grouping``
+     *  option is to ``true``, to limit the number of
+     *  results in each group.
+     *
+     *  If the ``limits`` option is unspecified the limit
+     *  parameters sent in search requests depend whether
+     *  ``grouping`` is ``true`` or ``false``:
+     *
+     *  * If ``grouping`` is ``false`` then ``limit`` is set to ``20``,
+     *    and ``partitionlimit`` is not set.
+     *  * If ``grouping`` is ``true`` then ``limit`` is set to ``40``,
+     *    and ``partitionlimit`` is set to ``10``.
+     *
+     *  Any provided ``limits`` object is *applied* to the
+     *  default values. For example, if ``grouping`` is
+     *  ``true`` and if the ``limits`` option is set to
+     *  ``{limit: 50}`` then ``limit`` will be set to ``50`` and
+     *  ``partitionlimit`` will be set to ``10`` in search requests.
      */
     limits: {},
 
@@ -207,7 +227,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     },
 
     createStore: function() {
-        var baseParams = Ext.apply(this.grouping ? 
+        var baseParams = Ext.apply(this.grouping ?
                 { limit: 40, partitionlimit: 10 } :
                 { limit: 20 }, this.limits);
         var store = new GeoExt.data.FeatureStore({
