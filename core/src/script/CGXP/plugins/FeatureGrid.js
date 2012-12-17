@@ -615,6 +615,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             var sm = this.currentGrid.getSelectionModel();
                             sm.clearSelections();
                         }
+                    }
+                    if (this.currentGrid) {
                         this.textItem.setText(this.getCount());
                     }
                 },
