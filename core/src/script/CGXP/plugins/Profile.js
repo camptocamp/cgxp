@@ -231,7 +231,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         var control =  this.createControl();
         this.control = control;
         this.target.mapPanel.map.addControl(control);
-        var btn = new GeoExt.Action(Ext.Apply({
+        var btn = new GeoExt.Action(Ext.apply({
             allowDepress: true,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
