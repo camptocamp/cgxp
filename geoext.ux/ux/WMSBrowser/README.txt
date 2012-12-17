@@ -1,4 +1,4 @@
-Diff after updated to revision 2906
+Diff after updated to revision 2907
 
 diff --git a/geoext.ux/ux/WMSBrowser/examples/WMSBrowser.html b/geoext.ux/ux/WMSBrowser/examples/WMSBrowser.html
 index d30f07a..5742ef0 100644
