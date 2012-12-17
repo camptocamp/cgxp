@@ -141,7 +141,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: 'WMS hinzufügen',
-        windowTitleText: 'WMS-Layer hineinladen'
+        windowTitleText: 'WMS-Layer hineinladen',
         menuText: 'WMS hinzufügen'
     },
 
