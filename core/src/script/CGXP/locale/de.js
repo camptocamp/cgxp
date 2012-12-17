@@ -41,7 +41,8 @@ GeoExt.Lang.add("de", {
         windowTitle: "Die aktuelle Seite kann mit folgender URL aufgerufen werden:",
         openlinkText: "Link in neuem Tab öffnen",
         closeText: "Schliessen",
-        incompatibleWithIeText: "Achtung: diese URL ist zu lang für Microsoft Internet Explorer!"
+        incompatibleWithIeText: "Achtung: diese URL ist zu lang für Microsoft Internet Explorer!",
+        menuText: 'Permalink'
     },
 
     "cgxp.plugins.FeatureGrid.prototype": {
@@ -89,7 +90,8 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Help.prototype": {
-        helpactiontooltipText: "Hilfe"
+        helpactiontooltipText: "Hilfe",
+        menuText: "Hilfe"
     },
 
     "cgxp.plugins.Redlining.prototype": {
@@ -140,6 +142,7 @@ GeoExt.Lang.add("de", {
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: 'WMS hinzufügen',
         windowTitleText: 'WMS-Layer hineinladen'
+        menuText: 'WMS hinzufügen'
     },
 
     "cgxp.plugins.AddKMLFile.prototype": {
@@ -148,7 +151,8 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.ContextualData.prototype": {
-        actionTooltipText: "Contextual Informations Tooltips"
+        actionTooltipText: "Contextual Informations Tooltips",
+        menuText: 'Contextual Informations'
     },
 
     "cgxp.plugins.ContextualData.Control.prototype": {
@@ -184,7 +188,18 @@ GeoExt.Lang.add("de", {
         xLabelText: "Abstand (m)",
         yLabelText: "Höhe (m)",
         errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-        exportCsvText: "Export als CSV"
+        exportCsvText: "Export als CSV",
+        menuText: 'Höhenprofil'
+    },
+
+    "cgxp.plugins.GoogleEarth.prototype": {
+        tooltipText: 'GoogleEarth',
+        menuText: 'GoogleEarth'
+    },
+
+    "cgxp.plugins.StreetView.prototype": {
+        tooltipText: 'StreetView',
+        menuText: 'StreetView'
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
@@ -199,7 +214,8 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.MapQuery.prototype": {
-        actionTooltip: 'Informationen in der Karte abfragen'
+        actionTooltip: 'Informationen in der Karte abfragen',
+        menuText: 'Informationen abfragen'
     },
 
     "cgxp.plugins.WFSGetFeature.prototype": {

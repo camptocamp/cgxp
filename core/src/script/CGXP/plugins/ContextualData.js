@@ -105,6 +105,11 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
         rightclickTpl: null
     },
 
+    /** api: config[actionConfig]
+     *  ``Object``
+     *  Configuration object for the action created by this plugin.
+     */
+
     /** api: method[handleServerData]
      *  Method intended to be overriden at config level, so users can specify
      *  specific treatments on server data
@@ -179,6 +184,9 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      */
     rightclickWindowConfig: {},
 
+    /** i18n */
+    menuText: 'Contextual data',
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -189,7 +197,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
 
         var control;
         if (this.enabledAction == 'all' || this.enabledAction == 'rightclick') {
-            // Rigth Clic-context menu
+            // Right Click-context menu
             control = new cgxp.plugins.ContextualData.ContextPopup({
                 handleRightClicks:true,
                 map: this.target.mapPanel.map,
@@ -217,9 +225,10 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
                 enableToggle: true,
                 iconCls: 'infotooltip',
                 tooltip: this.actionTooltipText,
+                menuText: this.menuText,
                 toggleGroup: this.toggleGroup,
                 control: control
-            }, this.options));
+            }, this.actionConfig));
             return cgxp.plugins.ContextualData.superclass.addActions.apply(this, [[action]]);
         } else {
             return null;

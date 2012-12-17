@@ -71,12 +71,13 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
      */
     helpactionText: null,
 
-    /** api: config[options]
+    /** i18n */
+    menuText: 'Help',
+
+    /** api: config[actionConfig]
      *  ``Object``
-     *  Config options for the ``Ext.Action`` created by this plugin.
-     *  Default is ``null``.
+     *  Configuration object for the action created by this plugin.
      */
-    options: null,
 
     /** api: method[addActions]
      */
@@ -85,11 +86,12 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
             iconCls: "help",
             tooltip: this.helpactiontooltipText,
             text: this.helpactionText,
+            menuText: this.menuText,
             handler: function() {
                 window.open(this.url);
             },
             scope: this
-        }, this.options));
+        }, this.actionConfig));
         return cgxp.plugins.Help.superclass.addActions.apply(this, [action]);
     }
 });
