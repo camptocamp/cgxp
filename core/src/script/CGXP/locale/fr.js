@@ -145,7 +145,7 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "Ajouter WMS",
-        windowTitleText: "Ajouter des couches WMS"
+        windowTitleText: "Ajouter des couches WMS",
         menuText: "Ajouter WMS"
     },
 
