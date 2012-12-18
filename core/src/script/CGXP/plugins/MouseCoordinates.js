@@ -41,7 +41,7 @@ Ext.namespace("cgxp");
  *              ptype: 'cgxp_mousecoordinates',
  *              actionTarget: 'center.bbar',
  *              controlConfig: {
- *                  numDigits: 0,
+ *                  numDigits: 6,
  *                  prefix: 'Lon: ',
  *                  separator: ', lat: ',
  *                  displayProjection: "EPSG:4326"
