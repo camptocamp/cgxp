@@ -436,7 +436,12 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         }
 
         for (var i = 0; i < geometryTypes.length; i++) {
-            options = {};
+            options = {
+                handlerOptions: {
+                    stopDown: true,
+                    stopUp: true
+                }
+            };
             geometryType = geometryTypes[i];
 
             switch (geometryType) {
@@ -454,10 +459,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     break;
                 case OpenLayers.i18n("Circle"):
                     handler = OpenLayers.Handler.RegularPolygon;
-                    options.handlerOptions = {
-                        sides: 32,
-                        irregular: false
-                    };
+                    options.handlerOptions.sides = 32;
+                    options.handlerOptions.irregular = false;
                     iconCls = "gx-featureediting-draw-circle";
                     tooltip = OpenLayers.i18n("Create circle");
                     break;
@@ -469,10 +472,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     break;
                 case OpenLayers.i18n("Box"):
                     handler = OpenLayers.Handler.RegularPolygon;
-                    options.handlerOptions = {
-                        sides: 4,
-                        irregular: true
-                    };
+                    options.handlerOptions.sides = 4;
+                    options.handlerOptions.irregular = true;
                     iconCls = "gx-featureediting-draw-box";
                     tooltip = OpenLayers.i18n("Create box");
                     break;

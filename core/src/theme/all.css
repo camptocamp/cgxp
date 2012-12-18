@@ -33,6 +33,9 @@ div.x-panel a:hover {
 .x-form-file-wrap table.x-form-file-btn {
     top: 0;
 }
+.x-panel-bwrap {
+    font-family: tahoma,arial,verdana,sans-serif;
+}
 
 /* cgxp_disclaimer */
 .disclaimer-ct {
@@ -397,6 +400,11 @@ div.legend label.layerparam-label {
     margin-left: 80px;
 }
 
+/* cgxp featuregrid */
+#featuregrid-container .x-panel-body {
+    font-size: 12px;
+}
+
 /* cgxp featureswindow */
 .x-grid3-row-body table.detail th {
     font-weight: bold;
@@ -410,6 +418,14 @@ div.legend label.layerparam-label {
 }
 
 .x-grid3-row-body table.detail a:link {
+    text-decoration: underline;
+}
+
+.x-toolbar .queryResultMessage {
+    font-style: italic;
+}
+/* because IE doesnt assign any special style to abbr element by default, we need to add some visual aid */
+.ext-ie .queryResultMessage abbr {
     text-decoration: underline;
 }
 

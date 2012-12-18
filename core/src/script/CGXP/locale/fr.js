@@ -60,7 +60,12 @@ GeoExt.Lang.add("fr", {
         csvSelectionExportText: "Exporter en CSV",
         maxFeaturesText: "Nombre maximum de résultats",
         resultText: "Résultat",
-        resultsText: "Résultats"
+        resultsText: "Résultats",
+        suggestionText: "Suggestion"
+    },
+
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        suggestionText: "Suggestion"
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -230,6 +235,15 @@ GeoExt.Lang.add("fr", {
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
         actionTooltip: 'Interroge la carte',
         noLayerSelectedMessage: 'Pas de couche sélectionnée'
+    },
+
+    "cgxp.plugins.GetFeature.prototype": {
+        tooltipText: 'Interroge la carte',
+        menuText: 'Interroge la carte',
+        unqueriedLayerTitle: "Impossible d'interroger cette couche",
+        unqueriedLayerText: "Seules les interrogations par simple clic sont " + 
+            "possibles pour cette couche.",
+        queryResultMessage: "Utilisez la touche {key} pour faire des sélections rectangulaires."
     },
 
     "cgxp.FloorSlider.prototype": {

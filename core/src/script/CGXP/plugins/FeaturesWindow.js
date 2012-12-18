@@ -77,7 +77,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  * ``queryopen``: sent on open query tool.
      *  * ``queryclose``: sent on closequery tool.
      *  * ``querystarts``: sent when the query button is pressed
-     *  * ``queryresults(features)``: sent when the result is received
+     *  * ``queryresults(queryresult)``: sent when the result is received
      */
     events: null,
 
@@ -123,6 +123,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of items" label (singular) (i18n).
      */
     itemText: "item",
+    /** api: config[suggestionText]
+     *  ``String`` Text for the shortened notice message (i18n).
+     */
+    suggestionText: "Suggestion",
 
     /** private: attribute[store]
      *  ``Ext.data.Store``
@@ -145,6 +149,21 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  a grouped id
      */
     originalIdRef: 'originalId',
+
+    /** api: config[messageStyle]
+     *  ``String`` CSS style used for the queryResult message.
+     */
+    messageStyle: 'queryResultMessage',
+
+    /** private: config[contentOverride]
+     *  ``String`` Id if the attribute used for unqueried layers fake features.
+     */
+    contentOverride: 'contentOverride',
+
+    /** api: config[showUnqueriedLayers]
+     *  ``Bool`` show or hide the unqueried layers in the tabpanel, default is true.
+     */
+    showUnqueriedLayers: true,
 
     init: function(target) {
         this.highlightStyle = OpenLayers.Util.applyDefaults(
@@ -191,11 +210,15 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             if (this.featuresWindow) {
                 this.store.removeAll();
                 this.vectorLayer.destroyFeatures();
+                if (this.featuresWindow.bbar) {
+                    this.featuresWindow.bbar.hide();
+                    this.featuresWindow.syncSize();
+                }
             }
         }, this);
 
-        this.events.on('queryresults', function(features) {
-            this.showWindow(features);
+        this.events.on('queryresults', function(queryResult) {
+            this.showWindow(queryResult);
         }, this);
 
         map.addLayer(this.vectorLayer);
@@ -219,23 +242,34 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             for (var k in attributes) {
                 if (attributes.hasOwnProperty(k) && attributes[k]) {
                     hasAttributes = true;
-                    detail = detail.concat([
-                        '<tr>',
-                        '<th>',
-                        OpenLayers.i18n(k),
-                        '</th>',
-                        '<td>',
-                        attributes[k],
-                        '</td>',
-                        '</tr>'
-                    ]);
+                    if (k == this.contentOverride) {
+                        detail.push(attributes[k]['text']);
+                        break; // exit for loop
+                    } else {
+                        detail = detail.concat([
+                            '<tr>',
+                            '<th>',
+                            OpenLayers.i18n(k),
+                            '</th>',
+                            '<td>',
+                            attributes[k],
+                            '</td>',
+                            '</tr>'
+                        ]);
+                    }
                 }
             }
             detail.push('</table>');
+
             // don't use feature without attributes
             if (!hasAttributes) {
                 return;
             }
+
+            if (!feature.geometry && feature.bounds) {
+                feature.geometry = feature.bounds.toGeometry();
+            }
+
             featuresWithAttributes.push(feature)
             feature.attributes[this.formatedAttributesId] = detail.join('');
             feature.attributes.type = OpenLayers.i18n(feature.type);
@@ -249,7 +283,9 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             if (feature.attributes.id) {
                 feature.attributes[this.originalIdRef] = feature.attributes.id;
             }
-            if (this.layers[feature.type] &&
+            if (feature.attributes[this.contentOverride]) {
+                feature.attributes.id = feature.attributes[this.contentOverride]['title'];
+            } else if (this.layers[feature.type] &&
                 this.layers[feature.type].identifierAttribute) {
                 // use the identifierAttribute field if set
                 var identifier = this.layers[feature.type].identifierAttribute;
@@ -264,17 +300,60 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
     /** private: method[showWindow]
      *  Shows the window
      */
-    showWindow: function(features) {
+    showWindow: function(queryResult) {
+
+        var features = queryResult.features
+
+        // if exist, insert the unqueried layers as fake features
+        if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
+            Ext.each(queryResult.unqueriedLayers, function(unqueriedLayer) {
+                var f = {
+                    id: unqueriedLayer.unqueriedLayerId,
+                    type: unqueriedLayer.unqueriedLayerId,
+                    attributes: {
+                        contentOverride: {
+                            title: unqueriedLayer.unqueriedLayerTitle,
+                            text: unqueriedLayer.unqueriedLayerText
+                        }
+                    }
+                };
+                this.push(f);
+            }, features);
+        }
+
         features = this.extendFeaturesAttributes(features);
 
         if (!this.grid) {
             this.createGrid();
-        }
-        this.store.loadData(features);
-
+        }     
+        // append new features to existing features in the store
+        this.store.loadData(features, true);
+        // reorder features to put unqueried layers at the end
+        if (this.showUnqueriedLayers) {
+            this.store.data.each(function(record) {
+                if (record.get('feature').attributes.contentOverride) {
+                    this.store.remove(record, true);
+                    this.store.insert(this.store.getTotalCount(), record);
+                }
+            }, this);
+        };
+        
         var first = false;
         if (!this.featuresWindow) {
             first = true;
+
+            this.messageItem = new Ext.Toolbar.TextItem({
+                text: '',
+                cls: this.messageStyle
+            });
+            var bbar = new Ext.Toolbar({items: [this.messageItem]});
+            if (queryResult.message) {
+                /* we need the windows width to write the message, but we cant
+                 get the windows width before it has been rendered, so we just 
+                 write some placeholder text to get the bbar sizing correct */
+                this.messageItem.setText('&nbsp;');
+            }
+            
             this.featuresWindow = new Ext.Window({
                 layout: 'fit',
                 width: 300,
@@ -287,16 +366,28 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                         this.store.removeAll();
                     },
                     scope: this
-                }
+                },
+                bbar: bbar
             });
+            
         } else {
             this.featuresWindow.add(this.grid);
+            if (queryResult.message) {
+                /* we need the windows width to write the message, but we cant
+                 get the windows width before it has been rendered, so we just 
+                 write some placeholder text to get the bbar sizing correct */
+                this.messageItem.setText('&nbsp;');
+                this.featuresWindow.bbar.show();
+                this.featuresWindow.syncSize();
+            };
             this.featuresWindow.doLayout();
-        }
+        };
+
         this.featuresWindow.show();
 
         // position the attributes window the first time
         // then it should appear at the last position the user chose
+        // also hide the toolbar if it is empty on first load
         if (first) {
             this.featuresWindow.alignTo(
                 this.target.mapPanel.body,
@@ -304,7 +395,19 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 [-5, 5],
                 true
             );
-        }
+            // needed to fully hide the toolbar and its container
+            this.featuresWindow.bbar.setVisibilityMode(Ext.Element.DISPLAY);
+            if (!queryResult.message) {
+                this.featuresWindow.bbar.hide();
+                this.featuresWindow.syncSize();
+                this.featuresWindow.doLayout();
+            };
+
+        };
+         // space calculation can only be performed once the window has been rendered
+        if (queryResult.message) {
+            this.setMessage(queryResult.message);
+        };
     },
 
     /** private: method[createGrid]
@@ -369,6 +472,26 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             disableSelection: true,
             hideHeaders: true
         });
+    },
+
+    /** private: method[setMessage]
+     *  Set the queryResult message, check if there is enough space to display it all
+     */
+    setMessage: function(msg) {
+        var msg = msg;
+        // tests the space required by the TextItem
+        this.messageItem.setText(msg);
+        
+        if ((this.featuresWindow.getInnerWidth() - 40) < this.messageItem.getWidth()) {
+            msg = [
+                '<abbr title="',
+                msg,
+                '">',
+                this.suggestionText,
+                '</abbr>'
+            ].join('');
+            this.messageItem.setText(msg);
+        }
     },
 
     /** private: method[printExport]
