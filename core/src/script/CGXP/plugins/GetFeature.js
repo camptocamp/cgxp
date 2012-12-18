@@ -360,8 +360,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         });
         // solve problem with drag before click where event has a none-empty 
         // value for passesTolerance which bypass the click triggering
-        this.clickWMSControl.handler.mouseup = function() {
-            var result = OpenLayers.Handler.Click.prototype.mouseup
+        this.clickWMSControl.handler.click = function() {
+            var result = OpenLayers.Handler.Click.prototype.click
                     .apply(this, arguments);
             this.down = null;
             return result;
