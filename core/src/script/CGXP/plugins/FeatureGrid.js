@@ -386,7 +386,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  Gets the result count.
      */
     getCount: function() {
-        if (!this.currentGrid) {
+        if (!this.currentGrid || !this.currentGrid.getStore()) {
             return "0 " + this.resultText;
         }
         var count = this.currentGrid.getStore().getCount();
