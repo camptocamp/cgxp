@@ -456,7 +456,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             single: false,
             handlerOptions: {
                 box: {
-                    keyMask: OpenLayers.Handler.MOD_CTRL
+                    keyMask: Ext.isMac ? OpenLayers.Handler.MOD_META :
+                        OpenLayers.Handler.MOD_CTRL
                 }
             },
             autoActivate: true,
