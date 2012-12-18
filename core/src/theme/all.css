@@ -520,6 +520,11 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
     margin-top: 1px;
 }
 
+/* text in toolbar like login */
+.ext-webkit .x-toolbar .xtb-text {
+    padding-top: 1px;
+}
+
 /* WMS browser */
 .x-tree-node-leaf .x-tree-node-noicon {
     background-image: none;
