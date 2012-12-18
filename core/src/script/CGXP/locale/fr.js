@@ -64,6 +64,10 @@ GeoExt.Lang.add("fr", {
         suggestionText: "Suggestion"
     },
 
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        suggestionText: "Suggestion"
+    },
+
     "cgxp.plugins.Print.prototype": {
         printTitle: "Imprimer",
         titlefieldText: "Titre",

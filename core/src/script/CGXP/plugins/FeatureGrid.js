@@ -210,7 +210,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     suggestionText: "Suggestion",
 
     /** api: config[messageStyle]
-     *  ``String`` CSS style used for the warning message.
+     *  ``String`` CSS style used for the queryResult message.
      */
     messageStyle: 'queryResultMessage',
 
@@ -362,6 +362,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         return groupedRecords;
     },
 
+    /** private: method[setMessage]
+     *  Set the queryResult message, check if there is enough space to display it all
+     */
     setMessage: function(msg) {
         var msg = msg;
         // tests the space required by the TextItem

@@ -123,6 +123,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of items" label (singular) (i18n).
      */
     itemText: "item",
+    /** api: config[suggestionText]
+     *  ``String`` Text for the shortened notice message (i18n).
+     */
+    suggestionText: "Suggestion",
 
     /** private: attribute[store]
      *  ``Ext.data.Store``
@@ -146,10 +150,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     originalIdRef: 'originalId',
 
-    /** api: config[warningMsgStyle]
-     *  ``String`` CSS style used for the warning message.
+    /** api: config[messageStyle]
+     *  ``String`` CSS style used for the queryResult message.
      */
-    warningMsgStyle: 'warningmsg',
+    messageStyle: 'queryResultMessage',
 
     /** private: config[contentOverride]
      *  ``String`` Id if the attribute used for unqueried layers fake features.
@@ -160,11 +164,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  ``Bool`` show or hide the unqueried layers in the tabpanel, default is true.
      */
     showUnqueriedLayers: true,
-
-    /** private: config[warningMsg]
-     *  ``String`` Content of the suggestion tooltips.
-     */
-    warningMsg: null,
 
     init: function(target) {
         this.highlightStyle = OpenLayers.Util.applyDefaults(
@@ -343,13 +342,16 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         if (!this.featuresWindow) {
             first = true;
 
-            this.warningMsg = new Ext.Toolbar.TextItem({
+            this.messageItem = new Ext.Toolbar.TextItem({
                 text: '',
-                cls: this.warningMsgStyle
+                cls: this.messageStyle
             });
-            var bbar = new Ext.Toolbar({items: [this.warningMsg]});
-            if (queryResult.warningMsg) {
-                this.warningMsg.setText(queryResult.warningMsg);
+            var bbar = new Ext.Toolbar({items: [this.messageItem]});
+            if (queryResult.message) {
+                /* we need the windows width to write the message, but we cant
+                 get the windows width before it has been rendered, so we just 
+                 write some placeholder text to get the bbar sizing correct */
+                this.messageItem.setText('&nbsp;');
             }
             
             this.featuresWindow = new Ext.Window({
@@ -370,8 +372,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             
         } else {
             this.featuresWindow.add(this.grid);
-            if (queryResult.warningMsg) {
-                this.warningMsg.setText(queryResult.warningMsg);
+            if (queryResult.message) {
+                /* we need the windows width to write the message, but we cant
+                 get the windows width before it has been rendered, so we just 
+                 write some placeholder text to get the bbar sizing correct */
+                this.messageItem.setText('&nbsp;');
                 this.featuresWindow.bbar.show();
                 this.featuresWindow.syncSize();
             };
@@ -392,11 +397,16 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             );
             // needed to fully hide the toolbar and its container
             this.featuresWindow.bbar.setVisibilityMode(Ext.Element.DISPLAY);
-            if (!queryResult.warningMsg) {
+            if (!queryResult.message) {
                 this.featuresWindow.bbar.hide();
                 this.featuresWindow.syncSize();
                 this.featuresWindow.doLayout();
             };
+
+        };
+         // space calculation can only be performed once the window has been rendered
+        if (queryResult.message) {
+            this.setMessage(queryResult.message);
         };
     },
 
@@ -462,6 +472,26 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
             disableSelection: true,
             hideHeaders: true
         });
+    },
+
+    /** private: method[setMessage]
+     *  Set the queryResult message, check if there is enough space to display it all
+     */
+    setMessage: function(msg) {
+        var msg = msg;
+        // tests the space required by the TextItem
+        this.messageItem.setText(msg);
+        
+        if ((this.featuresWindow.getInnerWidth() - 40) < this.messageItem.getWidth()) {
+            msg = [
+                '<abbr title="',
+                msg,
+                '">',
+                this.suggestionText,
+                '</abbr>'
+            ].join('');
+            this.messageItem.setText(msg);
+        }
     },
 
     /** private: method[printExport]

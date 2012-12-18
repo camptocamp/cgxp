@@ -60,6 +60,10 @@ GeoExt.Lang.add("de", {
         suggestionText: "Tipp"
     },
 
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        suggestionText: "Tipp"
+    },
+
     "cgxp.plugins.Print.prototype": {
         printTitle: "Drucken",
         titlefieldText: "Titel",
