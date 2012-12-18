@@ -201,10 +201,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             return config;
-        };
+        }
         var themes = (this.themes.local || []).concat(
             this.themes.external || []);
-        this.layersConfig = browse(themes)
+        this.layersConfig = browse(themes);
 
         this.buildWMSControl();
         this.buildWFSControls();
@@ -288,7 +288,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 // and lunch querystarts event
                 self.events.fireEvent('querystarts');
                 var layers = this.findLayers();
-                if (layers.length == 0) {
+                if (layers.length === 0) {
                     Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
                     this.events.triggerEvent("nogetfeatureinfo");
                     // Reset the cursor.
@@ -302,6 +302,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 this.features = [];
                 // group according to service url to combine requests
                 var externalServices = {}, internalServices = {}, url;
+                var returnFalse = function() { return false; };
                 for (var i=0, len=layers.length; i<len; i++) {
                     var layer = layers[i];
                     if (!(layer instanceof OpenLayers.Layer.WMS)) {
@@ -310,12 +311,12 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             url: self.mapserverURL,
                             projection:
                                 self.target.mapPanel.map.getProjectionObject(),
-                            reverseAxisOrder: function() { return false },
+                            reverseAxisOrder: returnFalse,
                             params: Ext.apply({
                                 LAYERS: layer.queryLayers || layer.mapserverLayers,
                                 VERSION: '1.1.1'
                             }, layer.mapserverParams)
-                        }
+                        };
                     }
                     var services = layer.params.EXTERNAL ?
                         externalServices : internalServices;
@@ -327,10 +328,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         services[url] = [layer];
                     }
                 }
-                var layers;
                 for (var url in services) {
-                    layers = services[url];
-                    var wmsOptions = this.buildWMSOptions(url, layers,
+                    var wmsOptions = this.buildWMSOptions(url, services[url],
                         clickPosition, 'image/png');
                     OpenLayers.Request.GET(wmsOptions);
                 }
@@ -365,7 +364,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     .apply(this, arguments);
             this.down = null;
             return result;
-        }
+        };
         this.target.mapPanel.map.addControl(this.clickWMSControl);
     },
 
@@ -580,7 +579,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         if (Ext.isMac) {
             key = '&#8984;';
         }
-        return tpl.applyTemplate({key: key})
+        return tpl.applyTemplate({key: key});
     }
 });
 
