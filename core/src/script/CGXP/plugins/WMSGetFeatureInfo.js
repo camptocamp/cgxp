@@ -31,6 +31,10 @@
 
 Ext.namespace("cgxp.plugins");
 
+/** 
+ * THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
+ */
+
 /** api: example
  *  Sample code showing on to add a WMSGetFeatureInfo plugin to a
  *  `gxp.Viewer`:
@@ -167,7 +171,7 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
             eventListeners: {
                 getfeatureinfo: function(e) {
-                    this.events.fireEvent('queryresults', e.features);
+                    this.events.fireEvent('queryresults', {features: e.features});
                 },
                 activate: function() {
                     this.events.fireEvent('queryopen');

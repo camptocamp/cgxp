@@ -56,7 +56,12 @@ GeoExt.Lang.add("de", {
         csvSelectionExportText: "Als CSV Datei exportieren",
         maxFeaturesText: "Maximale Anzahl Resultate erreicht",
         resultText: "Resultat",
-        resultsText: "Resultate"
+        resultsText: "Resultate",
+        suggestionText: "Tipp"
+    },
+
+    "cgxp.plugins.FeaturesWindow.prototype": {
+        suggestionText: "Tipp"
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -225,6 +230,15 @@ GeoExt.Lang.add("de", {
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
         actionTooltip: 'Informationen in der Karte abfragen',
         noLayerSelectedMessage: 'Keine Ebene ausgewählt'
+    },
+
+    "cgxp.plugins.GetFeature.prototype": {
+        actionTooltip: 'Informationen in der Karte abfragen',
+        menuText: 'Abfragen der Karte',
+        unqueriedLayerTitle: 'Diese Ebene kann nicht abgefragt werden.',
+        unqueriedLayerText: "Diese Ebene unterstützt nur Punkt-Abfragen.",
+        queryResultMessage: "Informationen in einem Rechteck können mit der " +
+            "{key} Taste abgefragt werden."
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {

@@ -28,7 +28,7 @@ GeoExt.ux.StreetViewClick = OpenLayers.Class(OpenLayers.Control, {
         'single': true,
         'double': false,
         'pixelTolerance': 0,
-        'stopSingle': false,
+        'stopSingle': true,
         'stopDouble': false
     },
 
@@ -36,8 +36,8 @@ GeoExt.ux.StreetViewClick = OpenLayers.Class(OpenLayers.Control, {
      *  Initializes the control
      */
     initialize: function(options) {
-        this.handlerOptions = OpenLayers.Util.extend({}, this.defaultHandlerOptions);
         OpenLayers.Control.prototype.initialize.apply(this, arguments);
+        OpenLayers.Util.extend(this.handlerOptions, this.defaultHandlerOptions);
         this.handler = new OpenLayers.Handler.Click(this, {
             'click': this.onClick,
             'dblclick': this.onDblclick},
