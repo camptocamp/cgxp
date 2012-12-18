@@ -1,0 +1,13 @@
+.wms-browser-combo, .wms-browser-connect-btn {
+    padding: 0px;
+    margin: 0px;
+}
+.x-tree-node-leaf .x-tree-node-noicon {
+    background-image: none;
+}
+.x-tree-node-leaf .x-tree-node-icon-unsupported {
+    background-image: url("../images/decline.png");
+}
+.x-tree-node-leaf .x-tree-node-icon-queryable {
+    background-image: url("../images/information.png");
+}
