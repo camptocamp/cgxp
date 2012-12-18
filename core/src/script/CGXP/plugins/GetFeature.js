@@ -173,7 +173,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         this.buildControls();
         if (this.actionTarget) {
-            var action = new GeoExt.Action(Ext.applyIf({
+            this.action = new GeoExt.Action(Ext.applyIf({
                 allowDepress: true,
                 enableToggle: true,
                 iconCls: 'info',
@@ -182,7 +182,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 toggleGroup: this.toggleGroup,
                 control: this.toolWFSControl
             }, this.actionOptions));
-            return cgxp.plugins.GetFeature.superclass.addActions.apply(this, [[action]]);
+            return cgxp.plugins.GetFeature.superclass.addActions.apply(this, 
+                    [[this.action]]);
         }
     },
 
@@ -341,6 +342,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         features: e.features,
                         message: self.getMessage()
                     });
+                    if (e.features.length > 0 && this.action) {
+                        this.action.items[0].toggle(false);
+                    }
                 },
                 activate: function() {
                     this.events.fireEvent('queryopen');
@@ -396,6 +400,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 this.events.fireEvent('queryresults', {
                     features: e.features
                 });
+                if (e.features.length > 0 && this.action) {
+                    this.action.items[0].toggle(false);
+                }
             },
             activate: function() {
                 this.events.fireEvent('queryopen');
