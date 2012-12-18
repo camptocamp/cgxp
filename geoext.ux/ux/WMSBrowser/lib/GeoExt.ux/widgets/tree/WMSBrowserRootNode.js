@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -9,8 +9,8 @@
 Ext.namespace("GeoExt.ux.tree");
 
 /*
- * @include GeoExt.ux/widgets/WMSBrowser.js
- * @include GeoExt/widgets/tree/WMSCapabilitiesLoader.js
+ * @requires GeoExt.ux/widgets/WMSBrowser.js
+ * @requires GeoExt/widgets/tree/WMSCapabilitiesLoader.js
  */
 
 /** api: (define)
@@ -62,7 +62,7 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
                         node.attributes.layer, true);
                     if (!compatible.compatible) {
                         iconCls = 'x-tree-node-icon-unsupported';
-                        var message = 
+                        var message =
                             self.wmsbrowser.layerCantBeAddedText + '\n' +
                             compatible.reasons.join(',\n');
                         elem.dom.title = message;
@@ -142,7 +142,7 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
         this.cascade(function(){
             var layer = this.attributes.layer;
 
-            // skip nodes without layers or not checked 
+            // skip nodes without layers or not checked
             if (!layer || !this.getUI().isChecked()) {
                 return;
             }
@@ -172,7 +172,7 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
         this.cascade(function(){
             var layer = this.attributes.layer;
 
-            // skip nodes without layers or not checked 
+            // skip nodes without layers or not checked
             if (!layer || !this.getUI().isChecked()) {
                 return;
             }

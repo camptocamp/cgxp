@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -94,13 +94,19 @@ GeoExt.ux.data.WMSBrowserWMSCapabilitiesStore = Ext.extend(GeoExt.data.WMSCapabi
                OpenLayers.Util.indexOf(record.get('srs'), srs) >= 0) {
                 record.set("srsCompatible", true);
             } else {
-                record.set("srsCompatible", false);
+                if(srs == 'EPSG:900913' && record.get('srs')['EPSG:3857'] === true) {
+                    srs = 'EPSG:3857';
+                    record.set("srsCompatible", true);
+                }
+                else {
+                    record.set("srsCompatible", false);
+                }
             }
 
-            // Check if the llbbox 
+            // Check if the llbbox
             var layerExtent = record.get("llbbox");
             var extent;
-            if (layerExtent) 
+            if (layerExtent)
             {
                 if(typeof layerExtent == "string") {
                     extent = OpenLayers.Bounds.fromString(layerExtent);
@@ -128,7 +134,7 @@ GeoExt.ux.data.WMSBrowserWMSCapabilitiesStore = Ext.extend(GeoExt.data.WMSCapabi
             // url field is a combobox and if it's not already added
             var xtype = this.wmsbrowser.serverComboBox.getXType();
             if(xtype == Ext.form.ComboBox.xtype) {
-                var aszUrls = 
+                var aszUrls =
                     this.wmsbrowser.serverComboBox.store.getValueArray('url');
                 var index = OpenLayers.Util.indexOf(
                     aszUrls, this.wmsbrowser.currentUrl

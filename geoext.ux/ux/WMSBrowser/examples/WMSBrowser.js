@@ -1,6 +1,8 @@
 var WMSBrowser, mapPanel, browserWindow, tree, browserOptions = {}, serverStore;
 
 Ext.onReady(function() {
+    //GeoExt.Lang.set('fr');
+
     Ext.QuickTips.init();
 
     serverStore = new Ext.data.SimpleStore({
