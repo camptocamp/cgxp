@@ -60,7 +60,8 @@ GeoExt.Lang.add("fr", {
         csvSelectionExportText: "Exporter en CSV",
         maxFeaturesText: "Nombre maximum de résultats",
         resultText: "Résultat",
-        resultsText: "Résultats"
+        resultsText: "Résultats",
+        suggestionText: "Suggestion"
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -236,13 +237,9 @@ GeoExt.Lang.add("fr", {
         tooltipText: 'Interroge la carte',
         menuText: 'Interroge la carte',
         unqueriedLayerTitle: "Impossible d'interroger cette couche",
-        unqueriedLayerText: "Cette couche ne supporte pas l'interrogation " +
-                "boîte (WFS GetFeature).",
-        wfsSuggestionShort: "Suggestion",
-        wfsSuggestionLong: "Pour obtenir des informations sur une zone, effectuez " +
-            "une interrogation boite (WFS GetFeature) " +
-            "à l'aide d'un ctrl-click-déplacé (ou simplement un click-déplacé " +
-            "si l'outil d'interrogation est activé dans la barre d'outils."
+        unqueriedLayerText: "Seules les interrogations par simple clic sont " + 
+            "possibles pour cette couche.",
+        queryResultMessage: "Utilisez la touche {key} pour faire des sélections rectangulaires."
     },
 
     "cgxp.FloorSlider.prototype": {

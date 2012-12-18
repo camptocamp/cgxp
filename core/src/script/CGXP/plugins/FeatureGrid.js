@@ -204,11 +204,15 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the "number of result" label (plural) (i18n).
      */
     resultsText: "Results",
+    /** api: config[suggestionText]
+     *  ``String`` Text for the shortened notice message (i18n).
+     */
+    suggestionText: "Suggestion",
 
-    /** api: config[warningMsgStyle]
+    /** api: config[messageStyle]
      *  ``String`` CSS style used for the warning message.
      */
-    warningMsgStyle: 'warningmsg',
+    messageStyle: 'queryResultMessage',
 
     /** api: config[showUnqueriedLayers]
      *  ``Bool`` show or hide the unqueried layers in the tabpanel, default is true.
@@ -358,6 +362,23 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         return groupedRecords;
     },
 
+    setMessage: function(msg) {
+        var msg = msg;
+        // tests the space required by the TextItem
+        this.messageItem.setText(msg);
+        
+        if ((this.tabpan.getInnerWidth() - 370) < this.messageItem.getWidth()) {
+            msg = [
+                '<abbr title="',
+                msg,
+                '">',
+                this.suggestionText,
+                '</abbr>'
+            ].join('');
+            this.messageItem.setText(msg);
+        }
+    },
+
     /** private: method[getCount]
      *  Gets the result count.
      */
@@ -455,7 +476,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }
 
             this.textItem.setText(this.getCount());
-            this.warningMsg.setText('');
+            this.messageItem.setText('');
         }, this);
 
         this.events.on('queryclose', function() {
@@ -569,11 +590,11 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     });
                     this.gridByType[feature.type] = grid;
                     // add the grid tab before the unqueried layer tabs, if any
-                    var nbitems = this.tabpan.items.items.length;
+                    var nbitems = this.tabpan.items.getCount();
                     if (nbitems > 0) {
                         var idx = 0;
                         for (var j=0, itemslen=nbitems; j<itemslen; j++)  {
-                            if (this.tabpan.items.items[j].getXType() != 'grid') {
+                            if (this.tabpan.items.itemAt(j).getXType() != 'grid') {
                                 idx = j;
                                 break;
                             }
@@ -614,8 +635,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.tabpan.ownerCt.ownerCt.doLayout();
             }
 
-            if (queryResult.warningMsg) {
-                this.warningMsg.setText(queryResult.warningMsg);
+            if (queryResult.message) {
+                this.setMessage(queryResult.message);
             }
             // add extra tab for special empty layers, if set
             if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
@@ -629,8 +650,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         var p = {
                             title: OpenLayers.i18n(queryResult.unqueriedLayers[i].unqueriedLayerId),
                             html: [queryResult.unqueriedLayers[i].unqueriedLayerTitle,
-                              queryResult.unqueriedLayers[i].unqueriedLayerText].join('<br />');
-                        }
+                              queryResult.unqueriedLayers[i].unqueriedLayerText].join('<br />')
+                        };
                         this.tabpan.add(p);
                     }
                 };
@@ -641,9 +662,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         this.textItem = new Ext.Toolbar.TextItem({
             text: ''
         });
-        this.warningMsg = new Ext.Toolbar.TextItem({
+        this.messageItem = new Ext.Toolbar.TextItem({
             text: '',
-            cls: this.warningMsgStyle
+            cls: this.messageStyle
         });
 
         this.selectionButton = new Ext.SplitButton({
@@ -827,7 +848,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             },
             bbar: [
                 this.selectionButton, this.selectionActionButton ,'->', 
-                this.warningMsg, '-', this.textItem, '-', {
+                this.messageItem, '-', this.textItem, '-', {
                     text: this.clearAllText,
                     handler: function() {
                         this.vectorLayer.destroyFeatures();

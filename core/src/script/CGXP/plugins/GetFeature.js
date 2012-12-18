@@ -166,8 +166,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     noLayerSelectedMessage: 'No layer selected',
     unqueriedLayerTitle: 'Unable to query this layer',
     unqueriedLayerText: "This Layer don't support box query (WFS GetFeature).",
-    wfsSuggestionShort: "Suggestion",
-    wfsSuggestionLong: "To obtain information on an area, please perform a box query (WFS GetFeature) with ctrl-click-drag (or simply click-drag if the query tool is available in the toolbar.",
+    queryResultMessage: "Use the {key} key to perform a rectangular selection.",
 
     /** api: method[addActions]
      */
@@ -341,13 +340,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 getfeatureinfo: function(e) {
                     this.events.fireEvent('queryresults', {
                         features: e.features,
-                        warningMsg: [
-                          '<abbr title="',
-                          self.wfsSuggestionLong,
-                          '">',
-                          self.wfsSuggestionShort,
-                          '</abbr>'
-                          ].join('')
+                        message: self.getMessage()
                     });
                 },
                 activate: function() {
@@ -578,6 +571,15 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             externalLayers: externalLayers,
             unqueriedLayers: unqueriedLayers
         };
+    },
+    
+    getMessage: function() {
+        var tpl = new Ext.Template(this.queryResultMessage);
+        var key = 'CTRL';
+        if (Ext.isMac) {
+            key = 'META';
+        }
+        return tpl.applyTemplate({key: key})
     }
 });
 

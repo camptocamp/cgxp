@@ -420,11 +420,12 @@ div.legend label.layerparam-label {
 .x-grid3-row-body table.detail a:link {
     text-decoration: underline;
 }
-.warningmsg abbr {
-    color: red;
+
+.x-toolbar .queryResultMessage {
+    font-style: italic;
 }
 /* because IE doesnt assign any special style to abbr element by default, we need to add some visual aid */
-.ext-ie .warningmsg abbr {
+.ext-ie .queryResultMessage abbr {
     text-decoration: underline;
 }
 

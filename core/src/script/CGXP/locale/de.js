@@ -56,7 +56,8 @@ GeoExt.Lang.add("de", {
         csvSelectionExportText: "Als CSV Datei exportieren",
         maxFeaturesText: "Maximale Anzahl Resultate erreicht",
         resultText: "Resultat",
-        resultsText: "Resultate"
+        resultsText: "Resultate",
+        suggestionText: "Tipp"
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -233,10 +234,8 @@ GeoExt.Lang.add("de", {
         unqueriedLayerTitle: 'Diese Ebene kann nicht abgefragt werden.',
         unqueriedLayerText: "Diese Ebene unterstützt die Abfrage mittels " +
                 "Rechteck nicht (WFS GetFeature).",
-        wfsSuggestionShort: "Tipp",
-        wfsSuggestionLong: "Informationen in einem Rechteck können über " +
-            "Ctrl-click-drag (oder einfach click-and-drag falls die Abfrage " +
-            "in der Toolbar aktiv ist)  abgefragt werden."
+        queryResultMessage: "Informationen in einem Rechteck können mit der " +
+            "{key} Taste abgefragt werden."
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {
