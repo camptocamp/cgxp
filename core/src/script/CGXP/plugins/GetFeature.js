@@ -577,7 +577,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var tpl = new Ext.Template(this.queryResultMessage);
         var key = 'CTRL';
         if (Ext.isMac) {
-            key = 'META';
+            key = '&#8984;';
         }
         return tpl.applyTemplate({key: key})
     }
