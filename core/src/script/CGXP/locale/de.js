@@ -236,8 +236,7 @@ GeoExt.Lang.add("de", {
         actionTooltip: 'Informationen in der Karte abfragen',
         menuText: 'Abfragen der Karte',
         unqueriedLayerTitle: 'Diese Ebene kann nicht abgefragt werden.',
-        unqueriedLayerText: "Diese Ebene unterstützt die Abfrage mittels " +
-                "Rechteck nicht (WFS GetFeature).",
+        unqueriedLayerText: "Diese Ebene unterstützt nur Punkt-Abfragen.",
         queryResultMessage: "Informationen in einem Rechteck können mit der " +
             "{key} Taste abgefragt werden."
     },

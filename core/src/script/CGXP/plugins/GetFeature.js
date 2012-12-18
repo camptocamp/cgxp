@@ -165,7 +165,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     menuText: 'Query the map',
     noLayerSelectedMessage: 'No layer selected',
     unqueriedLayerTitle: 'Unable to query this layer',
-    unqueriedLayerText: "This Layer don't support box query (WFS GetFeature).",
+    unqueriedLayerText: "This Layer only support single click query.",
     queryResultMessage: "Use the {key} key to perform a rectangular selection.",
 
     /** api: method[addActions]
