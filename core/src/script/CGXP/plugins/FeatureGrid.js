@@ -638,7 +638,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.tabpan.ownerCt.ownerCt.doLayout();
             }
 
-            if (queryResult.message) {
+            if (queryResult.message && this.vectorLayer.features.length > 0) {
                 this.setMessage(queryResult.message);
             }
             // add extra tab for special empty layers, if set
