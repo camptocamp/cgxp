@@ -303,7 +303,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 this.features = [];
                 // group according to service url to combine requests
                 var externalServices = {}, internalServices = {}, url;
-                var returnFalse = function() { return false; };
                 for (var i=0, len=layers.length; i<len; i++) {
                     var layer = layers[i];
                     if (!(layer instanceof OpenLayers.Layer.WMS)) {
@@ -312,7 +311,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             url: self.mapserverURL,
                             projection:
                                 self.target.mapPanel.map.getProjectionObject(),
-                            reverseAxisOrder: returnFalse,
+                            reverseAxisOrder: OpenLayers.Function.False,
                             params: Ext.apply({
                                 LAYERS: layer.queryLayers || layer.mapserverLayers,
                                 VERSION: '1.1.1'
