@@ -160,6 +160,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      *  The mapserver proxy URL
      */
 
+    /** api: config[autoDeactivate]
+     *  ``Boolean``
+     *  Deactivate the tool after query.
+     *  Default is ``true``.
+     */
+    autoDeactivate: true,
+
     /* i18n */
     tooltipText: 'Query the map',
     menuText: 'Query the map',
@@ -333,6 +340,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         clickPosition, 'image/png');
                     OpenLayers.Request.GET(wmsOptions);
                 }
+                if (self.autoDeactivate && self.action) {
+                    self.action.items[0].toggle(false);
+                }
             },
 
             eventListeners: {
@@ -341,9 +351,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         features: e.features,
                         message: self.getMessage()
                     });
-                    if (e.features.length > 0 && this.action) {
-                        this.action.items[0].toggle(false);
-                    }
                 },
                 activate: function() {
                     this.events.fireEvent('queryopen');
@@ -399,9 +406,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 this.events.fireEvent('queryresults', {
                     features: e.features
                 });
-                if (e.features.length > 0 && this.action) {
-                    this.action.items[0].toggle(false);
-                }
             },
             activate: function() {
                 this.events.fireEvent('queryopen');
@@ -436,6 +440,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     features: [],
                     unqueriedLayers: l.unqueriedLayers
                 });
+            }
+            if (self.autoDeactivate && self.action) {
+                self.action.items[0].toggle(false);
             }
         };
 
