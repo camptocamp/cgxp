@@ -243,7 +243,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private method[createWMSControl]
-     *  Create the WMS GetFeatureIndo control.
+     *  Create the WMS GetFeatureInfo control.
      */
     buildWMSControl: function() {
         var events = this.events;
