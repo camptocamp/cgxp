@@ -309,7 +309,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 this._numRequests = 0;
                 this.features = [];
                 // group according to service url to combine requests
-                var externalServices = {}, internalServices = {}, url;
+                var externalServices = {}; // parent
+                var internalServices = {}; // child and add by wmsbrowser
                 for (var i=0, len=layers.length; i<len; i++) {
                     var layer = layers[i];
                     if (!(layer instanceof OpenLayers.Layer.WMS)) {
@@ -327,17 +328,25 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     }
                     var services = layer.params.EXTERNAL ?
                         externalServices : internalServices;
-                    url = OpenLayers.Util.isArray(layer.url) ? layer.url[0] : layer.url;
+                    var url = OpenLayers.Util.isArray(layer.url) ?
+                        layer.url[0] : layer.url;
                     if (url in services) {
                         services[url].push(layer);
-                    } else {
+                    }
+                    else {
                         this._numRequests++;
                         services[url] = [layer];
                     }
                 }
-                for (var url in services) {
+                for (var url in internalServices) {
                     var wmsOptions = this.buildWMSOptions(url, services[url],
                         clickPosition, 'image/png');
+                    OpenLayers.Request.GET(wmsOptions);
+                }
+                for (var url in externalServices) {
+                    var wmsOptions = this.buildWMSOptions(url, services[url],
+                        clickPosition, 'image/png');
+                    wmsOptions.params[EXTERNAL] = true;
                     OpenLayers.Request.GET(wmsOptions);
                 }
                 if (self.autoDeactivate && self.action) {
