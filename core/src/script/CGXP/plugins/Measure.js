@@ -46,7 +46,10 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: Measure(config)
  *
- *    Provides two actions for measuring length and area.
+ *    This plugin adds a menu with menu items for selecting measure tools.
+ *
+ *    The menu div is assigned the ``cgxp-menu-measure`` class name, which
+ *    can be useful for styling.
  */
 cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
@@ -455,6 +458,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             menu: new Ext.menu.Menu({
+                cls: 'cgxp-menu-measure',
                 items: [
                     new Ext.menu.CheckItem(
                         new GeoExt.Action({
