@@ -34,7 +34,7 @@ Ext.onReady(function() {
             outputTarget: "east",
             outputConfig: {
                 autoScroll: true,
-                wmsURL: 'http://www2.demis.nl/wms/wms.asp?wms=WorldMap',
+                wmsURL: 'http://www2.dmsolutions.ca/cgi-bin/mswms_gmap',
                 themes: App.themes,
                 defaultThemes: App.default_themes
             }
@@ -46,7 +46,7 @@ Ext.onReady(function() {
         },
         map: {
             id: "mymap",
-            center: [-1.44, 43],
+            center: [-80, 44],
             zoom: 8,
             layers: [new OpenLayers.Layer('fake', {isBaseLayer: true})]
         }
