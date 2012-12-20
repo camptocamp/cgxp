@@ -401,7 +401,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        var listners = {
+        var listeners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
                     features: e.features
@@ -454,7 +454,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 box: true,
                 click: false,
                 single: false,
-                eventListeners: listners,
+                eventListeners: listeners,
                 request: request
             });
             // don't convert pixel to box, let the WFS GetFeature to query
@@ -473,7 +473,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             autoActivate: true,
-            eventListeners: listners,
+            eventListeners: listeners,
             request: request
         });
         this.target.mapPanel.map.addControl(this.ctrlWFSControl);
