@@ -63,7 +63,7 @@ Ext.namespace("cgxp.plugins");
  *                  collapseMode: "mini",
  *                  hidden: true,
  *                  bodyStyle: 'background-color: transparent;'
- *              }, 
+ *              },
  *              {
  *                  layout: "accordion",
  *                  id: "left-panel",
@@ -101,7 +101,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: "cgxp_menushortcut",
  *              actionTarget: "center.bbar",
  *              type: '->'
- *          }, 
+ *          },
  *          {
  *              ptype: "cgxp_addkmlfile",
  *              echoUrl: "${request.route_url('echo', path='')}",
@@ -206,6 +206,22 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         cgxp.plugins.GoogleEarthView.superclass.init.apply(this, arguments);
         this.googleEarthViewControl = null;
         this.pluginReadyCallback = null;
+        this.target.on('ready', this.viewerReady, this);
+    },
+
+    viewerReady: function() {
+        // detect when a KML layer is added to the map
+        this.target.mapPanel.layers.on("add", function(store) {
+            store.each(function(layer) {
+                var lyr = layer.getLayer();
+                if (lyr instanceof OpenLayers.Layer.Vector &&
+                    lyr.protocol instanceof OpenLayers.Protocol.HTTP &&
+                    typeof lyr.protocol.url == 'string' &&
+                    lyr.protocol.format instanceof OpenLayers.Format.KML) {
+                    this.actions[0].items[0].toggle(true);
+                }
+            }, this);
+        }, this);
     },
 
     /** private: method[addActions]
@@ -344,7 +360,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         }, this.actionConfig);
         return cgxp.plugins.GoogleEarthView.superclass.addActions.apply(this, [button]);
     }
-
 });
 
 Ext.preg(cgxp.plugins.GoogleEarthView.prototype.ptype, cgxp.plugins.GoogleEarthView);

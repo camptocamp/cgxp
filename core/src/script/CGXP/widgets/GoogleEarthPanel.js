@@ -113,8 +113,22 @@ cgxp.GoogleEarthPanel = Ext.extend(gxp.GoogleEarthPanel, {
         } else {
             this.addKmlUrl(kmlUrl);
         }
-    }
+    },
 
+    /** private: method[addLayer]
+     *  Adds a layer to the 3D visualization.
+     *  Adds support for KML layers to the inherited GXP GoogleEarthPanel.
+     */
+    addLayer: function(layer, order) {
+        gxp.GoogleEarthPanel.prototype.addLayer.apply(this, arguments);
+        var lyr = layer.getLayer();
+        if (lyr instanceof OpenLayers.Layer.Vector &&
+            lyr.protocol instanceof OpenLayers.Protocol.HTTP &&
+            typeof lyr.protocol.url == 'string' &&
+            lyr.protocol.format instanceof OpenLayers.Format.KML) {
+            this.addKmlUrl(lyr.protocol.url);
+        }
+    }
 });
 
 /** api: xtype = cgxp_googleearthpanel */

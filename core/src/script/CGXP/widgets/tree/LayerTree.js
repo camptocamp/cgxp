@@ -20,6 +20,9 @@
  * @requires GeoExt/data/LayerRecord.js
  * @include OpenLayers/Layer/WMS.js
  * @include OpenLayers/Format/WMTSCapabilities/v1_0_0.js
+ * @include OpenLayers/Format/KML.js
+ * @include OpenLayers/Protocol/HTTP.js
+ * @include OpenLayers/Strategy/Fixed.js
  * @requires GeoExt/widgets/tree/LayerParamNode.js
  * @include GeoExt/widgets/tree/TreeNodeUIEventMixin.js
  * @include GeoExt/plugins/TreeNodeActions.js
@@ -661,7 +664,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 key = 'legend';
                 break;
             case 'zoomtoscale':
-                    var n = node,
+                var n = node,
                     map = n.layer.map,
                     res = map.getResolution(),
                     zoom,
@@ -676,10 +679,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 map.setCenter(center, zoom);
                 break;
             case 'showin3d':
-                var googleEarthPanel = Ext.getCmp("googleearthpanel");
-                if (googleEarthPanel) {
-                    googleEarthPanel.toggleKmlUrl(node.attributes.kml);
+                var n = node,
+                    map = n.layer.map,
+                    layerName = n.text + '_kml';
+
+                // load the KML in the 2D map
+                // this should trigger its load in the 3D viewer as well
+                if (!map.getLayersByName(layerName).length) {
+                    var layer = new OpenLayers.Layer.Vector(layerName, {
+                        strategies: [new OpenLayers.Strategy.Fixed()],
+                        protocol: new OpenLayers.Protocol.HTTP({
+                            url: node.attributes.kml,
+                            format: new OpenLayers.Format.KML({
+                                extractStyles: true,
+                                internalProjection: map.projection
+                            })
+                        })
+                    });
+                    map.addLayer(layer);
+                } else {
+                    Ext.each(map.getLayersByName(layerName), function(layer) {
+                        map.removeLayer(layer);
+                    });
                 }
+
                 break;
         }
 

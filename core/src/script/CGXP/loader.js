@@ -59,7 +59,7 @@
         "plugins/ScaleChooser.js",
         "plugins/FloorSlider.js",
         "plugins/StreetView.js",
-        "plugins/SwitchableWMTSSource.js",
+        "../../../../openlayers.addins/SwitchableWMTS/lib/OpenLayers/Layer/SwitchableWMTS.js",
         "plugins/ThemeSelector.js",
         "plugins/ThemeFinder.js",
         "plugins/WFSGetFeature.js",
@@ -79,7 +79,7 @@
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/widgets/grid/WMSBrowserGridPanel.js",
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/widgets/tree/WMSBrowserRootNode.js",
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/widgets/tree/WMSBrowserTreePanel.js",
-        "../../../../geoext.ux/ux/WMSBrowser/resources/lang/fr.js",
+        "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/locale/WMSBrowser-fr.js",
         // </wmsbrowser dependencies>
         // <streetview dependencies>
         "../../../../geoext.ux/ux/StreetViewPanel/ux/control/StreetViewClick.js",
@@ -90,7 +90,6 @@
         "../../../../gxp/src/script/plugins/GoogleEarth.js",
         "../../../../openlayers.addins/GoogleEarthView/lib/OpenLayers/Control/GoogleEarthView.js",
         // </googleearthview dependencies>
-        "locale/en.js",
         "locale/fr.js",
         "locale/de.js",
         "locale/it.js"
