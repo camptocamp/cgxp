@@ -638,26 +638,26 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 this.tabpan.ownerCt.ownerCt.doLayout();
             }
 
-            if (queryResult.message) {
+            if (queryResult.message && this.vectorLayer.features.length > 0) {
                 this.setMessage(queryResult.message);
             }
             // add extra tab for special empty layers, if set
             if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
-                for (var i=0, len=queryResult.unqueriedLayers.length; i<len; i++) {
+                for (var k=0, lenk=queryResult.unqueriedLayers.length; k<lenk; k++) {
                     // check if tab already exists
-                    var tab = this.tabpan.find('title', queryResult.unqueriedLayers[i].unqueriedLayerId);
+                    var tab = this.tabpan.find('title', queryResult.unqueriedLayers[k].unqueriedLayerId);
                     if (tab.length == 1) {
                         this.tabpan.unhideTabStripItem(tab[0]);
                     } else {
                         // create tab
                         var p = {
-                            title: OpenLayers.i18n(queryResult.unqueriedLayers[i].unqueriedLayerId),
-                            html: [queryResult.unqueriedLayers[i].unqueriedLayerTitle,
-                              queryResult.unqueriedLayers[i].unqueriedLayerText].join('<br />')
+                            title: OpenLayers.i18n(queryResult.unqueriedLayers[k].unqueriedLayerId),
+                            html: [queryResult.unqueriedLayers[k].unqueriedLayerTitle,
+                              queryResult.unqueriedLayers[k].unqueriedLayerText].join('<br />')
                         };
                         this.tabpan.add(p);
                     }
-                };
+                }
             }
             this.textItem.setText(this.getCount());
         }, this);
