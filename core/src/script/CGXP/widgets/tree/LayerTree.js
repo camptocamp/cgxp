@@ -83,6 +83,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  Optional global configuration for WMS layers
      */
     wmsOptions: null,
+    
+    /** api: config[wmtsOptions]
+     *  ``Object``
+     *  Optional global configuration for WMTS layers
+     */
+    wmtsOptions: null,
 
     /** api: config[updateLegendDelay]
      *  ``Number``
@@ -805,7 +811,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                     capabilities_layer = capabilities_layers[i];
                                 }
                             }
-                            var layer = format.createLayer(capabilities, {
+                            var layer = format.createLayer(capabilities, Ext.apply({
                                 ref: child.name,
                                 layer: child.name,
                                 maxExtent: capabilities_layer.bounds ?
@@ -820,7 +826,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 isBaseLayer: false,
                                 mapserverURL: child.mapserverURL,
                                 mapserverLayers: child.mapserverLayers
-                            });
+                            }, this.wmtsOptions || {}));
                             child.node.attributes.layer = layer;
                             if (this.initialState && this.initialState['opacity_' + child.name]) {
                                 layer.setOpacity(this.initialState['opacity_' + child.name]);
