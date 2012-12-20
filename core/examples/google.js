@@ -1,17 +1,23 @@
+var app;
 Ext.onReady(function() {
     GeoExt.Lang.set("en");
 
-    var app = new gxp.Viewer({
+    app = new gxp.Viewer({
         portalConfig: {
-            renderTo: document.body,
             layout: "border",
-            width: 650,
-            height: 400,
             items: [{
+                region: "north",
+                html: "This example shoes how to integrate <b>Google plugins</b> (StreetView and GoogleEarth) in GXP Viewer.<br/>" +
+                    "One can load a <b>KML</b> for the <b>Bathymetry</b> layer (hover the node in the tree and click on the globe icon). This should show markers on the 2D map as well as on the 3D plugin (which should open automatically)."
+            }, {
                 id: "center",
                 region: "center",
                 layout: "border",
                 items: "mymap"
+            }, {
+                id: "east",
+                region: "east",
+                width: 250
             }]
         },
         tools: [{
@@ -23,6 +29,15 @@ Ext.onReady(function() {
             ptype: "cgxp_googleearthview",
             outputTarget: 'center',
             toggleGroup: 'maptools'
+        }, {
+            ptype: "cgxp_layertree",
+            outputTarget: "east",
+            outputConfig: {
+                autoScroll: true,
+                wmsURL: 'http://www2.dmsolutions.ca/cgi-bin/mswms_gmap',
+                themes: App.themes,
+                defaultThemes: App.default_themes
+            }
         }],
         sources: {
             osm: {
@@ -31,17 +46,9 @@ Ext.onReady(function() {
         },
         map: {
             id: "mymap",
-            //region: "center",
-            projection: "EPSG:900913",
-            units: "m",
-            maxResolution: 156543.0339,
-            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-            center: [659704.09163989,5711205.1705888],
-            zoom: 15,
-            layers: [{
-                source: "osm",
-                name: "mapnik"
-            }]
+            center: [-80, 44],
+            zoom: 8,
+            layers: [new OpenLayers.Layer('fake', {isBaseLayer: true})]
         }
     });
 });
