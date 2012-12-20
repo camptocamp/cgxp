@@ -160,6 +160,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      *  The mapserver proxy URL
      */
 
+    /** api: config[autoDeactivate]
+     *  ``Boolean``
+     *  Deactivate the tool after query.
+     *  Default is ``true``.
+     */
+    autoDeactivate: true,
+
     /* i18n */
     tooltipText: 'Query the map',
     menuText: 'Query the map',
@@ -173,7 +180,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         this.buildControls();
         if (this.actionTarget) {
-            var action = new GeoExt.Action(Ext.applyIf({
+            this.action = new GeoExt.Action(Ext.applyIf({
                 allowDepress: true,
                 enableToggle: true,
                 iconCls: 'info',
@@ -182,7 +189,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 toggleGroup: this.toggleGroup,
                 control: this.toolWFSControl
             }, this.actionOptions));
-            return cgxp.plugins.GetFeature.superclass.addActions.apply(this, [[action]]);
+            return cgxp.plugins.GetFeature.superclass.addActions.apply(this, 
+                    [[this.action]]);
         }
     },
 
@@ -201,10 +209,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             return config;
-        };
+        }
         var themes = (this.themes.local || []).concat(
             this.themes.external || []);
-        this.layersConfig = browse(themes)
+        this.layersConfig = browse(themes);
 
         this.buildWMSControl();
         this.buildWFSControls();
@@ -288,7 +296,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 // and lunch querystarts event
                 self.events.fireEvent('querystarts');
                 var layers = this.findLayers();
-                if (layers.length == 0) {
+                if (layers.length === 0) {
                     Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
                     this.events.triggerEvent("nogetfeatureinfo");
                     // Reset the cursor.
@@ -310,12 +318,12 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             url: self.mapserverURL,
                             projection:
                                 self.target.mapPanel.map.getProjectionObject(),
-                            reverseAxisOrder: function() { return false },
+                            reverseAxisOrder: OpenLayers.Function.False,
                             params: Ext.apply({
                                 LAYERS: layer.queryLayers || layer.mapserverLayers,
                                 VERSION: '1.1.1'
                             }, layer.mapserverParams)
-                        }
+                        };
                     }
                     var services = layer.params.EXTERNAL ?
                         externalServices : internalServices;
@@ -327,12 +335,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         services[url] = [layer];
                     }
                 }
-                var layers;
                 for (var url in services) {
-                    layers = services[url];
-                    var wmsOptions = this.buildWMSOptions(url, layers,
+                    var wmsOptions = this.buildWMSOptions(url, services[url],
                         clickPosition, 'image/png');
                     OpenLayers.Request.GET(wmsOptions);
+                }
+                if (self.autoDeactivate && self.action) {
+                    self.action.items[0].toggle(false);
                 }
             },
 
@@ -365,7 +374,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     .apply(this, arguments);
             this.down = null;
             return result;
-        }
+        };
         this.target.mapPanel.map.addControl(this.clickWMSControl);
     },
 
@@ -392,7 +401,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        var listners = {
+        var listeners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
                     features: e.features
@@ -432,6 +441,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     unqueriedLayers: l.unqueriedLayers
                 });
             }
+            if (self.autoDeactivate && self.action) {
+                self.action.items[0].toggle(false);
+            }
         };
 
         if (this.actionTarget) {
@@ -442,7 +454,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 box: true,
                 click: false,
                 single: false,
-                eventListeners: listners,
+                eventListeners: listeners,
                 request: request
             });
             // don't convert pixel to box, let the WFS GetFeature to query
@@ -461,7 +473,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             autoActivate: true,
-            eventListeners: listners,
+            eventListeners: listeners,
             request: request
         });
         this.target.mapPanel.map.addControl(this.ctrlWFSControl);
@@ -580,7 +592,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         if (Ext.isMac) {
             key = '&#8984;';
         }
-        return tpl.applyTemplate({key: key})
+        return tpl.applyTemplate({key: key});
     }
 });
 
