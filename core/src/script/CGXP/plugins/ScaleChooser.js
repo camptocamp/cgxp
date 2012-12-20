@@ -60,13 +60,13 @@ Ext.namespace("cgxp.plugins");
  *  .. code-block:: javascript
  *
  *              roundValues: [1, 2.5, 5, 10],
- *              decade: true
+ *              power10: true
  *
  *  The following scales ``[4, 9, 22, 48, 103, 231, 478, 978]``
  *  will be display as ``[5, 10, 25, 50, 100, 250, 500, 1000]``
  *
  *
- *  If you need something more specific, you can overwritten the
+ *  If you need something more specific, you can overwrite the
  *  method ``round`` like this:
  *  .. code-block:: javascript
  *
@@ -116,15 +116,20 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
      *  Defaults to undefined (disabled).
      */
 
-    /** api: config[decade]
+    /** api: config[power10]
      *  ``Boolean``
-     *  If true the ``roundValues`` arent the possible values on each decade,
-     *  and they should start with 1 and ends with 10.
-     *  For example if it's ``true`` and ``roundValues`` is ``[1, 2.5, 5, 10]`` than
-     *  all the possible values are ``[..., 1, 2.5, 5, 10, 25, 50, 100, ...]``.
+     *  If ``true``, the possible ``roundValues`` will be multiples of
+     *  10, 100, ... of the submitted ``roundValues``.
+     *  The latter values should then be contained between 1 and 10
+     *  and they should start with 1 and end with 10.
+     *
+     *  For example if it's ``true`` and ``roundValues`` is ``[1, 2.5, 5, 10]``
+     *  than all the possible values are
+     *  ``[..., 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100, ...]``.
+     *
      *  Defaults to false.
      */
-    decade: false,
+    power10: false,
 
     /** api: config[formatValue]
      *  ``Function``
@@ -205,7 +210,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
         if (this.roundValues) {
             var base = 1;
             var rest = value;
-            if (this.decade) {
+            if (this.power10) {
                 var log = Math.log(value)/Math.log(10);
                 base = Math.pow(10, Math.floor(log));
                 rest = value / base;
@@ -231,4 +236,3 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
 });
 
 Ext.preg(cgxp.plugins.ScaleChooser.prototype.ptype, cgxp.plugins.ScaleChooser);
-
