@@ -110,9 +110,9 @@ describe('plugins.ScaleChooser', function() {
             expect(s.round(71)).toBe(20);
             expect(s.round(99)).toBe(20);
         });
-        it('roundValues and factor', function() {
+        it('roundValues and power10', function() {
             s.roundValues = [1, 2.5, 5, 10];
-            s.factor = 10;
+            s.power10 = true;
             expect(s.round(1)).toBe(1);
             expect(s.round(3)).toBe(2.5);
             expect(s.round(70)).toBe(50);
