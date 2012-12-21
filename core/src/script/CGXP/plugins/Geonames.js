@@ -73,7 +73,7 @@ cgxp.plugins.Geonames = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text displayed by default in the ComboBox (i18n).
      */
-    emptyText: 'Recenter on...',
+    emptyText: "Recenter on...",
 
     /** api: config[emptyText]
      *  ``String``
@@ -93,22 +93,22 @@ cgxp.plugins.Geonames = Ext.extend(gxp.plugins.Tool, {
         var store = new Ext.data.Store({
             proxy: new Ext.data.ScriptTagProxy({
                 url: this.url,
-                method: 'GET'
+                method: "GET"
             }),
             baseParams: {
-                maxRows: '20'
+                maxRows: 20
             },
             reader: new Ext.data.JsonReader({
-                idProperty: 'geonameId',
+                idProperty: "geonameId",
                 root: "geonames",
                 totalProperty: "totalResultsCount",
                 fields: [
-                    { name: 'geonameId' },
-                    { name: 'countryName' },
-                    { name: 'lng' },
-                    { name: 'lat' },
-                    { name: 'name' },
-                    { name: 'fcodeName' }
+                    { name: "geonameId" },
+                    { name: "countryName" },
+                    { name: "lng" },
+                    { name: "lat" },
+                    { name: "name" },
+                    { name: "fcodeName" }
                 ]
             })
         });
@@ -122,11 +122,11 @@ cgxp.plugins.Geonames = Ext.extend(gxp.plugins.Tool, {
             minChars: 2,
             queryDelay: 50,
             hideTrigger: true,
-            displayField: 'name',
+            displayField: "name",
             forceSelection: true,
             emptyText: this.emptyText,
             loadingText: this.loadingText,
-            queryParam: 'name_startsWith',
+            queryParam: "name_startsWith",
             tpl: '<tpl for="."><div class="x-combo-list-item"><h1>{name}<br></h1>{countryName}</div></tpl>',
             store: this.createStore(),
             width: 200
@@ -139,7 +139,6 @@ cgxp.plugins.Geonames = Ext.extend(gxp.plugins.Tool, {
         }, this);
         return cgxp.plugins.Geonames.superclass.addActions.apply(this, [combo]);
     }
-
 });
 
 Ext.preg(cgxp.plugins.Geonames.prototype.ptype, cgxp.plugins.Geonames);
