@@ -17,6 +17,8 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include OpenLayers/BaseTypes/LonLat.js
+ * @include OpenLayers/Projection.js
  */
 
 /** api: (define)
