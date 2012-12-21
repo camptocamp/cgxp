@@ -279,9 +279,8 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     alert(this.errorText);
                     return;
                 }
-                var l = response.features.length;
-                if (response.features && l) {
-                    var fs = response;
+                if (response.features && response.features.length) {
+                    var fs = response, l = fs.features.length;
                     // required by ResultsPanel:
                     while(l--) {
                         fs.features[l].type = this.protocol.featureType;
