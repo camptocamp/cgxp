@@ -279,11 +279,12 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     alert(this.errorText);
                     return;
                 }
-                if (response.features && response.features.length) {
-                    var fs = response.features, l = fs.length;
+                var l = response.features.length;
+                if (response.features && l) {
+                    var fs = response;
                     // required by ResultsPanel:
                     while(l--) {
-                        fs[l].type = this.protocol.featureType;
+                        fs.features[l].type = this.protocol.featureType;
                     }
                     this.events.fireEvent("queryresults", fs);
                 } else {
