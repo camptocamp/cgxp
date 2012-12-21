@@ -341,12 +341,16 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 for (var url in internalServices) {
                     var wmsOptions = this.buildWMSOptions(url, services[url],
                         clickPosition, 'image/png');
+                    wmsOptions.params.QUERY_LAYERS = self.getQueryableWMSLayers(
+                        wmsOptions.params.QUERY_LAYERS);
                     OpenLayers.Request.GET(wmsOptions);
                 }
                 for (var url in externalServices) {
                     var wmsOptions = this.buildWMSOptions(url, services[url],
                         clickPosition, 'image/png');
-                    wmsOptions.params[EXTERNAL] = true;
+                    wmsOptions.params.QUERY_LAYERS = self.getQueryableWMSLayers(
+                        wmsOptions.params.QUERY_LAYERS);
+                    wmsOptions.params.EXTERNAL = true;
                     OpenLayers.Request.GET(wmsOptions);
                 }
                 if (self.autoDeactivate && self.action) {
