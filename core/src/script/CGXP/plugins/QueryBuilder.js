@@ -280,10 +280,10 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     return;
                 }
                 if (response.features && response.features.length) {
-                    var fs = response.features, l = fs.length;
+                    var fs = response, l = fs.features.length;
                     // required by ResultsPanel:
                     while(l--) {
-                        fs[l].type = this.protocol.featureType;
+                        fs.features[l].type = this.protocol.featureType;
                     }
                     this.events.fireEvent("queryresults", fs);
                 } else {
