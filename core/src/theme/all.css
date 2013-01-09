@@ -339,6 +339,9 @@ div.legend label.layerparam-label {
 .theme-selector .thumb {
     background: #dddddd;
     padding: 3px;
+    margin: 0 auto;
+    display: table;
+    line-height: 0;
 }
 .theme-selector .thumb img {
     height: 60px;
@@ -355,6 +358,7 @@ div.legend label.layerparam-label {
     display: block;
     overflow: hidden;
     text-align: center;
+    margin-top: 2px;
 }
 
 .theme-selector .x-view-over {
