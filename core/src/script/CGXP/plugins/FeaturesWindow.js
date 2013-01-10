@@ -167,6 +167,12 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     showUnqueriedLayers: true,
 
+    /** api: config[openFeatures]
+     *  ``Number`` on add feature directly open the first features, default is 1,
+     *  than the first feature is open, others are closed.
+     */
+    openFeatures: 1,
+
     init: function(target) {
         this.highlightStyle = OpenLayers.Util.applyDefaults(
             this.highlightStyle || {
@@ -309,8 +315,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         if (!this.grid) {
             this.createGrid();
         }
-        // append new features to existing features in the store
-        this.store.loadData(features, true);
         // reorder features to put unqueried layers at the end
         if (this.showUnqueriedLayers) {
             this.store.data.each(function(record) {
@@ -366,7 +370,12 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             this.featuresWindow.doLayout();
         }
 
-        this.featuresWindow.show();
+        if (features.length > 0) {
+            this.featuresWindow.show();
+        }
+
+        // append new features to existing features in the store
+        this.store.loadData(features, true);
 
         // position the attributes window the first time
         // then it should appear at the last position the user chose
@@ -455,6 +464,17 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             disableSelection: true,
             hideHeaders: true
         });
+        this.grid.view.on('rowsinserted', function(view, firstRow, lastRow) {
+            for (var row = firstRow ; row <= lastRow ; row++) {
+                if (row < this.openFeatures) {
+                    rowexpander.expandRow(row);
+                    row = this.grid.view.getRow(row);
+                }
+                else {
+                    break;
+                }
+            }
+        }, this)
     },
 
     /** private: method[setMessage]
