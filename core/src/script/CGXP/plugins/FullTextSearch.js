@@ -248,7 +248,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             );
             this.position = null;
             this.closeLoading.cancel();
-            this.applyPosition.cancel();
+            this.applyPositionTask.cancel();
             if (coords) {
                 var map = this.target.mapPanel.map;
                 var left = parseFloat(coords[1].replace("'", ""));
@@ -275,7 +275,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                     // close the loading twin box.
                     this.closeLoading.delay(10);
                     // apply the position
-                    this.applyPosition.delay(1000);
+                    this.applyPositionTask.delay(1000);
                     return false;
                 }
             }
@@ -284,11 +284,27 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         return store;
     },
 
-    /**
-     * Method: createCombo
+    /** private: method[applyPosition]
+     */
+    applyPosition: function() {
+        this.target.mapPanel.map.setCenter(
+            this.position, this.coordsRecenterZoom);
+
+        if (this.showCenter) {
+            // show a point feature to materialize the center
+            var feature = new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(this.position.lon,
+                                              this.position.lat),
+                this.coordsRecenteringStyle || {}
+            );
+            this.vectorLayer.removeAllFeatures();
+            this.vectorLayer.addFeatures([feature]);
+        }
+    },
+
+    /** private: method[createCombo]
      *
-     * Returns:
-     * {Ext.form.ComboBox} The search combo.
+     *  :returns ``Ext.form.ComboBox`` The search combo.
      */
     createCombo: function() {
         var map = this.target.mapPanel.map;
@@ -318,21 +334,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             combo.list.hide();
         }, this);
         // used to apply the position
-        this.applyPosition = new Ext.util.DelayedTask(function () {
-            map.setCenter(this.position, this.coordsRecenterZoom);
-
-            if (this.showCenter) {
-                // show a point feature to materialize the center
-                var feature = new OpenLayers.Feature.Vector(
-                    new OpenLayers.Geometry.Point(this.position.lon,
-                                                  this.position.lat)
-                );
-                if (this.coordsRecenteringStyle) {
-                    feature.style = this.coordsRecenteringStyle;
-                }
-                this.vectorLayer.removeFeatures(this.vectorLayer.features);
-                this.vectorLayer.addFeatures([feature]);
-            }
+        this.applyPositionTask = new Ext.util.DelayedTask(function () {
+            this.applyPosition();
         }, this);
         combo.on({
             'select': function(combo, record, index) {
@@ -391,8 +394,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             },
             'specialkey': function(field, event) {
                 if (this.position && event.getKey() == event.ENTER) {
-                    map.setCenter(this.position, this.pointRecenterZoom);
-                    this.applyPosition.cancel();
+                    this.applyPosition();
+                    this.applyPositionTask.cancel();
                 }
             },
             scope: this
