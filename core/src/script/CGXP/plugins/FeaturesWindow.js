@@ -176,17 +176,24 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         this.target.on('ready', this.viewerReady, this);
 
         var layers = {};
-        function browseThemes(node) {
-            for (var i=0, len=node.length; i<len; i++) {
-                var child = node[i];
+        function browseThemes(nodes) {
+            Ext.each(nodes, function(child) {
                 if (child.children) {
                     browseThemes(child.children);
                 } else {
-                    layers[child.name] = child;
+                    // is a group
+                    if (child.childLayers.length == 0) {
+                        layers[child.name] = child;
+                    }
+                    else {
+                        Ext.each(child.childLayers, function(layer) {
+                            layers[layer.name] = child;
+                        });
+                    }
                 }
-            }
+            });
         }
-        browseThemes(this.themes.external || {});
+        browseThemes(this.themes.external || []);
         browseThemes(this.themes.local);
         this.layers = layers;
     },
