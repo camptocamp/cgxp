@@ -16,16 +16,13 @@
 */
 
 /**
+ * @requires plugins/Tool.js
  * @include OpenLayers/Control/MousePosition.js
  */
 
 /** api: (define)
  *  module = cgxp.plugins
  *  class = MouseCoordinates
- */
-
-/** api: (extends)
- *  plugins/Tool.js
  */
 Ext.namespace("cgxp");
 
