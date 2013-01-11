@@ -23,10 +23,6 @@
  *  module = cgxp.plugins
  *  class = GoogleSource
  */
-
-/** api: (extends)
- *  plugins/GoogleSource.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor

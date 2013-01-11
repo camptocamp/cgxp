@@ -23,10 +23,6 @@
  *  module = cgxp.plugins
  *  class = OSMSource
  */
-
-/** api: (extends)
- *  plugins/OSMSource.js
- */
 Ext.namespace("cgxp.plugins");
 
 /** api: constructor
