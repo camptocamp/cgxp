@@ -264,7 +264,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 this.target.mapPanel.map.zoomTo(this.pointRecenterZoom);
             }
 
-            this.events.fireEvent('queryresults', features, true);
+            this.events.fireEvent('queryresults', {'features': features}, true);
         }
     }
 });
