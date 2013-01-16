@@ -113,7 +113,23 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     printPanel: null,
 
+    /** api: config[mapserverURL]
+     *  ``String``
+     *  URL of the mapserver proxy.
+     */
     mapserverURL: null,
+
+    /** api: config[printURL]
+     *  ``String``
+     *  URL of the print proxy.
+     */
+    printURL: null,
+
+    /** api: config[printProviderConfig]
+     *  ``Object``
+     *  Optional parameters to send to the print proxy.
+     */
+    printProviderConfig: null,
 
     /** api: config[options]
      *  ``String``
@@ -287,9 +303,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         var printProvider = new GeoExt.data.PrintProvider({
             url: this.printURL,
             timeout: this.timeout,
-            baseParams: {
+            baseParams: Ext.apply({
                 url: this.printURL
-            },
+            }, this.printProviderConfig),
             listeners: {
                 beforedownload: function(pp, url) {
                     if (Ext.isIE) {
