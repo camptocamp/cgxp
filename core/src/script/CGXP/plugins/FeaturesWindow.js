@@ -250,7 +250,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 if (attributes.hasOwnProperty(k) && attributes[k]) {
                     hasAttributes = true;
                     if (k == this.contentOverride) {
-                        detail.push(attributes[k]['text']);
+                        detail.push(attributes[k].text);
                         break; // exit for loop
                     } else {
                         detail = detail.concat([
@@ -277,7 +277,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 feature.geometry = feature.bounds.toGeometry();
             }
 
-            featuresWithAttributes.push(feature)
+            featuresWithAttributes.push(feature);
             feature.attributes[this.formatedAttributesId] = detail.join('');
             feature.attributes.type = OpenLayers.i18n(feature.type);
 
@@ -291,7 +291,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 feature.attributes[this.originalIdRef] = feature.attributes.id;
             }
             if (feature.attributes[this.contentOverride]) {
-                feature.attributes.id = feature.attributes[this.contentOverride]['title'];
+                feature.attributes.id = feature.attributes[this.contentOverride].title;
             } else if (this.layers[feature.type] &&
                 this.layers[feature.type].identifierAttribute) {
                 // use the identifierAttribute field if set
@@ -309,7 +309,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     showWindow: function(queryResult) {
 
-        var features = queryResult.features
+        var features = queryResult.features;
 
         // if exist, insert the unqueried layers as fake features
         if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
@@ -343,7 +343,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                     this.store.insert(this.store.getTotalCount(), record);
                 }
             }, this);
-        };
+        }
         
         var first = false;
         if (!this.featuresWindow) {
@@ -386,9 +386,9 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 this.messageItem.setText('&nbsp;');
                 this.featuresWindow.bbar.show();
                 this.featuresWindow.syncSize();
-            };
+            }
             this.featuresWindow.doLayout();
-        };
+        }
 
         this.featuresWindow.show();
 
@@ -408,13 +408,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 this.featuresWindow.bbar.hide();
                 this.featuresWindow.syncSize();
                 this.featuresWindow.doLayout();
-            };
+            }
 
-        };
+        }
          // space calculation can only be performed once the window has been rendered
         if (queryResult.message) {
             this.setMessage(queryResult.message);
-        };
+        }
     },
 
     /** private: method[createGrid]
@@ -485,7 +485,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  Set the queryResult message, check if there is enough space to display it all
      */
     setMessage: function(msg) {
-        var msg = msg;
         // tests the space required by the TextItem
         this.messageItem.setText(msg);
         

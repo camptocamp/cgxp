@@ -366,7 +366,6 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  Set the queryResult message, check if there is enough space to display it all
      */
     setMessage: function(msg) {
-        var msg = msg;
         // tests the space required by the TextItem
         this.messageItem.setText(msg);
         
@@ -483,7 +482,9 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         }, this);
 
         this.events.on('queryclose', function() {
-            this.control && this.control.deactivate();
+            if (this.control) {
+                this.control.deactivate();
+            }
         }, this);
 
         this.events.on('queryresults', function(queryResult, selectAll) {
