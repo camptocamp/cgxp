@@ -16,6 +16,7 @@
  */
 
 /*
+ * @requires CGXP/plugins/FeaturesResult.js
  * @include GeoExt/widgets/tree/LayerContainer.js
  * @include GeoExt/widgets/tree/LayerLoader.js
  * @include GeoExt/plugins/TreeNodeComponent.js
@@ -77,7 +78,7 @@ Ext.namespace("cgxp.plugins");
  *      :class:`cgxp.plugins.QueryBuilder`.
  *
  */
-cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.FeatureGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
     /** api: ptype = cgxp_featuregrid */
     ptype: "cgxp_featuregrid",
@@ -92,12 +93,6 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  The visible grid.
      */
     currentGrid: null,
-
-    /** private: attibute[vectorLayer]
-     *  ``OpenLayers.Layer.Vector``
-     *  The layer used to display the features.
-     */
-    vectorLayer: null,
 
     /** private: attibute[gridByType]
      *  ``Object``
@@ -139,6 +134,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  * ``queryresults(features)``: sent when the result is received
      */
     events: null,
+
+    /** api: config[themes]
+     *  ``Object`` List of internal and external themes and layers. (The
+     *  same object as that passed to the :class:`cgxp.plugins.LayerTree`).
+     */
+    themes: null,
 
     /** api: config[globalSelection]
      *  ``Boolean`` If true, selection state are remembered across all result
@@ -368,7 +369,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     setMessage: function(msg) {
         // tests the space required by the TextItem
         this.messageItem.setText(msg);
-        
+
         if ((this.tabpan.getInnerWidth() - 370) < this.messageItem.getWidth()) {
             msg = [
                 '<abbr title="',
@@ -399,8 +400,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``Ext.data.Record``
      */
     showFeature: function(record) {
-        record.getFeature().style = OpenLayers.Feature.Vector.style['default'];
-        record.getFeature().style.strokeWidth = 4;
+        record.getFeature().style = null;
         this.vectorLayer.drawFeature(record.getFeature());
     },
 
@@ -443,10 +443,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
         // a ResultsPanel object has its own vector layer, which
         // is added to the map once for good
-        this.vectorLayer = new OpenLayers.Layer.Vector(
-            OpenLayers.Util.createUniqueID("c2cgeoportal"), {
-                displayInLayerSwitcher: false,
-                alwaysInRange: true
+        this.createVectorLayer({
+            styleMap: new OpenLayers.StyleMap({
+                'select': {
+                    'strokeWidth': 4
+                }
+            })
         });
 
         this.events.on('querystarts', function() {
@@ -495,7 +497,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
 
             // if no feature do nothing
             if ((!features || features.length === 0) &&
-                    (!queryResult.unqueriedLayers || 
+                    (!queryResult.unqueriedLayers ||
                     queryResult.unqueriedLayers.length === 0)) {
                 // if really no feature close panel)
                 if (previouslyNoFeature) {
@@ -792,8 +794,8 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 'tabchange': function(tabpanel, tab) {
                     if (!tab) {
-                        /* if the tabpanel has been rendered once and hidden (user 
-                        clicked the remove all button), a tabchange event is triggered 
+                        /* if the tabpanel has been rendered once and hidden (user
+                        clicked the remove all button), a tabchange event is triggered
                         when the tabpanel is displayed again on next query, but
                         the tab is not ready and is yet undefined */
                         return;
@@ -822,7 +824,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             this.textItem.setText(this.getCount());
                         }
                         // re-enable grid related buttons
-                        this.selectionButton.enable(); 
+                        this.selectionButton.enable();
                         Ext.each(this.selectionActionButton.menu.items.items, function(item) {
                             item.enable();
                         });
@@ -831,7 +833,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         this.currentGrid = null;
                         this.textItem.setText(this.getCount());
                         // disable grid related buttons
-                        this.selectionButton.disable(); 
+                        this.selectionButton.disable();
                         Ext.each(this.selectionActionButton.menu.items.items, function(item) {
                             item.disable();
                         });
@@ -851,7 +853,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             },
             bbar: [
-                this.selectionButton, this.selectionActionButton ,'->', 
+                this.selectionButton, this.selectionActionButton, '->',
                 this.messageItem, '-', this.textItem, '-', {
                     text: this.clearAllText,
                     handler: function() {

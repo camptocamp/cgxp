@@ -16,7 +16,7 @@
  */
 
 /*
- * @requires plugins/Tool.js
+ * @requires CGXP/plugins/FeaturesResult.js
  * @include GeoExt/data/FeatureStore.js
  * @include GeoExt.ux/Ext.ux.grid.GridMouseEvents.js
  * @include Ext/examples/ux/RowExpander.js
@@ -65,7 +65,7 @@ Ext.namespace("cgxp.plugins");
  *      spec.
  *
  */
-cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
     /** api: ptype = cgxp_featureswindow*/
     ptype: "cgxp_featureswindow",
@@ -87,23 +87,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     themes: null,
 
-    /** private: attibute[vectorLayer]
-     *  ``OpenLayers.Layer.Vector``
-     *  The vector layer used to display the features.
-     */
-    vectorLayer: null,
-
     /** private: attribute[featuresWindow]
      *  ``Ext.Window``
      *  The window (popup) in which the results are shown.
      */
     featuresWindow: null,
-
-    /** private: attribute[layers]
-     *  ``Array``
-     *  The list of layers.
-     */
-    layers: null,
 
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
@@ -174,28 +162,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         );
         cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
-
-        var layers = {};
-        function browseThemes(nodes) {
-            Ext.each(nodes, function(child) {
-                if (child.children) {
-                    browseThemes(child.children);
-                } else {
-                    // is a group
-                    if (child.childLayers.length == 0) {
-                        layers[child.name] = child;
-                    }
-                    else {
-                        Ext.each(child.childLayers, function(layer) {
-                            layers[layer.name] = child;
-                        });
-                    }
-                }
-            });
-        }
-        browseThemes(this.themes.external || []);
-        browseThemes(this.themes.local);
-        this.layers = layers;
     },
 
     viewerReady: function() {
@@ -203,15 +169,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
         // a FeaturesWindow instance has its own vector layer, which
         // is added to the map once for good
-        this.vectorLayer = new OpenLayers.Layer.Vector(
-            OpenLayers.Util.createUniqueID("c2cgeoportal"), {
-                displayInLayerSwitcher: false,
-                alwaysInRange: true,
-                styleMap: new OpenLayers.StyleMap({
-                    'default': this.highlightStyle
-                })
-            }
-        );
+        this.createVectorLayer({
+            styleMap: new OpenLayers.StyleMap({
+                'default': this.highlightStyle
+            })
+        });
 
         this.events.on('querystarts', function() {
             if (this.featuresWindow) {
