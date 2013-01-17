@@ -49,7 +49,7 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
         cgxp.plugins.FeaturesResult.superclass.init.apply(this, arguments);
 
         var layers = {};
-        function browseThemes(node) {
+        function browseThemes(nodes) {
             Ext.each(nodes, function(child) {
                 if (child.children) {
                     browseThemes(child.children);
