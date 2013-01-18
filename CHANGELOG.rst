@@ -1,5 +1,14 @@
 This file includes migration steps for each release of CGXP.
 
+Version 1.4
+===========
+
+1. Rename ``CGXP/plugins/FeatureGrid.js`` to ``CGXP/plugins/FeaturesGris.js`` and
+   his ptype ``cgxp_featuregrid`` to ``cgxp_featuresgrid`` for name consistency.
+
+2. Add new ``themes`` argument to the plugin ``cgxp_featuresgrid`` to be able to 
+   display the Identifier Attribute on the drawn features.
+
 Version 1.3
 ===========
 
@@ -10,6 +19,8 @@ Version 1.3
 2. Former CGXP plugin ``SwitchableWMTSSource`` has been removed and replaced by
    an OpenLayers addin, ``OpenLayers.Layer.SwitchableWMTS``, combined to a 
    standard ``OLSource``. Here is an example of the new syntax to use:
+
+   .. code:: javascript
 
        {
            source: "olsource",
@@ -25,5 +36,4 @@ Version 1.3
                params:  {'time': '200703'},
                group: 'background'
            }, WMTS_OPTIONS)]
-       } 
-
+       }
