@@ -55,7 +55,7 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
                     browseThemes(child.children);
                 } else {
                     // is a group
-                    if (child.childLayers.length == 0) {
+                    if (child.childLayers.length === 0) {
                         layers[child.name] = child;
                     }
                     else {
