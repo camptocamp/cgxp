@@ -71,6 +71,18 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
             browseThemes(this.themes.local);
         }
         this.layers = layers;
+
+        this.target.on('ready', function() {
+            Ext.each(this.target.mapPanel.map.layers, function(layer) {
+                if (OpenLayers.Util.isArray(layer.queryLayers)) {
+                    Ext.each(layer.queryLayers, function(queryLayer) {
+                        if (queryLayer.name && queryLayer.identifierAttribute) {
+                            layers[queryLayer.name] = queryLayer;
+                        }
+                    });
+                }
+            });
+        }, this);
     },
 
     /** private: method[createVectorLayer]
