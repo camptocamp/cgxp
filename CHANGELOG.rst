@@ -3,8 +3,8 @@ This file includes migration steps for each release of CGXP.
 Version 1.4
 ===========
 
-1. Rename ``CGXP/plugins/FeatureGrid.js`` to ``CGXP/plugins/FeaturesGris.js``
-   [typo] (present in ``jsbuild/app.cfg``) and its ``ptype`` from
+1. Rename ``CGXP/plugins/FeatureGrid.js`` to ``CGXP/plugins/FeaturesGrid.js``
+   (present in ``jsbuild/app.cfg``) and its ``ptype`` from
    ``cgxp_featuregrid`` to ``cgxp_featuresgrid`` (present in the ``viewer.js``)
    for name consistency.
 
