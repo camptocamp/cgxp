@@ -16,7 +16,7 @@
  */
 
 /*
- * @requires plugins/Tool.js
+ * @requires CGXP/plugins/FeaturesResult.js
  * @include GeoExt/data/FeatureStore.js
  * @include GeoExt.ux/Ext.ux.grid.GridMouseEvents.js
  * @include Ext/examples/ux/RowExpander.js
@@ -64,8 +64,22 @@ Ext.namespace("cgxp.plugins");
  *      This is to read the "identifier attribute" from the layer
  *      spec.
  *
+ *      For the queryable Base layer the ``identifierAttribute`` can be 
+ *      provide by the ``queryLayers`` option in a layer config:
+ *    
+ *      .. code-block:: javascript
+ *    
+ *          ...
+ *          queryLayers: [{
+ *              name: "buildings",
+ *              identifierAttribute: "name"
+ *          }, {
+ *              name: "parcels",
+ *              identifierAttribute: "number"
+ *          }]
+ *          ...
  */
-cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
     /** api: ptype = cgxp_featureswindow*/
     ptype: "cgxp_featureswindow",
@@ -83,27 +97,15 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[themes]
      *  ``Object`` List of internal and external themes and layers. (The
-     *  same object as that passed to the :class:`cgxp.plugins.LayerTree`).
+     *  same object as passed to the :class:`cgxp.plugins.LayerTree`).
      */
     themes: null,
-
-    /** private: attibute[vectorLayer]
-     *  ``OpenLayers.Layer.Vector``
-     *  The vector layer used to display the features.
-     */
-    vectorLayer: null,
 
     /** private: attribute[featuresWindow]
      *  ``Ext.Window``
      *  The window (popup) in which the results are shown.
      */
     featuresWindow: null,
-
-    /** private: attribute[layers]
-     *  ``Array``
-     *  The list of layers.
-     */
-    layers: null,
 
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
@@ -174,28 +176,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
         );
         cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
-
-        var layers = {};
-        function browseThemes(nodes) {
-            Ext.each(nodes, function(child) {
-                if (child.children) {
-                    browseThemes(child.children);
-                } else {
-                    // is a group
-                    if (child.childLayers.length == 0) {
-                        layers[child.name] = child;
-                    }
-                    else {
-                        Ext.each(child.childLayers, function(layer) {
-                            layers[layer.name] = child;
-                        });
-                    }
-                }
-            });
-        }
-        browseThemes(this.themes.external || []);
-        browseThemes(this.themes.local);
-        this.layers = layers;
     },
 
     viewerReady: function() {
@@ -203,15 +183,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
 
         // a FeaturesWindow instance has its own vector layer, which
         // is added to the map once for good
-        this.vectorLayer = new OpenLayers.Layer.Vector(
-            OpenLayers.Util.createUniqueID("c2cgeoportal"), {
-                displayInLayerSwitcher: false,
-                alwaysInRange: true,
-                styleMap: new OpenLayers.StyleMap({
-                    'default': this.highlightStyle
-                })
-            }
-        );
+        this.createVectorLayer({
+            styleMap: new OpenLayers.StyleMap({
+                'default': this.highlightStyle
+            })
+        });
 
         this.events.on('querystarts', function() {
             if (this.featuresWindow) {
@@ -250,7 +226,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 if (attributes.hasOwnProperty(k) && attributes[k]) {
                     hasAttributes = true;
                     if (k == this.contentOverride) {
-                        detail.push(attributes[k]['text']);
+                        detail.push(attributes[k].text);
                         break; // exit for loop
                     } else {
                         detail = detail.concat([
@@ -277,7 +253,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 feature.geometry = feature.bounds.toGeometry();
             }
 
-            featuresWithAttributes.push(feature)
+            featuresWithAttributes.push(feature);
             feature.attributes[this.formatedAttributesId] = detail.join('');
             feature.attributes.type = OpenLayers.i18n(feature.type);
 
@@ -291,7 +267,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 feature.attributes[this.originalIdRef] = feature.attributes.id;
             }
             if (feature.attributes[this.contentOverride]) {
-                feature.attributes.id = feature.attributes[this.contentOverride]['title'];
+                feature.attributes.id = feature.attributes[this.contentOverride].title;
             } else if (this.layers[feature.type] &&
                 this.layers[feature.type].identifierAttribute) {
                 // use the identifierAttribute field if set
@@ -309,7 +285,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      */
     showWindow: function(queryResult) {
 
-        var features = queryResult.features
+        var features = queryResult.features;
 
         // if exist, insert the unqueried layers as fake features
         if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
@@ -343,7 +319,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                     this.store.insert(this.store.getTotalCount(), record);
                 }
             }, this);
-        };
+        }
         
         var first = false;
         if (!this.featuresWindow) {
@@ -386,9 +362,9 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 this.messageItem.setText('&nbsp;');
                 this.featuresWindow.bbar.show();
                 this.featuresWindow.syncSize();
-            };
+            }
             this.featuresWindow.doLayout();
-        };
+        }
 
         this.featuresWindow.show();
 
@@ -408,13 +384,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 this.featuresWindow.bbar.hide();
                 this.featuresWindow.syncSize();
                 this.featuresWindow.doLayout();
-            };
+            }
 
-        };
+        }
          // space calculation can only be performed once the window has been rendered
         if (queryResult.message) {
             this.setMessage(queryResult.message);
-        };
+        }
     },
 
     /** private: method[createGrid]
@@ -485,7 +461,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
      *  Set the queryResult message, check if there is enough space to display it all
      */
     setMessage: function(msg) {
-        var msg = msg;
         // tests the space required by the TextItem
         this.messageItem.setText(msg);
         
