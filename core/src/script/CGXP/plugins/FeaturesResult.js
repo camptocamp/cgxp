@@ -74,7 +74,7 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
 
         this.target.on('ready', function() {
             Ext.each(this.target.mapPanel.map.layers, function(layer) {
-                if (OpenLayers.Util.isArray(layer.queryLayers)) {
+                if (Ext.isArray(layer.queryLayers)) {
                     Ext.each(layer.queryLayers, function(queryLayer) {
                         if (queryLayer.name && queryLayer.identifierAttribute) {
                             layers[queryLayer.name] = queryLayer;
