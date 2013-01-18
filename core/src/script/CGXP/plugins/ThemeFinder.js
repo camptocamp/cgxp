@@ -70,7 +70,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
             {name: 'name'},
             {name: 'displayName'},
             {name: 'level'},
-            {name: 'children'},
+            {name: 'node'},
             {name: 'group'}
         ]);
         var twinField = new Ext.form.ComboBox(Ext.apply({
@@ -108,7 +108,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                                 'name': node.name,
                                 'displayName': node.displayName,
                                 'level': level,
-                                'children': node.children,
+                                'node': node,
                                 'group': mainGroup
                             })]);
                         }
@@ -120,7 +120,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                                     'name': node.name,
                                     'displayName': node.displayName,
                                     'level': level + 0.5,
-                                    'children': node.children,
+                                    'node': node,
                                     'group': mainGroup
                                 })]);
                             }
@@ -157,11 +157,11 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                 var tree = this.target.tools[this.layerTreeId].tree;
                 // theme
                 if (record.data.level < 1) {
-                    tree.loadTheme(record.data);
+                    tree.loadTheme(record.data.node);
                 }
                 // first level of layer group
                 else if (record.data.level < 2) {
-                    tree.loadGroup(record.data);
+                    tree.loadGroup(record.data.node);
                 }
                 else {
                     var layers = [record.data.name];
@@ -173,8 +173,8 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                             }
                         });
                     };
-                    if (record.data.children) {
-                        fillLayers(record.data.children);
+                    if (record.data.node.children) {
+                        fillLayers(record.data.node.children);
                     }
 
                     tree.loadGroup(record.data.group, layers);
