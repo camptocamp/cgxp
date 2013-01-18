@@ -1207,7 +1207,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                });
            }
            return true;
-       }
+       };
        Ext.each(['local', 'external'], function(location) {
             Ext.each(this.themes[location], function(t) {
                 Ext.each(t.children, function(n) {
