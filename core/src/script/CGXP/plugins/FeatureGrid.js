@@ -137,7 +137,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
     /** api: config[themes]
      *  ``Object`` List of internal and external themes and layers. (The
-     *  same object as that passed to the :class:`cgxp.plugins.LayerTree`).
+     *  same object as passed to the :class:`cgxp.plugins.LayerTree`).
      */
     themes: null,
 
