@@ -34,13 +34,13 @@
 
 /** api: (define)
  *  module = cgxp.plugins
- *  class = FeatureGrid
+ *  class = FeaturesGrid
  */
 
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing how to add a FeatureGrid plugin to a
+ *  Sample code showing how to add a FeaturesGrid plugin to a
  *  `gxp.Viewer`:
  *
  *  .. code-block:: javascript
@@ -51,11 +51,11 @@ Ext.namespace("cgxp.plugins");
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
- *              ptype: "cgxp_featuregrid",
- *              id: "featureGrid",
+ *              ptype: "cgxp_featuresgrid",
+ *              id: "featuresGrid",
  *              csvURL: "${request.route_url('csvecho')}",
  *              maxFeatures: 200,
- *              outputTarget: "featuregrid-container",
+ *              outputTarget: "featuresgrid-container",
  *              events: EVENTS
  *          }, {
  *              ptype: "cgxp_wmsgetfeatureinfo",
@@ -68,7 +68,7 @@ Ext.namespace("cgxp.plugins");
  */
 
 /** api: constructor
- *  .. class:: FeatureGrid(config)
+ *  .. class:: FeaturesGrid(config)
  *
  *      A plugin that adds a grid panel for displaying feature information (one
  *      feature per row).
@@ -78,10 +78,10 @@ Ext.namespace("cgxp.plugins");
  *      :class:`cgxp.plugins.QueryBuilder`.
  *
  */
-cgxp.plugins.FeatureGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
+cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
-    /** api: ptype = cgxp_featuregrid */
-    ptype: "cgxp_featuregrid",
+    /** api: ptype = cgxp_featuresgrid */
+    ptype: "cgxp_featuresgrid",
 
     /** private: attibute[this.tabpan]
      *  ``Object``
@@ -227,7 +227,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     init: function() {
         this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
-        cgxp.plugins.FeatureGrid.superclass.init.apply(this, arguments);
+        cgxp.plugins.FeaturesGrid.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
     },
 
@@ -867,7 +867,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             ]
         };
 
-        this.tabpan = cgxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        this.tabpan = cgxp.plugins.FeaturesGrid.superclass.addOutput.call(this, config);
         this.tabpan.ownerCt.on("expand", function() {
             this.vectorLayer.setVisibility(true);
         }, this);
@@ -943,4 +943,4 @@ cgxp.plugins.FeatureGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     }
 });
 
-Ext.preg(cgxp.plugins.FeatureGrid.prototype.ptype, cgxp.plugins.FeatureGrid);
+Ext.preg(cgxp.plugins.FeaturesGrid.prototype.ptype, cgxp.plugins.FeaturesGrid);
