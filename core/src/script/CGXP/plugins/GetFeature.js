@@ -93,13 +93,14 @@ Ext.namespace("cgxp.plugins");
  *      ...
  *      queryLayers: [{
  *          name: "buildings",
+ *          identifierAttribute: "name"
  *          maxResolutionHint: 6.6145797614602611
  *      }, {
  *          name: "parcels",
+ *          identifierAttribute: "number"
  *          maxScaleDenominator: 10000
  *      }]
  *      ...
- *
  */
 cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
