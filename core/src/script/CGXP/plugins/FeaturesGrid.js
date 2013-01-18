@@ -56,6 +56,7 @@ Ext.namespace("cgxp.plugins");
  *              csvURL: "${request.route_url('csvecho')}",
  *              maxFeatures: 200,
  *              outputTarget: "featuresgrid-container",
+ *              themes: THEMES,
  *              events: EVENTS
  *          }, {
  *              ptype: "cgxp_wmsgetfeatureinfo",
@@ -77,6 +78,20 @@ Ext.namespace("cgxp.plugins");
  *      :class:`cgxp.plugins.WMSGetFeatureInfo`, and
  *      :class:`cgxp.plugins.QueryBuilder`.
  *
+ *      For the queryable Base layer the ``identifierAttribute`` can be
+ *      provide by the ``queryLayers`` option in a layer config:
+ *
+ *      .. code-block:: javascript
+ *
+ *          ...
+ *          queryLayers: [{
+ *              name: "buildings",
+ *              identifierAttribute: "name"
+ *          }, {
+ *              name: "parcels",
+ *              identifierAttribute: "number"
+ *          }]
+ *          ...
  */
 cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 

@@ -64,6 +64,20 @@ Ext.namespace("cgxp.plugins");
  *      This is to read the "identifier attribute" from the layer
  *      spec.
  *
+ *      For the queryable Base layer the ``identifierAttribute`` can be 
+ *      provide by the ``queryLayers`` option in a layer config:
+ *    
+ *      .. code-block:: javascript
+ *    
+ *          ...
+ *          queryLayers: [{
+ *              name: "buildings",
+ *              identifierAttribute: "name"
+ *          }, {
+ *              name: "parcels",
+ *              identifierAttribute: "number"
+ *          }]
+ *          ...
  */
 cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
