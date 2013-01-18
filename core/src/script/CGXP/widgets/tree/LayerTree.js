@@ -763,10 +763,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *          configuration, the ``realIndex`` is the position where the
      *          layer should be in the final configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, realIndex) {
+    parseChildren: function(child, layer, result, currentIndex, realIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
-                currentIndex += this.parseChildren(child.children[j], layer, result, currentIndex, realIndex);
+                currentIndex += this.parseChildren(child.children[j], layer, result, currentIndex, realIndex, layers);
                 realIndex++;
             }
         }
@@ -854,7 +854,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             if (this.initialState && this.initialState['opacity_' + child.name]) {
                                 layer.setOpacity(this.initialState['opacity_' + child.name]);
                             }
-                            layer.setVisibility(child.node.attributes.checked);
+                            if (layers.indexOf(child.name) >= 0) {
+                                this.fireEvent('checkchange', child.node, true);
+                                layer.setVisibility(true);
+                            }
+                            else {
+                                layer.setVisibility(child.node.attributes.checked);
+                            }
                             result.allOlLayers[allOlLayerIndex] = layer;
                             this.mapPanel.layers.insert(indexToAdd.currentIndex, [
                                 new this.recordType({
@@ -1018,7 +1024,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     allOlLayers: []
                 };
                 this.indexesToAdd = [];
-                this.parseChildren(group, null, result, index, index);
+                this.parseChildren(group, null, result, index, index, layers);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
@@ -1201,7 +1207,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                });
            }
            return true;
-       }
+       };
        Ext.each(['local', 'external'], function(location) {
             Ext.each(this.themes[location], function(t) {
                 Ext.each(t.children, function(n) {
