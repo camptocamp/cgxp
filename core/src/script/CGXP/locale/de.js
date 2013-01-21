@@ -45,7 +45,7 @@ GeoExt.Lang.add("de", {
         menuText: 'Permalink'
     },
 
-    "cgxp.plugins.FeatureGrid.prototype": {
+    "cgxp.plugins.FeaturesGrid.prototype": {
         clearAllText: "Resultate löschen",
         selectText: "Auswahl",
         selectAllText: "Alle",

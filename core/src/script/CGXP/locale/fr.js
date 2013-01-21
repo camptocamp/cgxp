@@ -49,7 +49,7 @@ GeoExt.Lang.add("fr", {
         menuText: 'Permalien'
     },
     
-    "cgxp.plugins.FeatureGrid.prototype": {
+    "cgxp.plugins.FeaturesGrid.prototype": {
         clearAllText: "Tout effacer",
         selectText: "Sélectionner",
         selectAllText: "Tous",
