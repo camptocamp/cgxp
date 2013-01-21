@@ -854,7 +854,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             if (this.initialState && this.initialState['opacity_' + child.name]) {
                                 layer.setOpacity(this.initialState['opacity_' + child.name]);
                             }
-                            if (layers.indexOf(child.name) >= 0) {
+                            if (layers && layers.indexOf(child.name) >= 0) {
                                 this.fireEvent('checkchange', child.node, true);
                                 layer.setVisibility(true);
                             }
