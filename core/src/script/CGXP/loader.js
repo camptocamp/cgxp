@@ -32,7 +32,7 @@
         "plugins/Disclaimer.js",
         "plugins/ModalDisclaimer.js",
         "plugins/Editing.js",
-        "plugins/FeatureGrid.js",
+        "plugins/FeaturesGrid.js",
         "plugins/FeaturesWindow.js",
         "plugins/FullTextSearch.js",
         "plugins/GoogleEarthView.js",
