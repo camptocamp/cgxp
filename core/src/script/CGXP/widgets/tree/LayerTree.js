@@ -745,7 +745,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /** private: method[parseChildren}
+    /** private: method[parseChildren]
      *  Parses recursively the children of a group node.
      *
      *  :arg child: ``Object`` the node to parse
