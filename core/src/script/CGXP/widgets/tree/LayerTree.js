@@ -1362,7 +1362,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }, this, {single: true});
                 return false;
             }
-            if (n.layer instanceof OpenLayers.Layer.WMS && n.isLeaf()) {
+            if (n.isLeaf()) {
                 this.updateNodeLegends(n);
             }
         }, this);
