@@ -48,6 +48,7 @@ Ext.namespace("cgxp.plugins");
  *
  *
  *  If we add:
+ *
  *  .. code-block:: javascript
  *
  *              roundValues: [10, 20, 50, 100, 250, 500]
@@ -57,6 +58,7 @@ Ext.namespace("cgxp.plugins");
  *
  *
  *  If we add:
+ *
  *  .. code-block:: javascript
  *
  *              roundValues: [1, 2.5, 5, 10],
@@ -68,6 +70,7 @@ Ext.namespace("cgxp.plugins");
  *
  *  If you need something more specific, you can overwrite the
  *  method ``round`` like this:
+ *
  *  .. code-block:: javascript
  *
  *      round: function(value) {
