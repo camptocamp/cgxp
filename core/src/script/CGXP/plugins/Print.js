@@ -169,11 +169,20 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[encodeLayer]
      * ``Object``
-     * Additional attribute used on encode layer.
+     * Additional attribute used to encode internal layer.
      * Default to { useNativeAngle: true }
      */
     encodeLayer: {
         useNativeAngle: true
+    },
+
+    /** api: config[encodeExternalLayer]
+     * ``Object``
+     * Additional attribute used to encode external layer.
+     * Default to { useNativeAngle: false }
+     */
+    encodeExternalLayer: {
+        useNativeAngle: false
     },
 
     /** api: config[actionTarget]
@@ -385,8 +394,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 apply = true;
             }
             if (apply) {
-                encodedLayer.baseURL =  this.mapserverURL;
-                encodedLayer.type =  'WMS';
+                encodedLayer.baseURL = this.mapserverURL;
+                encodedLayer.type = 'WMS';
                 delete encodedLayer.dimensions;
                 delete encodedLayer.formatSuffix;
                 delete encodedLayer.layer;
@@ -407,9 +416,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         OpenLayers.Util.getParameterString(encodedLayer.customParams));
                 delete encodedLayer.customParams;
             }
-            if (encodedLayer) {
-                Ext.apply(encodedLayer, this.encodeLayer);
-            }
+            Ext.apply(encodedLayer, 
+                encodedLayer.baseURL == this.mapserverURL ?
+                this.encodeLayer : this.encodeExternalLayer);
         }, this);
 
         // handle query result table
