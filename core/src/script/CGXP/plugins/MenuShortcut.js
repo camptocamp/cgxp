@@ -66,8 +66,8 @@ cgxp.plugins.MenuShortcut = Ext.extend(gxp.plugins.Tool, {
             '-': Ext.Toolbar.Separator,
             ' ': Ext.Toolbar.Spacer
         }
-        
-        return cgxp.plugins.MenuShortcut.superclass.addActions.apply(this, 
+
+        return cgxp.plugins.MenuShortcut.superclass.addActions.apply(this,
                 [new classes[this.type]()]);
     }
 });

@@ -34,8 +34,8 @@ OpenLayers.Spherical.computeDistanceBetween = function(from, to, radius) {
   var sinHalfDeltaLon = Math.sin(Math.PI * (to.lon - from.lon) / 360);
   var sinHalfDeltaLat = Math.sin(Math.PI * (to.lat - from.lat) / 360);
   var a = sinHalfDeltaLat * sinHalfDeltaLat +
-      sinHalfDeltaLon * sinHalfDeltaLon * Math.cos(Math.PI * from.lat / 180) * Math.cos(Math.PI * to.lat / 180); 
-  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+      sinHalfDeltaLon * sinHalfDeltaLon * Math.cos(Math.PI * from.lat / 180) * Math.cos(Math.PI * to.lat / 180);
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
 
 

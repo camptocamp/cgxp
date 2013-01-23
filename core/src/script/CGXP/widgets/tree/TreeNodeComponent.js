@@ -24,7 +24,7 @@ cgxp.tree.TreeNodeComponent = Ext.extend(GeoExt.plugins.TreeNodeComponent, {
     divCls: null,
 
     configKey: 'component',
-    
+
     /** private: method[onRenderNode]
      *  :param node: ``Ext.tree.TreeNode``
      */

@@ -28,7 +28,7 @@
 Ext.namespace("cgxp.plugins");
 
 /** api: example
- *  Sample code showing how to add the LayerTree, ThemeChooser 
+ *  Sample code showing how to add the LayerTree, ThemeChooser
  *  and ThemeSelector plugins to a `gxp.Viewer`:
  *
  *  .. code-block:: javascript
@@ -61,7 +61,7 @@ Ext.namespace("cgxp.plugins");
  *                  collapseMode: "mini",
  *                  hidden: true,
  *                  bodyStyle: 'background-color: transparent;'
- *              }, 
+ *              },
  *              {
  *                  layout: "accordion",
  *                  id: "left-panel",
@@ -92,7 +92,7 @@ Ext.namespace("cgxp.plugins");
  *                  layout: "fit",
  *                  style: "padding: 3px 0 3px 3px;"
  *              }
- *          }, 
+ *          },
  *          {
  *              ptype: "cgxp_themefinder",
  *              outputTarget: "layerpanel",
@@ -101,7 +101,7 @@ Ext.namespace("cgxp.plugins");
  *              outputConfig: {
  *                  layout: "fit",
  *                  style: "padding: 3px;"
- *              }                             
+ *              }
  *          },
  *          {
  *              ptype: "cgxp_layertree",
@@ -117,7 +117,7 @@ Ext.namespace("cgxp.plugins");
  *                  layout: "fit",
  *                  autoScroll: true
  *              }
- *          }, 
+ *          },
  *          ...
  *          ]
  *          ...
@@ -127,9 +127,9 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: LayerTree(config)
  *
- */   
+ */
 cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = cgxp_layertree */
     ptype: "cgxp_layertree",
 
@@ -181,7 +181,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             wmsURL: this.wmsURL,
             defaultThemes: this.defaultThemes
         }, config || {});
-        
+
         this.tree = cgxp.plugins.LayerTree.superclass.addOutput.call(this, config);
         return this.tree;
     }

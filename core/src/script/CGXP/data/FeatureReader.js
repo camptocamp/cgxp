@@ -31,9 +31,9 @@ cgxp.data.FeatureReader = Ext.extend(GeoExt.data.FeatureReader, {
     readRecords: function(features) {
         if (this.meta.format) {
             features = this.meta.format.read(features);
-        }   
+        }
         return GeoExt.data.FeatureReader.prototype.readRecords.call(
             this, features
-        );  
-    }   
+        );
+    }
 });

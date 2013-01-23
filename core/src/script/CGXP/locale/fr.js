@@ -29,7 +29,7 @@ GeoExt.Lang.add("fr", {
         emptyText: "Recherche...",
         loadingText: "Recherche en cours..."
     },
-    
+
     "cgxp.plugins.ThemeFinder.prototype": {
         emptyText: "Rechercher un thème ou une couche"
     },
@@ -39,7 +39,7 @@ GeoExt.Lang.add("fr", {
         externalTitle: "Couches externes",
         toolTitle: "Thèmes"
     },
-    
+
     "cgxp.plugins.Permalink.prototype": {
         toolTitle: "Permalien",
         windowTitle: "Permalien",
@@ -48,7 +48,7 @@ GeoExt.Lang.add("fr", {
         incompatibleWithIeText: "Attention&nbsp;: cette URL est trop longue pour Microsoft Internet Explorer%nbsp;!",
         menuText: 'Permalien'
     },
-    
+
     "cgxp.plugins.FeaturesGrid.prototype": {
         clearAllText: "Tout effacer",
         selectText: "Sélectionner",
@@ -241,7 +241,7 @@ GeoExt.Lang.add("fr", {
         tooltipText: 'Interroge la carte',
         menuText: 'Interroge la carte',
         unqueriedLayerTitle: "Impossible d'interroger cette couche",
-        unqueriedLayerText: "Seules les interrogations par simple clic sont " + 
+        unqueriedLayerText: "Seules les interrogations par simple clic sont " +
             "possibles pour cette couche.",
         queryResultMessage: "Utilisez la touche {key} pour faire des sélections rectangulaires."
     },

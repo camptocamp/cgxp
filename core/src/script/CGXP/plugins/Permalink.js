@@ -122,11 +122,11 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         // of the permalink text field.
         Ext.state.Manager.getProvider().on({
             statechange: function(provider) {
-                
+
                 // generate a clean url to provide to the PermalinkProvider
                 // to avoid recovering unvanted parameters from the url
                 var base = window.location.protocol + "//" +
-                                window.location.host + 
+                                window.location.host +
                                 window.location.pathname;
                 var params = OpenLayers.Util.getParameters();
                 if (params.debug !== undefined) {

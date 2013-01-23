@@ -34,9 +34,9 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: ThemeFinder(config)
  *
- */   
+ */
 cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = cgxp_themefinder */
     ptype: "cgxp_themefinder",
 
@@ -81,9 +81,9 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
             themeQuery: function(queryText) {
                 store.removeAll();
                 var iQueryText = queryText.toLowerCase();
-                
+
                 /*
-                 * Filter the theme, layer group, layer to display only the 
+                 * Filter the theme, layer group, layer to display only the
                  * corresponding elements.
                  *
                  * It will search on layer name and Displayname.
@@ -193,7 +193,7 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         });
-        
+
         var searchField = cgxp.plugins.ThemeFinder.superclass.addOutput.call(this, twinField);
         return searchField;
     }

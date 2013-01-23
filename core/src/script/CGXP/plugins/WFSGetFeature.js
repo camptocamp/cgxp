@@ -31,7 +31,7 @@
 
 Ext.namespace("cgxp.plugins");
 
-/** 
+/**
  * THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
  */
 
@@ -112,22 +112,22 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /** api: config[actionTarget]
-     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions 
-     *  (e.g. buttons or menus)? 
+     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
+     *  (e.g. buttons or menus)?
      *
-     *  In case of a string, this can be any string that references an 
-     *  ``Ext.Container`` property on the portal, or a unique id configured on a 
+     *  In case of a string, this can be any string that references an
+     *  ``Ext.Container`` property on the portal, or a unique id configured on a
      *  component.
      *
-     *  In case of an object, the object has a "target" and an "index" property, 
-     *  so that the tool can be inserted at a specified index in the target. 
-     *               
-     *  actionTarget can also be an array of strings or objects, if the action is 
+     *  In case of an object, the object has a "target" and an "index" property,
+     *  so that the tool can be inserted at a specified index in the target.
+     *
+     *  actionTarget can also be an array of strings or objects, if the action is
      *  to be put in more than one place (e.g. a button and a context menu item).
      *
-     *  To reference one of the toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or 
-     *  ".fbar" has to be appended. The default is "map.tbar". The viewer's main 
-     *  MapPanel can always be accessed with "map" as actionTarget. Set to null if 
+     *  To reference one of the toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or
+     *  ".fbar" has to be appended. The default is "map.tbar". The viewer's main
+     *  MapPanel can always be accessed with "map" as actionTarget. Set to null if
      *  no actions should be created.
      *
      *  Some tools provide a context menu. To reference this context menu as
@@ -259,10 +259,10 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
         // when we have no sub-layers selected
         return new OpenLayers.Control.GetFeature({
             target: this.target,
-            box: true, 
-            click: true, 
-            single: false, 
-            clickTolerance: this.clickTolerance, 
+            box: true,
+            click: true,
+            single: false,
+            clickTolerance: this.clickTolerance,
             eventListeners: {
                 featuresselected: function(e) {
                     this.events.fireEvent('queryresults', {features: e.features});

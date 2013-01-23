@@ -6,7 +6,7 @@ Ext.onReady(function() {
     OpenLayers.Util.extend(OpenLayers.Lang.en, {
         "Theme 1": "Theme 1 (translated)"
     });
-    
+
     var app = new gxp.Viewer({
         portalConfig: {
             renderTo: document.body,
