@@ -1,4 +1,4 @@
-/* Copyright (c) 2011 by Camptocamp SA. Published under the 2-clause BSD license.
+/* Copyright (c) 2011-2013 by Camptocamp SA. Published under the 2-clause BSD license.
  * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
