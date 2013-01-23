@@ -1,6 +1,6 @@
 /*
     gxp.js - High level widgets for web mapping applications.
-    Copyright (c) 2008-2011, The Open Planning Project
+    Copyright (c) 2011-2013 by Camptocamp SA
     All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
