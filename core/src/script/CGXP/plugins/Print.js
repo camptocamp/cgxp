@@ -169,7 +169,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[encodeLayer]
      * ``Object``
-     * Additional attribute used on encode internal layer.
+     * Additional attribute used to encode internal layer.
      * Default to { useNativeAngle: true }
      */
     encodeLayer: {
@@ -178,7 +178,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[encodeExternalLayer]
      * ``Object``
-     * Additional attribute used on encode external layer.
+     * Additional attribute used to encode external layer.
      * Default to { useNativeAngle: false }
      */
     encodeExternalLayer: {
