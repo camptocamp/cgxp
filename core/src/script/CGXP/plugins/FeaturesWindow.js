@@ -181,7 +181,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(gxp.plugins.Tool, {
                 if (child.children) {
                     browseThemes(child.children);
                 } else {
-                    // is a group
+                    // is not a WMS layer
+                    if (!child.childLayers) {
+                        return;
+                    }
+                    // is not a mapserver group
                     if (child.childLayers.length == 0) {
                         layers[child.name] = child;
                     }
