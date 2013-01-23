@@ -64,11 +64,11 @@ Ext.namespace("cgxp.plugins");
  *      This is to read the "identifier attribute" from the layer
  *      spec.
  *
- *      For the queryable Base layer the ``identifierAttribute`` can be 
+ *      For the queryable Base layer the ``identifierAttribute`` can be
  *      provide by the ``queryLayers`` option in a layer config:
- *    
+ *
  *      .. code-block:: javascript
- *    
+ *
  *          ...
  *          queryLayers: [{
  *              name: "buildings",
@@ -308,7 +308,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
         if (!this.grid) {
             this.createGrid();
-        }     
+        }
         // append new features to existing features in the store
         this.store.loadData(features, true);
         // reorder features to put unqueried layers at the end
@@ -320,7 +320,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                 }
             }, this);
         }
-        
+
         var first = false;
         if (!this.featuresWindow) {
             first = true;
@@ -332,11 +332,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             var bbar = new Ext.Toolbar({items: [this.messageItem]});
             if (queryResult.message) {
                 /* we need the windows width to write the message, but we cant
-                 get the windows width before it has been rendered, so we just 
+                 get the windows width before it has been rendered, so we just
                  write some placeholder text to get the bbar sizing correct */
                 this.messageItem.setText('&nbsp;');
             }
-            
+
             this.featuresWindow = new Ext.Window({
                 layout: 'fit',
                 width: 300,
@@ -352,12 +352,12 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                 },
                 bbar: bbar
             });
-            
+
         } else {
             this.featuresWindow.add(this.grid);
             if (queryResult.message) {
                 /* we need the windows width to write the message, but we cant
-                 get the windows width before it has been rendered, so we just 
+                 get the windows width before it has been rendered, so we just
                  write some placeholder text to get the bbar sizing correct */
                 this.messageItem.setText('&nbsp;');
                 this.featuresWindow.bbar.show();
@@ -463,7 +463,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
     setMessage: function(msg) {
         // tests the space required by the TextItem
         this.messageItem.setText(msg);
-        
+
         if ((this.featuresWindow.getInnerWidth() - 40) < this.messageItem.getWidth()) {
             msg = [
                 '<abbr title="',

@@ -93,7 +93,7 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[maxIsSky]
      *  ``Boolean``
-     *  If set to ``true`` the label for the slider's max value will be 
+     *  If set to ``true`` the label for the slider's max value will be
      *  the value of the ``skyText`` config option,
      *  and no floor param will be set in the query string of requests.
      *  Default is ``true``.

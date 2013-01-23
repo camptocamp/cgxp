@@ -2,7 +2,7 @@ var app;
 
 Ext.onReady(function() {
     GeoExt.Lang.set("fr");
-    
+
     var app = new gxp.Viewer({
         portalConfig: {
             renderTo: document.body,

@@ -17,7 +17,7 @@
 
 Ext.namespace("cgxp.tree");
 cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
-    
+
     /** private: method[constructor]
      *  :param config: ``Object``
      */
@@ -38,7 +38,7 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
             scope: this
         });
     },
-    
+
     /** private: method[onAppendNode]
      *  :param node: ``Ext.tree.TreeNode``
      */

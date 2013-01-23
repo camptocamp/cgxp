@@ -86,7 +86,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  Optional global configuration for WMS layers
      */
     wmsOptions: null,
-    
+
     /** api: config[wmtsOptions]
      *  ``Object``
      *  Optional global configuration for WMTS layers

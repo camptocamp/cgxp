@@ -54,7 +54,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     initComponent: function() {
         var result = cgxp.MapPanel.superclass.initComponent.call(this);
         this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
-        // The crosshair should always be on top 
+        // The crosshair should always be on top
         this.map.events.register('addlayer', this, function(layer) {
             if (this.vectorLayer) {
                 this.map.raiseLayer(this.vectorLayer, 1);

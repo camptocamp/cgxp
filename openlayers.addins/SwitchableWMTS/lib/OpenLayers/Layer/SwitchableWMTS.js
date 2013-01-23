@@ -12,20 +12,20 @@
  *     new configuration parameters that make the service base URL switch to
  *     the ``secondaryUrl`` when the current zoomlevel is greater than
  *     ``zoomThreshold``.
- * 
+ *
  * Inherits from:
  *  - <OpenLayers.Layer.WMTS>
  */
 OpenLayers.Layer.SwitchableWMTS = OpenLayers.Class(OpenLayers.Layer.WMTS, {
 
-    /** 
+    /**
      * Property: url
      * {String|Array(String)} The base URL or request URL template for the WMTS
      * service when zoomlevel threshold is reached.
      */
     secondaryUrl: null,
 
-    /** 
+    /**
      * Property: zoomThreshold
      * Max zoomlevel for using standard base url. Above this zoomlevel, the
      * secondaryUrl is used as base url.

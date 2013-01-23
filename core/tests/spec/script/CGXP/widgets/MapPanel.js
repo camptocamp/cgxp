@@ -66,7 +66,7 @@ describe('MapPanel', function() {
             expect(no_gx_mappanel_state_keys).toEqual(true);
         });
     });
-    
+
     describe('when calling applyState', function() {
         var map, popupOK;
         beforeEach(function() {
@@ -132,11 +132,11 @@ describe('MapPanel', function() {
                     zoom: 4
                 });
             });
-            
+
             waitsFor(function() {
                 return popupOK;
             }, "The popup is displayed in the page", 500);
-            
+
         });
     });
 });
