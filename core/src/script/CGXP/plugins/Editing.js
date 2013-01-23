@@ -242,12 +242,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[addEditingLayer]
      */
     addEditingLayer: function() {
-        var editingStyleMap = new OpenLayers.StyleMap({  
+        var editingStyleMap = new OpenLayers.StyleMap({
             'vertices': new OpenLayers.Style({
                 pointRadius: 5,
                 graphicName: "square",
                 fillColor: "white",
-                fillOpacity: 0.6, 
+                fillOpacity: 0.6,
                 strokeWidth: 1,
                 strokeOpacity: 1,
                 strokeColor: "#333333"

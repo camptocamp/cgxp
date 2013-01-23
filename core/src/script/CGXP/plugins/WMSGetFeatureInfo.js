@@ -31,7 +31,7 @@
 
 Ext.namespace("cgxp.plugins");
 
-/** 
+/**
  * THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
  */
 

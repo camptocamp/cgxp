@@ -2,7 +2,7 @@ var app;
 
 Ext.onReady(function() {
     GeoExt.Lang.set("fr");
-    
+
     app = new gxp.Viewer({
         proxy: "/cgi-bin/proxy.cgi?url=",
         portalConfig: {

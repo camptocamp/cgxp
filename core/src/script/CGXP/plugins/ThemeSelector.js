@@ -34,9 +34,9 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: ThemeSelector(config)
  *
- */   
+ */
 cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = cgxp_themeselector */
     ptype: "cgxp_themeselector",
 
@@ -56,7 +56,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
     localTitle: "Local layers",
     externalTitle: "External layers",
     toolTitle: "Themes",
-    
+
     /** api: config[maxHeight]
      *  ``Integer``
      *  Maximum height in pixels of the themeSelector panel.
@@ -75,18 +75,18 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 '<span>{[OpenLayers.i18n(values.name)]}</span></div>',
             '</tpl>',
             '<div class="x-clear"></div>'
-        );  
-     
-        var tabconfig = { 
+        );
+
+        var tabconfig = {
             fields: ['name', 'icon', 'children']
-        };  
+        };
         var localStore = new Ext.data.JsonStore(Ext.apply(tabconfig, {
             data: this.themes.local
         }));
         var externalStore = new Ext.data.JsonStore(Ext.apply(tabconfig, {
-            data: this.themes.external || []  
+            data: this.themes.external || []
         }));
-     
+
         tabconfig =  {
             tpl: tpl,
             overClass: 'x-view-over',
@@ -100,7 +100,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                     if (record) {
                         var tree = this.target.tools[this.layerTreeId].tree;
                         tree.loadTheme(record.data);
-                    }   
+                    }
                     themeSelector.menu.hide();
                 },
                 afterrender: function(view) {
@@ -109,7 +109,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                     }
                 },
                 scope: this
-            }   
+            }
         };
 
         var themepanel;
@@ -122,7 +122,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 title: this.externalTitle,
                 store: externalStore
             }, tabconfig));
-    
+
             themepanel = new Ext.TabPanel({
                 width: 560,
                 activeTab: 0,
@@ -153,7 +153,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             width: '100%',
             menu: [themepanel]
         }, config || {});
-        
+
         var themeSelector = cgxp.plugins.ThemeSelector.superclass.addOutput.call(this, config);
         return themeSelector;
     }

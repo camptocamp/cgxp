@@ -17,7 +17,7 @@
 
 Ext.namespace("cgxp.tools");
 
-/** 
+/**
  * Open an external url in a Ext windows
  * This is a replacement for the usual 'window.open(...)'
  */
@@ -35,7 +35,7 @@ cgxp.tools.openInfoWindow = function(url, title, width, height) {
     cgxp.tools.openWindow(content, title, width, height);
 };
 
-/** 
+/**
  * Generic Ext windows handler
  */
 cgxp.tools.openWindow = function(content, title, width, height) {

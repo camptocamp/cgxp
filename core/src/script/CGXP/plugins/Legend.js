@@ -106,7 +106,7 @@ cgxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
                 updateDelay: 2000
             },
             preferredTypes: ['cgxp_wmslegend']
-        }); 
+        });
 
         // _gx_legendpanel should be available only when window is open
         legendWin.on({

@@ -190,7 +190,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 toggleGroup: this.toggleGroup,
                 control: this.toolWFSControl
             }, this.actionOptions));
-            return cgxp.plugins.GetFeature.superclass.addActions.apply(this, 
+            return cgxp.plugins.GetFeature.superclass.addActions.apply(this,
                     [[this.action]]);
         }
     },
@@ -381,7 +381,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        // solve problem with drag before click where event has a none-empty 
+        // solve problem with drag before click where event has a none-empty
         // value for passesTolerance which bypass the click triggering
         this.clickWMSControl.handler.click = function() {
             var result = OpenLayers.Handler.Click.prototype.click
@@ -599,7 +599,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             unqueriedLayers: unqueriedLayers
         };
     },
-    
+
     getMessage: function() {
         var tpl = new Ext.Template(this.queryResultMessage);
         var key = 'CTRL';

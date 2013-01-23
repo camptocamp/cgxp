@@ -79,7 +79,7 @@ cgxp.plugins.GoogleSource = Ext.extend(gxp.plugins.GoogleSource, {
             if (config.ref) {
                 layer.ref = config.ref;
             }
-        } 
+        }
         return record;
     }
 });

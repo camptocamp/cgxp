@@ -185,7 +185,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
         if (!state) {
             return null;
         }
-        
+
         var filters = [], prop, values, propFilters, i, len;
         for (prop in state) {
             if (!state[prop]) {

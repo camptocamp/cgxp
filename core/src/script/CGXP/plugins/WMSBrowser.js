@@ -102,7 +102,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
 
     /** i18n */
     menuText: 'Add WMS layers',
-    
+
     /** private: method[addActions]
      */
     addActions: function() {
@@ -178,7 +178,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         }
         return this.wmsBrowser;
     },
-    
+
     onLayerAdded: function(o) {
         // instruct the layertree to add new layers in a single group
         // with a single OpenLayers layer
@@ -200,7 +200,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             ignorePort80: true
         });
         var groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
-        
+
         this.target.tools[this.layerTreeId].tree.addGroup({
             displayName: groupName,
             isExpanded: true,

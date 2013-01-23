@@ -5,7 +5,7 @@ Ext.onReady(function() {
     map = new OpenLayers.Map();
     map.addLayers([
         new OpenLayers.Layer('fake', {isBaseLayer: true})
-    ]); 
+    ]);
     mapPanel = new GeoExt.MapPanel({
         renderTo: document.body,
         width: 512,
