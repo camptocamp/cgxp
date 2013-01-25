@@ -104,7 +104,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
-    /** api: ptype = cgxp_wfsgetfeature */
+    /** api: ptype = cgxp_getfeature */
     ptype: "cgxp_getfeature",
 
     /** api: config[toggleGroup]
@@ -113,7 +113,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /** api: config[actionTarget]
-     *  ``String`` or ``Null`` Where to place the optional tool's actions.
+     *  ``String`` or ``null`` Where to place the optional tool's actions.
      */
 
     /** api: config[actionOptions]
