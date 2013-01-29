@@ -31,10 +31,6 @@
 
 Ext.namespace("cgxp.plugins");
 
-/**
- * THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
- */
-
 /** api: example
  *  Sample code showing how to add a WFSGetFeature plugin to a
  *  `gxp.Viewer`:
@@ -70,6 +66,8 @@ Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: WFSGetFeature(config)
+ *
+ *  THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
  *
  *  This plugin adds a toggle button to a toolbar. When the button is
  *  pressed the map changes to "query" mode - user can click and draw
