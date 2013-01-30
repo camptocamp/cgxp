@@ -85,7 +85,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  .. code-block:: javascript
      *
      *      tpls: {
-     *          all: "Local Coord. Label : {coord_x} {coord_y}<br />" +
+     *          allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +
      *              "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
      *              "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
      *              "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
