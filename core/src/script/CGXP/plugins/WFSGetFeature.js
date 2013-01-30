@@ -67,7 +67,7 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: WFSGetFeature(config)
  *
- *  THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
+ *  THIS TOOL IS DEPRECATED, PLEASE USE ``cgxp.plugins.GetFeature`` INSTEAD.
  *
  *  This plugin adds a toggle button to a toolbar. When the button is
  *  pressed the map changes to "query" mode - user can click and draw

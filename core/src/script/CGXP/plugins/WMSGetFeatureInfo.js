@@ -53,7 +53,7 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: WMSGetFeatureInfo(config)
  *
- *    THIS TOOL IS DEPRECATED, PLEASE USE THE ``cgxp.plugins.GetFeature``.
+ *    THIS TOOL IS DEPRECATED, PLEASE USE ``cgxp.plugins.GetFeature`` INSTEAD.
  *
  *    Map queries (with WMS GetFeatureInfo)
  *
