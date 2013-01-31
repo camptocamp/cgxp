@@ -73,7 +73,7 @@ Ext.namespace("cgxp.plugins");
  *  (WMS GetFeatureInfo) or with a CTRL-Drag for a box query
  *  (WFS GetFeature).
  *  We can optionally (with actionTarget) add a toggle button
- *  to a toolbar to do a box query without the pressing the CTRL.
+ *  to a toolbar to do a box query without pressing the CTRL key.
  *
  *  Only the currently visible layers are queried.
  *
@@ -113,8 +113,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /** api: config[actionTarget]
-     *  ``String`` or ``null`` Where to place the optional tool's actions.
+     *  ``String`` or ``null`` Where to place the optional tool button.
+     *  If set to ``null``, no button is displayed (default is ``null``).
      */
+    actionTarget: null,
 
     /** api: config[actionOptions]
      *  ``Object``
