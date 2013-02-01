@@ -160,6 +160,12 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     dummyForm: null,
 
+
+    /** api: config[pointRecenterZoom]
+     * ``Number`` Zoom level to use when recentering on point items (optional).
+     */
+    pointRecenterZoom: null,
+
     /** api: config[clearAllText]
      *  ``String`` Text for the "clear all results" button (i18n).
      */
@@ -770,8 +776,16 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         Ext.each(sm.getSelections(), function(r){
                             bbox.extend(r.getFeature().geometry.getBounds());
                         });
-                        if (bbox.getWidth() + bbox.getHeight() > 0) {
-                            map.zoomToExtent(bbox.scale(1.05));
+                        // has selection
+                        if (bbox.left !== null) {
+                            // is a point
+                            if (bbox.getWidth() + bbox.getHeight() == 0) {
+                                map.setCenter(bbox.getCenterLonLat(),
+                                    this.pointRecenterZoom);
+                            }
+                            else {
+                                map.zoomToExtent(bbox.scale(1.05));
+                            }
                         }
                     },
                     scope: this
