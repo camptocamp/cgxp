@@ -341,21 +341,28 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         services[url] = [layer];
                     }
                 }
-                for (var url in internalServices) {
-                    var wmsOptions = this.buildWMSOptions(url, services[url],
-                        clickPosition, 'image/png');
-                    wmsOptions.params.QUERY_LAYERS = self.getQueryableWMSLayers(
-                        wmsOptions.params.QUERY_LAYERS);
-                    OpenLayers.Request.GET(wmsOptions);
-                }
-                for (var url in externalServices) {
-                    var wmsOptions = this.buildWMSOptions(url, services[url],
-                        clickPosition, 'image/png');
-                    wmsOptions.params.QUERY_LAYERS = self.getQueryableWMSLayers(
-                        wmsOptions.params.QUERY_LAYERS);
-                    wmsOptions.params.EXTERNAL = true;
-                    OpenLayers.Request.GET(wmsOptions);
-                }
+
+                var me = this;
+                var query = function(urls) {
+                    for (var url in urls) {
+                        var wmsOptions = me.buildWMSOptions(url, services[url],
+                            clickPosition, 'image/png');
+                        wmsOptions.params.QUERY_LAYERS = self.getQueryableWMSLayers(
+                            wmsOptions.params.QUERY_LAYERS);
+                        // Get the params from the first layer
+                        var layer = services[url][0];
+                        for (var param in layer.params) {
+                            if (wmsOptions.params[param] === undefined &&
+                                    param != 'TRANSPARENT') {
+                                wmsOptions.params[param] = layer.params[param];
+                            }
+                        }
+                        OpenLayers.Request.GET(wmsOptions);
+                    }
+                };
+                query(internalServices);
+                query(externalServices);
+
                 if (self.autoDeactivate && self.action) {
                     self.action.items[0].toggle(false);
                 }
@@ -399,7 +406,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     buildWFSControls: function() {
         var protocol = new OpenLayers.Protocol.WFS({
-            url: this.mapserverURL,
             geometryName: this.geometryName,
             srsName: this.target.mapPanel.map.getProjection(),
             formatOptions: {
@@ -408,7 +414,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
         });
         var externalProtocol = new OpenLayers.Protocol.WFS({
-            url: this.mapserverURL + "?EXTERNAL=true",
             geometryName: this.geometryName,
             srsName: this.target.mapPanel.map.getProjection(),
             formatOptions: {
@@ -440,6 +445,25 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var self = this;
         var request = function() {
             self.events.fireEvent('querystarts');
+
+            var olLayers = this.target.mapPanel.map.
+                    getLayersByClass("OpenLayers.Layer.WMS");
+            var params = {};
+            if (olLayers.length > 0) {
+                var layer = olLayers[0];
+                for (param in layer.params) {
+                    if (['FORMAT', 'LAYERS', 'REQUEST', 'SERVICE',
+                            'SRS', 'STYLES', 'TRANSPARENT', 'VERSION'].
+                            indexOf(param) < 0) {
+                        params[param] = layer.params[param];
+                    }
+                }
+            }
+            params = OpenLayers.Util.getParameterString(params);
+            protocol.options.url = self.mapserverURL + '?' + params;
+            externalProtocol.options.url = self.mapserverURL +
+                    '?EXTERNAL=true&' + params;
+
             var l = self.getLayers.call(self);
             if (l.internalLayers.length > 0) {
                 protocol.format.featureType = l.internalLayers;
