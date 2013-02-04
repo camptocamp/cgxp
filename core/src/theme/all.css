@@ -4,6 +4,9 @@ div.x-panel a {
 div.x-panel a:hover {
     text-decoration: underline;
 }
+.x-map .x-toolbar {
+    padding: 2px;
+}
 
 /* gxp_zoomtoextent */
 .x-toolbar .gxp-icon-zoomtoextent, .x-menu .gxp-icon-zoomtoextent {
