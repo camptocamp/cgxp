@@ -1,0 +1,21 @@
+/*!
+ * Ext JS Library 3.4.0
+ * Copyright(c) 2006-2011 Sencha Inc.
+ * licensing@sencha.com
+ * http://www.sencha.com/license
+ */
+.x-map, .x-map div, .x-map dl, .x-map dt, .x-map dd, .x-map ul, .x-map ol, .x-map li, .x-map h1, .x-map h2, .x-map h3, .x-map h4, .x-map h5, .x-map h6, .x-map pre, .x-map form, .x-map fieldset, .x-map input, .x-map p, .x-map blockquote, .x-map th, .x-map td
+{margin:0;padding:0;}
+.x-map img, .x-map body, .x-map html{border:0;}
+.x-map address, .x-map caption, .x-map cite, .x-map code, .x-map dfn, .x-map em, .x-map strong, .x-map th, .x-map var
+{font-style:normal;font-weight:normal;}
+.x-map ol, .x-map ul {list-style:none;}
+.x-map caption, .x-map th {text-align:left;}
+.x-map h1, .x-map h2, .x-map h3, .x-map h4, .x-map h5, .x-map h6{font-size:100%;}
+.x-map q:before, .x-map q:after{content:'';}
+
+.x-map .ext-forced-border-box, .x-map .ext-forced-border-box * {
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
