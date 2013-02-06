@@ -1,8 +1,8 @@
 .. module:: cgxp.plugins
     :synopsis: A collection of plugin classes.
 
-:mod:`cgxp.plugins`
-===================
+Plugins
+=======
 
 The :mod:`cgxp.plugins` module contains plugins that plug into
 :class:`cgxp.Viewer` to add functionality.

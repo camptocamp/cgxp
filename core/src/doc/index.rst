@@ -23,6 +23,11 @@ See the :ref:`build_doc` section to know how to build this doc.
 
 .. toctree::
     :maxdepth: 2
+    
+    lib/api
+
+.. toctree::
+    :maxdepth: 2
 
     lib/plugins
 
