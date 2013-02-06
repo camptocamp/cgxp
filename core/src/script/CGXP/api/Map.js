@@ -35,6 +35,11 @@
  * @include OpenLayers/Control/SelectFeature.js
  */
 
+/** api: (define)
+ *  module = cgxp.api
+ *  class = Map
+ */
+
 if (!window.cgxp) {
     cgxp = {};
 }
@@ -82,14 +87,16 @@ cgxp.api.Map.prototype = {
     deferedCalls: null,
 
     /** api: method[initMap]
-     *  Is intended to be overriden in inheriting classes.
      *  :arg config:  ``Object``
+     *
+     *  Is intended to be overriden in inheriting classes.
      */
     initMap: function() { },
 
     /** private: method[adaptConfig]
+     *  :arg config: ``Object`` the map config
+     *
      *  Adapts the config before creating the map.
-     *  :arg config ``Object`` the map config
      */
     adaptConfig: function(config) {
         // remove any controls if not used by user
@@ -118,11 +125,12 @@ cgxp.api.Map.prototype = {
     },
 
     /** api: method[adaptConfigForViewer]
+     *  :arg config: ``Object`` the map config
+     *  :returns: ``Object`` The new config to be used for the map option of the
+     *      viewer
+     *
      *  Convenience method to add some required options to mapConfig before
      *  using it to create a viewer.
-     *  :arg config: ``Object`` the map config
-     *  :returns ``Object`` The new config to be used for the map option of the
-     *      viewer
      */
     adaptConfigForViewer: function(config) {
         var newConfig = OpenLayers.Util.extend({}, config);
@@ -137,8 +145,9 @@ cgxp.api.Map.prototype = {
     },
 
     /** api: method[onViewerReady]
-     *  Method to be called as CGXP.Viewer ready event callback.
      *  :arg viewer: ``GXP.widgets.Viewer`` the viewer
+     *
+     *  Method to be called as GXP.widgets.Viewer ready event callback.
      */
     onViewerReady: function(viewer) {
         var i;
@@ -160,8 +169,9 @@ cgxp.api.Map.prototype = {
     },
 
     /** api: method[initMapFromConfig]
+     *  :arg config: ``Object``
+     *
      *  Convenience method to create a map from a config.
-     *  :arg config:  ``Object``
      */
     initMapFromConfig: function(config) {
         var i;
@@ -240,8 +250,8 @@ cgxp.api.Map.prototype = {
     },
 
     /** private: method[createOverlayLayer]
-     * :arg layer ``String`` The name of the layer to add.
-     * :arg external ``Boolean`` Whether it is an external layer or not.
+     * :arg layer: ``String`` The name of the layer to add.
+     * :arg external: ``Boolean`` Whether it is an external layer or not.
      */
     createOverlayLayer: function(layer, external) {
         var params = {
@@ -272,8 +282,8 @@ cgxp.api.Map.prototype = {
     },
 
     /** api: method[recenter]
-     *  :arg center ``Array(Number)`` Center coordinates
-     *  :arg zoom ``Number``
+     *  :arg center: ``Array(Number)`` Center coordinates
+     *  :arg zoom: ``Number``
      */
     recenter: function(center, zoom) {
         if (!this.map) {
@@ -285,9 +295,9 @@ cgxp.api.Map.prototype = {
     },
 
     /** api: method[recenterOnObjects]
-     *  :arg layer ``String`` The layer name
-     *  :arg ids ``Array(String)`` The ids of the feature to recenter on.
-     *  :arg highlight ``Boolean`` Tells whether to hilight the features or not.
+     *  :arg layer: ``String`` The layer name
+     *  :arg ids: ``Array(String)`` The ids of the feature to recenter on.
+     *  :arg highlight: ``Boolean`` Tells whether to hilight the features or not.
      *      Defaults to false.
      */
     recenterOnObjects: function(layer, ids, highlight) {
@@ -336,7 +346,7 @@ cgxp.api.Map.prototype = {
     },
 
     /** api: method[addMarker]
-     *  :arg options ``Object`` List of marker options
+     *  :arg options: ``Object`` List of marker options
      */
     addMarker: function(options) {
         if (!this.map) {
@@ -385,7 +395,6 @@ cgxp.api.Map.prototype = {
     },
 
     /** private: method[createQueryControl]
-     *
      */
     createQueryControl: function() {
         var map = this.map,
@@ -444,8 +453,8 @@ cgxp.api.Map.prototype = {
     },
 
     /** private: method[showPopup]
-     *  :args feature ``OpenLayers.Feature.Vector``
-     *  :args position ``OpenLayers.Pixel``
+     *  :arg feature: ``OpenLayers.Feature.Vector``
+     *  :arg position: ``OpenLayers.Pixel``
      */
     showPopup: function(feature, position) {
         var detail = [],
@@ -480,12 +489,12 @@ cgxp.api.Map.prototype = {
         this.map.addPopup(popup);
     },
 
-    /** api: method: addLayer
-     *  arg: layerType ``String`` A text description of the layer format
+    /** api: method[addCustomLayer]
+     *  :arg layerType: ``String`` A text description of the layer format
      *      (either "text" or "gpx")
-     *  arg: layerName ``String`` A text description for the layer
-     *  arg: layerUrl ``String`` The url the file to load
-     *  arg: options ``Object`` Optional (only if layerType="gpx") styling
+     *  :arg layerName: ``String`` A text description for the layer
+     *  :arg layerUrl: ``String`` The url the file to load
+     *  :arg options: ``Object`` Optional (only if layerType="gpx") styling
      *      properties (ie. strokeColor, strokeWidth, strokeOpacity)
      */
     addCustomLayer: function (layerType, layerName, layerUrl, options) {
