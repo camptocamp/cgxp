@@ -13,3 +13,6 @@
 [submodule "openlayers.addins/URLCompressed"]
 	path = openlayers.addins/URLCompressed
 	url = https://github.com/sbrunner/OpenLayers-URLCompressed.git
+[submodule "core/tests/lib/jasmine"]
+	path = core/tests/lib/jasmine
+	url = https://github.com/pivotal/jasmine.git
