@@ -20,6 +20,11 @@
  * @include OpenLayers/Handler/Click.js
  * @include OpenLayers/Geometry/Point.js
  */
+
+/** api: (define)
+ *  module = cgxp.api
+ *  class = Click
+ */
 cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
 
     /** api: config[protocol]
@@ -72,8 +77,8 @@ cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
     },
 
     /** private: method[selectBestFeature]
-     *  :args features ``Array(OpenLayers.Feature.Vector)``
-     *  :args clickPosition ``OpenLayers.LonLat``
+     *  :arg features: ``Array(OpenLayers.Feature.Vector)``
+     *  :arg clickPosition: ``OpenLayers.LonLat``
      */
     selectBestFeature: function(features, clickPosition) {
         var point = new OpenLayers.Geometry.Point(clickPosition.lon,
