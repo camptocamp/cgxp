@@ -4,7 +4,7 @@
 API
 ===
 
-The :mod:`cgxp.api` module contains api class are used to create the API.
+The :mod:`cgxp.api` module contains API classes that are used to create the API.
 
 .. toctree::
    :maxdepth: 1
