@@ -480,7 +480,7 @@ cgxp.api.Map.prototype = {
         this.map.addPopup(popup);
     },
 
-    /** api: ethod: addLayer
+    /** api: method: addLayer
      *  arg: layerType ``String`` A text description of the layer format
      *      (either "text" or "gpx")
      *  arg: layerName ``String`` A text description for the layer
