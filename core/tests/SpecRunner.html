@@ -64,7 +64,11 @@
 
 <script type="text/javascript">
   jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
-  jasmine.getEnv().addReporter(new jasmine.ConsoleReporter());
+  // The run_jasmine_test.coffee script (from phantom-jasmine)
+  // assumes that the console reporter instance is available
+  // in the global namespace object as "console_reporter".
+  window.console_reporter = new jasmine.ConsoleReporter();
+  jasmine.getEnv().addReporter(window.console_reporter);
 
   jasmine.getEnv().execute();
 </script>
