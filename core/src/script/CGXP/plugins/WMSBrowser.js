@@ -208,8 +208,10 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         var urlObj = OpenLayers.Util.createUrlObject(layer.url, {
             ignorePort80: true
         });
-        var groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
+        var groupName = urlObj.host + (urlObj.port ? ':' + urlObj.port : '') +
+             urlObj.pathname;
         
+        // Use internalWMS: true to have the same UI as them.
         this.target.tools[this.layerTreeId].tree.addGroup({
             displayName: groupName,
             isExpanded: true,
