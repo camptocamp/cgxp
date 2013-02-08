@@ -127,6 +127,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                         else {
                             this.panel.panorama.navigationToolLayer.setVisibility(true);
                             this.panel.panorama.navigationLinkLayer.setVisibility(true);
+                            this.panel.clickControl.activate();
                         }
                         this.outputTarget.add(this.panel);
                         // mark as not rendered to force to render the new component.
@@ -143,6 +144,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                     else {
                         this.panel.panorama.navigationToolLayer.setVisibility(false);
                         this.panel.panorama.navigationLinkLayer.setVisibility(false);
+                        this.panel.clickControl.deactivate();
                         this.panel.setVisible(false);
                         this.outputTarget.doLayout();
                     }
