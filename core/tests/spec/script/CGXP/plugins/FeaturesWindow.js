@@ -63,7 +63,7 @@ describe('plugins.FeaturesWindow', function() {
                 foo: 'bar'
             })];
             features[0].type = 'dude';
-            events.fireEvent('queryresults', features);
+            events.fireEvent('queryresults', {features: features});
             expect(fw.featuresWindow).toBeInstanceOf(Ext.Window);
         });
     });
@@ -76,9 +76,13 @@ describe('plugins.FeaturesWindow', function() {
                     body: document.body
                 }
             };
-            fw.showWindow([
-                new OpenLayers.Feature.Vector(null, {})
-            ]);
+            fw.showWindow({
+                features: [
+                    new OpenLayers.Feature.Vector(null, {
+                        foo: 'bar'
+                    })
+                ]
+            });
             fw.featuresWindow.hide();
         });
         afterEach(function() {
