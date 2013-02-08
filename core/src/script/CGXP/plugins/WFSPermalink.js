@@ -57,11 +57,11 @@ Ext.namespace("cgxp.plugins");
  *  .. class:: WFSPermalink(config)
  *
  *    This plugin is used to perform a WFS request at application loading time
- *    using GET parameters. Resulting features are then highlighted and
+ *    based on GET parameters. Resulting features are then highlighted and
  *    the map is zoomed to the nearest map extent.
  *
  *    Accepted GET parameters are all prefixed with the ``wfs_`` keyword (may be
- *    changed using the ``stateId`` property:
+ *    changed using the ``stateId`` property):
  *
  *    * ``wfs_layer`` tells what layer will be queried
  *    * other parameters will be considered as WFS attribute/values filters and
@@ -70,7 +70,7 @@ Ext.namespace("cgxp.plugins");
  *
  *    Example:
  *    http://example.com?wfs_layer=parcels&wfs_city=Oslo&wfs_number=12,34,56
- *    will load the parcels #12, 34 and 56 of the city of Oslo.
+ *    will load parcels #12, 34 and 56 of the city of Oslo.
  */
 cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
