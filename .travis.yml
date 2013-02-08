@@ -1,0 +1,18 @@
+language: python
+python:
+- 2.7
+
+before_script:
+- cd core/src/doc
+- wget http://www.mapfish.org/downloads/virtualenv-1.4.5.py
+- python virtualenv-1.4.5.py --distribute --no-site-packages env
+- source env/bin/activate
+- pip install -r requirements
+- cd -
+
+script: ./travis.sh
+
+notifications:
+  email:
+    recipients:
+    - geospatial@lists.camptocamp.com

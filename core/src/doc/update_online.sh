@@ -38,9 +38,7 @@ if [[ ! -d env ]]; then
 fi
 
 # install JSTools, Jinga2 and Sphinx
-./env/bin/pip install 'Jinga2==2.6'
-./env/bin/pip install 'JSTools==0.6'
-./env/bin/pip install 'Sphinx==1.1.2'
+./env/bin/pip install -r requirements
 
 ./env/bin/jst jst.cfg
 make SPHINXBUILD=./env/bin/sphinx-build BUILDDIR=${BUILDDIR} clean html
