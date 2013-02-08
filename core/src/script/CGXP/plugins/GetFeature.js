@@ -93,11 +93,11 @@ Ext.namespace("cgxp.plugins");
  *      ...
  *      queryLayers: [{
  *          name: "buildings",
- *          identifierAttribute: "name"
+ *          identifierAttribute: "name",
  *          maxResolutionHint: 6.6145797614602611
  *      }, {
  *          name: "parcels",
- *          identifierAttribute: "number"
+ *          identifierAttribute: "number",
  *          maxScaleDenominator: 10000
  *      }]
  *      ...
