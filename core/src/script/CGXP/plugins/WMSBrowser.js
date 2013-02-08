@@ -193,6 +193,14 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         // with a single OpenLayers layer
         var layer = o.layer;
 
+        var index = this.target.mapPanel.layers.getCount();
+        while (this.target.mapPanel.map.layers[index-1] == layer ||
+            this.target.mapPanel.map.layers[index-1] instanceof
+                OpenLayers.Layer.Vector && index > 0) {
+            index--;
+        }
+        this.target.mapPanel.map.setLayerIndex(layer, index);
+
         var layerTitles = layer.name.split(',');
         var children = [];
         Ext.each(layer.params.LAYERS, function(layerName, idx) {
