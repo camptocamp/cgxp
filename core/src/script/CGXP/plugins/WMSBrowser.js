@@ -141,7 +141,8 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             });
             var config = {
                 border: false,
-                zoomOnLayerAdded: true,
+                zoomOnLayerAdded: false,
+                zoomToRecordLLBBox: function() {},
                 resetLayerPreview: function() {
                     if (this.layerPreview) {
                         this.mapPanelPreview.map.removeLayer(this.layerPreview);
