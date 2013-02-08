@@ -317,6 +317,19 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 for (var i=0, len=layers.length; i<len; i++) {
                     var layer = layers[i];
                     if (!(layer instanceof OpenLayers.Layer.WMS)) {
+                        var queryLayers = layer.queryLayers || layer.mapserverLayers;
+                        if (Ext.isArray(queryLayers)) {
+                            var ql = [];
+                            Ext.each(queryLayers, function(queryLayer) {
+                                if (Ext.isString(queryLayer)) {
+                                    ql.push(queryLayer);
+                                }
+                                else if (queryLayer.name) {
+                                    ql.push(queryLayer.name);
+                                }
+                            });
+                            queryLayers = ql;
+                        }
                         // Create a fake WMS layer
                         layer = {
                             url: self.mapserverURL,
@@ -324,7 +337,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                                 self.target.mapPanel.map.getProjectionObject(),
                             reverseAxisOrder: OpenLayers.Function.False,
                             params: Ext.apply({
-                                LAYERS: layer.queryLayers || layer.mapserverLayers,
+                                LAYERS: queryLayers,
                                 VERSION: '1.1.1'
                             }, layer.mapserverParams)
                         };
