@@ -63,10 +63,10 @@ Ext.namespace("cgxp.plugins");
  *    Accepted GET parameters are all prefixed with the ``wfs_`` keyword (may be
  *    changed using the ``stateId`` property):
  *
- *    * ``wfs_layer`` tells what layer will be queried
- *    * other parameters will be considered as WFS attribute/values filters and
+ *    - ``wfs_layer`` tells what layer will be queried
+ *    - other parameters will be considered as WFS attribute/values filters and
  *      must be of the form:
- *      ``wfs_<layer attribute name>``=<a comma-separated list of values>
+ *      ``wfs_<layer attribute name>=<a comma-separated list of values>``
  *
  *    Example:
  *    http://example.com?wfs_layer=parcels&wfs_city=Oslo&wfs_number=12,34,56
