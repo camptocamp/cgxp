@@ -134,12 +134,20 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             var layers = [];
             Ext.each(this.target.mapPanel.map.layers, function(layer) {
                 if (layer.visibility && layer.group == 'background') {
-                    layers.push(layer.clone());
+                    layer = layer.clone();
+                    layer.setVisibility(true);
+                    layers.push(layer);
                 }
             });
             var config = {
                 border: false,
                 zoomOnLayerAdded: true,
+                resetLayerPreview: function() {
+                    if (this.layerPreview) {
+                        this.mapPanelPreview.map.removeLayer(this.layerPreview);
+                        this.layerPreview = null;
+                    }
+                },
                 closeOnLayerAdded: false,
                 mapPanelPreviewOptions: {
                     height: 170,
