@@ -780,11 +780,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     parseChildren: function(child, layer, result, currentIndex, realIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
-                currentIndex += this.parseChildren(child.children[j], layer, result, currentIndex, realIndex, layers);
+                currentIndex += this.parseChildren(child.children[j], layer, result,
+                        currentIndex, realIndex, layers);
                 realIndex++;
             }
-        }
-        else {
+        } else {
             if (child.disclaimer) {
                 result.disclaimer[child.disclaimer] = true;
             }
@@ -797,8 +797,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             // put a reference to ol layer in the config object
             if (layer) {
                 child.layer = layer;
-            }
-            else {
+            } else {
                 if (child.type == "external WMS") {
                     child.layer = new OpenLayers.Layer.WMS(
                         child.name, child.url, {
