@@ -139,11 +139,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     nodeLoadingPlugin: null,
 
+    /** private: property[wmtsInfo]
+     *  ``Object`` An object to store information on WMTS layers while waiting
+     *  for WMTS Capabilities responses. Keyed by WMTS URL.
+     */
+    wmtsInfo: null,
+
     /**
      * Property: actionsPlugin
      */
     initComponent: function() {
         this.themes = this.themes || {};
+        this.wmtsInfo = {};
 
         // fill displaynames one time for everybody
         function fillDisplayNames(nodes) {
@@ -814,96 +821,168 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             layer: child.layer
                         }, child.layer.id)]);
                     return 1;
-                }
-                else if (child.type == "WMTS") {
-                    var format = new OpenLayers.Format.WMTSCapabilities();
-                    var allOlLayerIndex = result.allOlLayers.length;
+                } else if (child.type == "WMTS") {
+                    var layersInfo = this.wmtsInfo[child.url];
+                    if (!layersInfo) {
+                        layersInfo = this.wmtsInfo[child.url] = [];
+                        OpenLayers.Request.GET({
+                            url: child.url,
+                            success: this.onWmtsCapsReceive.createDelegate(
+                                this, [layersInfo, layers], true)
+                        });
+                    }
+                    // The layerInfo object includes the necessary information
+                    // for creating and inserting the WMTS layer. The creation
+                    // and insertion of the layer will occur when the WMTS
+                    // GetCapabilities response is received.
                     var indexToAdd = {
                         currentIndex: currentIndex,
                         realIndex: realIndex
                     };
+                    var layerInfo = {
+                        node: child,
+                        indexToAdd: indexToAdd,
+                        allOlLayers: result.allOlLayers,
+                        allOlLayersIndex: result.allOlLayers.length
+                    };
+                    layersInfo.push(layerInfo);
                     this.indexesToAdd.push(indexToAdd);
                     result.allOlLayers.push(null);
-                    OpenLayers.Request.GET({
-                        url: child.url,
-                        scope: this,
-                        success: function(request) {
-                            var doc = request.responseXML;
-                            if (!doc || !doc.documentElement) {
-                                doc = request.responseText;
-                            }
-                            var capabilities = format.read(doc);
-                            var capabilities_layers = capabilities.contents.layers;
-                            var capabilities_layer = null;
-                            for (i = 0, ii = capabilities_layers.length;
-                                    i < ii ; i++) {
-                                if (capabilities_layers[i].identifier == child.name) {
-                                    capabilities_layer = capabilities_layers[i];
-                                }
-                            }
-                            var layer = format.createLayer(capabilities, Ext.apply({
-                                ref: child.name,
-                                layer: child.name,
-                                maxExtent: capabilities_layer.bounds ?
-                                    capabilities_layer.bounds.transform(
-                                        "EPSG:4326",
-                                        this.mapPanel.map.getProjectionObject()) :
-                                    undefined,
-                                style: child.style,
-                                matrixSet: child.matrixSet,
-                                dimension: child.dimension,
-                                visibility: child.isChecked,
-                                isBaseLayer: false,
-                                mapserverURL: child.mapserverURL,
-                                mapserverLayers: child.mapserverLayers
-                            }, this.wmtsOptions || {}));
-                            child.node.attributes.layer = layer;
-                            if (this.initialState && this.initialState['opacity_' + child.name]) {
-                                layer.setOpacity(this.initialState['opacity_' + child.name]);
-                            }
-                            if (layers && layers.indexOf(child.name) >= 0) {
-                                this.fireEvent('checkchange', child.node, true);
-                                layer.setVisibility(true);
-                            }
-                            else {
-                                layer.setVisibility(child.node.attributes.checked);
-                            }
-                            result.allOlLayers[allOlLayerIndex] = layer;
-                            this.mapPanel.layers.insert(indexToAdd.currentIndex, [
-                                new this.recordType({
-                                    disclaimer: child.disclaimer,
-                                    legendURL: child.legendImage,
-                                    layer: layer
-                                }, layer.id)]);
-                            Ext.each(this.indexesToAdd, function(idx) {
-                                if (indexToAdd.realIndex < idx.realIndex) {
-                                    idx.currentIndex++;
-                                }
-                            });
-                            child.slider.setLayer(layer);
-                            child.node.layer = layer;
-                            layer.events.on({
-                                "visibilitychanged": child.node.onLayerVisibilityChanged,
-                                scope: child.node
-                            });
-                            child.node.on({
-                                "checkchange": child.node.onCheckChange,
-                                scope: child.node
-                            });
-                            var groupNode;
-                            child.node.bubble(function(n) {
-                                if (n.parentNode == this.root) {
-                                    groupNode = n;
-                                    return false;
-                                }
-                            }, this);
-                            this.nodeLoadingPlugin.registerLoadListeners(groupNode);
-                        }
-                    });
                 }
             }
         }
         return 0;
+    },
+
+    /** private: method[olWmtsCapsReceive]
+     *  :param request: ``Object`` The XHR object.
+     *  :param layersInfo: ``Array`` The layer info objects.
+     *  :param visibleLayers: ``Array`` The names of the layers to make
+     *      visible immediately.
+     */
+    onWmtsCapsReceive: function(request, layersInfo, visibleLayers) {
+        var doc = request.responseXML;
+        if (!doc || !doc.documentElement) {
+            doc = request.responseText;
+        }
+        var format = new OpenLayers.Format.WMTSCapabilities();
+        var capabilities = format.read(doc);
+
+        this.insertWmtsLayers(capabilities, layersInfo, visibleLayers, format);
+    },
+
+    /** private: method[insertWmtsLayers]
+     *  :param capabilities: ``Object`` The WMTS capabilities object.
+     *  :param layersInfo: ``Array`` The layer info objects.
+     *  :param visibleLayers: ``Array`` The names of the layers to make
+     *      visible immediately.
+     *  :param format: ``OpenLayers.format.WMTSCapabilities`` The WMTS
+     *      Capabilities format.
+     */
+    insertWmtsLayers: function(capabilities, layersInfo, visibleLayers, format) {
+        var capabilitiesLayers = capabilities.contents.layers;
+
+        for (var i = 0, ii = layersInfo.length; i < ii; ++i) {
+            var layerInfo = layersInfo[i];
+
+            var capabilitiesLayer;
+            for (var j = 0, jj = capabilitiesLayers.length; j < jj; ++j) {
+                if (capabilitiesLayers[j].identifier == layerInfo.node.name) {
+                    capabilitiesLayer = capabilitiesLayers[j];
+                }
+            }
+            if (!capabilitiesLayer) {
+                continue;
+            }
+
+            this.insertWmtsLayer(capabilities, capabilitiesLayer, layerInfo,
+                    visibleLayers, format);
+        }
+    },
+
+
+    /** private: method[insertWmtsLayer]
+     *  :param capabilities: ``Object`` The WMTS capabilities object.
+     *  :param capabilitiesLayer: ``Object`` The object representing the
+     *      layer in the WMTS capabilities.
+     *  :param layerInfo: ``Object`` The layer info object.
+     *  :param visibleLayers: ``Array`` The names of the layers to make
+     *      visible immediately.
+     *  :param format: ``OpenLayers.format.WMTSCapabilities`` The WMTS
+     *      Capabilities format.
+     */
+    insertWmtsLayer: function(capabilities, capabilitiesLayer, layerInfo,
+            visibleLayers, format) {
+
+        var layerNode = layerInfo.node;
+        var layerName = layerNode.name;
+
+        var layer = format.createLayer(capabilities, Ext.apply({
+            ref: layerName,
+            layer: layerName,
+            maxExtent: capabilitiesLayer.bounds ?
+                capabilitiesLayer.bounds.transform(
+                    "EPSG:4326",
+                    this.mapPanel.map.getProjectionObject()) : undefined,
+            style: layerNode.style,
+            matrixSet: layerNode.matrixSet,
+            dimension: layerNode.dimension,
+            visibility: layerNode.isChecked,
+            isBaseLayer: false,
+            mapserverURL: layerNode.mapserverURL,
+            mapserverLayers: layerNode.mapserverLayers
+        }, this.wmtsOptions || {}));
+
+        var treeNode = layerNode.node;
+        treeNode.layer = layer;
+        treeNode.attributes.layer = layer;
+
+        if (this.initialState && this.initialState['opacity_' + layerName]) {
+            layer.setOpacity(this.initialState['opacity_' + layerName]);
+        }
+        if (visibleLayers && visibleLayers.indexOf(layerName) >= 0) {
+            this.fireEvent('checkchange', treeNode, true);
+            layer.setVisibility(true);
+        } else {
+            layer.setVisibility(treeNode.attributes.checked);
+        }
+
+        layerInfo.allOlLayers[layerInfo.allOlLayersIndex] = layer;
+
+        this.mapPanel.layers.insert(layerInfo.indexToAdd.currentIndex, [
+            new this.recordType({
+                disclaimer: layerNode.disclaimer,
+                legendURL: layerNode.legendImage,
+                layer: layer
+            }, layer.id)]);
+
+        // Update the currentIndex of the other layers. Yes, I know, this
+        // is tricky!
+        Ext.each(this.indexesToAdd, function(idx) {
+            if (layerInfo.indexToAdd.realIndex < idx.realIndex) {
+                idx.currentIndex++;
+            }
+        });
+
+        layerNode.slider.setLayer(layer);
+
+        layer.events.on({
+            "visibilitychanged": treeNode.onLayerVisibilityChanged,
+            scope: treeNode
+        });
+        treeNode.on({
+            "checkchange": treeNode.onCheckChange,
+            scope: treeNode
+        });
+
+        var groupNode;
+        treeNode.bubble(function(n) {
+            if (n.parentNode == this.root) {
+                groupNode = n;
+                return false;
+            }
+        }, this);
+        this.nodeLoadingPlugin.registerLoadListeners(groupNode);
     },
 
     /** private :method[loadTheme]
