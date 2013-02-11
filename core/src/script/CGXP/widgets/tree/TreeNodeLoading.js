@@ -18,12 +18,25 @@
 Ext.namespace("cgxp.tree");
 cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
 
+    /** private: property[layerIds]
+     *  ``Object`` A map referencing the layers we already have loadstart
+     *  and loadend listeners for.
+     */
+    layerIds: null,
+
+    /** private: property[numLoadingLayers]
+     *  ``Object`` A map indicating whether nodes have loading layers.
+     */
+    numLoadingLayers: null,
+
     /** private: method[constructor]
      *  :param config: ``Object``
      */
     constructor: function(config) {
         Ext.apply(this.initialConfig, Ext.apply({}, config));
         Ext.apply(this, config);
+        this.layerIds = {};
+        this.numLoadingLayers = {};
 
         cgxp.tree.TreeNodeLoading.superclass.constructor.apply(this, arguments);
     },
@@ -43,21 +56,59 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
      *  :param node: ``Ext.tree.TreeNode``
      */
     onAppendNode: function(tree, parentNode, node) {
-        var rendered = node.rendered;
-        if(!rendered && node.layer) {
-            var layer = node.layer;
-            layer.events.on({
-                'loadstart': function() {
-                    if (node && node.ui && node.ui.isChecked()) {
-                        Ext.get(node.ui.elNode).addClass('gx-tree-node-loading');
-                    }
-                },
-                'loadend': function() {
-                    if (node && node.ui && node.ui.elNode) {
-                        Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
-                    }
-                }
-            });
+        this.registerLoadListeners(node);
+    },
+
+    /** private: method[registerLoadListeners]
+     *  :param node: ``Ext.tree.TreeNode``
+     *
+     *  Register loadstart and loadend listeners on the layers associated
+     *  with this group node.
+     */
+    registerLoadListeners: function(node) {
+        var i, olLayer, olLayers, onLoadstart, onLoadend;
+        olLayers = node.attributes.allOlLayers;
+        if (!olLayers) {
+            return;
+        }
+        this.numLoadingLayers[node.id] = 0;
+        for (i = 0; i < olLayers.length; ++i) {
+            olLayer = olLayers[i];
+            if (olLayer !== null && !this.layerIds[olLayer.id]) {
+                onLoadstart = Ext.createDelegate(
+                        this.onLayerLoadstart, this, [node]);
+                onLoadend = Ext.createDelegate(
+                        this.onLayerLoadend, this, [node]);
+                olLayer.events.on(
+                        {loadstart: onLoadstart, loadend: onLoadend});
+                this.layerIds[olLayer.id] = true;
+            }
+        }
+    },
+
+    /** private: method[onLayerLoadstart]
+     *  :param node: ``Ext.tree.TreeNode``
+     *
+     *  Layer loadstart listener.
+     */
+    onLayerLoadstart: function(node) {
+        if (++this.numLoadingLayers[node.id] > 0) {
+            if (node && node.ui && node.ui.isChecked()) {
+                Ext.get(node.ui.elNode).addClass('gx-tree-node-loading');
+            }
+        }
+    },
+
+    /** private: method[onLayerLoadend]
+     *  :param node: ``Ext.tree.TreeNode``
+     *
+     *  Layer loadend listener.
+     */
+    onLayerLoadend: function(node) {
+        if (--this.numLoadingLayers[node.id] === 0) {
+            if (node && node.ui && node.ui.elNode) {
+                Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
+            }
         }
     }
 });
