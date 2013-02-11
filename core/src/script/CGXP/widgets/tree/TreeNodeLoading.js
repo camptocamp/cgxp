@@ -93,7 +93,7 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
      */
     onLayerLoadstart: function(node) {
         if (++this.numLoadingLayers[node.id] > 0) {
-            if (node && node.ui && node.ui.isChecked()) {
+            if (node && node.ui && node.ui.elNode) {
                 Ext.get(node.ui.elNode).addClass('gx-tree-node-loading');
             }
         }
