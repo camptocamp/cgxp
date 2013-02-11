@@ -133,6 +133,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  ``Array`` of ``Object`` with one 'index' attribute.
      */
 
+    /** private: property[nodeLoadingPlugin]
+     *  ``cgxp.tree.TreeNodeLoading`` A reference to the the ``TreeNodeLoading``
+     *  plugin  added to the tree.
+     */
+    nodeLoadingPlugin: null,
+
     /**
      * Property: actionsPlugin
      */
@@ -165,6 +171,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 scope: this
             }
         });
+        this.nodeLoadingPlugin = new cgxp.tree.TreeNodeLoading();
         this.plugins = [
             this.actionsPlugin,
             new GeoExt.plugins.TreeNodeComponent(),
@@ -172,7 +179,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 divCls: "legend-component",
                 configKey: "legend"
             }),
-            new cgxp.tree.TreeNodeLoading()
+            this.nodeLoadingPlugin
         ];
         var layerNodeUI = Ext.extend(cgxp.tree.TreeNodeTriStateUI, new GeoExt.tree.TreeNodeUIEventMixin());
         this.loader = new Ext.tree.TreeLoader({
@@ -883,7 +890,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 "checkchange": child.node.onCheckChange,
                                 scope: child.node
                             });
-
+                            var groupNode;
+                            child.node.bubble(function(n) {
+                                if (n.parentNode == this.root) {
+                                    groupNode = n;
+                                    return false;
+                                }
+                            }, this);
+                            this.nodeLoadingPlugin.registerLoadListeners(groupNode);
                         }
                     });
                 }
