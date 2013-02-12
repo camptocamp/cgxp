@@ -768,12 +768,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
      *  :arg currentIndex: ``int`` index there to add the layers on non
      *          internal WMS (to have the right order).
+     *  arg realIndex: ``int`` the deference with ``currentIndex`` is that is
+     *         current index is where the layer should be added in the actual
+     *         configuration, the ``realIndex`` is the position where the
+     *         layer should be in the final configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, layers) {
+    parseChildren: function(child, layer, result, currentIndex, realIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
                 currentIndex += this.parseChildren(child.children[j], layer, result,
-                        currentIndex, layers);
+                        currentIndex, realIndex, layers);
+                realIndex++;
             }
         } else {
             if (child.disclaimer) {
@@ -827,7 +832,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     // GetCapabilities response is received.
                     var layerInfo = {
                         node: child,
-                        index: currentIndex,
+                        currentIndex: currentIndex,
+                        realIndex: realIndex,
                         allOlLayers: result.allOlLayers,
                         allOlLayersIndex: result.allOlLayers.length
                     };
@@ -934,14 +940,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         layerInfo.allOlLayers[layerInfo.allOlLayersIndex] = layer;
 
-        this.mapPanel.layers.insert(layerInfo.index, [
+        this.mapPanel.layers.insert(layerInfo.currentIndex, [
             new this.recordType({
                 disclaimer: layerNode.disclaimer,
                 legendURL: layerNode.legendImage,
                 layer: layer
             }, layer.id)]);
 
-        this.updateIndicesInWmtsInfo(layerInfo.index);
+        this.updateIndicesInWmtsInfo(layerInfo.realIndex);
 
         layerNode.slider.setLayer(layer);
 
@@ -973,8 +979,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (wmtsInfo.hasOwnProperty(k)) {
                 for (var i = 0; i < wmtsInfo[k].length; ++i) {
                     var layerInfo = wmtsInfo[k][i];
-                    if (layerInfo.index >= index) {
-                        layerInfo.index++;
+                    if (layerInfo.realIndex > index) {
+                        layerInfo.currentIndex++;
                     }
                 }
             }
@@ -1112,7 +1118,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.parseChildren(group, null, result, index, layers);
+                this.parseChildren(group, null, result, index, index, layers);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
