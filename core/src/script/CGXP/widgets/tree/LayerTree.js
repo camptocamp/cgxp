@@ -146,7 +146,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     initComponent: function() {
         this.themes = this.themes || {};
-        this.wmtsInfo = {};
 
         // fill displaynames one time for everybody
         function fillDisplayNames(nodes) {
@@ -992,6 +991,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
+
+        // As a simplification we clear the wmtsInfo object each time
+        // a theme is loaded. This means that new WMTS GetCapabilities
+        // requests will be issued when switching themes. This is not
+        // optimal but simplifies things a lot.
+        this.wmtsInfo = {};
+
         var node;
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
