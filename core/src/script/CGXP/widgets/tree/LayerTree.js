@@ -1429,7 +1429,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             node.layer.destroy();
         } else {
             Ext.each(node.attributes.allOlLayers, function(layer) {
-                layer.destroy();
+                // If the group is removed while WMTS Capabilities are
+                // loading then we have null items in the allOlLayers
+                // array.
+                if (layer !== null) {
+                    layer.destroy();
+                }
             });
         }
         this.fireEvent('removegroup');
