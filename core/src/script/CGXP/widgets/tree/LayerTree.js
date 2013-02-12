@@ -129,10 +129,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer"}]),
 
-    /** private: property[indexesToAdd]
-     *  ``Array`` of ``Object`` with one 'index' attribute.
-     */
-
     /** private: property[nodeLoadingPlugin]
      *  ``cgxp.tree.TreeNodeLoading`` A reference to the the ``TreeNodeLoading``
      *  plugin  added to the tree.
@@ -772,17 +768,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
      *  :arg currentIndex: ``int`` index there to add the layers on non
      *          internal WMS (to have the right order).
-     *  :arg realIndex: ``int`` the deference with ``currentIndex`` is that is
-     *          current index is where the layer should be added in the actual
-     *          configuration, the ``realIndex`` is the position where the
-     *          layer should be in the final configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, realIndex, layers) {
+    parseChildren: function(child, layer, result, currentIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
                 currentIndex += this.parseChildren(child.children[j], layer, result,
-                        currentIndex, realIndex, layers);
-                realIndex++;
+                        currentIndex, layers);
             }
         } else {
             if (child.disclaimer) {
@@ -834,18 +825,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     // for creating and inserting the WMTS layer. The creation
                     // and insertion of the layer will occur when the WMTS
                     // GetCapabilities response is received.
-                    var indexToAdd = {
-                        currentIndex: currentIndex,
-                        realIndex: realIndex
-                    };
                     var layerInfo = {
                         node: child,
-                        indexToAdd: indexToAdd,
+                        index: currentIndex,
                         allOlLayers: result.allOlLayers,
                         allOlLayersIndex: result.allOlLayers.length
                     };
                     layersInfo.push(layerInfo);
-                    this.indexesToAdd.push(indexToAdd);
                     result.allOlLayers.push(null);
                 }
             }
@@ -948,20 +934,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         layerInfo.allOlLayers[layerInfo.allOlLayersIndex] = layer;
 
-        this.mapPanel.layers.insert(layerInfo.indexToAdd.currentIndex, [
+        this.mapPanel.layers.insert(layerInfo.index, [
             new this.recordType({
                 disclaimer: layerNode.disclaimer,
                 legendURL: layerNode.legendImage,
                 layer: layer
             }, layer.id)]);
 
-        // Update the currentIndex of the other layers. Yes, I know, this
-        // is tricky!
-        Ext.each(this.indexesToAdd, function(idx) {
-            if (layerInfo.indexToAdd.realIndex < idx.realIndex) {
-                idx.currentIndex++;
-            }
-        });
+        this.updateIndicesInWmtsInfo(layerInfo.index);
 
         layerNode.slider.setLayer(layer);
 
@@ -982,6 +962,23 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }, this);
         this.nodeLoadingPlugin.registerLoadListeners(groupNode);
+    },
+
+    /** private: method[updateIndicesInWmtsInfo]
+     *  :param index: ``Number`` The index after which indices need updating.
+     */
+    updateIndicesInWmtsInfo: function(index) {
+        var wmtsInfo = this.wmtsInfo;
+        for (var k in wmtsInfo) {
+            if (wmtsInfo.hasOwnProperty(k)) {
+                for (var i = 0; i < wmtsInfo[k].length; ++i) {
+                    var layerInfo = wmtsInfo[k][i];
+                    if (layerInfo.index >= index) {
+                        layerInfo.index++;
+                    }
+                }
+            }
+        }
     },
 
     /** private :method[loadTheme]
@@ -1115,8 +1112,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.indexesToAdd = [];
-                this.parseChildren(group, null, result, index, index, layers);
+                this.parseChildren(group, null, result, index, layers);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
