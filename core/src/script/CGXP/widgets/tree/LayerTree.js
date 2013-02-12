@@ -141,6 +141,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     wmtsInfo: null,
 
+    /** private: property[wmtsCapsFormat]
+     *  ``OpenLayers.Format.WMTSCapabilities`` WMTS Capabilities format.
+     */
+    wmtsCapsFormat: null,
+
     /**
      * Property: actionsPlugin
      */
@@ -854,9 +859,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         if (!doc || !doc.documentElement) {
             doc = request.responseText;
         }
-        var format = new OpenLayers.Format.WMTSCapabilities();
+        var format = this.wmtsCapsFormat;
+        if (!format) {
+            format = this.wmtsCapsFormat = new OpenLayers.Format.WMTSCapabilities();
+        }
         var capabilities = format.read(doc);
-
         this.insertWmtsLayers(capabilities, layersInfo, visibleLayers, format);
     },
 
