@@ -761,24 +761,23 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg child: ``Object`` the node to parse
      *  :arg layer: ``<OpenLayers.Layer.WMS>`` The reference to the OL Layer,
      *      present only for internal WMS.
-     *  :arg result: ``Object`` The result object of the parsed children, it contains
+     *  :arg result: ``Object`` The result object of the parsed children, contains:
      *     - allLayers ``Array(String)`` The list of WMS subLayers for this layer.
      *     - checkedLayers ``Array(String)`` The list of checked subLayers.
      *     - disclaimer ``Object`` The list layers disclaimers.
-     *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
-     *  :arg currentIndex: ``int`` index there to add the layers on non
-     *          internal WMS (to have the right order).
-     *  arg realIndex: ``int`` the deference with ``currentIndex`` is that is
-     *         current index is where the layer should be added in the actual
-     *         configuration, the ``realIndex`` is the position where the
-     *         layer should be in the final configuration.
+     *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers
+     *       (for non internal WMS).
+     *  :arg currentIndex: ``Number`` The index at which to insert a new layer
+     *          in the layer store.
+     *  :arg orderIndex: ``Number`` An index incremented as parseChildren is
+     *          called. Represents the layer position in the final
+     *          configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, realIndex, layers) {
+    parseChildren: function(child, layer, result, currentIndex, orderIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
                 currentIndex += this.parseChildren(child.children[j], layer, result,
-                        currentIndex, realIndex, layers);
-                realIndex++;
+                        currentIndex, orderIndex++, layers);
             }
         } else {
             if (child.disclaimer) {
@@ -833,7 +832,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     var layerInfo = {
                         node: child,
                         currentIndex: currentIndex,
-                        realIndex: realIndex,
+                        orderIndex: orderIndex,
                         allOlLayers: result.allOlLayers,
                         allOlLayersIndex: result.allOlLayers.length
                     };
@@ -947,7 +946,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 layer: layer
             }, layer.id)]);
 
-        this.updateIndicesInWmtsInfo(layerInfo.realIndex);
+        this.updateIndicesInWmtsInfo(layerInfo.orderIndex);
 
         layerNode.slider.setLayer(layer);
 
@@ -979,7 +978,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (wmtsInfo.hasOwnProperty(k)) {
                 for (var i = 0; i < wmtsInfo[k].length; ++i) {
                     var layerInfo = wmtsInfo[k][i];
-                    if (layerInfo.realIndex > index) {
+                    if (layerInfo.orderIndex > index) {
                         layerInfo.currentIndex++;
                     }
                 }
