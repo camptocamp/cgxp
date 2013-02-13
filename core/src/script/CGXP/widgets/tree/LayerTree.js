@@ -129,9 +129,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     recordType: GeoExt.data.LayerRecord.create([{name: "disclaimer"}]),
 
-    /** private: property[indexesToAdd]
-     *  ``Array`` of ``Object`` with one 'index' attribute.
+    /** private: property[nodeLoadingPlugin]
+     *  ``cgxp.tree.TreeNodeLoading`` A reference to the the ``TreeNodeLoading``
+     *  plugin  added to the tree.
      */
+    nodeLoadingPlugin: null,
+
+    /** private: property[wmtsInfo]
+     *  ``Object`` An object to store information on WMTS layers while waiting
+     *  for WMTS Capabilities responses. Keyed by WMTS URL.
+     */
+    wmtsInfo: null,
+
+    /** private: property[wmtsCapsFormat]
+     *  ``OpenLayers.Format.WMTSCapabilities`` WMTS Capabilities format.
+     */
+    wmtsCapsFormat: null,
 
     /**
      * Property: actionsPlugin
@@ -165,6 +178,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 scope: this
             }
         });
+        this.nodeLoadingPlugin = new cgxp.tree.TreeNodeLoading();
         this.plugins = [
             this.actionsPlugin,
             new GeoExt.plugins.TreeNodeComponent(),
@@ -172,7 +186,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 divCls: "legend-component",
                 configKey: "legend"
             }),
-            new cgxp.tree.TreeNodeLoading()
+            this.nodeLoadingPlugin
         ];
         var layerNodeUI = Ext.extend(cgxp.tree.TreeNodeTriStateUI, new GeoExt.tree.TreeNodeUIEventMixin());
         this.loader = new Ext.tree.TreeLoader({
@@ -751,26 +765,25 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg child: ``Object`` the node to parse
      *  :arg layer: ``<OpenLayers.Layer.WMS>`` The reference to the OL Layer,
      *      present only for internal WMS.
-     *  :arg result: ``Object`` The result object of the parsed children, it contains
+     *  :arg result: ``Object`` The result object of the parsed children, contains:
      *     - allLayers ``Array(String)`` The list of WMS subLayers for this layer.
      *     - checkedLayers ``Array(String)`` The list of checked subLayers.
      *     - disclaimer ``Object`` The list layers disclaimers.
-     *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers (for non internal WMS).
-     *  :arg currentIndex: ``int`` index there to add the layers on non
-     *          internal WMS (to have the right order).
-     *  :arg realIndex: ``int`` the deference with ``currentIndex`` is that is
-     *          current index is where the layer should be added in the actual
-     *          configuration, the ``realIndex`` is the position where the
-     *          layer should be in the final configuration.
+     *     - allOlLayers ``Array(OpenLayers.Layer)`` The list of children layers
+     *       (for non internal WMS).
+     *  :arg currentIndex: ``Number`` The index at which to insert a new layer
+     *          in the layer store.
+     *  :arg orderIndex: ``Number`` An index incremented as parseChildren is
+     *          called. Represents the layer position in the final
+     *          configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, realIndex, layers) {
+    parseChildren: function(child, layer, result, currentIndex, orderIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
-                currentIndex += this.parseChildren(child.children[j], layer, result, currentIndex, realIndex, layers);
-                realIndex++;
+                currentIndex += this.parseChildren(child.children[j], layer, result,
+                        currentIndex, orderIndex++, layers);
             }
-        }
-        else {
+        } else {
             if (child.disclaimer) {
                 result.disclaimer[child.disclaimer] = true;
             }
@@ -783,8 +796,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             // put a reference to ol layer in the config object
             if (layer) {
                 child.layer = layer;
-            }
-            else {
+            } else {
                 if (child.type == "external WMS") {
                     child.layer = new OpenLayers.Layer.WMS(
                         child.name, child.url, {
@@ -807,89 +819,177 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             layer: child.layer
                         }, child.layer.id)]);
                     return 1;
-                }
-                else if (child.type == "WMTS") {
-                    var format = new OpenLayers.Format.WMTSCapabilities();
-                    var allOlLayerIndex = result.allOlLayers.length;
-                    var indexToAdd = {
+                } else if (child.type == "WMTS") {
+                    var layersInfo = this.wmtsInfo[child.url];
+                    if (!layersInfo) {
+                        layersInfo = this.wmtsInfo[child.url] = [];
+                        OpenLayers.Request.GET({
+                            url: child.url,
+                            success: this.onWmtsCapsReceive.createDelegate(
+                                this, [layersInfo, layers], true)
+                        });
+                    }
+                    // The layerInfo object includes the necessary information
+                    // for creating and inserting the WMTS layer. The creation
+                    // and insertion of the layer will occur when the WMTS
+                    // GetCapabilities response is received.
+                    var layerInfo = {
+                        node: child,
                         currentIndex: currentIndex,
-                        realIndex: realIndex
+                        orderIndex: orderIndex,
+                        allOlLayers: result.allOlLayers,
+                        allOlLayersIndex: result.allOlLayers.length
                     };
-                    this.indexesToAdd.push(indexToAdd);
+                    layersInfo.push(layerInfo);
                     result.allOlLayers.push(null);
-                    OpenLayers.Request.GET({
-                        url: child.url,
-                        scope: this,
-                        success: function(request) {
-                            var doc = request.responseXML;
-                            if (!doc || !doc.documentElement) {
-                                doc = request.responseText;
-                            }
-                            var capabilities = format.read(doc);
-                            var capabilities_layers = capabilities.contents.layers;
-                            var capabilities_layer = null;
-                            for (i = 0, ii = capabilities_layers.length;
-                                    i < ii ; i++) {
-                                if (capabilities_layers[i].identifier == child.name) {
-                                    capabilities_layer = capabilities_layers[i];
-                                }
-                            }
-                            var layer = format.createLayer(capabilities, Ext.apply({
-                                ref: child.name,
-                                layer: child.name,
-                                maxExtent: capabilities_layer.bounds ?
-                                    capabilities_layer.bounds.transform(
-                                        "EPSG:4326",
-                                        this.mapPanel.map.getProjectionObject()) :
-                                    undefined,
-                                style: child.style,
-                                matrixSet: child.matrixSet,
-                                dimension: child.dimension,
-                                visibility: child.isChecked,
-                                isBaseLayer: false,
-                                mapserverURL: child.mapserverURL,
-                                mapserverLayers: child.mapserverLayers
-                            }, this.wmtsOptions || {}));
-                            child.node.attributes.layer = layer;
-                            if (this.initialState && this.initialState['opacity_' + child.name]) {
-                                layer.setOpacity(this.initialState['opacity_' + child.name]);
-                            }
-                            if (layers && layers.indexOf(child.name) >= 0) {
-                                this.fireEvent('checkchange', child.node, true);
-                                layer.setVisibility(true);
-                            }
-                            else {
-                                layer.setVisibility(child.node.attributes.checked);
-                            }
-                            result.allOlLayers[allOlLayerIndex] = layer;
-                            this.mapPanel.layers.insert(indexToAdd.currentIndex, [
-                                new this.recordType({
-                                    disclaimer: child.disclaimer,
-                                    legendURL: child.legendImage,
-                                    layer: layer
-                                }, layer.id)]);
-                            Ext.each(this.indexesToAdd, function(idx) {
-                                if (indexToAdd.realIndex < idx.realIndex) {
-                                    idx.currentIndex++;
-                                }
-                            });
-                            child.slider.setLayer(layer);
-                            child.node.layer = layer;
-                            layer.events.on({
-                                "visibilitychanged": child.node.onLayerVisibilityChanged,
-                                scope: child.node
-                            });
-                            child.node.on({
-                                "checkchange": child.node.onCheckChange,
-                                scope: child.node
-                            });
-
-                        }
-                    });
                 }
             }
         }
         return 0;
+    },
+
+    /** private: method[olWmtsCapsReceive]
+     *  :param request: ``Object`` The XHR object.
+     *  :param layersInfo: ``Array`` The layer info objects.
+     *  :param visibleLayers: ``Array`` The names of the layers to make
+     *      visible immediately.
+     */
+    onWmtsCapsReceive: function(request, layersInfo, visibleLayers) {
+        var doc = request.responseXML;
+        if (!doc || !doc.documentElement) {
+            doc = request.responseText;
+        }
+        var format = this.wmtsCapsFormat;
+        if (!format) {
+            format = this.wmtsCapsFormat = new OpenLayers.Format.WMTSCapabilities();
+        }
+        var capabilities = format.read(doc);
+        this.insertWmtsLayers(capabilities, layersInfo, visibleLayers, format);
+    },
+
+    /** private: method[insertWmtsLayers]
+     *  :param capabilities: ``Object`` The WMTS capabilities object.
+     *  :param layersInfo: ``Array`` The layer info objects.
+     *  :param visibleLayers: ``Array`` The names of the layers to make
+     *      visible immediately.
+     *  :param format: ``OpenLayers.format.WMTSCapabilities`` The WMTS
+     *      Capabilities format.
+     */
+    insertWmtsLayers: function(capabilities, layersInfo, visibleLayers, format) {
+        var capabilitiesLayers = capabilities.contents.layers;
+
+        for (var i = 0, ii = layersInfo.length; i < ii; ++i) {
+            var layerInfo = layersInfo[i];
+
+            var capabilitiesLayer;
+            for (var j = 0, jj = capabilitiesLayers.length; j < jj; ++j) {
+                if (capabilitiesLayers[j].identifier == layerInfo.node.name) {
+                    capabilitiesLayer = capabilitiesLayers[j];
+                }
+            }
+            if (!capabilitiesLayer) {
+                continue;
+            }
+
+            this.insertWmtsLayer(capabilities, capabilitiesLayer, layerInfo,
+                    visibleLayers, format);
+        }
+    },
+
+
+    /** private: method[insertWmtsLayer]
+     *  :param capabilities: ``Object`` The WMTS capabilities object.
+     *  :param capabilitiesLayer: ``Object`` The object representing the
+     *      layer in the WMTS capabilities.
+     *  :param layerInfo: ``Object`` The layer info object.
+     *  :param visibleLayers: ``Array`` The names of the layers to make
+     *      visible immediately.
+     *  :param format: ``OpenLayers.format.WMTSCapabilities`` The WMTS
+     *      Capabilities format.
+     */
+    insertWmtsLayer: function(capabilities, capabilitiesLayer, layerInfo,
+            visibleLayers, format) {
+
+        var layerNode = layerInfo.node;
+        var layerName = layerNode.name;
+
+        var layer = format.createLayer(capabilities, Ext.apply({
+            ref: layerName,
+            layer: layerName,
+            maxExtent: capabilitiesLayer.bounds ?
+                capabilitiesLayer.bounds.transform(
+                    "EPSG:4326",
+                    this.mapPanel.map.getProjectionObject()) : undefined,
+            style: layerNode.style,
+            matrixSet: layerNode.matrixSet,
+            dimension: layerNode.dimension,
+            visibility: layerNode.isChecked,
+            isBaseLayer: false,
+            mapserverURL: layerNode.mapserverURL,
+            mapserverLayers: layerNode.mapserverLayers
+        }, this.wmtsOptions || {}));
+
+        var treeNode = layerNode.node;
+        treeNode.layer = layer;
+        treeNode.attributes.layer = layer;
+
+        if (this.initialState && this.initialState['opacity_' + layerName]) {
+            layer.setOpacity(this.initialState['opacity_' + layerName]);
+        }
+        if (visibleLayers && visibleLayers.indexOf(layerName) >= 0) {
+            this.fireEvent('checkchange', treeNode, true);
+            layer.setVisibility(true);
+        } else {
+            layer.setVisibility(treeNode.attributes.checked);
+        }
+
+        layerInfo.allOlLayers[layerInfo.allOlLayersIndex] = layer;
+
+        this.mapPanel.layers.insert(layerInfo.currentIndex, [
+            new this.recordType({
+                disclaimer: layerNode.disclaimer,
+                legendURL: layerNode.legendImage,
+                layer: layer
+            }, layer.id)]);
+
+        this.updateIndicesInWmtsInfo(layerInfo.orderIndex);
+
+        layerNode.slider.setLayer(layer);
+
+        layer.events.on({
+            "visibilitychanged": treeNode.onLayerVisibilityChanged,
+            scope: treeNode
+        });
+        treeNode.on({
+            "checkchange": treeNode.onCheckChange,
+            scope: treeNode
+        });
+
+        var groupNode;
+        treeNode.bubble(function(n) {
+            if (n.parentNode == this.root) {
+                groupNode = n;
+                return false;
+            }
+        }, this);
+        this.nodeLoadingPlugin.registerLoadListeners(groupNode);
+    },
+
+    /** private: method[updateIndicesInWmtsInfo]
+     *  :param index: ``Number`` The index after which indices need updating.
+     */
+    updateIndicesInWmtsInfo: function(index) {
+        var wmtsInfo = this.wmtsInfo;
+        for (var k in wmtsInfo) {
+            if (wmtsInfo.hasOwnProperty(k)) {
+                for (var i = 0; i < wmtsInfo[k].length; ++i) {
+                    var layerInfo = wmtsInfo[k][i];
+                    if (layerInfo.orderIndex > index) {
+                        layerInfo.currentIndex++;
+                    }
+                }
+            }
+        }
     },
 
     /** private :method[loadTheme]
@@ -898,6 +998,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
+
+        // As a simplification we clear the wmtsInfo object each time
+        // a theme is loaded. This means that new WMTS GetCapabilities
+        // requests will be issued when switching themes. This is not
+        // optimal but simplifies things a lot.
+        this.wmtsInfo = {};
+
         var node;
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
@@ -1023,7 +1130,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.indexesToAdd = [];
                 this.parseChildren(group, null, result, index, index, layers);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
@@ -1330,7 +1436,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             node.layer.destroy();
         } else {
             Ext.each(node.attributes.allOlLayers, function(layer) {
-                layer.destroy();
+                // If the group is removed while WMTS Capabilities are
+                // loading then we have null items in the allOlLayers
+                // array.
+                if (layer !== null) {
+                    layer.destroy();
+                }
             });
         }
         this.fireEvent('removegroup');
