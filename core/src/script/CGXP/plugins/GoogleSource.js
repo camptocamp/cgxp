@@ -42,7 +42,7 @@ Ext.namespace("cgxp.plugins");
  *  .. code-block:: javascript
  *
  *    "google": {
- *        ptype: "cgxp_google"
+ *        ptype: "cgxp_googlesource"
  *    }
  *
  *  A typical configuration for a layer from this source (in the ``layers``
