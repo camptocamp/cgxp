@@ -135,22 +135,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     nodeLoadingPlugin: null,
 
-    /** private: property[wmtsInfo]
+    /** private: property[wmtsInfos]
      *  ``Object`` An object to store information on WMTS layers while waiting
-     *  for WMTS Capabilities responses. Keyed by WMTS URL.
+     *  for WMTS Capabilities responses, than also store the capabilities
+     *  object. Keyed by WMTS URL.
      */
-    wmtsInfo: null,
+    wmtsInfos: null,
 
     /** private: property[wmtsCapsFormat]
      *  ``OpenLayers.Format.WMTSCapabilities`` WMTS Capabilities format.
      */
     wmtsCapsFormat: null,
 
+    /** private: property[orderIndex]
+     *  ``Number`` An index incremented as parseChildren is called.
+     *  Represents the relative position of the WMTS layers.
+     */
+    orderIndex: 0,
+
     /**
      * Property: actionsPlugin
      */
     initComponent: function() {
         this.themes = this.themes || {};
+        this.wmtsInfos = {};
 
         // fill displaynames one time for everybody
         function fillDisplayNames(nodes) {
@@ -773,15 +781,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *       (for non internal WMS).
      *  :arg currentIndex: ``Number`` The index at which to insert a new layer
      *          in the layer store.
-     *  :arg orderIndex: ``Number`` An index incremented as parseChildren is
-     *          called. Represents the layer position in the final
-     *          configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, orderIndex, layers) {
+    parseChildren: function(child, layer, result, currentIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
                 currentIndex += this.parseChildren(child.children[j], layer, result,
-                        currentIndex, orderIndex++, layers);
+                        currentIndex, layers);
             }
         } else {
             if (child.disclaimer) {
@@ -820,13 +825,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         }, child.layer.id)]);
                     return 1;
                 } else if (child.type == "WMTS") {
-                    var layersInfo = this.wmtsInfo[child.url];
-                    if (!layersInfo) {
-                        layersInfo = this.wmtsInfo[child.url] = [];
+                    var wmtsInfo = this.wmtsInfos[child.url];
+                    if (!wmtsInfo) {
+                        wmtsInfo = {
+                            capabilities: null,
+                            layersInfo: []
+                        }
+                        this.wmtsInfos[child.url] = wmtsInfo;
                         OpenLayers.Request.GET({
                             url: child.url,
                             success: this.onWmtsCapsReceive.createDelegate(
-                                this, [layersInfo, layers], true)
+                                this, [wmtsInfo, layers], true)
                         });
                     }
                     // The layerInfo object includes the necessary information
@@ -836,11 +845,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     var layerInfo = {
                         node: child,
                         currentIndex: currentIndex,
-                        orderIndex: orderIndex,
+                        orderIndex: this.orderIndex++,
                         allOlLayers: result.allOlLayers,
                         allOlLayersIndex: result.allOlLayers.length
                     };
-                    layersInfo.push(layerInfo);
+                    wmtsInfo.layersInfo.push(layerInfo);
                     result.allOlLayers.push(null);
                 }
             }
@@ -850,33 +859,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
     /** private: method[olWmtsCapsReceive]
      *  :param request: ``Object`` The XHR object.
-     *  :param layersInfo: ``Array`` The layer info objects.
+     *  :param wmtsInfo: ``Object`` Contains the layer info objects.
      *  :param visibleLayers: ``Array`` The names of the layers to make
      *      visible immediately.
      */
-    onWmtsCapsReceive: function(request, layersInfo, visibleLayers) {
+    onWmtsCapsReceive: function(request, wmtsInfo, visibleLayers) {
         var doc = request.responseXML;
         if (!doc || !doc.documentElement) {
             doc = request.responseText;
         }
-        var format = this.wmtsCapsFormat;
-        if (!format) {
-            format = this.wmtsCapsFormat = new OpenLayers.Format.WMTSCapabilities();
+        if (!this.wmtsCapsFormat) {
+            this.wmtsCapsFormat = new OpenLayers.Format.WMTSCapabilities();
         }
-        var capabilities = format.read(doc);
-        this.insertWmtsLayers(capabilities, layersInfo, visibleLayers, format);
+        wmtsInfo.capabilities = this.wmtsCapsFormat.read(doc);
+        this.insertWmtsLayers(wmtsInfo, visibleLayers);
     },
 
     /** private: method[insertWmtsLayers]
-     *  :param capabilities: ``Object`` The WMTS capabilities object.
-     *  :param layersInfo: ``Array`` The layer info objects.
+     *  :param wmtsInfo: ``Object`` Contains the layer info objects.
      *  :param visibleLayers: ``Array`` The names of the layers to make
      *      visible immediately.
-     *  :param format: ``OpenLayers.format.WMTSCapabilities`` The WMTS
-     *      Capabilities format.
      */
-    insertWmtsLayers: function(capabilities, layersInfo, visibleLayers, format) {
-        var capabilitiesLayers = capabilities.contents.layers;
+    insertWmtsLayers: function(wmtsInfo, visibleLayers) {
+        var capabilitiesLayers = wmtsInfo.capabilities.contents.layers;
+        var layersInfo = wmtsInfo.layersInfo;
 
         for (var i = 0, ii = layersInfo.length; i < ii; ++i) {
             var layerInfo = layersInfo[i];
@@ -891,9 +897,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 continue;
             }
 
-            this.insertWmtsLayer(capabilities, capabilitiesLayer, layerInfo,
-                    visibleLayers, format);
+            this.insertWmtsLayer(wmtsInfo.capabilities,
+                    capabilitiesLayer, layerInfo, visibleLayers);
         }
+        wmtsInfo.layersInfo = [];
     },
 
 
@@ -904,20 +911,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :param layerInfo: ``Object`` The layer info object.
      *  :param visibleLayers: ``Array`` The names of the layers to make
      *      visible immediately.
-     *  :param format: ``OpenLayers.format.WMTSCapabilities`` The WMTS
-     *      Capabilities format.
      */
     insertWmtsLayer: function(capabilities, capabilitiesLayer, layerInfo,
-            visibleLayers, format) {
+            visibleLayers) {
 
         var layerNode = layerInfo.node;
         var layerName = layerNode.name;
 
-        var layer = format.createLayer(capabilities, Ext.apply({
+        var layer = this.wmtsCapsFormat.createLayer(capabilities, Ext.apply({
             ref: layerName,
             layer: layerName,
             maxExtent: capabilitiesLayer.bounds ?
-                capabilitiesLayer.bounds.transform(
+                capabilitiesLayer.bounds.clone().transform(
                     "EPSG:4326",
                     this.mapPanel.map.getProjectionObject()) : undefined,
             style: layerNode.style,
@@ -979,11 +984,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :param index: ``Number`` The index after which indices need updating.
      */
     updateIndicesInWmtsInfo: function(index) {
-        var wmtsInfo = this.wmtsInfo;
+        var wmtsInfo = this.wmtsInfos;
         for (var k in wmtsInfo) {
             if (wmtsInfo.hasOwnProperty(k)) {
-                for (var i = 0; i < wmtsInfo[k].length; ++i) {
-                    var layerInfo = wmtsInfo[k][i];
+                for (var i = 0; i < wmtsInfo[k].layersInfo.length; ++i) {
+                    var layerInfo = wmtsInfo[k].layersInfo[i];
                     if (layerInfo.orderIndex > index) {
                         layerInfo.currentIndex++;
                     }
@@ -998,12 +1003,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
-
-        // As a simplification we clear the wmtsInfo object each time
-        // a theme is loaded. This means that new WMTS GetCapabilities
-        // requests will be issued when switching themes. This is not
-        // optimal but simplifies things a lot.
-        this.wmtsInfo = {};
+        this.orderIndex = 0;
 
         var node;
         if (this.uniqueTheme) {
@@ -1130,11 +1130,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.parseChildren(group, null, result, index, index, layers);
+                this.parseChildren(group, null, result, index, layers);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
                 groupNode = this.addGroup(group, false);
+
+                for (var url in this.wmtsInfos) {
+                    if (this.wmtsInfos.hasOwnProperty(url)) {
+                        var wmtsInfo = this.wmtsInfos[url];
+                        if (wmtsInfo.capabilities && wmtsInfo.layersInfo.length > 0) {
+                            this.insertWmtsLayers(wmtsInfo);
+                        }
+                    }
+                }
             }
             if (scroll) {
                 this.body.scrollTo('top', 0);
