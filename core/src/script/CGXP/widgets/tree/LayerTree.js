@@ -147,6 +147,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     wmtsCapsFormat: null,
 
+    /** private: property[orderIndex]
+     *  ``Number`` An index incremented as parseChildren is called.
+     *  Represents the relative position of the WMTS layers.
+     */
+    orderIndex: 0,
+
     /**
      * Property: actionsPlugin
      */
@@ -775,15 +781,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *       (for non internal WMS).
      *  :arg currentIndex: ``Number`` The index at which to insert a new layer
      *          in the layer store.
-     *  :arg orderIndex: ``Number`` An index incremented as parseChildren is
-     *          called. Represents the layer position in the final
-     *          configuration.
      */
-    parseChildren: function(child, layer, result, currentIndex, orderIndex, layers) {
+    parseChildren: function(child, layer, result, currentIndex, layers) {
         if (child.children) {
             for (var j = child.children.length - 1; j >= 0; j--) {
                 currentIndex += this.parseChildren(child.children[j], layer, result,
-                        currentIndex, orderIndex++, layers);
+                        currentIndex, layers);
             }
         } else {
             if (child.disclaimer) {
@@ -842,7 +845,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     var layerInfo = {
                         node: child,
                         currentIndex: currentIndex,
-                        orderIndex: orderIndex,
+                        orderIndex: this.orderIndex++,
                         allOlLayers: result.allOlLayers,
                         allOlLayersIndex: result.allOlLayers.length
                     };
@@ -1000,6 +1003,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg theme: ``Object`` the theme config
      */
     loadTheme: function(theme) {
+        this.orderIndex = 0;
+
         var node;
         if (this.uniqueTheme) {
             for (var i = this.root.childNodes.length-1 ; i >= 0 ; i--) {
@@ -1125,7 +1130,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     disclaimer: {},
                     allOlLayers: []
                 };
-                this.parseChildren(group, null, result, index, index, layers);
+                this.parseChildren(group, null, result, index, layers);
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
