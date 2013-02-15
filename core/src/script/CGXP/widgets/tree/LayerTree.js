@@ -919,7 +919,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             ref: layerName,
             layer: layerName,
             maxExtent: capabilitiesLayer.bounds ?
-                capabilitiesLayer.bounds.transform(
+                capabilitiesLayer.bounds.clone().transform(
                     "EPSG:4326",
                     this.mapPanel.map.getProjectionObject()) : undefined,
             style: layerNode.style,
