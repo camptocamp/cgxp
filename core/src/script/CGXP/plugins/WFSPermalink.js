@@ -79,7 +79,7 @@ Ext.namespace("cgxp.plugins");
  *      starting at 0. For instance ``wfs_0_<layer attribute name>``
  *
  *    Example:
- *    http://example.com?wfs_layer=parcels&wfs_ngroups=2&
+ *    http://example.com?wfs_layer=parcels&wfs_ngroups=2
  *                      &wfs_0_city=Oslo&wfs_0_number=12,34,56
  *                      &wfs_1_city=Paris&wfs_1_number=78,90
  *    will load parcels #12, 34 and 56 of the city of Oslo as well as
