@@ -80,8 +80,7 @@ Ext.namespace("cgxp.plugins");
  *
  *    Example:
  *    http://example.com?wfs_layer=parcels&wfs_ngroups=2
- *                      &wfs_0_city=Oslo&wfs_0_number=12,34,56
- *                      &wfs_1_city=Paris&wfs_1_number=78,90
+ *    &wfs_0_city=Oslo&wfs_0_number=12,34,56&wfs_1_city=Paris&wfs_1_number=78,90
  *    will load parcels #12, 34 and 56 of the city of Oslo as well as
  *    parcels #78 and 90 of the city of Paris.
  */
