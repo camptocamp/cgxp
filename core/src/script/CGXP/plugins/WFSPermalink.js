@@ -71,6 +71,18 @@ Ext.namespace("cgxp.plugins");
  *    Example:
  *    http://example.com?wfs_layer=parcels&wfs_city=Oslo&wfs_number=12,34,56
  *    will load parcels #12, 34 and 56 of the city of Oslo.
+ *
+ *    It is possible to define several groups of filtering parameters by:
+ *
+ *    - adding a ``wfs_ngroups`` parameter telling how many groups are defined
+ *    - prefixing all filtering parameters by the number of each group,
+ *      starting at 0. For instance ``wfs_0_<layer attribute name>``
+ *
+ *    Example:
+ *    http://example.com?wfs_layer=parcels&wfs_ngroups=2
+ *    &wfs_0_city=Oslo&wfs_0_number=12,34,56&wfs_1_city=Paris&wfs_1_number=78,90
+ *    will load parcels #12, 34 and 56 of the city of Oslo as well as
+ *    parcels #78 and 90 of the city of Paris.
  */
 cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
@@ -181,7 +193,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
         this.events.fireEvent('querystarts');
         protocol.read({
-            filter: this.createFilter(layerName, state),
+            filter: this.createFilter(state),
             maxFeatures: this.maxFeatures,
             callback: function(response) {
                 this.handleResponse(response, layerName);
@@ -192,14 +204,55 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
     /** private: method[createFilter]
      *  Build a WFS filter according to the permalink parameters.
-     *  :param layerName: ``String`` The layer name.
      *  :param state: ``Object`` The state object.
      */
-    createFilter: function(layerName, state) {
+    createFilter: function(state) {
         if (!state) {
             return null;
         }
 
+        if (typeof state.ngroups != "undefined") {
+            var nb = parseInt(state.ngroups);
+            if (typeof nb != "number") {
+                return null;
+            }
+            delete state.ngroups;
+            var filterGroups = [], filter, params, prop, prefix;
+            for (var i = 0; i < nb; i++) {
+                prefix = String(i) + "_";
+                params = {};
+                // look for state properties starting with the current prefix
+                for (prop in state) {
+                    if (prop.indexOf(prefix) == 0) {
+                        params[prop.substring(prefix.length)] = state[prop];
+                        delete state[prop];
+                    }
+                }
+                filter = this.createGroupFilter(params);
+                if (filter) {
+                    filterGroups.push(filter);
+                }
+            }
+            if (filterGroups.length == 0) {
+                return null;
+            }
+            if (filterGroups.length == 1) {
+                return filterGroups[0];
+            }
+            return new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.OR,
+                filters: filterGroups
+            });
+        }
+
+        return this.createGroupFilter(state);
+    },
+
+    /** private: method[createGroupFilter]
+     *  Build a WFS filter according to a group of permalink parameters.
+     *  :param state: ``Object`` The full state object or a subset (group).
+     */
+    createGroupFilter: function(state) {
         var filters = [], prop, values, propFilters, i, len;
         for (prop in state) {
             if (!state[prop]) {
@@ -225,7 +278,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             }
         }
 
-        if (!filters) {
+        if (filters.length == 0) {
             return null;
         }
 
