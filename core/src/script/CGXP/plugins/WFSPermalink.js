@@ -233,7 +233,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                     filterGroups.push(filter);
                 }
             }
-            if (!filterGroups) {
+            if (filterGroups.length == 0) {
                 return null;
             }
             if (filterGroups.length == 1) {
@@ -278,7 +278,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             }
         }
 
-        if (!filters) {
+        if (filters.length == 0) {
             return null;
         }
 
