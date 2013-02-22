@@ -320,7 +320,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
-        var actions = internalWMS ? [{
+        // internalWMS or layer leaf
+        var actions = internalWMS || group.type ? [{
             action: "opacity",
             qtip: this.opacityText
         }] : [];
@@ -350,10 +351,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             expanded: group.isExpanded,
             layer: group.layer,
             allOlLayers: group.allOlLayers,
-            component: internalWMS ? this.getOpacitySlider(group) : null,
+            component: internalWMS || group.type ? this.getOpacitySlider(group) : null,
+            hasOpacity: internalWMS || group.type,
             actions: actions
         };
-        if (internalWMS) {
+        // internalWMS or layer leaf
+        if (internalWMS || group.type) {
             groupNodeConfig.nodeType = 'cgxp_layer';
         }
         this.addMetadata(group, groupNodeConfig, true);
@@ -967,7 +970,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var index = this.mapPanel.layers.getCount();
             while (this.mapPanel.map.layers[index-1] instanceof OpenLayers.Layer.Vector && index > 0) { index--; }
             var result;
-            if (group.isInternalWMS !== false) {
+            if (group.isInternalWMS || group.type == 'internal WMS') {
                 var params = {
                     layers: [],
                     format: 'image/png',
@@ -1029,6 +1032,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
                 groupNode = this.addGroup(group, false);
+                group.node = groupNode;
             }
             if (scroll) {
                 this.body.scrollTo('top', 0);
@@ -1163,10 +1167,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var id = group.attributes.groupId;
             groups.push(id);
             var layer = group.layer;
-            if (group.attributes.internalWMS) {
+            if (group.attributes.hasOpacity) {
                 if (layer.opacity !== null && layer.opacity != 1) {
                     state['group_opacity_' + id] = layer.opacity;
                 }
+            }
+            if (group.attributes.internalWMS) {
                 if (layer.params.LAYERS.length > 0) {
                     state['group_layers_' + id] = [layer.params.LAYERS].join(',');
                 }
