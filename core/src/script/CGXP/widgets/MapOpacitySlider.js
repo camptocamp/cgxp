@@ -235,7 +235,9 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     applyState: function(state) {
         var baselayer = this.map.getLayersBy('ref', state.ref)[0];
-        this.updateBaseLayer(baselayer);
+        if (baselayer) {
+            this.updateBaseLayer(baselayer);
+        }
         if (this.orthoRef) {
             var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0]
             if (state.opacity != 100) {
