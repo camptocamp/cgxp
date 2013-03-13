@@ -68,6 +68,7 @@
         "plugins/WMSBrowser.js",
         "plugins/WMSGetFeatureInfo.js",
         "plugins/Zoom.js",
+        "plugins/ToolActivateMgr.js",
 
         "../../../../geoext.ux/ux/FeatureSelectionModel/lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js",
         "../../../../ext/Ext/examples/ux/RowExpander.js",
