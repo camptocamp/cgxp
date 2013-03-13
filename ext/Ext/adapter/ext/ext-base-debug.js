@@ -67,7 +67,7 @@ Ext.apply = function(o, c, defaults){
         isIE = !isOpera && check(/msie/),
         isIE7 = isIE && (check(/msie 7/) || docMode == 7),
         isIE8 = isIE && (check(/msie 8/) && docMode != 7),
-        isIE9 = isIE && check(/msie 9/),
+        isIE9 = isIE && check(/msie 9/) || check(/msie 10/),
         isIE6 = isIE && !isIE7 && !isIE8 && !isIE9,
         isGecko = !isWebKit && check(/gecko/),
         isGecko2 = isGecko && check(/rv:1\.8/),

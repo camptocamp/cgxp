@@ -1,5 +1,14 @@
 This file includes migration steps for each release of CGXP.
 
+
+Version 1.3.1
+=============
+
+1. Add workaround for IE10 by considering IE10 as IE9 not IE6 ...
+   To use it, in the ``jsbuild/app.cfg`` file, you should replace
+   ``adapter/ext/ext-base.js`` by ``adapter/ext/ext-base-debug.js``.
+
+
 Version 1.3
 ===========
 
