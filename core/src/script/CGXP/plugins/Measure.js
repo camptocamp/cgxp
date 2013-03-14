@@ -177,6 +177,37 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 
     popup: null,
 
+    /** api: config[symbolizers]
+     *  ``Object``
+     *  (optional) Styles of the features drawn on the map when measuring.
+     *  If provided they will override the default styles.
+     *  Possible symbolizer types are "Point", "Line" and "Polygon".
+     *
+     *  Example:
+     *
+     *  .. code-block:: javascript
+     *
+     *      symbolizers: {
+     *          "Point": {
+     *              pointRadius: 10,
+     *              graphicName: "square",
+     *              fillColor: "blue",
+     *              strokeWidth: 1,
+     *              strokeColor: "red"
+     *          }
+     *      }
+     */
+    symbolizers: {},
+
+    /** api: config[sketchSymbolizers]
+     *  ``Object``
+     *  (optional) Styles of the features drawn on the map when measuring
+     *  segments, such as azimuths. If provided they will override the default
+     *  styles. Possible symbolizer types are "Point", "Line" and "Polygon".
+     *  See ``symbolizers`` for an example.
+     */
+    sketchSymbolizers: {},
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -210,7 +241,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         var styleMap = new OpenLayers.StyleMap({
             "default": new OpenLayers.Style(null, {
                 rules: [new OpenLayers.Rule({
-                    symbolizer: {
+                    symbolizer: Ext.applyIf(this.symbolizers, {
                         "Point": {
                             pointRadius: 4,
                             graphicName: "square",
@@ -233,7 +264,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             fillColor: "white",
                             fillOpacity: 0.3
                         }
-                    }
+                    })
                 })]
             })
         });
@@ -313,7 +344,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     createSegmentMeasureControl: function() {
         // style the sketch fancy
-        var sketchSymbolizers = {
+        var sketchSymbolizers = Ext.applyIf(this.sketchSymbolizers, {
             "Point": {
                 pointRadius: 6,
                 graphicName: "cross",
@@ -334,7 +365,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 strokeColor: "#FF0000",
                 fillOpacity: 0
             }
-        };
+        });
         var style = new OpenLayers.Style();
         style.addRules([
             new OpenLayers.Rule({symbolizer: sketchSymbolizers})
