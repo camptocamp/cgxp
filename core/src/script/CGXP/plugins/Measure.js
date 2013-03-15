@@ -199,14 +199,14 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     symbolizers: {},
 
-    /** api: config[sketchSymbolizers]
+    /** api: config[azimuthSymbolizers]
      *  ``Object``
      *  (optional) Styles of the features drawn on the map when measuring
-     *  segments, such as azimuths. If provided they will override the default
+     *  azimuths. If provided they will override the default
      *  styles. Possible symbolizer types are "Point", "Line" and "Polygon".
      *  See ``symbolizers`` for an example.
      */
-    sketchSymbolizers: {},
+    azimuthSymbolizers: {},
 
     /** private: method[constructor]
      */
@@ -241,7 +241,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         var styleMap = new OpenLayers.StyleMap({
             "default": new OpenLayers.Style(null, {
                 rules: [new OpenLayers.Rule({
-                    symbolizer: Ext.applyIf(this.symbolizers, {
+                    symbolizer: Ext.apply({
                         "Point": {
                             pointRadius: 4,
                             graphicName: "square",
@@ -264,7 +264,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             fillColor: "white",
                             fillOpacity: 0.3
                         }
-                    })
+                    }, this.symbolizers)
                 })]
             })
         });
@@ -344,7 +344,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     createSegmentMeasureControl: function() {
         // style the sketch fancy
-        var sketchSymbolizers = Ext.applyIf(this.sketchSymbolizers, {
+        var azimuthSymbolizers = Ext.apply({
             "Point": {
                 pointRadius: 6,
                 graphicName: "cross",
@@ -365,10 +365,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 strokeColor: "#FF0000",
                 fillOpacity: 0
             }
-        });
+        }, this.azimuthSymbolizers);
         var style = new OpenLayers.Style();
         style.addRules([
-            new OpenLayers.Rule({symbolizer: sketchSymbolizers})
+            new OpenLayers.Rule({symbolizer: azimuthSymbolizers})
         ]);
         var styleMap = new OpenLayers.StyleMap({"default": style});
         var control = new cgxp.plugins.Measure.SegmentMeasureControl({
