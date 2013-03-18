@@ -61,7 +61,23 @@ OpenLayers.inherit(Map, cgxp.api.Map, {
                         group: 'background'
                     }
                 ]
-            },{
+            }, {
+                source: 'olsource',
+                type: "OpenLayers.Layer.TMS",
+                args: [
+                    OpenLayers.i18n('Plan cadastral'),
+                    ['http://tile1-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile2-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile3-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile4-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile5-sitn.ne.ch/tilecache_new/tilecache.cgi/'],
+                    {
+                        layername: 'plan_cadastral_c2c',
+                        type:'png; mode=24bit',
+                        serverResolutions: [250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.125,0.0625],
+                        maxExtent: new OpenLayers.Bounds(420000,30000,900000,360000),
+                        tileOrigin: new OpenLayers.LonLat(420000,30000),
+                        ref: 'plan_cadastral',
+                        group: 'background'
+                    }
+                ]
+            }, {
                 source: "olsource",
                 type: "OpenLayers.Layer.TMS",
                 args: [
@@ -143,7 +159,23 @@ OpenLayers.inherit(XMap, cgxp.api.Map, {
                         group: 'background'
                     }
                 ]
-            },{
+            }, {
+                source: 'olsource',
+                type: "OpenLayers.Layer.TMS",
+                args: [
+                    OpenLayers.i18n('Plan cadastral'),
+                    ['http://tile1-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile2-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile3-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile4-sitn.ne.ch/tilecache_new/tilecache.cgi/', 'http://tile5-sitn.ne.ch/tilecache_new/tilecache.cgi/'],
+                    {
+                        layername: 'plan_cadastral_c2c',
+                        type:'png; mode=24bit',
+                        serverResolutions: [250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.125,0.0625],
+                        maxExtent: new OpenLayers.Bounds(420000,30000,900000,360000),
+                        tileOrigin: new OpenLayers.LonLat(420000,30000),
+                        ref: 'plan_cadastral',
+                        group: 'background'
+                    }
+                ]
+            }, {
                 source: "olsource",
                 type: "OpenLayers.Layer.TMS",
                 args: [
@@ -174,7 +206,9 @@ OpenLayers.inherit(XMap, cgxp.api.Map, {
             // configuration of all tool plugins for this application
             tools: [
             {
-                ptype: "cgxp_mapopacityslider"
+                ptype: "cgxp_mapopacityslider",
+                orthoRef: "ortho",
+                defaultBaseLayerRef: "plan"
             },
             {
                 ptype: "gxp_zoomtoextent",
@@ -216,7 +250,8 @@ window.onload = function() {
         zoom: 8,
         layerSwitcher: true,
         //layerSwitcherExpanded: true,
-        layers: ['parcelles', 'batiments_ofs']
+        layers: ['parcelles', 'batiments_ofs'],
+        backgroundLayers: ['ortho', 'plan_cadastral', 'plan']
         //overview: true
         //overviewExpanded: true
     });

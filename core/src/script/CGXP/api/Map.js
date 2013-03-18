@@ -99,28 +99,61 @@ cgxp.api.Map.prototype = {
      *  Adapts the config before creating the map.
      */
     adaptConfig: function(config) {
-        // remove any controls if not used by user
+        var userConfig = this.userConfig;
+
+        // adapt the controls array in the config based
+        // on the user config
         function getBy(array, property, match) {
             var test = (typeof match.test == "function");
             var found = OpenLayers.Array.filter(array, function(item) {
-                return item[property] == match || (test && match.test(item[property]));
+                return item[property] == match ||
+                    (test && match.test(item[property]));
             });
             return found;
         }
         var switcher = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.LayerSwitcher')[0];
-        if (!this.userConfig.addLayerSwitcher && switcher) {
+        if (!userConfig.addLayerSwitcher && switcher) {
             OpenLayers.Util.removeItem(config.controls, switcher);
         }
         var overview = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.OverviewMap')[0];
-        if (!this.userConfig.addMiniMap && overview) {
+        if (!userConfig.addMiniMap && overview) {
             OpenLayers.Util.removeItem(config.controls, overview);
         }
         var mousePos = getBy(config.controls, "CLASS_NAME",
             'OpenLayers.Control.MousePosition')[0];
-        if (!this.userConfig.showCoords && mousePos) {
+        if (!userConfig.showCoords && mousePos) {
             OpenLayers.Util.removeItem(config.controls, mousePos);
+        }
+
+        // adapt the layers array in the config based on
+        // the user config
+        function getLayerByRef(ref) {
+            var i, j, layer, layerArgs, layers = config.layers;
+            for (i = 0; i < layers.length; ++i) {
+                layer = layers[i];
+                layerArgs = layer.args;
+                if (layerArgs) {
+                    for (j = 0; j < layerArgs.length; ++j) {
+                        if (layerArgs[j].ref == ref) {
+                            return layer;
+                        }
+                    }
+                }
+            }
+        }
+        if (userConfig.backgroundLayers) {
+            var i,
+                layerRefs = userConfig.backgroundLayers,
+                layer, layers = [];
+            for (i = 0; i < layerRefs.length; ++i) {
+                layer = getLayerByRef(layerRefs[i]);
+                if (layer) {
+                    layers.push(layer);
+                }
+            }
+            config.layers = layers;
         }
     },
 
@@ -135,11 +168,20 @@ cgxp.api.Map.prototype = {
     adaptConfigForViewer: function(config) {
         var newConfig = OpenLayers.Util.extend({}, config);
         OpenLayers.Util.extend(newConfig , this.userConfig);
-        // we use the dom id also to give an id to the mappanel in the viewer
+
+        // we use the dom id also to give an id to the mappanel
+        // in the viewer
         newConfig.id = this.userConfig.div + "-map";
         newConfig.tbar = [];
 
         this.adaptConfig(newConfig);
+
+        // if backgroundLayers is set we reverse the layers
+        // array for the layer order to match what the user
+        // provided.
+        if (newConfig.backgroundLayers) {
+            newConfig.layers.reverse();
+        }
 
         return newConfig;
     },
@@ -174,14 +216,14 @@ cgxp.api.Map.prototype = {
      *  Convenience method to create a map from a config.
      */
     initMapFromConfig: function(config) {
+        this.adaptConfig(config);
+
         var i;
         for (i = 0; i < config.layers.length; i++) {
             var layer = config.layers[i];
             config.layers[i] = this.createBaseLayerFromConfig(layer);
             config.layers[i].opacity = 1;
         }
-
-        this.adaptConfig(config);
 
         OpenLayers.Util.extend(config, this.userConfig);
 
