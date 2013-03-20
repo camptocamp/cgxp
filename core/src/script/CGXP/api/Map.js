@@ -246,7 +246,8 @@ cgxp.api.Map.prototype = {
     createOverlayLayer: function(layer, external) {
         var params = {
             layers: layer,
-            format: 'image/png'
+            format: 'image/png',
+            transparent: true
         };
         if (external) {
             params.external = true;
