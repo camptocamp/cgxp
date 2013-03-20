@@ -205,7 +205,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
                                               {'layer': newLayer});
                     layerAdded = true;
 
-                    if(this.wmsbrowser.zoomOnLayerAdded) {
+                    if (this.wmsbrowser.zoomOnLayerAdded) {
                         // zoom to added layer extent
                         // (in the current map projection)
                         var bounds = OpenLayers.Bounds.fromArray(

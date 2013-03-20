@@ -134,12 +134,21 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             var layers = [];
             Ext.each(this.target.mapPanel.map.layers, function(layer) {
                 if (layer.visibility && layer.group == 'background') {
-                    layers.push(layer.clone());
+                    layer = layer.clone();
+                    layer.setVisibility(true);
+                    layers.push(layer);
                 }
             });
             var config = {
                 border: false,
-                zoomOnLayerAdded: true,
+                zoomOnLayerAdded: false,
+                zoomToRecordLLBBox: function() {},
+                resetLayerPreview: function() {
+                    if (this.layerPreview) {
+                        this.mapPanelPreview.map.removeLayer(this.layerPreview);
+                        this.layerPreview = null;
+                    }
+                },
                 closeOnLayerAdded: false,
                 mapPanelPreviewOptions: {
                     height: 170,
@@ -184,6 +193,14 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         // with a single OpenLayers layer
         var layer = o.layer;
 
+        var index = this.target.mapPanel.layers.getCount();
+        while (this.target.mapPanel.map.layers[index-1] == layer ||
+            this.target.mapPanel.map.layers[index-1] instanceof
+                OpenLayers.Layer.Vector && index > 0) {
+            index--;
+        }
+        this.target.mapPanel.map.setLayerIndex(layer, index);
+
         var layerTitles = layer.name.split(',');
         var children = [];
         Ext.each(layer.params.LAYERS, function(layerName, idx) {
@@ -199,8 +216,10 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         var urlObj = OpenLayers.Util.createUrlObject(layer.url, {
             ignorePort80: true
         });
-        var groupName = urlObj.host + (urlObj.port ? ':'+urlObj.port : '') + urlObj.pathname;
-
+        var groupName = this.wmsBrowser.treePanel.root.
+                childNodes[0].attributes.text;
+        
+        // Use internalWMS: true to have the same UI as them.
         this.target.tools[this.layerTreeId].tree.addGroup({
             displayName: groupName,
             isExpanded: true,
