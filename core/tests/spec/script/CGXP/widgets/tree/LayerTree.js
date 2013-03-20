@@ -14,6 +14,7 @@ describe('cgxp.tree.LayerTree', function() {
     beforeEach(function() {
         clock = sinon.useFakeTimers();
         var map = new OpenLayers.Map({
+            zoomMethod: null,
             layers: [
                 new OpenLayers.Layer('', {isBaseLayer: true})
             ]

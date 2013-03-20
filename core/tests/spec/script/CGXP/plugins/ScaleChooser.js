@@ -26,7 +26,9 @@ describe('plugins.ScaleChooser', function() {
     describe('when calling addActions', function() {
         var combo, map;
         beforeEach(function() {
-            map = new OpenLayers.Map();
+            map = new OpenLayers.Map({
+                zoomMethod: null
+            });
             var layer = new OpenLayers.Layer('', {
                 isBaseLayer: true,
                 // the layer actually gets scales
@@ -60,7 +62,9 @@ describe('plugins.ScaleChooser', function() {
     describe('when selecting a value in the combo', function() {
         var map, combo;
         beforeEach(function() {
-            map = new OpenLayers.Map();
+            map = new OpenLayers.Map({
+                zoomMethod: null
+            });
             var layer = new OpenLayers.Layer('', {
                 isBaseLayer: true,
                 // the layer actually gets scales
