@@ -489,7 +489,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     break;
                 }
             }
-        }, this)
+        }, this);
     },
 
     /** private: method[setMessage]
