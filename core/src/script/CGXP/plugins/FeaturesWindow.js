@@ -101,6 +101,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     themes: null,
 
+    /** api: config[windowOptions]
+     * ``Object`` Additional options given to the window constructor.
+     */
+    windowOptions: {},
+
     /** private: attribute[featuresWindow]
      *  ``Ext.Window``
      *  The window (popup) in which the results are shown.
@@ -341,7 +346,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                 this.messageItem.setText('&nbsp;');
             }
 
-            this.featuresWindow = new Ext.Window({
+            this.featuresWindow = new Ext.Window(Ext.apply({
                 layout: 'fit',
                 width: 300,
                 height: 280,
@@ -355,7 +360,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     scope: this
                 },
                 bbar: bbar
-            });
+            }, this.windowOptions));
 
         } else {
             this.featuresWindow.add(this.grid);
