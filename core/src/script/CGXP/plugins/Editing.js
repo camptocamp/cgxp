@@ -223,12 +223,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }
         });
         for (var i in layers) {
-            size++;
-            // only add an item for new editable layers
-            if (alreadyAvailableItems.indexOf(parseInt(i)) == -1) {
-                this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
-                    menu.add(this.createMenuItem(layer, geometryType));
-                }).createDelegate(this, [layers[i]], true));
+            if (layers.hasOwnProperty(i)) {
+                size++;
+                // only add an item for new editable layers
+                if (alreadyAvailableItems.indexOf(parseInt(i, 10)) == -1) {
+                    this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
+                        menu.add(this.createMenuItem(layer, geometryType));
+                    }).createDelegate(this, [layers[i]], true));
+                }
             }
         }
         this.win.setDisabled(size === 0);
@@ -410,8 +412,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
                 var layerIds = [];
-                for (var i in self.getEditableLayers()) {
-                    layerIds.push(i);
+                var editLayers = self.getEditableLayers();
+                for (var i in editLayers) {
+                    if (editLayers.hasOwnProperty(i)) {
+                        layerIds.push(i);
+                    }
                 }
                 if (layerIds.length === 0) {
                     // we need to reset the cursor manually
