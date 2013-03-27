@@ -98,6 +98,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     windowOptions: {},
 
+    /** api: config[readParams]
+     *  ``Object``
+     *  Default params given to the read request
+     */
+    readParams: {},
+
     /** private: property[editingLayer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector editing layer
@@ -435,14 +441,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     return;
                 }
                 options.url = baseURL + layerIds.join(',');
+                options.params = Ext.apply(options.params || {}, self.readParams);
                 if (self.floorSliderId) {
                     var floorSlider = self.target.tools[this.floorSliderId];
                     if (floorSlider) {
                         var floor = floorSlider.getFloor();
                         if (floor !== undefined) {
-                            if (!options.params) {
-                                options.params = {};
-                            }
                             options.params.floor__eq = floorSlider.getFloor();
                         }
                     }
