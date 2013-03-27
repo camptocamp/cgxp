@@ -87,6 +87,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
+    /** api: config[floorSliderId]
+     *  ``String``
+     *  Id of the floorSlider tool.
+     */
+    floorSliderId: null,
+
     /** api: config[windowOptions]
      * ``Object`` Additional options given to the window constructor.
      */
@@ -429,6 +435,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     return;
                 }
                 options.url = baseURL + layerIds.join(',');
+                if (self.floorSliderId) {
+                    var floorSlider = self.target.tools[this.floorSliderId];
+                    if (floorSlider.getFloor() !== undefined) {
+                        options.params.floor__eq = floorSlider.getFloor();
+                    }
+                }
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
