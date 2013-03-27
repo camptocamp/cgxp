@@ -387,7 +387,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     closeEditing: function() {
         // avoid reentrance
-        if(!arguments.callee._in) {
+        if (!arguments.callee._in) {
             arguments.callee._in = true;
             if (this.attributePopup) {
                 this.attributePopup.hide();
@@ -448,14 +448,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     self.closeEditing();
                     OpenLayers.Protocol.HTTP.prototype.read.call(this, options);
                 }
-                if(self.editorGrid && self.editorGrid.dirty) {
+                if (self.editorGrid && self.editorGrid.dirty) {
                     Ext.Msg.show({
                         title: self.editorGrid.cancelMsgTitle,
                         msg: self.editorGrid.cancelMsg,
                         buttons: Ext.Msg.YESNO,
                         icon: Ext.MessageBox.QUESTION,
                         fn: function(button) {
-                            if(button === "yes") {
+                            if (button === "yes") {
                                 doRead.call(this, options);
                             } else {
                                 // we need to reset the cursor manually
