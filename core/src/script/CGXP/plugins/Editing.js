@@ -87,6 +87,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
+    /** api: config[windowOptions]
+     * ``Object`` Additional options given to the window constructor.
+     */
+    windowOptions: {},
+
     /** private: property[editingLayer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector editing layer
@@ -557,7 +562,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var first = false; // first time we show the popup
         if (!this.attributePopup) {
             first = true;
-            this.attributePopup = new Ext.Window({
+            this.attributePopup = new Ext.Window(Ext.apply({
                 map: this.map,
                 height: 150,
                 width: 300,
@@ -567,7 +572,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 unpinnable: false,
                 draggable: true,
                 border: false
-            });
+            }, this.windowOptions));
         }
         this.attributePopup.add(this.editorGrid);
         this.attributePopup.show();
