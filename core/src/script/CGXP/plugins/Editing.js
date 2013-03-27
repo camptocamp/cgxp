@@ -437,8 +437,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 options.url = baseURL + layerIds.join(',');
                 if (self.floorSliderId) {
                     var floorSlider = self.target.tools[this.floorSliderId];
-                    if (floorSlider.getFloor() !== undefined) {
-                        options.params.floor__eq = floorSlider.getFloor();
+                    if (floorSlider) {
+                        var floor = floorSlider.getFloor();
+                        if (floor !== undefined) {
+                            if (!options.params) {
+                                options.params = {};
+                            }
+                            options.params.floor__eq = floorSlider.getFloor();
+                        }
                     }
                 }
                 // ensure that there's no unsaved modification before sending
