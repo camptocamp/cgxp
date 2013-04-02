@@ -20,6 +20,7 @@
  * @include CGXP/widgets/tool/Button.js
  * @include CGXP/widgets/tool/Window.js
  * @include CGXP/widgets/RedLiningPanel.js
+ * @include CGXP/plugins/ToolActivateMgr.js
  * @requires FeatureEditing/ux/widgets/FeatureEditingControler.js
  * @include FeatureEditing/ux/data/FeatureEditingDefaultStyleStore.js
  * @include Styler/ux/LayerStyleManager.js
@@ -73,6 +74,13 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     toggleGroup: null,
 
+    /** api: config[activateToggleGroup]
+     *  ``String``
+     *  The name of the activate toggle group this tool is in.
+     *  Default is "clickgroup".
+     */
+    activateToggleGroup: "clickgroup",
+
     /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
@@ -85,6 +93,10 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     layerManagerUrl: null,
 
+    /** private: config[autoActivate]
+     */
+    autoActivate: false,
+
     /** private: property[redliningPanel]
      */
     redliningPanel: null,
@@ -96,9 +108,27 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
     /* i18n*/
     redliningText: "Redlining",
 
+    /** private: method[deactivate]
+     */
+    deactivate: function() {
+        if (this.active) {
+            var actions = this.redliningPanel.controler.actions;
+            for (var i=0; i < actions.length; i++) {
+                if (actions[i].control) {
+                    actions[i].control.deactivate();
+                }
+            }
+            this.redliningWindow.hide();
+        }
+        return cgxp.plugins.Redlining.superclass.deactivate.call(this);
+    },
+
     /** private: method[init]
      */
     init: function() {
+        if (this.activateToggleGroup) {
+            cgxp.plugins.ToolActivateMgr.register(this);
+        }
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
 
@@ -134,22 +164,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-
         /**
-         * Method: deactivateRedlining
-         * Deactivates all redlining controls
-         */
-        // See monkey patch (end of this file)
-        var deactivateRedlining = function() {
-            var actions = this.redliningPanel.controler.actions;
-            for (var i=0; i < actions.length; i++) {
-                if (actions[i].control) {
-                    actions[i].control.deactivate();
-                }
-            }
-        }.createDelegate(this);
-
-        /** 
          * Property: redliningWindow
          */
         this.redliningWindow = new cgxp.tool.Window({
@@ -164,13 +179,17 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
                 toggleGroup: this.toggleGroup,
                 window: this.redliningWindow
             }, this.actionConfig))
-        );  
+        );
         button.on({
             'toggle': function(button) {
                 if (!button.pressed) {
-                    deactivateRedlining();
-                }   
-            }   
+                    this.deactivate();
+                }
+                else {
+                    this.activate();
+                }
+            },
+            scope: this
         });
         return cgxp.plugins.Redlining.superclass.addActions.apply(this, [button]);
     }
