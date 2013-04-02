@@ -52,7 +52,10 @@ cgxp.RedLiningPanel = Ext.extend(
         attributes: {
             point: {},
             line: {},
-            polygon: {}
+            polygon: {
+                'isCircle': function(val) { return val == 'true'; },
+                'isBox': function(val) { return val == 'true'; }
+            }
         },
         accuracy: 0.1,
         styleAttributes: {
@@ -72,9 +75,7 @@ cgxp.RedLiningPanel = Ext.extend(
             polygon: {
                 'fillColor': true,
                 'strokeColor': true,
-                'strokeWidth': parseFloat,
-                'isCircle': function(val) { return val == 'true'; },
-                'isBox': function(val) { return val == 'true'; }
+                'strokeWidth': parseFloat
             }
         }
     }),
