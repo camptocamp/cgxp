@@ -85,13 +85,19 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
      */
     layerManagerUrl: null,
 
+    /** private: property[redliningPanel]
+     */
     redliningPanel: null,
 
+    /** private: property[redliningWindow]
+     */
     redliningWindow: null,
 
     /* i18n*/
     redliningText: "Redlining",
 
+    /** private: method[init]
+     */
     init: function() {
         cgxp.plugins.Redlining.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
@@ -99,8 +105,10 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
         GeoExt.ux.LayerManagerExportWindow.prototype.baseUrl = this.layerManagerUrl;
     },
 
+    /** private: method[viewerReady]
+     */
     viewerReady: function() {
-        /* instanciating the RedLiningPanel at the 'ready' stage because the 
+        /* instanciating the RedLiningPanel at the 'ready' stage because the
            actions depends of the existence of the layer, which can only be
            added now to be correctly placed above the background layers */
         this.redliningPanel = new cgxp.RedLiningPanel({
@@ -109,16 +117,16 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
             popupOptions: {
                 unpinnable: false,
                 draggable: true
-            },  
+            },
             selectControlOptions: {
                 toggle: false,
                 clickout: false
-            },  
+            },
             'import': false,
             bodyStyle: 'display: none',
             border: false
         });
-        /* pushing the RedLiningPanel with all the actions into the existing but 
+        /* pushing the RedLiningPanel with all the actions into the existing but
            empty redliningWindow */
         this.redliningWindow.add(this.redliningPanel);
     },
@@ -147,7 +155,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
         this.redliningWindow = new cgxp.tool.Window({
             width: 240,
             items: []
-        }); 
+        });
 
         var button = new cgxp.tool.Button(
             new Ext.Action(Ext.apply({
