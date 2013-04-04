@@ -255,7 +255,7 @@ GeoExt.Lang.add("de", {
         deleteButtonText: "Löschen",
         deleteButtonTooltip: "Dieses Objekt löschen",
         cancelMsgTitle: "Das Löschen abbrechen?",
-        cancelMsg: "Es gibt ungesicherte Änderungen. Sind Sie sicher dass Sie abbrechen wollen?",
+        cancelMsg: "Es gibt ungesicherte Änderungen. Sind Sie sicher, dass Sie abbrechen wollen?",
         cancelButtonText: "Abbrechen",
         cancelButtonTooltip: "Die Edition abbrechen und die Änderungen nicht speichern",
         saveButtonText: "Speichern",
