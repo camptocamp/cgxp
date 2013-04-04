@@ -385,20 +385,20 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
                     // removes 0-length lines
                     if (f.geometry instanceof OpenLayers.Geometry.LineString &&
-                        (!b || (b.getWidth() == 0 && b.getHeight() == 0))) {
+                        (!b || (b.getWidth() === 0 && b.getHeight() === 0))) {
                         continue;
                     }
 
                     // removes flat polygons
                     if ((f.geometry instanceof OpenLayers.Geometry.Polygon ||
                         f.geometry instanceof OpenLayers.Geometry.MultiPolygon) &&
-                        f.geometry.getArea() == 0) {
+                        f.geometry.getArea() === 0) {
                         continue;
                     }
 
                     features.push(f);
                 }
-                if (features.length == 0) {
+                if (features.length === 0) {
                     return false;
                 }
                 layer.features = features;
@@ -440,7 +440,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         OpenLayers.Util.getParameterString(encodedLayer.customParams));
                 delete encodedLayer.customParams;
             }
-            Ext.apply(encodedLayer, 
+            Ext.apply(encodedLayer,
                 encodedLayer.baseURL == this.mapserverURL ?
                 this.encodeLayer : this.encodeExternalLayer);
         }, this);
@@ -483,7 +483,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         if (printExport.hasOwnProperty(dataset)) {
                             // TODO, implement paging in case of too many result to display on only one page
                             if (printExport[dataset].table.data.length > 0 &&
-                                printExport[dataset].table.data[0].col0 != '') {
+                                printExport[dataset].table.data[0].col0 !== '') {
                                 var page = new GeoExt.data.PrintPage({
                                     printProvider: printProvider
                                 });
@@ -503,7 +503,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             }
-        }.createDelegate(this));
+        }, this);
 
         var translate_name = function(record) {
             record.set('label', OpenLayers.i18n(record.get('name')));
