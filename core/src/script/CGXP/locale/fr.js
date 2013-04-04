@@ -260,12 +260,12 @@ GeoExt.Lang.add("fr", {
     },
 
     "GeoExt.ux.FeatureEditorGrid.prototype": {
-        deleteMsgTitle: "Supprimer l'objet?",
-        deleteMsg: "Êtes-vous sûr de vouloir supprimer cet objet?",
+        deleteMsgTitle: "Supprimer l'objet ?",
+        deleteMsg: "Êtes-vous sûr de vouloir supprimer cet objet ?",
         deleteButtonText: "Supprimer",
         deleteButtonTooltip: "Supprimer cet objet",
-        cancelMsgTitle: "Annuler la suppression?",
-        cancelMsg: "Il y a des modifications non-enregistrées. Êtes-vous sûr de vouloir annuler?",
+        cancelMsgTitle: "Annuler la suppression ?",
+        cancelMsg: "Il y a des modifications non-enregistrées. Êtes-vous sûr de vouloir annuler ?",
         cancelButtonText: "Annuler",
         cancelButtonTooltip: "Arrêter l'édition, ne pas enregistrer les modifications",
         saveButtonText: "Enregistrer",
