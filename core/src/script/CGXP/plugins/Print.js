@@ -211,6 +211,12 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     fields: ['title', 'comment', 'legend'],
 
+    /** api: config[floorSliderId]
+     *  ``String``
+     *  Id of the floorSlider tool.
+     */
+    floorSliderId: null,
+
     /* i18n */
     printTitle: "Printing",
     titlefieldText: "Title",
@@ -443,6 +449,15 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
             options.legend = this.includeLegend ?
                              this.target.tools[this.legendPanelId].legendPanel : null;
+            if (this.floorSliderId) {
+                var floorSlider = this.target.tools[this.floorSliderId];
+                if (floorSlider) {
+                    var floor = floorSlider.getFloor();
+                    printProvider.customParams.floor =
+                        floor !== undefined ? floor :
+                        cgxp.FloorSlider.prototype.skyText;
+                }
+            }
 
             // need to define the table object even for page0 as java expects it
             pages[0].customParams = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
