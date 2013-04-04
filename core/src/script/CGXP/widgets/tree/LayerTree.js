@@ -86,7 +86,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  Optional global configuration for WMS layers
      */
     wmsOptions: null,
-    
+
     /** api: config[wmtsOptions]
      *  ``Object``
      *  Optional global configuration for WMTS layers
@@ -252,9 +252,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg group: ``Object`` The group config object
      *  :arg internalWMS: ``Boolean``
      *  :arg scroll: ``Boolean``
+     *  :arg visibility: ``Boolean``
      *  :returns: ``Ext.tree.TreeNode``
      */
-    addGroup: function(group, internalWMS) {
+    addGroup: function(group, internalWMS, visibility) {
         var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
         function addNodes(children, parentNode, level) {
             if (!level) {
@@ -347,7 +348,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             cls: 'x-tree-node-theme',
             loaded: true,
             uiProvider: 'layer',
-            checked: !!group.isChecked,
+            checked: visibility !== undefined ? visibility : !!group.isChecked,
             expanded: group.isExpanded,
             layer: group.layer,
             allOlLayers: group.allOlLayers,
@@ -1011,13 +1012,19 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.layer = layer;
                 group.allLayers = result.allLayers.reverse();
                 group.allOlLayers = [layer];
-                layer.params.LAYERS = layers || result.checkedLayers;
+                // on first level layer we only use the opacity
+                if (!group.children) {
+                    layer.params.LAYERS = result.allLayers;
+                }
+                else {
+                    layer.params.LAYERS = layers || result.checkedLayers;
+                }
                 this.mapPanel.layers.insert(index,
                     new this.recordType({
                         disclaimer: result.disclaimer,
                         layer: layer
                     }, layer.id));
-                groupNode = this.addGroup(group, true);
+                groupNode = this.addGroup(group, true, visibility);
             }
             else {
                 result = {
@@ -1031,7 +1038,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
-                groupNode = this.addGroup(group, false);
+                groupNode = this.addGroup(group, false, visibility);
                 group.node = groupNode;
             }
             if (scroll) {
@@ -1080,8 +1087,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         if (layer) {
             layer.setOpacity(opacity || 1);
-            if (layer.params.LAYERS.length > 0) {
-                layer.setVisibility(visibility !== false);
+            if (visibility !== undefined) {
+                layer.setVisibility(visibility);
+            }
+            else if (groupNode.childNodes.length === 0) {
+                layer.setVisibility(groupNode.attributes.checked);
+            }
+            else if (layer.params.LAYERS.length > 0) {
+                layer.setVisibility(true);
             }
         }
 
@@ -1140,7 +1153,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.initialState['group_opacity_' + t] : 1;
             var layers = this.initialState['group_layers_' + t] ?
                 this.initialState['group_layers_' + t] : [];
-            var visibility = layers !== '' ? true : false;
+            if (!OpenLayers.Util.isArray(layers)) {
+                layers = [layers];
+            }
+            var visibility = layers.length !== 0 ? true : false;
             var group = this.findGroupByName(t);
             this.loadGroup(group, layers, opacity, visibility);
         }, this);
@@ -1173,7 +1189,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }
             if (group.attributes.internalWMS) {
-                if (layer.params.LAYERS.length > 0) {
+                if (layer.params.LAYERS.length > 0 && layer.visibility) {
                     state['group_layers_' + id] = [layer.params.LAYERS].join(',');
                 }
             }
