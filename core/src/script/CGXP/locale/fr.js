@@ -273,5 +273,4 @@ GeoExt.Lang.add("fr", {
         nameHeader: "Nom",
         valueHeader: "Valeur"
     }
-
 });
