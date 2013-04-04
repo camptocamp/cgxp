@@ -23,6 +23,7 @@
  * @include OpenLayers/Format/GML.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
  * @include GeoExt/widgets/Action.js
+ * @include CGXP/plugins/ToolActivateMgr.js
  */
 
 
@@ -170,6 +171,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     autoDeactivate: true,
 
+    /** api: config[activateToggleGroup]
+     *  ``String``
+     *  The name of the activate toggle group this tool is in.
+     *  Default is "clickgroup".
+     */
+    activateToggleGroup: "clickgroup",
+
     /* i18n */
     tooltipText: 'Query the map',
     menuText: 'Query the map',
@@ -178,10 +186,37 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     unqueriedLayerText: "This Layer only support single click query.",
     queryResultMessage: "Use the {key} key to perform a rectangular selection.",
 
+    /** private: method[activate]
+     */
+    activate: function() {
+        if (!this.active) {
+            this.clickWMSControl.activate();
+        }
+        return cgxp.plugins.GetFeature.superclass.activate.call(this);
+    },
+
+    /** private: method[deactivate]
+     */
+    deactivate: function() {
+        if (this.active) {
+            this.clickWMSControl.deactivate();
+        }
+        return cgxp.plugins.GetFeature.superclass.deactivate.call(this);
+    },
+
+    /** private: method[init]
+     */
+    init: function(target) {
+        if (this.activateToggleGroup) {
+            cgxp.plugins.ToolActivateMgr.register(this);
+        }
+        this.buildControls(target.mapPanel.map);
+        cgxp.plugins.GetFeature.superclass.init.call(this, target);
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
-        this.buildControls();
         if (this.actionTarget) {
             this.action = new GeoExt.Action(Ext.applyIf({
                 allowDepress: true,
@@ -200,7 +235,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /** private: method[buildControls]
      *  Create the WMS and WFS controls.
      */
-    buildControls: function() {
+    buildControls: function(map) {
         function browse(node, config) {
             config = config || {};
             for (var i = 0, leni = node.length; i < leni; i++) {
@@ -217,8 +252,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             this.themes.external || []);
         this.layersConfig = browse(themes);
 
-        this.buildWMSControl();
-        this.buildWFSControls();
+        this.buildWMSControl(map);
+        this.buildWFSControls(map);
     },
 
     /** private method[getQueryableWMSLayers]
@@ -248,7 +283,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /** private method[createWMSControl]
      *  Create the WMS GetFeatureInfo control.
      */
-    buildWMSControl: function() {
+    buildWMSControl: function(map) {
         var events = this.events;
         var self = this;
 
@@ -259,7 +294,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             maxFeatures: this.maxFeatures || 100,
             queryVisible: true,
             drillDown: true,
-            autoActivate: true,
+            autoActivate: false,
 
             findLayers: function() {
                 // OpenLayers.Control.WMSGetFeatureInfo.prototype.findLayers
@@ -411,16 +446,16 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             this.down = null;
             return result;
         };
-        this.target.mapPanel.map.addControl(this.clickWMSControl);
+        map.addControl(this.clickWMSControl);
     },
 
     /** private method[createWFSControls]
      *  Create the WFS GetFeature control.
      */
-    buildWFSControls: function() {
+    buildWFSControls: function(map) {
         var protocol = new OpenLayers.Protocol.WFS({
             geometryName: this.geometryName,
-            srsName: this.target.mapPanel.map.getProjection(),
+            srsName: map.getProjection(),
             formatOptions: {
                 featureNS: 'http://mapserver.gis.umn.edu/mapserver',
                 autoconfig: false
@@ -428,7 +463,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         });
         var externalProtocol = new OpenLayers.Protocol.WFS({
             geometryName: this.geometryName,
-            srsName: this.target.mapPanel.map.getProjection(),
+            srsName: map.getProjection(),
             formatOptions: {
                 featureNS: 'http://mapserver.gis.umn.edu/mapserver',
                 autoconfig: false
@@ -512,7 +547,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             });
             // don't convert pixel to box, let the WFS GetFeature to query
             this.toolWFSControl.click = true;
-            this.target.mapPanel.map.addControl(this.toolWFSControl);
+            map.addControl(this.toolWFSControl);
         }
         this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
             target: this.target,
@@ -529,7 +564,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             eventListeners: listeners,
             request: request
         });
-        this.target.mapPanel.map.addControl(this.ctrlWFSControl);
+        map.addControl(this.ctrlWFSControl);
     },
 
     /** private: method[getLayers]

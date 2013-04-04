@@ -274,9 +274,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  :arg group: ``Object`` The group config object
      *  :arg internalWMS: ``Boolean``
      *  :arg scroll: ``Boolean``
+     *  :arg visibility: ``Boolean``
      *  :returns: ``Ext.tree.TreeNode``
      */
-    addGroup: function(group, internalWMS) {
+    addGroup: function(group, internalWMS, visibility) {
         var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
         function addNodes(children, parentNode, level) {
             if (!level) {
@@ -342,7 +343,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }
 
-        var actions = internalWMS ? [{
+        // internalWMS or layer leaf
+        var actions = internalWMS || group.type ? [{
             action: "opacity",
             qtip: this.opacityText
         }] : [];
@@ -368,14 +370,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             cls: 'x-tree-node-theme',
             loaded: true,
             uiProvider: 'layer',
-            checked: !!group.isChecked,
+            checked: visibility !== undefined ? visibility : !!group.isChecked,
             expanded: group.isExpanded,
             layer: group.layer,
             allOlLayers: group.allOlLayers,
-            component: internalWMS ? this.getOpacitySlider(group) : null,
+            component: internalWMS || group.type ? this.getOpacitySlider(group) : null,
+            hasOpacity: internalWMS || group.type,
             actions: actions
         };
-        if (internalWMS) {
+        // internalWMS or layer leaf
+        if (internalWMS || group.type) {
             groupNodeConfig.nodeType = 'cgxp_layer';
         }
         this.addMetadata(group, groupNodeConfig, true);
@@ -1074,7 +1078,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var index = this.mapPanel.layers.getCount();
             while (this.mapPanel.map.layers[index-1] instanceof OpenLayers.Layer.Vector && index > 0) { index--; }
             var result;
-            if (group.isInternalWMS !== false) {
+            if (group.isInternalWMS || group.type == 'internal WMS') {
                 var params = {
                     layers: [],
                     format: 'image/png',
@@ -1115,13 +1119,19 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.layer = layer;
                 group.allLayers = result.allLayers.reverse();
                 group.allOlLayers = [layer];
-                layer.params.LAYERS = layers || result.checkedLayers;
+                // on first level layer we only use the opacity
+                if (!group.children) {
+                    layer.params.LAYERS = result.allLayers;
+                }
+                else {
+                    layer.params.LAYERS = layers || result.checkedLayers;
+                }
                 this.mapPanel.layers.insert(index,
                     new this.recordType({
                         disclaimer: result.disclaimer,
                         layer: layer
                     }, layer.id));
-                groupNode = this.addGroup(group, true);
+                groupNode = this.addGroup(group, true, visibility);
             }
             else {
                 result = {
@@ -1134,7 +1144,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 group.layers = result.checkedLayers;
                 group.allLayers = result.allLayers;
                 group.allOlLayers = result.allOlLayers;
-                groupNode = this.addGroup(group, false);
+                groupNode = this.addGroup(group, false, visibility);
 
                 for (var url in this.wmtsInfos) {
                     if (this.wmtsInfos.hasOwnProperty(url)) {
@@ -1191,8 +1201,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         if (layer) {
             layer.setOpacity(opacity || 1);
-            if (layer.params.LAYERS.length > 0) {
-                layer.setVisibility(visibility !== false);
+            if (visibility !== undefined) {
+                layer.setVisibility(visibility);
+            }
+            else if (groupNode.childNodes.length === 0) {
+                layer.setVisibility(groupNode.attributes.checked);
+            }
+            else if (layer.params.LAYERS.length > 0) {
+                layer.setVisibility(true);
             }
         }
 
@@ -1251,7 +1267,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.initialState['group_opacity_' + t] : 1;
             var layers = this.initialState['group_layers_' + t] ?
                 this.initialState['group_layers_' + t] : [];
-            var visibility = layers !== '' ? true : false;
+            if (!OpenLayers.Util.isArray(layers)) {
+                layers = [layers];
+            }
+            var visibility = layers.length !== 0 ? true : false;
             var group = this.findGroupByName(t);
             this.loadGroup(group, layers, opacity, visibility);
         }, this);
@@ -1278,11 +1297,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var id = group.attributes.groupId;
             groups.push(id);
             var layer = group.layer;
-            if (group.attributes.internalWMS) {
+            if (group.attributes.hasOpacity) {
                 if (layer.opacity !== null && layer.opacity != 1) {
                     state['group_opacity_' + id] = layer.opacity;
                 }
-                if (layer.params.LAYERS.length > 0) {
+            }
+            if (group.attributes.internalWMS) {
+                if (layer.params.LAYERS.length > 0 && layer.visibility) {
                     state['group_layers_' + id] = [layer.params.LAYERS].join(',');
                 }
             }
