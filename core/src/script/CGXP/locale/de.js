@@ -247,5 +247,21 @@ GeoExt.Lang.add("de", {
         strokeWidthFieldText: "Breite",
         labelFieldText: "Text",
         fontSizeFieldText: "Grösse"
+    },
+
+    "GeoExt.ux.FeatureEditorGrid.prototype": {
+        deleteMsgTitle: "Dieses Objekt löschen?",
+        deleteMsg: "Wollen Sie dieses Objekt wirklich löschen?",
+        deleteButtonText: "Löschen",
+        deleteButtonTooltip: "Dieses Objekt löschen",
+        cancelMsgTitle: "Das Löschen abbrechen?",
+        cancelMsg: "Es gibt ungesicherte Änderungen. Sind Sie sicher dass Sie abbrechen wollen?",
+        cancelButtonText: "Abbrechen",
+        cancelButtonTooltip: "Die Edition abbrechen und die Änderungen nicht speichern",
+        saveButtonText: "Speichern",
+        saveButtonTooltip: "Die Änderungen speichern",
+        nameHeader: "Name",
+        valueHeader: "Wert"
     }
+
 });
