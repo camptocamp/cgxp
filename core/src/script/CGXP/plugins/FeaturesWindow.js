@@ -101,6 +101,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     themes: null,
 
+    /** api: config[windowOptions]
+     * ``Object`` Additional options given to the window constructor.
+     */
+    windowOptions: {},
+
     /** private: attribute[featuresWindow]
      *  ``Ext.Window``
      *  The window (popup) in which the results are shown.
@@ -213,6 +218,36 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         map.addLayer(this.vectorLayer);
     },
 
+    /** public: method[getDetail]
+     *  Create the details view of a feature,
+     *  Override this to change the details view
+     */
+    getDetail: function(feature) {
+        var detail = ['<table class="detail">'],
+            attributes = feature.attributes;
+        for (var k in attributes) {
+            if (attributes.hasOwnProperty(k) && attributes[k]) {
+                if (k == this.contentOverride) {
+                    detail.push(attributes[k].text);
+                    break; // exit for loop
+                } else {
+                    detail = detail.concat([
+                        '<tr>',
+                        '<th>',
+                        OpenLayers.i18n(k),
+                        '</th>',
+                        '<td>',
+                        attributes[k],
+                        '</td>',
+                        '</tr>'
+                    ]);
+                }
+            }
+        }
+        detail.push('</table>');
+        return detail.join('');
+    },
+
     /** private: method[extendFeaturesAttributes]
      *
      *  Store the `type` and `id` properties into attributes, because
@@ -224,32 +259,12 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         var featuresWithAttributes = [];
         var i, previousLayer;
         Ext.each(features, function(feature) {
-            var detail = [],
-                attributes = feature.attributes;
-            detail.push('<table class="detail">');
             var hasAttributes = false;
-            for (var k in attributes) {
-                if (attributes.hasOwnProperty(k) && attributes[k]) {
+            for (var k in feature.attributes) {
+                if (feature.attributes.hasOwnProperty(k) && feature.attributes[k]) {
                     hasAttributes = true;
-                    if (k == this.contentOverride) {
-                        detail.push(attributes[k].text);
-                        break; // exit for loop
-                    } else {
-                        detail = detail.concat([
-                            '<tr>',
-                            '<th>',
-                            OpenLayers.i18n(k),
-                            '</th>',
-                            '<td>',
-                            attributes[k],
-                            '</td>',
-                            '</tr>'
-                        ]);
-                    }
                 }
             }
-            detail.push('</table>');
-
             // don't use feature without attributes
             if (!hasAttributes) {
                 return;
@@ -260,7 +275,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             }
 
             featuresWithAttributes.push(feature);
-            feature.attributes[this.formatedAttributesId] = detail.join('');
+            feature.attributes[this.formatedAttributesId] = this.getDetail(feature);
             feature.attributes.type = OpenLayers.i18n(feature.type);
 
             if (feature.type != previousLayer) {
@@ -341,7 +356,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                 this.messageItem.setText('&nbsp;');
             }
 
-            this.featuresWindow = new Ext.Window({
+            this.featuresWindow = new Ext.Window(Ext.apply({
                 layout: 'fit',
                 width: 300,
                 height: 280,
@@ -355,7 +370,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     scope: this
                 },
                 bbar: bbar
-            });
+            }, this.windowOptions));
 
         } else {
             this.featuresWindow.add(this.grid);
@@ -474,7 +489,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     break;
                 }
             }
-        }, this)
+        }, this);
     },
 
     /** private: method[setMessage]
