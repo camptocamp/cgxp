@@ -33,22 +33,28 @@ describe('cgxp.tree.LayerTree', function() {
                 "name": "theme1",
                 "children": [{
                     "name": "layer1",
+                    "isInternalWMS": true,
                     "isExpanded": true,
                     "children": [{
                         "name": "layer11",
+                        "type": "internal WMS",
                         "legendRule": "rule1",
                         "isChecked": true
                     }, {
                         "name": "layer12",
+                        "type": "internal WMS",
                         "legend": true
                     }]
                 }, {
                     "name": "layer2",
+                    "isInternalWMS": true,
                     "expanded": false,
                     "children": [{
                         "name": "layer21"
+                        "type": "internal WMS",
                     }, {
                         "name": "layer22",
+                        "type": "internal WMS",
                         "isChecked": true
                     }]
                 }]
