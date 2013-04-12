@@ -15,4 +15,4 @@ script: ./travis.sh
 notifications:
   email:
     recipients:
-    - geospatial@lists.camptocamp.com
+    - c2cgeoportal@camptocamp.com
