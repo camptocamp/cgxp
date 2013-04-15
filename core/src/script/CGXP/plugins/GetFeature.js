@@ -494,8 +494,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var request = function() {
             self.events.fireEvent('querystarts');
 
-            var olLayers = this.target.mapPanel.map.
-                    getLayersByClass("OpenLayers.Layer.WMS");
+            var olLayers = map.getLayersByClass("OpenLayers.Layer.WMS");
             var params = {};
             if (olLayers.length > 0) {
                 var layer = olLayers[0];
