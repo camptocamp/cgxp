@@ -155,6 +155,18 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      */
     tree: null,
 
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        cgxp.plugins.LayerTree.superclass.constructor.call(this, config);
+        this.addEvents(
+            /** api: event[loadtheme]
+             *  Fired when a theme is loaded.
+             */
+            "loadtheme"
+        );
+    },
+
     /** private: method[init]
      */
     init: function() {
@@ -183,6 +195,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         }, config || {});
 
         this.tree = cgxp.plugins.LayerTree.superclass.addOutput.call(this, config);
+        this.relayEvents(this.tree, ['loadtheme']);
         return this.tree;
     }
 
