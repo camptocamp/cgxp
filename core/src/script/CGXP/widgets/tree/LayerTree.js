@@ -234,7 +234,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             /** private: event[ordergroup]
              *  Fires after the themes order is changed.
              */
-            "ordergroup"
+            "ordergroup",
+
+            /** private: event[loadtheme]
+             *  Fires after a theme is loaded.
+             */
+            "loadtheme"
         );
         this.on('checkchange', function(node, checked) {
             this.fireEvent("layervisibilitychange");
@@ -1056,6 +1061,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var newUrl = url.substr(0, end) + th + theme.name + query;
             history.replaceState({}, OpenLayers.i18n(theme.name), newUrl);
         }
+
+        this.fireEvent('loadtheme', theme);
     },
 
     /** api: method[loadGroup]
