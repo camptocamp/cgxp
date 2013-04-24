@@ -193,6 +193,30 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: null,
 
+    /** api: config[fields]
+     *  ``Array``
+     *  Fields added in the print form.
+     *  E.g.:
+     *
+     *  .. code:: javascript
+     *
+     *    fields: [{
+     *        xtype: 'textfield',
+     *        name: 'remarque,
+     *        fieldLabel: 'Remarques',
+     *        autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
+     *    }]
+     *
+     *  Default to: ``['title', 'comment', 'legend']``, that are predefined fields.
+     */
+    fields: ['title', 'comment', 'legend'],
+
+    /** api: config[floorSliderId]
+     *  ``String``
+     *  Id of the floorSlider tool.
+     */
+    floorSliderId: null,
+
     /* i18n */
     printTitle: "Printing",
     titlefieldText: "Title",
@@ -361,20 +385,20 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
                     // removes 0-length lines
                     if (f.geometry instanceof OpenLayers.Geometry.LineString &&
-                        (!b || (b.getWidth() == 0 && b.getHeight() == 0))) {
+                        (!b || (b.getWidth() === 0 && b.getHeight() === 0))) {
                         continue;
                     }
 
                     // removes flat polygons
                     if ((f.geometry instanceof OpenLayers.Geometry.Polygon ||
                         f.geometry instanceof OpenLayers.Geometry.MultiPolygon) &&
-                        f.geometry.getArea() == 0) {
+                        f.geometry.getArea() === 0) {
                         continue;
                     }
 
                     features.push(f);
                 }
-                if (features.length == 0) {
+                if (features.length === 0) {
                     return false;
                 }
                 layer.features = features;
@@ -416,7 +440,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         OpenLayers.Util.getParameterString(encodedLayer.customParams));
                 delete encodedLayer.customParams;
             }
-            Ext.apply(encodedLayer, 
+            Ext.apply(encodedLayer,
                 encodedLayer.baseURL == this.mapserverURL ?
                 this.encodeLayer : this.encodeExternalLayer);
         }, this);
@@ -425,6 +449,15 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
             options.legend = this.includeLegend ?
                              this.target.tools[this.legendPanelId].legendPanel : null;
+            if (this.floorSliderId) {
+                var floorSlider = this.target.tools[this.floorSliderId];
+                if (floorSlider) {
+                    var floor = floorSlider.getFloor();
+                    printProvider.customParams.floor =
+                        floor !== undefined ? floor :
+                        cgxp.FloorSlider.prototype.skyText;
+                }
+            }
 
             // need to define the table object even for page0 as java expects it
             pages[0].customParams = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
@@ -450,7 +483,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         if (printExport.hasOwnProperty(dataset)) {
                             // TODO, implement paging in case of too many result to display on only one page
                             if (printExport[dataset].table.data.length > 0 &&
-                                printExport[dataset].table.data[0].col0 != '') {
+                                printExport[dataset].table.data[0].col0 !== '') {
                                 var page = new GeoExt.data.PrintPage({
                                     printProvider: printProvider
                                 });
@@ -470,7 +503,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             }
-        }.createDelegate(this));
+        }, this);
 
         var translate_name = function(record) {
             record.set('label', OpenLayers.i18n(record.get('name')));
@@ -499,6 +532,58 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         }.createDelegate(this));
 
+        items = [];
+        Ext.each(this.fields, function(field) {
+            if (field == 'title') {
+                items.push({
+                    xtype: 'textfield',
+                    name: 'title',
+                    fieldLabel: this.titlefieldText,
+                    emptyText: this.titlefieldvalueText,
+                    plugins: new GeoExt.plugins.PrintProviderField({
+                        printProvider: printProvider
+                    }),
+                    autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
+                });
+            }
+            else if (field == 'comment') {
+                items.push({
+                    xtype: 'textarea',
+                    name: 'comment',
+                    fieldLabel: this.commentfieldText,
+                    emptyText: this.commentfieldvalueText,
+                    plugins: new GeoExt.plugins.PrintProviderField({
+                        printProvider: printProvider
+                    }),
+                    autoCreate: {tag: "textarea", maxLength: "100"}
+                });
+            }
+            else if (field == 'legend') {
+                items.push({
+                    xtype: 'checkbox',
+                    name: 'legend',
+                    fieldLabel: this.includelegendText,
+                    hideLabel: true,
+                    boxLabel: this.includelegendText,
+                    checked: this.includeLegend,
+                    // deactivate the checkbox if no legend panel is available
+                    hidden: !this.legendPanelId,
+                    handler: function(cb, checked) {
+                        this.includeLegend = checked;
+                    },
+                    scope: this
+                });
+            }
+            else {
+                items.push(Ext.apply({
+                    xtype: 'textfield',
+                    plugins: new GeoExt.plugins.PrintProviderField({
+                        printProvider: printProvider
+                    }),
+                    autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
+                }, field));
+            }
+        }, this);
         // create the print panel
         options = Ext.apply({
             mapPanel: this.target.mapPanel,
@@ -554,38 +639,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 labelSeparator: ''
             },
             printProvider: printProvider,
-            items: [{
-                xtype: 'textfield',
-                name: 'title',
-                fieldLabel: this.titlefieldText,
-                emptyText: this.titlefieldvalueText,
-                plugins: new GeoExt.plugins.PrintProviderField({
-                    printProvider: printProvider
-                }),
-                autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-            }, {
-                xtype: 'textarea',
-                name: 'comment',
-                fieldLabel: this.commentfieldText,
-                emptyText: this.commentfieldvalueText,
-                plugins: new GeoExt.plugins.PrintProviderField({
-                    printProvider: printProvider
-                }),
-                autoCreate: {tag: "textarea", maxLength: "100"}
-            }, {
-                xtype: 'checkbox',
-                name: 'legend',
-                fieldLabel: this.includelegendText,
-                hideLabel: true,
-                boxLabel: this.includelegendText,
-                checked: this.includeLegend,
-                // deactivate the checkbox if no legend panel is available
-                hidden: !this.legendPanelId,
-                handler: function(cb, checked) {
-                    this.includeLegend = checked;
-                },
-                scope: this
-            }],
+            items: items,
             comboOptions: {
                 editable: false,
                 displayField: 'label'

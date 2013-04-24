@@ -106,13 +106,18 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
      */
     widgetOptions: {},
 
+    /** private: property[floorSlider]
+     *  ``cgxp.FloorSlider``
+     *  The FloorSlider widget
+     */
+
     /** public: method[init]
      */
     init: function() {
         cgxp.plugins.FloorSlider.superclass.init.apply(this, arguments);
         this.target.addListener('ready', function() {
             var mapPanel = this.target.mapPanel;
-            var floorSlider = new cgxp.FloorSlider(Ext.apply({
+            this.floorSlider = new cgxp.FloorSlider(Ext.apply({
                 minValue: this.minValue,
                 maxValue: this.maxValue,
                 value: this.value,
@@ -120,6 +125,13 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
                 mapPanel: mapPanel
             }, this.widgetOptions));
         }, this);
+    },
+
+    /** public: method[getFloor]
+     *  Get the current floor, ``undefined`` for sky.
+     */
+    getFloor: function() {
+        return this.floorSlider.getFloor();
     }
 });
 
