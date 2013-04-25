@@ -385,9 +385,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             this.featuresWindow.doLayout();
         }
 
-        if (features.length > 0) {
-            this.featuresWindow.show();
-        }
+        this.featuresWindow.show();
 
         // append new features to existing features in the store
         this.store.loadData(features, true);
