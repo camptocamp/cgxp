@@ -176,7 +176,6 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     dummyForm: null,
 
-
     /** api: config[pointRecenterZoom]
      * ``Number`` Zoom level to use when recentering on point items (optional).
      */
@@ -240,6 +239,11 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``Bool`` show or hide the unqueried layers in the tabpanel, default is true.
      */
     showUnqueriedLayers: true,
+
+    /** api: config[maxPrintedColumns]
+     *  ``Int`` max number of columns in the printed attributes table. Default is 9.
+     */
+    maxPrintedColumns: 9,
 
     /** private: property[selectAll]
      */
@@ -367,7 +371,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                             var id = 'col' + index;
                             raw[id] = attributes[prop];
                             index++;
-                            if (index > 9) {
+                            if (index > this.maxPrintedColumns) {
                                 break;
                             }
                             if (groupedRecords[grid.title]._newGroup) {

@@ -172,6 +172,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     showUnqueriedLayers: true,
 
+    /** api: config[maxPrintedColumns]
+     *  ``Int`` max number of columns in the printed attributes table. Default is 9.
+     */
+    maxPrintedColumns: 9,
+
     /** api: config[openFeatures]
      *  ``Number`` on add feature directly open the first features, default is 1,
      *  than the first feature is open, others are closed.
@@ -562,7 +567,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     var id = 'col' + index;
                     raw[id] = attributes[prop];
                     index++;
-                    if (index > 9) {
+                    if (index > this.maxPrintedColumns) {
                         break;
                     }
                     if (groupedRecords[attributes.type]._newGroup) {
