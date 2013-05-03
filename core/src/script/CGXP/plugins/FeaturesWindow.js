@@ -326,6 +326,12 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         }
 
         features = this.extendFeaturesAttributes(features);
+        if (features.length == 0) {
+            if (this.featuresWindow) {
+                this.featuresWindow.hide();
+            }
+            return;
+        }
 
         if (!this.grid) {
             this.createGrid();
@@ -385,9 +391,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             this.featuresWindow.doLayout();
         }
 
-        if (features.length > 0) {
-            this.featuresWindow.show();
-        }
+        this.featuresWindow.show();
 
         // append new features to existing features in the store
         this.store.loadData(features, true);
