@@ -239,8 +239,14 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 var child = node[i];
                 if (child.children) {
                     browse(child.children, config);
-                } else {
+                }
+                else {
                     config[child.name] = child;
+                    if (child.childLayers && child.childLayers.length > 0) {
+                        Ext.each(child.childLayers, function (layer) {
+                            config[layer.name] = layer;
+                        });
+                    }
                 }
             }
             return config;
