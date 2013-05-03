@@ -87,6 +87,23 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
+    /** api: config[floorSliderId]
+     *  ``String``
+     *  Id of the floorSlider tool.
+     */
+    floorSliderId: null,
+
+    /** api: config[windowOptions]
+     * ``Object`` Additional options given to the window constructor.
+     */
+    windowOptions: {},
+
+    /** api: config[readParams]
+     *  ``Object``
+     *  Default params given to the read request
+     */
+    readParams: {},
+
     /** private: property[editingLayer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector editing layer
@@ -223,12 +240,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }
         });
         for (var i in layers) {
-            size++;
-            // only add an item for new editable layers
-            if (alreadyAvailableItems.indexOf(parseInt(i)) == -1) {
-                this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
-                    menu.add(this.createMenuItem(layer, geometryType));
-                }).createDelegate(this, [layers[i]], true));
+            if (layers.hasOwnProperty(i)) {
+                size++;
+                // only add an item for new editable layers
+                if (alreadyAvailableItems.indexOf(parseInt(i, 10)) == -1) {
+                    this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
+                        menu.add(this.createMenuItem(layer, geometryType));
+                    }).createDelegate(this, [layers[i]], true));
+                }
             }
         }
         this.win.setDisabled(size === 0);
@@ -374,7 +393,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     closeEditing: function() {
         // avoid reentrance
-        if(!arguments.callee._in) {
+        if (!arguments.callee._in) {
             arguments.callee._in = true;
             if (this.attributePopup) {
                 this.attributePopup.hide();
@@ -410,8 +429,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
                 var layerIds = [];
-                for (var i in self.getEditableLayers()) {
-                    layerIds.push(i);
+                var editLayers = self.getEditableLayers();
+                for (var i in editLayers) {
+                    if (editLayers.hasOwnProperty(i)) {
+                        layerIds.push(i);
+                    }
                 }
                 if (layerIds.length === 0) {
                     // we need to reset the cursor manually
@@ -419,6 +441,16 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     return;
                 }
                 options.url = baseURL + layerIds.join(',');
+                options.params = Ext.apply(options.params || {}, self.readParams);
+                if (self.floorSliderId) {
+                    var floorSlider = self.target.tools[this.floorSliderId];
+                    if (floorSlider) {
+                        var floor = floorSlider.getFloor();
+                        if (floor !== undefined) {
+                            options.params.floor__eq = floorSlider.getFloor();
+                        }
+                    }
+                }
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
@@ -426,14 +458,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     self.closeEditing();
                     OpenLayers.Protocol.HTTP.prototype.read.call(this, options);
                 }
-                if(self.editorGrid && self.editorGrid.dirty) {
+                if (self.editorGrid && self.editorGrid.dirty) {
                     Ext.Msg.show({
                         title: self.editorGrid.cancelMsgTitle,
                         msg: self.editorGrid.cancelMsg,
                         buttons: Ext.Msg.YESNO,
                         icon: Ext.MessageBox.QUESTION,
                         fn: function(button) {
-                            if(button === "yes") {
+                            if (button === "yes") {
                                 doRead.call(this, options);
                             } else {
                                 // we need to reset the cursor manually
@@ -552,7 +584,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var first = false; // first time we show the popup
         if (!this.attributePopup) {
             first = true;
-            this.attributePopup = new Ext.Window({
+            this.attributePopup = new Ext.Window(Ext.apply({
                 map: this.map,
                 height: 150,
                 width: 300,
@@ -562,7 +594,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 unpinnable: false,
                 draggable: true,
                 border: false
-            });
+            }, this.windowOptions));
         }
         this.attributePopup.add(this.editorGrid);
         this.attributePopup.show();
