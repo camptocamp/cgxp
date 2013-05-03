@@ -112,6 +112,17 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     featuresWindow: null,
 
+    /** private: attribute[notificationElement]
+     *  ``Ext.Element``
+     *  The notification element.
+     */
+    notificationElement: null,
+
+    /** private: attribute[notificationTimeout]
+     *  ``Number``
+     *  the notification timeout ID
+     */
+
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
      *  on the map when hovering the row in the grid (optional).
@@ -134,6 +145,14 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``String`` Text for the shortened notice message (i18n).
      */
     suggestionText: "Suggestion",
+    /** api: config[noFeatureFound]
+     *  ``String`` No feature found notice message (i18n).
+     */
+    noFeatureFound: "No feature found",
+    /** api: config[loadingResults]
+     *  ``String`` Loading results message (i18n).
+     */
+    loadingResults: "Loading results...",
 
     /** private: attribute[store]
      *  ``Ext.data.Store``
@@ -209,6 +228,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     this.featuresWindow.syncSize();
                 }
             }
+            this.showNotification(this.loadingResults);
         }, this);
 
         this.events.on('queryresults', function(queryResult) {
@@ -301,6 +321,36 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         return featuresWithAttributes;
     },
 
+    /** private: method[showNotification]
+     *  Shows the notification window
+     */
+    showNotification: function(message, timeout) {
+        if (this.notificationTimeout) {
+            window.clearTimeout(this.notificationTimeout);
+            this.notificationTimeout = undefined;
+        }
+        if (this.featuresWindow) {
+            this.featuresWindow.hide();
+        }
+        if (!this.notificationElement) {
+            this.notificationElement = Ext.DomHelper.append(
+                this.target.mapPanel.getEl(),
+                {html: '<div class="featureswindow-notif"></div>'},
+                true
+            );
+        }
+        this.notificationElement.dom.firstChild.innerHTML = message;
+        this.notificationElement.show();
+        if (timeout) {
+            this.notificationTimeout = setTimeout(Ext.createDelegate(function() {
+                if (this.notificationElement) {
+                    this.notificationElement.fadeOut({ duration: 2, remove: false });
+                }
+                this.notificationTimeout = undefined;
+            }, this), timeout);
+        }
+    },
+
     /** private: method[showWindow]
      *  Shows the window
      */
@@ -327,10 +377,16 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
         features = this.extendFeaturesAttributes(features);
         if (features.length == 0) {
-            if (this.featuresWindow) {
-                this.featuresWindow.hide();
-            }
+            this.showNotification(this.noFeatureFound, 5000);
             return;
+        }
+
+        if (this.notificationTimeout) {
+            window.clearTimeout(this.notificationTimeout);
+            this.notificationTimeout = undefined;
+        }
+        if (this.notificationElement) {
+            this.notificationElement.hide();
         }
 
         if (!this.grid) {
