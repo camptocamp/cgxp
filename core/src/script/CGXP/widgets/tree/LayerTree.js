@@ -940,7 +940,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             visibility: layerNode.isChecked,
             isBaseLayer: false,
             mapserverURL: layerNode.wmsUrl,
-            mapserverLayers: layerNode.wmsLayers
+            mapserverLayers: layerNode.wmsLayers,
+            queryLayers: layerNode.queryLayers
         }, this.wmtsOptions || {}));
 
         var treeNode = layerNode.node;
