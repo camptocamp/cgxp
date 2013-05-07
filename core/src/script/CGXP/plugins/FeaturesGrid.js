@@ -240,11 +240,6 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     showUnqueriedLayers: true,
 
-    /** api: config[maxPrintedColumns]
-     *  ``Int`` max number of columns in the printed attributes table. Default is 9.
-     */
-    maxPrintedColumns: 9,
-
     /** private: property[selectAll]
      */
 
@@ -371,9 +366,6 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                             var id = 'col' + index;
                             raw[id] = attributes[prop];
                             index++;
-                            if (index > this.maxPrintedColumns) {
-                                break;
-                            }
                             if (groupedRecords[grid.title]._newGroup) {
                                 groupedRecords[grid.title][id] = OpenLayers.i18n(prop);
                                 groupedRecords[grid.title].table.columns.push(id);
