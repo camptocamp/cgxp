@@ -562,9 +562,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                     var id = 'col' + index;
                     raw[id] = attributes[prop];
                     index++;
-                    if (index > 9) {
-                        break;
-                    }
                     if (groupedRecords[attributes.type]._newGroup) {
                         if (prop == this.originalIdRef) {
                             prop = 'id';
