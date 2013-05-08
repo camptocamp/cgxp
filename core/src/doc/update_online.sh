@@ -12,8 +12,8 @@
 #
 # Possible Apache config:
 #
-# Alias /cgxp "/var/www/docs.camptocamp.net/htdocs/c2cgeoportal/html"
-# <Directory "/var/www/docs.camptocamp.net/htdocs/cgxp/html">
+# Alias /cgxp "/var/www/vhosts/docs.camptocamp.net/htdocs/c2cgeoportal/html"
+# <Directory "/var/www/vhosts/docs.camptocamp.net/htdocs/cgxp/html">
 #     Options Indexes FollowSymLinks MultiViews
 #     AllowOverride None
 #     Order allow,deny
@@ -22,7 +22,7 @@
 #
 
 # BUILDDIR is where the HTML files are generated
-BUILDDIR=/var/www/docs.camptocamp.net/htdocs/cgxp
+BUILDDIR=/var/www/vhosts/docs.camptocamp.net/htdocs/cgxp
 
 # create the build dir if it doesn't exist
 if [[ ! -d ${BUILDDIR} ]]; then
@@ -34,7 +34,7 @@ git pull origin master
 
 # create a virtual env if none exists already
 if [[ ! -d env ]]; then
-    curl http://mapfish.org/downloads/virtualenv-1.4.5.py | python - --no-site-packages --distribute env
+    virtualenv --no-site-packages --distribute env
 fi
 
 # install JSTools, Jinga2 and Sphinx
