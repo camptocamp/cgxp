@@ -176,7 +176,6 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     dummyForm: null,
 
-
     /** api: config[pointRecenterZoom]
      * ``Number`` Zoom level to use when recentering on point items (optional).
      */
@@ -367,9 +366,6 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                             var id = 'col' + index;
                             raw[id] = attributes[prop];
                             index++;
-                            if (index > 9) {
-                                break;
-                            }
                             if (groupedRecords[grid.title]._newGroup) {
                                 groupedRecords[grid.title][id] = OpenLayers.i18n(prop);
                                 groupedRecords[grid.title].table.columns.push(id);
