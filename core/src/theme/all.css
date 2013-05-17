@@ -59,6 +59,17 @@ div.x-panel a:hover {
     width: 100%;
 }
 
+/* cgxp_featuresWindow */
+.featureswindow-notif {
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    padding: 1em;
+    border-radius: 1em;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
 /* cgxp_measure */
 .x-btn .cgxp-icon-measure-point, .x-menu-item .cgxp-icon-measure-point, .x-tree-node .cgxp-icon-measure-point {
     background-image: url('img/bullet_orange.png');

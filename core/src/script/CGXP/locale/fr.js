@@ -65,7 +65,12 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
-        suggestionText: "Suggestion"
+        windowTitleText: 'Résultats',
+        itemsText: "éléments",
+        itemText: "élément",
+        suggestionText: "Suggestion",
+        noFeatureFound: "Aucun résultat",
+        loadingResults: "Chargement des résultats..."
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -140,12 +145,6 @@ GeoExt.Lang.add("fr", {
         showhidelegendText: "Afficher/masquer la légende",
         themealreadyloadedText: "Ce thème est déjà chargé.",
         showIn3dText: 'Afficher en 3D'
-    },
-
-    "cgxp.plugins.FeaturesWindow.prototype": {
-        windowTitleText: 'Résultats',
-        itemsText: "éléments",
-        itemText: "élément"
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
