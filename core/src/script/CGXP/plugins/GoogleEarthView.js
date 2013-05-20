@@ -211,13 +211,10 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
     viewerReady: function() {
         // detect when a KML layer is added to the map
-        this.target.mapPanel.layers.on("add", function(store) {
-            store.each(function(layer) {
-                var lyr = layer.getLayer();
-                if (lyr instanceof OpenLayers.Layer.Vector &&
-                    lyr.protocol instanceof OpenLayers.Protocol.HTTP &&
-                    typeof lyr.protocol.url == 'string' &&
-                    lyr.protocol.format instanceof OpenLayers.Format.KML) {
+        this.target.mapPanel.layers.on('add', function(store) {
+            store.each(function(record) {
+                var layer = record.getLayer();
+                if (cgxp.plugins.GoogleEarthView.isKmlLayer(layer)) {
                     this.actions[0].items[0].toggle(true);
                 }
             }, this);
@@ -361,5 +358,14 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         return cgxp.plugins.GoogleEarthView.superclass.addActions.apply(this, [button]);
     }
 });
+
+/** private: method[isKmlLayer]
+ */
+cgxp.plugins.GoogleEarthView.isKmlLayer = function(layer) {
+    return layer instanceof OpenLayers.Layer.Vector &&
+        layer.protocol instanceof OpenLayers.Protocol.HTTP &&
+        typeof layer.protocol.url == 'string' &&
+        layer.protocol.format instanceof OpenLayers.Format.KML;
+};
 
 Ext.preg(cgxp.plugins.GoogleEarthView.prototype.ptype, cgxp.plugins.GoogleEarthView);
