@@ -572,3 +572,8 @@ div.x-panel div.x-panel-bbar div.wms-browser-toolbar {
 div.x-panel .olControlZoom a:hover {
     text-decoration: none;
 }
+
+/* MyPosition */
+.x-toolbar .myposition {
+    background-image: url('img/myposition.gif');
+}
