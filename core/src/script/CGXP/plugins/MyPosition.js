@@ -74,12 +74,13 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
             tooltip: this.actionTooltip,
             iconCls: 'myposition',
             handler: function() {
+                var recenteringZoom = this.recenteringZoom;
                 navigator.geolocation.getCurrentPosition(function(pos) {
                     var position = new OpenLayers.LonLat(pos.coords.longitude,
                                                          pos.coords.latitude);
                     position.transform(new OpenLayers.Projection("EPSG:4326"),
                                        map.getProjectionObject());
-                    var zoom = Math.max(this.recenteringZoom, map.getZoom());
+                    var zoom = Math.max(recenteringZoom, map.getZoom());
                     map.setCenter(position, zoom);
                 });
             },
