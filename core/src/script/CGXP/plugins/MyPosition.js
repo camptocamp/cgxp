@@ -45,7 +45,7 @@ Ext.namespace("cgxp.plugins");
  */
 
 /** api: constructor
- *  .. class:: Help(config)
+ *  .. class:: MyPosition(config)
  *
  *    Provides a "My Position" button that tries to recenter on
  *    the user's current position.
