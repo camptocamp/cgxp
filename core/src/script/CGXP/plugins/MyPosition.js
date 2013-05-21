@@ -62,7 +62,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
     recenteringZoom: 11,
 
     /** i18n */
-    actionText: "My position",
+    actionTooltip: "Recenter to my location",
 
     /** api: method[addActions]
      */
@@ -71,7 +71,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
 
         var map = this.target.mapPanel.map;
         var button = new Ext.Button({
-            tooltip: this.actionText,
+            tooltip: this.actionTooltip,
             iconCls: 'myposition',
             handler: function() {
                 navigator.geolocation.getCurrentPosition(function(pos) {

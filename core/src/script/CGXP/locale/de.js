@@ -241,6 +241,10 @@ GeoExt.Lang.add("de", {
             "{key} Taste abgefragt werden."
     },
 
+    "cgxp.plugins.MyPosition.prototype": {
+        actionTooltip: "Recenter to my location"
+    },
+
     "GeoExt.ux.form.FeaturePanel.prototype": {
         pointRadiusFieldText: "Grösse",
         colorFieldText: "Farbe",
