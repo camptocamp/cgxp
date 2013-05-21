@@ -245,6 +245,10 @@ GeoExt.Lang.add("fr", {
         queryResultMessage: "Utilisez la touche {key} pour faire des sélections rectangulaires."
     },
 
+    "cgxp.plugins.MyPosition.prototype": {
+        actionTooltip: "Recentrer sur ma position"
+    },
+
     "cgxp.FloorSlider.prototype": {
         skyText: "Ciel",
         floorText: "Étages"
