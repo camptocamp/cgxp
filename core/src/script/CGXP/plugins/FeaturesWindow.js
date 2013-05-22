@@ -192,8 +192,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
     showUnqueriedLayers: true,
 
     /** api: config[openFeatures]
-     *  ``Number`` on add feature directly open the first features, default is 1,
-     *  than the first feature is open, others are closed.
+     *  ``Number`` number of query results that will be expand in the grid
+     *  when loaded, default is 1.
      */
     openFeatures: 1,
 
@@ -543,7 +543,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             for (var row = firstRow ; row <= lastRow ; row++) {
                 if (row < this.openFeatures) {
                     rowexpander.expandRow(row);
-                    row = this.grid.view.getRow(row);
                 }
                 else {
                     break;
