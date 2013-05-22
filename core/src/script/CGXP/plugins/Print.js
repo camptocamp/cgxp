@@ -411,12 +411,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 delete encodedLayer.zoomOffset;
                 encodedLayer.singleTile = true;
             }
-            if (encodedLayer.customParams) {
-                encodedLayer.baseURL = OpenLayers.Util.urlAppend(encodedLayer.baseURL,
-                        OpenLayers.Util.getParameterString(encodedLayer.customParams));
-                delete encodedLayer.customParams;
-            }
-            Ext.apply(encodedLayer, 
+            Ext.apply(encodedLayer,
                 encodedLayer.baseURL == this.mapserverURL ?
                 this.encodeLayer : this.encodeExternalLayer);
         }, this);
