@@ -70,6 +70,12 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      *  The list of background layers.
      */
     layers: null,
+    
+    /** private: property[stateBaseLayerRef]
+     *  ``String``
+     *  Reference of the base layer provided by the state.
+     */
+    stateBaseLayerRef: null,
 
     /**
      * private: method[initComponent]
@@ -95,14 +101,6 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         // we should get the layers list for combobox before
         // changing the base layer to have the right order.
         this.layers = this.map.getLayersBy('group', 'background');
-        var baseLayer = this.map.getLayersBy('ref', this.defaultBaseLayerRef)[0];
-        if (baseLayer) {
-            this.updateBaseLayer(baseLayer);
-        }
-
-        this.map.events.register("changebaselayer", this, function(e) {
-            this.fireEvent('changebaselayer');
-        });
 
         if (this.orthoRef) {
             this.opacitySlider = this.createOpacitySlider();
@@ -113,6 +111,25 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             ]);
         } else {
             this.add(this.createBaselayerCombo());
+        }
+
+        this.map.events.register("changebaselayer", this, function(e) {
+            this.fireEvent('changebaselayer');
+        });
+
+        this.on('beforerender', this.setInitialBaseLayer, this);
+    },
+
+    setInitialBaseLayer: function() {
+        var baseLayer = null;
+        if (this.stateBaseLayerRef) {
+            baseLayer = this.map.getLayersBy('ref', this.stateBaseLayerRef)[0];
+        }
+        if (!baseLayer) {
+            baseLayer = this.map.getLayersBy('ref', this.defaultBaseLayerRef)[0];
+        }
+        if (baseLayer) {
+            this.updateBaseLayer(baseLayer);
         }
     },
 
@@ -213,7 +230,11 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         if (this.map.allOverlays) {
             Ext.invoke(this.layers, "setVisibility", false);
             this.map.setLayerIndex(newBaseLayer, 0);
-            newBaseLayer.setVisibility(true);
+            if (!this.orthoRef ||
+                this.map.getLayersBy('ref', this.orthoRef)[0].opacity != 1) {
+                // show new base layer only if ortho layer is not fully opaque
+                newBaseLayer.setVisibility(true);
+            }
         } else {
             this.map.setBaseLayer(newBaseLayer);
         }
@@ -234,12 +255,11 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     /** private: method[applyState]
      */
     applyState: function(state) {
-        var baselayer = this.map.getLayersBy('ref', state.ref)[0];
-        if (baselayer) {
-            this.updateBaseLayer(baselayer);
+        if (state.ref) {
+            this.stateBaseLayerRef = state.ref;
         }
         if (this.orthoRef) {
-            var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0]
+            var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
             if (state.opacity != 100) {
                 orthoLayer.setVisibility(true);
             }
