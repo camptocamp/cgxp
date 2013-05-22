@@ -358,7 +358,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                     var tree = this.target.tools[this.layerTreeId].tree;
                     var layer = tree.findGroupByLayerName(record.get('layer_name'));
                     if (layer) {
-                        tree.loadGroup(layer, [record.get('layer_name')], null, null, true);
+                        tree.loadGroup(layer, [record.get('layer_name')], undefined, undefined, true);
                     }
                 } else {
                     // try to load layer directly
