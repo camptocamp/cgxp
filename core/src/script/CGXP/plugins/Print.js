@@ -438,6 +438,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             Ext.apply(encodedLayer,
                 encodedLayer.baseURL == this.mapserverURL ?
                 this.encodeLayer : this.encodeExternalLayer);
+            if (encodedLayer.type == 'WMS') {
+                encodedLayer.customParams.map_resolution =
+                        printProvider.dpi.data.value;
+            }
         }, this);
 
         // handle query result table
