@@ -30,6 +30,12 @@
  *  A specific ``GeoExt.MapPanel`` that overrides the ``getState`` method
  *  to remove visibility- and opacity-related states from the global
  *  state.
+ *
+ *  Used state (prefixed with 'map_' in the Permalink):
+ *   * x, y, zoom: map context (read - write)
+ *   * crosshair: if true defined a point at the center of the screen with
+ *                the style: crosshairStyle. 
+ *   * tooltip: text that will be open in a popup at the center of the screen
  */
 Ext.namespace("cgxp");
 
