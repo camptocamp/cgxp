@@ -866,7 +866,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 layer.setVisibility(child.node.attributes.checked);
                             }
                             result.allOlLayers[allOlLayerIndex] = layer;
-                            var disclaimer = {}
+                            var disclaimer = {};
                             disclaimer[child.disclaimer] = true;
                             this.mapPanel.layers.insert(indexToAdd.currentIndex, [
                                 new this.recordType({
