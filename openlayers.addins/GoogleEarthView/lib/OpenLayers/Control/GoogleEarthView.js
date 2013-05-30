@@ -1,4 +1,4 @@
-/* Copyright (c) 2011 by Camptocamp SA. Published under the 2-clause BSD license.
+/* Copyright (c) 2011-2013 by Camptocamp SA. Published under the 2-clause BSD license.
  * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
@@ -74,45 +74,38 @@
  */
 OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
 
-    /**
-     * APIProperty: autoActivate
-     * {Boolean}
+    /** api: config[autoActivate]
+     *  ``Boolean``
      */
     autoActivate: false,
 
-    /**
-     * APIProperty: displayInLayerSwitcher
-     * {Boolean}
+    /** api: config[displayInLayerSwitcher]
+     *  ``Boolean``
      */
     displayInLayerSwitcher: false,
 
-    /**
-     * APIProperty: gePlugin
-     * {google.earth.GEPlugin}
+    /** api: config[gePlugin]
+     *  ``google.earth.GEPlugin``
      */
     gePlugin: null,
 
-    /**
-     * APIProperty: visible
-     * {Boolean}
+    /** api: config[visible]
+     *  ``Boolean``
      */
     visible: true,
 
-    /**
-     * APIProperty: layerName
-     * {String}
+    /** api: config[layerName]
+     *  ``String``
      */
     layerName: null,
 
-    /**
-     * APIProperty: cameraStyle
-     * {symbolizer}
+    /** api: config[cameraStyle]
+     *  ``Object``
      */
     cameraStyle: null,
 
-    /**
-     * APIProperty: lineStyle
-     * {symbolizer}
+    /** api: config[lineStyle]
+     *  ``Object``
      */
     lineStyle: {
         pointRadius: 6,
@@ -120,9 +113,8 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         strokeWidth: 3
     },
 
-    /**
-     * APIProperty: lookAtStyle
-     * {symbolizer}
+    /** api: config[lookAtStyle]
+     *  ``Object``
      */
     lookAtStyle: {
         fillColor: "#ff0000",
@@ -130,101 +122,88 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         pointRadius: 8
     },
 
-    /**
-     * Property: altitudeMode
-     * {number}
+    /** private: property[altitudeMode]
+     *  ``Number``
      */
     altitudeMode: 0,
 
-    /**
-     * Property: layer
-     * {OpenLayers.Layer.Vector}
+    /** private: property[layer]
+     *  ``OpenLayers.Layer.Vector``
      */
     layer: null,
 
-    /**
-     * Property: featuresAdded
-     * {Boolean}
+    /** private: property[featuresAdded]
+     *  ``Boolean``
      */
     featuresAdded: false,
 
-    /**
-     * Property: dragFeatureControl
-     * {OpenLayers.Control.DragFeature}
+    /** private: property[dragFeatureControl]
+     *  ``OpenLayers.Control.DragFeature``
      */
     dragFeatureControl: null,
 
-    /**
-     * Property: cameraFeature
-     * {OpenLayers.Feature.Vector}
+    /** private: property[cameraFeature]
+     *  ``OpenLayers.Feature.Vector``
      */
     cameraFeature: null,
 
-    /**
-     * Property: lineFeature
-     * {OpenLayers.Feature.Vector}
+    /** private: property[lineFeature]
+     *  ``OpenLayers.Feature.Vector``
      */
     lineFeature: null,
 
-    /**
-     * Property: lookAtFeature
-     * {OpenLayers.Feature.Vector}
+    /** private: property[lookAtFeature]
+     *  ``OpenLayers.Feature.Vector``
      */
     lookAtFeature: null,
 
-    /**
-     * Property: gimballLock
-     * {boolean}
+    /** private: property[gimballLock]
+     *  ``Boolean``
      */
     gimballLock: false,
 
-    /**
-     * Property: gimballLockThreshold
-     * {number}
+    /** private: property[gimballLockThreshold]
+     *  ``Number``
      */
     gimballLockThreshold: 1,
 
-    /**
-     * Property: geProjection
-     * {OpenLayers.Projection}
+    /** private: property[geProjection]
+     *  ``OpenLayers.Projection``
      */
     geProjection: null,
 
-    /**
-     * Property: frameendCallback
-     * {function}
+    /** private: property[frameendCallback]
+     *  ``Function``
      */
     frameendCallback: null,
 
-    /**
-     * Property: gePluginFlyToSpeedSet
-     * {boolean}
+    /** private: property[gePluginFlyToSpeedSet]
+     *  ``Boolean``
      */
     gePluginFlyToSpeedSet: false,
 
     /** private: attibute[doDragCamera]
-     *  {Boolean}
+     *  ``Boolean``
      *  True during camera drag.
      */
     doDragCamera: false,
 
     /** private: attibute[initialLookAt]
-     *  ``Object``
+     *  ``OpenLayers.LonLat``
      *  Look at lon lat at drag start.
      */
     initialLookAt: null
 
     /** private: attibute[initialRange]
      *  ``Number``
-     *  Range at grag start.
+     *  Range at grab start.
      */
     initialRange: null,
 
-    /**
-     * Constructor: OpenLayers.Control.GoogleEarthView
+    /** private: method[initialize]
+     *  Constructor of OpenLayers.Control.GoogleEarthView
      *
-     * Parameters:
-     * options - {Object}
+     *  :arg options: ``Object``
      */
     initialize: function(options) {
         options = options || {};
@@ -244,8 +223,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * APIMethod: destroy
+    /** private: method[destroy]
      */
     destroy: function() {
         this.deactivate();
@@ -256,8 +234,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * APIMethod: setGEPlugin
+    /** api: method[setGEPlugin]
      */
     setGEPlugin: function(gePlugin) {
         this.disconnectGEPlugin();
@@ -271,8 +248,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * Method: connectGEPlugin
+    /** private: method[connectGEPlugin]
      */
     connectGEPlugin: function() {
         this.frameendCallback = OpenLayers.Function.bind(this.update, this);
@@ -281,8 +257,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         this.gePluginFlyToSpeedSet = false;
     },
 
-    /**
-     * Method: disconnectGEPlugin
+    /** private: method[disconnectGEPlugin]
      */
     disconnectGEPlugin: function() {
         if (this.frameendCallback) {
@@ -292,8 +267,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * APIMethod: draw
+    /** private: method[draw]
      */
     draw: function() {
         OpenLayers.Control.prototype.draw.apply(this, arguments);
@@ -327,8 +301,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         return this.div;
     },
 
-    /**
-     * APIMethod: activate
+    /** private: method[activate]
      */
     activate: function() {
         if (OpenLayers.Control.prototype.activate.apply(this, arguments) &&
@@ -344,8 +317,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * APIMethod: deactivate
+    /** private: method[deactivate]
      */
     deactivate: function() {
         if (OpenLayers.Control.prototype.deactivate.apply(this, arguments)) {
@@ -359,8 +331,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * Method: onDrag
+    /** private: method[onDrag]
      */
     onDrag: function(feature, pixel) {
         var mapProjection = this.map.getProjectionObject();
@@ -460,7 +431,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
 
     },
 
-    /** Method: onStart
+    /** private: method[onStart]
      */
     onStart: function(feature) {
         if (feature === this.cameraFeature) {
