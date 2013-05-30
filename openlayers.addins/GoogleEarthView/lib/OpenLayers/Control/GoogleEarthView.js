@@ -202,6 +202,24 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      */
     gePluginFlyToSpeedSet: false,
 
+    /** private: attibute[doDragCamera]
+     *  {Boolean}
+     *  True during camera drag.
+     */
+    doDragCamera: false,
+
+    /** private: attibute[initialLookAt]
+     *  ``Object``
+     *  Look at lon lat at drag start.
+     */
+    initialLookAt: null
+
+    /** private: attibute[initialRange]
+     *  ``Number``
+     *  Range at grag start.
+     */
+    initialRange: null,
+
     /**
      * Constructor: OpenLayers.Control.GoogleEarthView
      *
@@ -248,7 +266,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             this.altitudeMode = this.gePlugin.ALTITUDE_RELATIVE_TO_GROUND;
             if (this.active) {
                 this.connectGEPlugin();
-                this.onFrameend();
+                this.update();
             }
         }
     },
@@ -257,7 +275,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      * Method: connectGEPlugin
      */
     connectGEPlugin: function() {
-        this.frameendCallback = OpenLayers.Function.bind(this.onFrameend, this);
+        this.frameendCallback = OpenLayers.Function.bind(this.update, this);
         google.earth.addEventListener(
             this.gePlugin, "frameend", this.frameendCallback);
         this.gePluginFlyToSpeedSet = false;
@@ -302,7 +320,8 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
                 this.layer, {
                     geometryTypes: [OpenLayers.Geometry.Point.prototype.CLASS_NAME],
                     onDrag: OpenLayers.Function.bind(this.onDrag, this),
-                    onStart: OpenLayers.Function.bind(this.onStart, this)
+                    onStart: OpenLayers.Function.bind(this.onStart, this),
+                    onComplete: OpenLayers.Function.bind(this.onComplete, this)
                 });
         }
         return this.div;
@@ -318,7 +337,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             this.map.addControl(this.dragFeatureControl);
             this.dragFeatureControl.activate();
             this.connectGEPlugin();
-            this.onFrameend();
+            this.update();
             return true;
         } else {
             return false;
@@ -354,26 +373,26 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
         var geLookAt = view.copyAsLookAt(this.altitudeMode);
         if (feature === this.cameraFeature && !this.gimballLock) {
             // Set the camera heading and range
-            var lookAtLonLat = new OpenLayers.LonLat(
-                geLookAt.getLongitude(), geLookAt.getLatitude());
+            geLookAt.setLongitude(this.initialLookAt.lon);
+            geLookAt.setLatitude(this.initialLookAt.lat);
             geLookAt.setHeading(
-                -OpenLayers.Spherical.computeHeading(lonLat, lookAtLonLat));
+                -OpenLayers.Spherical.computeHeading(lonLat, this.initialLookAt));
             geLookAt.setRange(
-                1000 * OpenLayers.Util.distVincenty(lonLat, lookAtLonLat) /
+                1000 * OpenLayers.Util.distVincenty(lonLat, this.initialLookAt) /
                     Math.sin(Math.PI * geLookAt.getTilt() / 180));
         } else if (feature === this.lookAtFeature ||
                    (feature === this.cameraFeature && this.gimballLock)) {
             // Set the look at point
+            geLookAt.setRange(this.initialRange);
             geLookAt.setLongitude(lonLat.lon);
             geLookAt.setLatitude(lonLat.lat);
         }
         view.setAbstractView(geLookAt);
     },
 
-    /**
-     * APIMethod: onFrameend
+    /** private: method[update]
      */
-    onFrameend: function() {
+    update: function() {
 
         var mapProjection = this.map.getProjectionObject();
         var view = this.gePlugin.getView();
@@ -443,13 +462,36 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
 
     /** Method: onStart
      */
-    onStart: function() {
+    onStart: function(feature) {
+        if (feature === this.cameraFeature) {
+            this.doDragCamera = true;
+        }
+        // calculate initial range
+        var mapProjection = this.map.getProjectionObject();
+        var lookAt = this.lookAtFeature.geometry.clone();
+        lookAt.transform(mapProjection, this.geProjection);
+        this.initialLookAt = new OpenLayers.LonLat(lookAt.x, lookAt.y);
+        var camera = this.cameraFeature.geometry.clone();
+        camera.transform(mapProjection, this.geProjection);
+        var cameraLonLat = new OpenLayers.LonLat(camera.x, camera.y);
+        var view = this.gePlugin.getView();
+        var geLookAt = view.copyAsLookAt(this.altitudeMode);
+        this.initialRange =
+            1000 * OpenLayers.Util.distVincenty(cameraLonLat, this.initialLookAt) /
+                Math.sin(Math.PI * geLookAt.getTilt() / 180);
+
         // Set the fly to speed to teleport (instantaneous) when the user first
         // starts dragging a feature so that the GE Plugin does not lag
         if (this.gePlugin != null && !this.gePluginFlyToSpeedSet) {
             this.gePlugin.getOptions().setFlyToSpeed(this.gePlugin.SPEED_TELEPORT);
             this.gePluginFlyToSpeedSet = true;
         }
+    },
+
+    /** private: method[onComplete]
+     */
+    onComplete: function() {
+        this.doDragCamera = false;
     },
 
     CLASS_NAME: "OpenLayers.Control.GoogleEarthView"
