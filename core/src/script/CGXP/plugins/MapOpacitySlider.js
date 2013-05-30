@@ -120,8 +120,10 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
             }, this);
         } else {
             var containerId = Ext.id();
-            var container = {html: '<div id="' + containerId + '" ' +
-                                   'class="baseLayersOpacitySlider-toolbar"></div>'};
+            var container = new Ext.Container({
+                id: containerId,
+                cls: 'baseLayersOpacitySlider-toolbar'
+            });
             this.target.addListener('ready', function() {
                 this.createToolbar({renderTo: containerId});
             }, this);
