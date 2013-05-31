@@ -14,5 +14,3 @@ then
   exit 1
 fi
 echo Documentation Success
-
-core/tests/phantom-jasmine/run_jasmine_test.coffee core/tests/SpecRunner.html
