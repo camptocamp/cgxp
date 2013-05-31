@@ -32,22 +32,28 @@ describe('cgxp.tree.LayerTree', function() {
                 "name": "theme1",
                 "children": [{
                     "name": "layer1",
+                    "isInternalWMS": true,
                     "isExpanded": true,
                     "children": [{
                         "name": "layer11",
+                        "type": "internal WMS",
                         "legendRule": "rule1",
                         "isChecked": true
                     }, {
                         "name": "layer12",
+                        "type": "internal WMS",
                         "legend": true
                     }]
                 }, {
                     "name": "layer2",
+                    "isInternalWMS": true,
                     "expanded": false,
                     "children": [{
                         "name": "layer21"
+                        "type": "internal WMS",
                     }, {
                         "name": "layer22",
+                        "type": "internal WMS",
                         "isChecked": true
                     }]
                 }]
@@ -87,7 +93,8 @@ describe('cgxp.tree.LayerTree', function() {
                                                            // layer
         });
 
-        it('defers legends creation', function() {
+// click() don't works with phantomjs
+/*        it('defers legends creation', function() {
             var requestUpdateLegendsSpy = spyOn(
                 layerTree, 'requestUpdateLegends').andCallThrough();
             var updateLegendsSpy = spyOn(
@@ -120,7 +127,7 @@ describe('cgxp.tree.LayerTree', function() {
             Ext.select('.legend', node.ui.getEl()).first().dom.click();
             legendGraphics = 0;
             expect(countLegendGraphics()).toEqual(2); // layer1 icon + layer2 legend
-        });
+        });*/
     });
 
     describe('zoom the map', function() {
