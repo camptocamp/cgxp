@@ -248,9 +248,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             }
             return config;
         }
-        var themes = (this.themes.local || []).concat(
-            this.themes.external || []);
-        this.layersConfig = browse(themes);
+        this.layersConfig = browse(this.themes.local);
+        if (this.themes.external) {
+            this.externalLayersConfig = browse(this.themes.external);
+        }
 
         this.buildWMSControl(map);
         this.buildWFSControls(map);
@@ -258,23 +259,32 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
     /** private method[getQueryableWMSLayers]
      */
-    getQueryableWMSLayers: function(layers) {
+    getQueryableWMSLayers: function(layers, external, nameOnly) {
+        var layersConfig = external ? this.externalLayersConfig :
+            this.layersConfig;
         var queryLayers = [];
         // Add only queryable layer or sublayer.
         Ext.each(layers, function(queryLayer) {
-            if (queryLayer in this.layersConfig) {
-                if (this.layersConfig[queryLayer].queryable) {
-                    queryLayers.push(queryLayer);
+            if (queryLayer in layersConfig) {
+                var queryLayerConfig = layersConfig[queryLayer];
+                if (queryLayerConfig.queryable) {
+                    if (nameOnly) {
+                        queryLayers.push(queryLayerConfig.name);
+                    }
+                    else {
+                        queryLayers.push(queryLayerConfig);
+                    }
                 }
-                Ext.each(this.layersConfig[queryLayer]
-                        .childLayers, function(childLayer) {
+                Ext.each(queryLayerConfig.childLayers, function(childLayer) {
                     if (childLayer.queryable) {
-                        queryLayers.push(childLayer.name);
+                        if (nameOnly) {
+                            queryLayers.push(childLayer.name);
+                        }
+                        else {
+                            queryLayers.push(childLayer);
+                        }
                     }
                 });
-            }
-            else {
-                queryLayers.push(queryLayer);
             }
         }, this);
         return queryLayers;
@@ -377,6 +387,17 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             }, layer.mapserverParams)
                         };
                     }
+                    else {
+                        // Create a fake WMS layer
+                        layer = {
+                            url: layer.url,
+                            projection: layer.projection,
+                            reverseAxisOrder: OpenLayers.Function.False,
+                            params: Ext.apply({}, layer.params)
+                        };
+                        layer.params.LAYERS = self.getQueryableWMSLayers(
+                            layer.params.LAYERS, layer.params.EXTERNAL, true);
+                    }
                     var services = layer.params.EXTERNAL ?
                         externalServices : internalServices;
                     var url = OpenLayers.Util.isArray(layer.url) ?
@@ -395,8 +416,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     for (var url in urls) {
                         var wmsOptions = me.buildWMSOptions(url, services[url],
                             clickPosition, 'image/png');
-                        wmsOptions.params.QUERY_LAYERS = self.getQueryableWMSLayers(
-                            wmsOptions.params.QUERY_LAYERS);
                         // Get the params from the first layer
                         var layer = services[url][0];
                         for (var param in layer.params) {
@@ -606,45 +625,42 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var currentRes = map.getResolution();
         Ext.each(olLayers, function(olLayer) {
             if (olLayer.getVisibility() === true) {
-                var layers = olLayer.params.LAYERS ||
-                             olLayer.queryLayers ||
-                             olLayer.mapserverLayers;
+                var external = olLayer.mapserverParams &&
+                    olLayer.mapserverParams.EXTERNAL ||
+                    olLayer.params && olLayer.params.EXTERNAL;
+                var layers;
+                if (olLayer.mapserverLayers || olLayer.queryLayers) {
+                    layers = Ext.isArray(olLayer.queryLayers) ?
+                        olLayer.queryLayers :
+                        olLayer.queryLayers || olLayer.mapserverLayers;
+                    if (!Ext.isArray(layers)) {
+                        layers = layers.split(',');
+                    }
+                }
+                else {
+                    layers = olLayer.params.LAYERS;
+                    if (!Ext.isArray(layers)) {
+                        layers = layers.split(',');
+                    }
+                    layers = this.getQueryableWMSLayers(layers, external);
+                }
                 if (!layers) {
                     return;
                 }
 
-                if (!Ext.isArray(layers)) {
-                    layers = layers.split(',');
-                }
-                layers = this.getQueryableWMSLayers(layers);
-
                 var filteredLayers = [];
                 Ext.each(layers, function(layer) {
-                    l = this.layersConfig[layer];
-                    if (l) {
-                        if (l.childLayers && l.childLayers.length > 0) {
-                            // layer is a layergroup (as per Mapserver)
-                            Ext.each(l.childLayers, function(child) {
-                                if (inRange(child, currentRes)) {
-                                    filteredLayers.push(c.name);
-                                }
-                            }, this);
-                        } else {
-                            // layer is not a layergroup
-                            if (inRange(l, currentRes)) {
-                                filteredLayers.push(layer);
-                            }
-                        }
-                    } else if (inRange(layer, currentRes)) {
-                        filteredLayers.push(layer.name || layer);
+                    if (Ext.isString(layer)) {
+                        filteredLayers.push(layer);
+                    }
+                    else if (inRange(layer, currentRes)) {
+                        filteredLayers.push(layer.name);
                     }
                 }, this);
 
                 Ext.each(filteredLayers, function(layer) {
                     var queried = false;
-                    if (olLayer.mapserverParams &&
-                            olLayer.mapserverParams.EXTERNAL ||
-                            olLayer.params && olLayer.params.EXTERNAL) {
+                    if (external) {
                         if (this.externalWFSTypes.indexOf(layer) >= 0) {
                             externalLayers.push(layer);
                             queried = true;
