@@ -119,7 +119,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  ``<parameter_name>_label``.
      *
      *  :arg data: ``Object`` JavaScript literal created from the JSON response.
-     *  :return: ``Object``
+     *  :returns: ``Object``
      *
      *  Full config example:
      *
@@ -169,18 +169,24 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
     /** api: config[mouseoverWindowConfig]
      *  ``Object``
      *  Allow to override the default values of the mouseover window
-     *  mouseoverWindowConfig: {
-     *    width: 245
-     *  }
+     *
+     *  .. code-block:: javascript
+     *
+     *    mouseoverWindowConfig: {
+     *      width: 245
+     *    }
      */
     mouseoverWindowConfig: {},
 
     /** api: config[rightclickWindowConfig]
      *  ``Object``
      *  Allow to override the default values of the rightclick window
-     *  rightclickWindowConfig: {
-     *    width: 500
-     *  }
+     *
+     *  .. code-block:: javascript
+     *
+     *    rightclickWindowConfig: {
+     *      width: 500
+     *    }
      */
     rightclickWindowConfig: {},
 
