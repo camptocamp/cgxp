@@ -829,6 +829,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             if (!doc || !doc.documentElement) {
                                 doc = request.responseText;
                             }
+                            // for ie8 - https://github.com/camptocamp/c2cgeoportal/issues/561
+                            if (!doc && request._object && request._object.responseXML) {
+                                doc = request._object.responseXML;
+                            }
                             var capabilities = format.read(doc);
                             var capabilities_layers = capabilities.contents.layers;
                             var capabilities_layer = null;
