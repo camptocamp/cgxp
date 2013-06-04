@@ -189,7 +189,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      *              '<td>{lonm}  {latm} m</td>',
      *              '</tr><tr>',
      *              '<td>WGS 84: </td>',
-     *              '<td>{lond} {latd}°</td>',
+     *              '<td>{lond} {latd}</td>',
      *              '</tr></table>', {compiled: true});
      */
     pointMeterTemplate: null,
