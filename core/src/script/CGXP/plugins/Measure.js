@@ -175,6 +175,40 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     azimuthTemplate: null,
 
+    /** api: config[pointMeterTemplate]
+     *  ``Ext.Template``
+     *  The template object used to display metric coordinates.
+     *
+     *  Standard value is:
+     *
+     *  .. code-block:: javascript
+     *
+     *      this.pointMeterTemplate = new Ext.Template(
+     *              '<table class="measure point"><tr>',
+     *              '<td>', this.coordinateText, '</td>',
+     *              '<td>{lonm}  {latm} m</td>',
+     *              '</tr><tr>',
+     *              '<td>WGS 84: </td>',
+     *              '<td>{lond} {latd}</td>',
+     *              '</tr></table>', {compiled: true});
+     */
+    pointMeterTemplate: null,
+    
+    /** api: config[pointTemplate]
+     *  ``Ext.Template``
+     *  The template object used to display coordinates.
+     *
+     *  Standard value is:
+     *
+     *  .. code-block:: javascript
+     *
+     *      this.pointTemplate = new Ext.Template(
+     *          this.easternText, ' {lon} {unit}<br />',
+     *          this.northernText, ' {lat} {unit}',
+     *          {compiled: true});
+     */
+    pointTemplate: null,
+
     popup: null,
 
     /** api: config[symbolizers]
