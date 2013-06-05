@@ -78,60 +78,61 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
             tpl: tpl,
             mode: 'local',
             themes: this.themes,
-            themeQuery: function(queryText) {
-                store.removeAll();
-                var iQueryText = queryText.toLowerCase();
-
-                /*
-                 * Filter the theme, layer group, layer to display only the
-                 * corresponding elements.
-                 *
-                 * It will search on layer name and Displayname.
-                 *
-                 * Add a level elemnt to sort theme (theme = 0, first layer group 1, ...)
-                 * and add 0.5 if it's not case sensitive.
-                 */
-                function filter(nodes, level, theme) {
-                    level = level || 0;
-                    Ext.each(nodes, function(node) {
-                        var mainGroup = level <= 1 ? node : theme;
-                        // remove dupplicate theme and same layergroup
-                        if (level == 1 && theme.children.length == 1 &&
-                                theme.children[0] === node &&
-                                theme.name === node.name) {
-                            filter(node.children, level+1, mainGroup);
-                            return;
-                        }
-                        if (node.name.search(queryText) >= 0 ||
-                                node.displayName.search(queryText) >= 0) {
+            ignoreThemes: this.ignoreThemes,
+            /*
+             * Filter the theme, layer group, layer to display only the
+             * corresponding elements.
+             *
+             * It will search on layer name and Displayname.
+             *
+             * Add a level element to sort theme (theme = 0, first layer group 1, ...)
+             * and add 0.5 if it's not case sensitive.
+             */
+            filter: function(queryText, iQueryText, nodes, level, theme) {
+                level = level || 0;
+                Ext.each(nodes, function(node) {
+                    var mainGroup = level <= 1 ? node : theme;
+                    // remove dupplicate theme and same layergroup
+                    if (level == 1 && theme.children.length == 1 &&
+                            theme.children[0] === node &&
+                            theme.name === node.name) {
+                        this.filter(queryText, iQueryText, node.children, level+1, mainGroup);
+                        return;
+                    }
+                    if (node.name.search(queryText) >= 0 ||
+                            node.displayName.search(queryText) >= 0) {
+                        store.add([new ThemeRecord({
+                            'name': node.name,
+                            'displayName': node.displayName,
+                            'level': level,
+                            'node': node,
+                            'group': mainGroup
+                        })]);
+                    }
+                    else {
+                        // case insensitive search
+                        if (node.name.toLowerCase().search(iQueryText) >= 0 ||
+                                node.displayName.toLowerCase().search(iQueryText) >= 0) {
                             store.add([new ThemeRecord({
                                 'name': node.name,
                                 'displayName': node.displayName,
-                                'level': level,
+                                'level': level + 0.5,
                                 'node': node,
                                 'group': mainGroup
                             })]);
                         }
-                        else {
-                            // case insensitive search
-                            if (node.name.toLowerCase().search(iQueryText) >= 0 ||
-                                    node.displayName.toLowerCase().search(iQueryText) >= 0) {
-                                store.add([new ThemeRecord({
-                                    'name': node.name,
-                                    'displayName': node.displayName,
-                                    'level': level + 0.5,
-                                    'node': node,
-                                    'group': mainGroup
-                                })]);
-                            }
-                        }
-                        filter(node.children, level+1, mainGroup);
-                    });
-                }
+                    }
+                    this.filter(queryText, iQueryText, node.children, level+1, mainGroup);
+                }, this);
+            },
 
-                filter(this.themes.local);
+            themeQuery: function(queryText) {
+                store.removeAll();
+                var iQueryText = queryText.toLowerCase();
+
+                this.filter(queryText, iQueryText, this.themes.local);
                 if (this.themes.external) {
-                    filter(this.themes.external);
+                    this.filter(queryText, iQueryText, this.themes.external);
                 }
                 store.sort('level');
 
