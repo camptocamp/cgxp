@@ -53,7 +53,7 @@ Ext.namespace("cgxp.plugins");
  *
  *  In the jsbuild/app.cfg, add in ``root``::
  *
- *      regiogis/static/lib/cgxp/geoext.ux/ux/StreetViewPanel
+ *      <project>/static/lib/cgxp/geoext.ux/ux/StreetViewPanel
  *
  *  and in ``include``::
  *
