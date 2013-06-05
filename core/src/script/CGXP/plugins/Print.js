@@ -435,14 +435,13 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 delete encodedLayer.zoomOffset;
                 encodedLayer.singleTile = true;
             }
-            if (encodedLayer.customParams) {
-                encodedLayer.baseURL = OpenLayers.Util.urlAppend(encodedLayer.baseURL,
-                        OpenLayers.Util.getParameterString(encodedLayer.customParams));
-                delete encodedLayer.customParams;
-            }
             Ext.apply(encodedLayer,
                 encodedLayer.baseURL == this.mapserverURL ?
                 this.encodeLayer : this.encodeExternalLayer);
+            if (encodedLayer.type == 'WMS') {
+                encodedLayer.customParams.map_resolution =
+                        printProvider.dpi.data.value;
+            }
         }, this);
 
         // handle query result table
