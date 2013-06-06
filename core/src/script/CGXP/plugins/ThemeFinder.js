@@ -54,6 +54,62 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
 
     emptyText: "Find a theme or a layer",
 
+    /** api: config[ignoreThemes]
+     *  ``Array``
+     *  List of theme names that shouldn't be found.
+     */
+    ignoreThemes: [],
+
+    /** api: config[findTheme]
+     *  ``Boolean``
+     *  Find for themes, default to true.
+     */
+    findTheme: true,
+
+    /** api: config[findGroup]
+     *  ``Boolean``
+     *  Find for first level layer groups (block), default to true.
+     */
+    findGroup: true,
+
+    /** api: config[findFolder]
+     *  ``Boolean``
+     *  Find for layer group (tree folder), default to true.
+     */
+    findFolder: true,
+
+    /** api: config[findLayer]
+     *  ``Boolean``
+     *  Find for layer (tree node), default to true.
+     */
+    findLayer: true,
+
+    /** api: config[template]
+     *  ``Ext.XTemplate``
+     *  The template used to display the result, default to:
+     *
+     *  .. code:: javascript
+     *
+     *      new Ext.XTemplate(
+     *          '<tpl for="."><div class="x-combo-list-item themefinder-{type}">',
+     *          '{displayName}',
+     *          '</div></tpl>'
+     *      )
+     *
+     *  Available attributes:
+     *   * {name} ``String``
+     *   * {displayName} ``String``
+     *   * {groupName} ``String`` Group display name
+     *   * {level} ``Number`` 0 for theme, 1 for group, ... add 1 on each step,
+     *     and 1.5 for case insensitive
+     *   * {type} ``String`` theme|group|folder|layer
+     */
+    template: new Ext.XTemplate(
+        '<tpl for="."><div class="x-combo-list-item themefinder-{type}">',
+        '{displayName}',
+        '</div></tpl>'
+    ),
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -61,53 +117,62 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
         var store = new Ext.data.ArrayStore({
             fields: ['name', 'displayName']
         });
-        var tpl = new Ext.XTemplate(
-            '<tpl for="."><div class="x-combo-list-item">',
-            '{displayName}',
-            '</div></tpl>'
-        );
         var ThemeRecord = Ext.data.Record.create([
             {name: 'name'},
             {name: 'displayName'},
+            {name: 'groupName'},
             {name: 'level'},
+            {name: 'type'},
             {name: 'node'},
             {name: 'group'}
         ]);
+        var plugin = this;
         var twinField = new Ext.form.ComboBox(Ext.apply({
             store: store,
-            tpl: tpl,
+            tpl: this.template,
             mode: 'local',
-            themes: this.themes,
-            themeQuery: function(queryText) {
-                store.removeAll();
-                var iQueryText = queryText.toLowerCase();
+            /*
+             * Filter the theme, layer group, layer to display only the
+             * corresponding elements.
+             *
+             * It will search on layer name and Displayname.
+             *
+             * Add a level element to sort theme (theme = 0, first layer group 1, ...)
+             * and add 0.5 if it's not case sensitive.
+             */
+            filter: function(queryText, iQueryText, nodes, level, theme) {
+                level = level || 0;
+                Ext.each(nodes, function(node) {
+                    if (level === 0 && plugin.ignoreThemes.indexOf(node.name) >= 0) {
+                        return;
+                    }
+                    var mainGroup = level <= 1 ? node : theme;
+                    var isLayer = !node.children;
+                    var isTheme = level === 0;
+                    var isGroup = !isLayer && level == 1;
+                    var isFolder = !isLayer && level > 1;
+                    // remove duplicate theme and same layergroup
+                    var duplicate = level == 1 && theme.children.length == 1 &&
+                            theme.children[0] === node &&
+                            theme.name === node.name &&
+                            plugin.findTheme; // don't filter duplicate if they aren't displayed
+                    var type = isLayer ? 'layer' :
+                            isTheme ? 'theme' :
+                            isGroup ? 'group' :
+                            'folder';
 
-                /*
-                 * Filter the theme, layer group, layer to display only the
-                 * corresponding elements.
-                 *
-                 * It will search on layer name and Displayname.
-                 *
-                 * Add a level elemnt to sort theme (theme = 0, first layer group 1, ...)
-                 * and add 0.5 if it's not case sensitive.
-                 */
-                function filter(nodes, level, theme) {
-                    level = level || 0;
-                    Ext.each(nodes, function(node) {
-                        var mainGroup = level <= 1 ? node : theme;
-                        // remove dupplicate theme and same layergroup
-                        if (level == 1 && theme.children.length == 1 &&
-                                theme.children[0] === node &&
-                                theme.name === node.name) {
-                            filter(node.children, level+1, mainGroup);
-                            return;
-                        }
+                    if (!duplicate && (isLayer && plugin.findLayer ||
+                            isTheme && plugin.findTheme ||
+                            isGroup && plugin.findGroup ||
+                            isFolder && plugin.findFolder)) {
                         if (node.name.search(queryText) >= 0 ||
                                 node.displayName.search(queryText) >= 0) {
                             store.add([new ThemeRecord({
                                 'name': node.name,
                                 'displayName': node.displayName,
+                                'groupName': mainGroup ? mainGroup.displayName : '',
                                 'level': level,
+                                'type': type,
                                 'node': node,
                                 'group': mainGroup
                             })]);
@@ -119,19 +184,26 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                                 store.add([new ThemeRecord({
                                     'name': node.name,
                                     'displayName': node.displayName,
+                                    'groupName': mainGroup ? mainGroup.displayName : '',
                                     'level': level + 0.5,
+                                    'type': type,
                                     'node': node,
                                     'group': mainGroup
                                 })]);
                             }
                         }
-                        filter(node.children, level+1, mainGroup);
-                    });
-                }
+                    }
+                    this.filter(queryText, iQueryText, node.children, level+1, mainGroup);
+                }, this);
+            },
 
-                filter(this.themes.local);
-                if (this.themes.external) {
-                    filter(this.themes.external);
+            themeQuery: function(queryText) {
+                store.removeAll();
+                var iQueryText = queryText.toLowerCase();
+
+                this.filter(queryText, iQueryText, plugin.themes.local);
+                if (plugin.themes.external) {
+                    this.filter(queryText, iQueryText, plugin.themes.external);
                 }
                 store.sort('level');
 
