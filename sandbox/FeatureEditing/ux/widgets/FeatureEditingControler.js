@@ -640,25 +640,26 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         GeoExt.ux.data.Export.KMLExport(this.map, this.layers, null, this.downloadService);
     },
 
-    /** private: method[getSelectControl]
-     *  :return: ``OpenLayers.Control.Select``
-     *  Convenience method to return the SelectFeature control from
-     *  this.featureControl object.
+    /** private: method[select]
+     *  Wrapper of the selecting method of the underlying control.
      */
-    getSelectControl: function() {
-        var control = false;
-
-        switch (this.featureControl.CLASS_NAME) {
-            case "OpenLayers.Control.SelectFeature":
-                control = this.featureControl;
-                break;
-            case "OpenLayers.Control.ModifyFeature":
-            case "OpenLayers.Control.DeleteFeature":
-                control = this.featureControl.selectControl;
-                break;
+    select: function(feature) {
+        if (this.featureControl instanceof OpenLayers.Control.SelectFeature) {
+            this.featureControl.select(feature);
+        } else if (this.featureControl instanceof OpenLayers.Control.ModifyFeature) {
+            this.featureControl.selectFeature(feature);
         }
+    },
 
-        return control;
+    /** private: method[unselect]
+     *  Wrapper of the unselecting method of the underlying control.
+     */
+    unselect: function(feature) {
+        if (this.featureControl instanceof OpenLayers.Control.SelectFeature) {
+            this.featureControl.unselect(feature);
+        } else if (this.featureControl instanceof OpenLayers.Control.ModifyFeature) {
+            this.featureControl.unselectFeature(feature);
+        }
     },
 
     /** private: method[getActiveDrawControl]
@@ -728,8 +729,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
 
         this.featureControl.activate();
 
-        var control = this.getSelectControl();
-        control.select.defer(1, control, [feature]);
+        this.select.defer(1, this, [feature]);
     },
 
     /** private: method[onModificationStart]
@@ -795,7 +795,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         popup.on({
             close: function() {
                 if (OpenLayers.Util.indexOf(this.controler.activeLayer.selectedFeatures, this.feature) > -1) {
-                    this.controler.getSelectControl().unselect(this.feature);
+                    this.controler.unselect(this.feature);
                 }
             }
         });
