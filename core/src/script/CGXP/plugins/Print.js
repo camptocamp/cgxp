@@ -439,6 +439,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 encodedLayer.baseURL == this.mapserverURL ?
                 this.encodeLayer : this.encodeExternalLayer);
             if (encodedLayer.type == 'WMS') {
+                encodedLayer.customParams = encodedLayer.customParams || {};
                 encodedLayer.customParams.map_resolution =
                         printProvider.dpi.data.value;
             }
