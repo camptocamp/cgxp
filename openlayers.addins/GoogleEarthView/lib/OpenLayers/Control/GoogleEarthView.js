@@ -182,12 +182,6 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      */
     gePluginFlyToSpeedSet: false,
 
-    /** private: attibute[doDragCamera]
-     *  ``Boolean``
-     *  True during camera drag.
-     */
-    doDragCamera: false,
-
     /** private: attibute[initialLookAt]
      *  ``OpenLayers.LonLat``
      *  Look at lon lat at drag start.
@@ -434,9 +428,6 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
     /** private: method[onStart]
      */
     onStart: function(feature) {
-        if (feature === this.cameraFeature) {
-            this.doDragCamera = true;
-        }
         // calculate initial range
         var mapProjection = this.map.getProjectionObject();
         var lookAt = this.lookAtFeature.geometry.clone();
@@ -457,12 +448,6 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             this.gePlugin.getOptions().setFlyToSpeed(this.gePlugin.SPEED_TELEPORT);
             this.gePluginFlyToSpeedSet = true;
         }
-    },
-
-    /** private: method[onComplete]
-     */
-    onComplete: function() {
-        this.doDragCamera = false;
     },
 
     CLASS_NAME: "OpenLayers.Control.GoogleEarthView"
