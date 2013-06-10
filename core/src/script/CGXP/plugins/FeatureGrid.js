@@ -82,7 +82,7 @@ cgxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_featuregrid */
     ptype: "cgxp_featuregrid",
 
-    /** private: attibute[this.tabpan]
+    /** private: attibute[tabpan]
      *  ``Object``
      */
     tabpan: null,
