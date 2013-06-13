@@ -98,30 +98,30 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** api: ptype = cgxp_featuresgrid */
     ptype: "cgxp_featuresgrid",
 
-    /** private: attibute[tabpan]
+    /** private: attribute[tabpan]
      *  ``Object``
      */
     tabpan: null,
 
-    /** private: attibute[currentGrid]
+    /** private: attribute[currentGrid]
      *  ``Object``
      *  The visible grid.
      */
     currentGrid: null,
 
-    /** private: attibute[gridByType]
+    /** private: attribute[gridByType]
      *  ``Object``
      *  Stores grid by type.
      */
     gridByType: {},
 
-    /** private: attibute[textItem]
+    /** private: attribute[textItem]
      *  ``Object``
      *  Component used as a status bar.
      */
     textItem: null,
 
-    /** private: attibute[control]
+    /** private: attribute[control]
      *  ``OpenLayers.Control.SelectFeature``
      *  The OpenLayers control used to select the features.
      */
@@ -240,12 +240,23 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     showUnqueriedLayers: true,
 
+    /** api: config[highlightStyle]
+     *  ``Object``  A style properties object to be used to show features
+     *  on the map when clicking on the rows in the grid (optional).
+     */
+    highlightStyle: null,
+
     /** private: property[selectAll]
      */
 
     /** private: method[init]
      */
     init: function() {
+        this.highlightStyle = OpenLayers.Util.applyDefaults(
+            this.highlightStyle || {
+                'strokeWidth': 4
+            }, OpenLayers.Feature.Vector.style['default']
+        );
         this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
         cgxp.plugins.FeaturesGrid.superclass.init.apply(this, arguments);
         this.target.on('ready', this.viewerReady, this);
@@ -462,9 +473,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         // is added to the map once for good
         this.createVectorLayer({
             styleMap: new OpenLayers.StyleMap({
-                'select': {
-                    'strokeWidth': 4
-                }
+                'select': this.highlightStyle
             })
         });
 
