@@ -21,17 +21,6 @@
 # </Directory>
 #
 
-# BUILDDIR is where the HTML files are generated
-BUILDDIR=/var/www/vhosts/docs.camptocamp.net/htdocs/cgxp
-
-# create the build dir if it doesn't exist
-if [[ ! -d ${BUILDDIR} ]]; then
-    mkdir -p ${BUILDDIR}
-fi
-
-# get the latest files
-git pull origin master
-
 # create a virtual env if none exists already
 if [[ ! -d env ]]; then
     virtualenv --no-site-packages --distribute env
@@ -40,7 +29,43 @@ fi
 # install JSTools, Jinga2 and Sphinx
 ./env/bin/pip install -r requirements
 
-./env/bin/jst jst.cfg
-make SPHINXBUILD=./env/bin/sphinx-build BUILDDIR=${BUILDDIR} clean html
+BUILDBASEDIR=/var/www/vhosts/docs.camptocamp.net/htdocs/cgxp
+
+if [[ ! -d ${BUILDBASEDIR}/html ]]; then
+    mkdir -p ${BUILDBASEDIR}/html
+fi
+
+for VERSION in master 1.3
+do
+
+    # BUILDDIR is where the HTML files are generated
+    BUILDDIR=${BUILDBASEDIR}/${VERSION}
+
+    # create the build dir if it doesn't exist
+    if [[ ! -d ${BUILDDIR} ]]; then
+        mkdir -p ${BUILDDIR}
+    fi
+
+    # get the latest files
+    git checkout --force ${VERSION}
+    git pull origin ${VERSION}
+    git reset --hard
+
+    rm -rf lib/api
+    rm -rf lib/plugins
+    rm -rf lib/widgets
+    ./env/bin/jst jst.cfg
+    make SPHINXBUILD=./env/bin/sphinx-build BUILDDIR=${BUILDDIR} clean html
+
+    if [[ ! -e ${BUILDBASEDIR}/html/${VERSION} ]]; then
+        ln -s ${BUILDDIR}/html ${BUILDBASEDIR}/html/${VERSION}
+    fi
+
+done
+
+# have the right script to run it on the next time
+git checkout --force master
+git pull origin master
+git reset --hard
 
 exit 0
