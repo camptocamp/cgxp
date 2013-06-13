@@ -186,7 +186,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
      *  ``OpenLayers.LonLat``
      *  Look at lon lat at drag start.
      */
-    initialLookAt: null
+    initialLookAt: null,
 
     /** private: attibute[initialRange]
      *  ``Number``
