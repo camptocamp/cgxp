@@ -27,7 +27,7 @@ if [[ ! -d env ]]; then
 fi
 
 # install JSTools, Jinga2 and Sphinx
-./env/bin/pip install -r requirements
+./env/bin/pip install -r requirements.txt
 
 BUILDBASEDIR=/var/www/vhosts/docs.camptocamp.net/htdocs/cgxp
 
