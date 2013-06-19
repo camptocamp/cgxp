@@ -423,8 +423,8 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
         if (!this.controlOptions.immediate) {
             this.popup.hide();
-            this.popup.setTitle(title);
         }
+        this.popup.setTitle(title);
 
         var order = event.order,
             geom = event.geometry;
