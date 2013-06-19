@@ -40,6 +40,8 @@ cgxp.WMSLegend = Ext.extend(GeoExt.WMSLegend, {
      */
     updateDelay: 0,
 
+    defaultStyleIsFirst: false,
+
     /** private: method[initComponent]
      *  Initialized the WMS legend.
      */
