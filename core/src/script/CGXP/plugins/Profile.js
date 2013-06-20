@@ -235,6 +235,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             allowDepress: true,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
+            group: this.toggleGroup,
             text: this.buttonText,
             iconCls: "cgxp-icon-profile",
             tooltip: this.tooltipText,
