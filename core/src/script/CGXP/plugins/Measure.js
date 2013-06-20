@@ -209,7 +209,60 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     pointTemplate: null,
 
+    /** api: config[controlOptions]
+     *  ``Object``
+     *  Allow to customise the handler behavior.
+     *
+     *  To enable on-the-fly measurement (ie. not only after mouse click), set 
+     *  the attribute 'immediate' to true.
+     *  On-the-fly measurement is compatible with both 'follow' and 'fixed' popup 
+     *  positionning.
+     *
+     *  Example:
+     *
+     *  .. code-block:: javascript
+     *
+     *     controlOptions: {
+     *        immediate: true
+     *     }
+     */
+    controlOptions: {},
+
     popup: null,
+
+    /** api: config[popupPosition]
+     *  ``Object``
+     *  (optional) Set the position behaviour for the popup.
+     *  By default the popup follow the mouse click (GeoExt.Popup), but it can
+     *  also be fixed to a specific position in the viewport (Ext.Window) with
+     *  predefined positionning which can be adjusted in x and/or y
+     *  
+     *  position: 'follow' or 'fixed'
+     *  Default: 'follow'
+     * 
+     *  if position is 'fixed', the additionals parameters are supported:
+     *
+     *  anchor: one of 'tl','t','tr','l','c','r','bl','b','br'
+     *  Default: 't'
+     *
+     *  offsetx: int
+     *  Default: 0
+     *
+     *  offsety: int
+     *  Default: 0
+     *
+     *  Example:
+     *
+     *  .. code-block:: javascript
+     *
+     *      popupPosition: {
+     *          'position': 'fixed',
+     *          'anchor': 'tl',
+     *          'offsetx': 30,
+     *          'offsety': 10
+     *      }
+     */
+    popupPosition: {},
 
     /** api: config[symbolizers]
      *  ``Object``
@@ -336,19 +389,41 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     showPopup: function(event, title) {
         if (!this.popup) {
-            this.popup = new GeoExt.Popup({
-                border: false,
-                map: this.target.mapPanel.map,
-                unpinnable: false,
-                closeAction: 'hide',
-                location: new OpenLayers.LonLat(0, 0)
-            });
+            if (this.popupPosition.position == 'fixed') {
+                this.popup = new Ext.Window({
+                    border: false,
+                    fixed: true,
+                    map: this.target.mapPanel.map,                    
+                    closeAction: 'hide',
+                    listeners: {
+                        render: function() {
+                            // popup must be rendered to by aligned
+                            this.popup.alignTo(this.target.mapPanel.getEl(), 
+                                    this.popupPosition.anchor || 't',
+                                    [this.popupPosition.offsetx || 0,
+                                     this.popupPosition.offsety || 0]
+                                    );
+                        },
+                        scope: this
+                    }
+                });
+            } else {
+                this.popup = new GeoExt.Popup({
+                    border: false,
+                    map: this.target.mapPanel.map,
+                    unpinnable: false,
+                    closeAction: 'hide',
+                    location: new OpenLayers.LonLat(0, 0)
+                });
+            }
             if (Ext.isIE7) {
                 // IE7 needs an explicit width.
                 this.popup.setWidth(200);
             }
         }
-        this.popup.hide();
+        if (!this.controlOptions.immediate) {
+            this.popup.hide();
+        }
         this.popup.setTitle(title);
 
         var order = event.order,
@@ -358,15 +433,18 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             event.measure.toFixed(2) : event.measure;
 
         if (!order || measure > 0) {
-            if (order == 2) {
-                geom = geom.getCentroid();
-            } else if (order == 1 || event.azimuth !== undefined) {
-                geom = geom.components[geom.components.length - 1];
+            if (!this.popup.fixed) {
+                if (order == 2) {
+                    geom = geom.getCentroid();
+                } else if (order == 1 || event.azimuth !== undefined) {
+                    geom = geom.components[geom.components.length - 1];
+                }
+                this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
+                this.popup.position();
             }
-            this.popup.location = new OpenLayers.LonLat(geom.x, geom.y);
-
-            this.popup.position();
-            this.popup.show();
+            if (this.popup.hidden) {
+                this.popup.show();           
+            }
             this.popup.update({
                 html: this.makeString(event)
             });
