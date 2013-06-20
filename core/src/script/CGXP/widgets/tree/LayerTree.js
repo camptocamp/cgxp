@@ -278,11 +278,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *
      *  :arg group: ``Object`` The group config object
      *  :arg internalWMS: ``Boolean``
-     *  :arg scroll: ``Boolean``
      *  :arg visibility: ``Boolean``
+     *  :arg styles: ``Array`` The styles object of the LayerRecord. Useful
+     *      when dealing with custom legend urls. Optional.
      *  :returns: ``Ext.tree.TreeNode``
      */
-    addGroup: function(group, internalWMS, visibility) {
+    addGroup: function(group, internalWMS, visibility, styles) {
         var checkedNodes = internalWMS ? group.layer.params.LAYERS : group.layers;
         function addNodes(children, parentNode, level) {
             if (!level) {
@@ -326,6 +327,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 item.node = parentNode.appendChild(nodeConfig);
                 if (item.children) {
                     addNodes.call(this, item.children, item.node, level+1);
+                }
+                if (item.legendImage) {
+                    styles.push({
+                        layerName: item.name,
+                        legend: {
+                            href: item.legendImage
+                        }
+                    });
                 }
             }, this);
         }
@@ -1138,12 +1147,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 else {
                     layer.params.LAYERS = layers || result.checkedLayers;
                 }
-                this.mapPanel.layers.insert(index,
-                    new this.recordType({
-                        disclaimer: result.disclaimer,
-                        layer: layer
-                    }, layer.id));
-                groupNode = this.addGroup(group, true, visibility);
+                var styles = [];
+                var layerRecord = new this.recordType({
+                    disclaimer: result.disclaimer,
+                    layer: layer
+                }, layer.id);
+                this.mapPanel.layers.insert(index, layerRecord);
+                groupNode = this.addGroup(group, true, visibility, styles);
+                layerRecord.set('styles', styles);
             }
             else {
                 result = {
