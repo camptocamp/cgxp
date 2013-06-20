@@ -330,7 +330,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 if (item.legendImage) {
                     styles.push({
-                        name: item.name,
+                        layerName: item.name,
                         legend: {
                             href: item.legendImage
                         }
