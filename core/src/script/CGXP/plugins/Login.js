@@ -105,10 +105,10 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[ignoreExistingPermalink]
      *  ``Bool``
-     * if set to true, existing permalink in url are ignored and the permalink 
-     * corresponding to the up-to-date state of the application is used.
+     *  if set to true, existing permalink in url are ignored and the permalink 
+     *  corresponding to the up-to-date state of the application is used.
      *
-     * Default: false
+     *  Default: false
      */
     ignoreExistingPermalink: false,
 
