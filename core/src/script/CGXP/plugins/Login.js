@@ -44,7 +44,8 @@ Ext.namespace("cgxp.plugins");
  *              username: "${user.username}",
  *      % endif
  *              loginURL: "${request.route_url('login', path='')}",
- *              logoutURL: "${request.route_url('logout', path='')}"
+ *              logoutURL: "${request.route_url('logout', path='')}",
+ *              permalinkId: "permalink",
  *          }]
  *          ...
  *      });
@@ -94,6 +95,22 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     button: null,
     loginForm: null,
+
+    /** api: config[permalinkId]
+     *  ``String``
+     *  Id of the permalink tool.
+     *  You need to set an id in the permalink plugin config
+     */
+    permalinkId: null,
+
+    /** api: config[ignoreExistingPermalink]
+     *  ``Bool``
+     *  if set to true, existing permalink in url are ignored and the permalink 
+     *  corresponding to the up-to-date state of the application is used.
+     *
+     *  Default: false
+     */
+    ignoreExistingPermalink: false,
 
     /* i18n */
     authenticationFailureText: "Impossible to connect.",
@@ -209,9 +226,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 if (Ext.isIE) {
                     window.external.AutoCompleteSaveForm(this.loginForm.getForm().el.dom);
                 }
-                this.loginForm.getForm().el.dom.action = window.location.href;
-                this.loginForm.getForm().standardSubmit = true;
-                this.loginForm.getForm().submit();
+                window.location = this.getUrl();
             },
             failure: function(form, action) {
                 this.button.setIconClass('');
@@ -220,6 +235,37 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         });
+    },
+
+    /**
+     * return the url where the user is redirected after login
+     * if the current url is already a permalink, use it as it is,
+     * otherwise get the permalink
+     */
+    getUrl: function() {
+        /* check if the current url is already a permalink (map_x exists) and 
+           also check if all other other required parameters are set */
+        var targetUrl;
+        var currentUrl = window.location.href;
+
+        if (this.permalinkId == null) {
+            alert('permalinkId is missing in your login plugin config.');
+            return currentUrl;
+        }
+        // map_x is used as an indicator of existing permalink
+        if (!this.ignoreExistingPermalink && 
+              window.location.search.indexOf('map_x') > -1) {
+            targetUrl = currentUrl;
+        } else {
+            if (this.target.tools[this.permalinkId]) {
+                targetUrl = this.target.tools[this.permalinkId].permalink;
+            } else {
+                alert('permalinkId not found, your permalink plugin "id" config is' +
+                      ' either missing or wrong');
+                targetUrl = currentUrl;
+            }
+        }
+        return targetUrl;
     }
 
 });

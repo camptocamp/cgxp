@@ -58,6 +58,12 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
      *  Configuration object for the action created by this plugin.
      */
 
+    /** api: config[permalink]
+     *  ``String``
+     *  Allow other plugins to access the latest permalink.
+     */
+    permalink: '',
+
     /* i18n */
     toolTitle: "Permalink",
     windowTitle: "Permalink",
@@ -134,6 +140,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                 }
                 link = provider.getLink(base);
                 permalinkTextField.setValue(link);
+                this.permalink = link;
 
                 var splittedURL = link.split(/\/+/g);
                 var path = "/" + splittedURL[splittedURL.length - 1];
@@ -145,7 +152,8 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                     warningLabel.hide();
                 }
                 permalinkWindow.doLayout();
-            }
+            },
+            scope: this
         });
 
         var action = Ext.apply({
