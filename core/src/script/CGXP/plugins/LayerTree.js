@@ -151,6 +151,13 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      */
     defaultThemes: null,
 
+    /** api: config[showKMLIn2D]
+     *  ``Boolean`
+     *  Indicate if KML layers should be shown in the 2D map.
+     *  Default is ``true``.
+     */
+    showKMLIn2D: true,
+
     /** private: property[tree]
      */
     tree: null,
@@ -196,7 +203,33 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
         this.tree = cgxp.plugins.LayerTree.superclass.addOutput.call(this, config);
         this.relayEvents(this.tree, ['loadtheme']);
+        this.tree.on('togglekml', this.toggleKml, this);
         return this.tree;
+    },
+
+    /** private: method[toggleKml]
+     */
+    toggleKml: function(e) {
+        var layerName = e.layerName;
+        var map = this.target.mapPanel.map;
+        if (map.getLayersByName(layerName).length === 0) {
+            var layer = new OpenLayers.Layer.Vector(layerName, {
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: e.url,
+                    format: new OpenLayers.Format.KML({
+                        extractStyles: true,
+                        internalProjection: map.projection
+                    })
+                }),
+                visibility: this.showKMLIn2D
+            });
+            map.addLayer(layer);
+        } else {
+            Ext.each(map.getLayersByName(layerName), function(layer) {
+                map.removeLayer(layer);
+            });
+        }
     }
 
 });
