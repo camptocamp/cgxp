@@ -213,6 +213,7 @@ GeoExt.ux.form.FeaturePanel.prototype.labelFieldText = "Label";
 GeoExt.ux.form.FeaturePanel.prototype.colorFieldText = "Color";
 GeoExt.ux.form.FeaturePanel.prototype.strokeWidthFieldText = "Stroke width";
 GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Size";
+GeoExt.ux.form.FeaturePanel.prototype.radiusFieldText = "Radius";
 GeoExt.ux.form.FeaturePanel.prototype.attributesText = "Attributes";
 
 // some more redlining patch
@@ -315,6 +316,40 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
                 scope: this
             }
         });
+    }
+    if (feature.attributes.isCircle) {
+        var radius = feature.geometry.getBounds().getWidth()/2;
+        var cb = function(sp) {
+            var f = feature,
+                id = f.geometry.id,
+                value = (sp.field) ? sp.field.getValue() : sp.value;
+            f.geometry = OpenLayers.Geometry.Polygon.createRegularPolygon(
+                f.geometry.getCentroid(), value, 32, 0
+            );
+            f.geometry.id = id;
+            this.controler.featureControl.resetVertices();
+            f.layer.drawFeature(f);
+        };
+        var radiusField = Ext.create({
+            xtype: 'spinnerfield',
+            name: 'radius',
+            fieldLabel: this.radiusFieldText+' ('+feature.layer.map.units+')',
+            value: radius,
+            decimalPrecision: 0,
+            width: 130,
+            incrementValue: Math.round(radius)/100,
+            listeners: {
+                spin: cb,
+                valid: cb,
+                scope: this
+            }
+        });
+        feature.layer.events.register('featuremodified', null, function(e){
+            if (e.feature != feature) { return; }
+            radiusField.setValue(e.feature.geometry.getBounds().getWidth()/2);
+
+        });
+        oGroupItems.push(radiusField);
     }
 
     oGroup.items = oGroupItems;

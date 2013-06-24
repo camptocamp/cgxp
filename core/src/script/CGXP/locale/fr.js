@@ -259,7 +259,8 @@ GeoExt.Lang.add("fr", {
         colorFieldText: "Couleur",
         strokeWidthFieldText: "Epaisseur du trait",
         labelFieldText: "Étiquette",
-        fontSizeFieldText: "Taille"
+        fontSizeFieldText: "Taille",
+        radiusFieldText: "Rayon"
     },
 
     "GeoExt.ux.FeatureEditorGrid.prototype": {
