@@ -338,16 +338,12 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                         this.googleEarthViewControl.destroy();
                         this.googleEarthViewControl = null;
 
-                        var layersToRemove = [];
                         this.target.mapPanel.layers.each(function(record) {
                             var layer = record.getLayer();
                             if (cgxp.plugins.GoogleEarthView.isKmlLayer(layer)) {
-                                layersToRemove.push(layer);
+                                layer.destroy();
                             }
                         });
-                        for (var i = 0; i < layersToRemove.length; ++i) {
-                            layersToRemove[i].destroy();
-                        }
 
                         this.googleEarthPanel.destroy();
                         this.googleEarthPanel = null;
