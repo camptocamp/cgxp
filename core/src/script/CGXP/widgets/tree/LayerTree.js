@@ -239,7 +239,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             /** private: event[loadtheme]
              *  Fires after a theme is loaded.
              */
-            "loadtheme"
+            "loadtheme",
+
+            /** private: event[togglekml]
+             *  Fires when a "showin3d" action is triggered.
+             */
+            "togglekml"
         );
         this.on('checkchange', function(node, checked) {
             this.fireEvent("layervisibilitychange");
@@ -719,30 +724,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 map.setCenter(center, zoom);
                 break;
             case 'showin3d':
-                var n = node,
-                    map = n.layer.map,
-                    layerName = n.text + '_kml';
-
-                // load the KML in the 2D map
-                // this should trigger its load in the 3D viewer as well
-                if (!map.getLayersByName(layerName).length) {
-                    var layer = new OpenLayers.Layer.Vector(layerName, {
-                        strategies: [new OpenLayers.Strategy.Fixed()],
-                        protocol: new OpenLayers.Protocol.HTTP({
-                            url: node.attributes.kml,
-                            format: new OpenLayers.Format.KML({
-                                extractStyles: true,
-                                internalProjection: map.projection
-                            })
-                        })
-                    });
-                    map.addLayer(layer);
-                } else {
-                    Ext.each(map.getLayersByName(layerName), function(layer) {
-                        map.removeLayer(layer);
-                    });
-                }
-
+                this.fireEvent('togglekml', {
+                    url: node.attributes.kml,
+                    layerName: node.text + '_kml'
+                });
                 break;
         }
 
