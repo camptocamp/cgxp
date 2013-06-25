@@ -212,6 +212,13 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      */
     'export': true,
 
+    /** api: property['rotate']
+     *  ``Boolean``
+     *  If set to true, automatically creates and add a modifyFeature action
+     *  in rotate mode only.
+     */
+    rotate: false,
+
     /** api: property[toggleGroup]
      *  ``String``
      *  The name of the group used for the buttons created.  If none is
@@ -404,6 +411,28 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         var action = new GeoExt.Action(actionOptions);
 
         this.actions.push(action);
+
+        if (this.rotate) {
+            var rotateControl = new OpenLayers.Control.ModifyFeature(layer, {
+                mode: OpenLayers.Control.ModifyFeature.ROTATE
+            });
+            var rotateActionOptions = {
+                control: rotateControl,
+                map: this.map,
+                toggleGroup: this.toggleGroup,
+                allowDepress: false,
+                pressed: false,
+                tooltip: OpenLayers.i18n('Rotate Feature'),
+                group: this.toggleGroup,
+                checked: false
+            };
+            if (this.useIcons === true) {
+                rotateActionOptions.iconCls = "gx-featureediting-rotatefeature";
+            } else {
+                rotateActionOptions.text = OpenLayers.i18n("Rotate Feature");
+            }
+            this.actions.push(new GeoExt.Action(rotateActionOptions));
+        }
     },
 
     /** private: method[destroyFeatureControl]
@@ -755,6 +784,11 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         if (drawControl) {
             drawControl.deactivate();
             this.featureControl.activate();
+        }
+
+        if (!this.featureControl.active) {
+            // Then active modifyFeatureControl is rotate only: no popup.
+            return;
         }
 
         var options = {
