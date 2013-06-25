@@ -347,7 +347,6 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
         feature.layer.events.register('featuremodified', null, function(e){
             if (e.feature != feature) { return; }
             radiusField.setValue(e.feature.geometry.getBounds().getWidth()/2);
-
         });
         oGroupItems.push(radiusField);
     }
