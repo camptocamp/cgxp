@@ -9,6 +9,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     'Import KML': 'Importer KML',
     'Import': 'Importer',
     'Edit Feature': 'Editer Objet',
+    'Rotate Feature': 'Pivoter l\'objet',
     'LineString': 'Ligne',
     'MultiLineString': 'MultiLigne',
     'Point': 'Point',
