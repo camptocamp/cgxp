@@ -16,3 +16,6 @@
 [submodule "core/tests/lib/jasmine"]
 	path = core/tests/lib/jasmine
 	url = https://github.com/pivotal/jasmine.git
+[submodule "dygraphs/dygraphs/dygraphs"]
+	path = dygraphs/dygraphs/dygraphs
+	url = https://github.com/danvk/dygraphs
