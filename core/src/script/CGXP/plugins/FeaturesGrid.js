@@ -299,7 +299,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     Ext.iterate(attributes, function iter(key, attr) {
                         header.push(q + OpenLayers.i18n(key).replace(q, q+q) + q);
                     }, this);
-                    csv.push(header);
+                    csv.push(header.join(this.csvSeparator));
                 }
                 for (var prop in attributes) {
                     if (attributes.hasOwnProperty(prop)) {
