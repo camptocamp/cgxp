@@ -153,6 +153,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
                 clickout: false
             },
             'import': false,
+            rotate: true,
             bodyStyle: 'display: none',
             border: false
         });

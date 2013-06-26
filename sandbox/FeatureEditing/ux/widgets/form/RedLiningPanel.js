@@ -54,6 +54,13 @@ GeoExt.ux.form.RedLiningPanel = Ext.extend(GeoExt.ux.form.FeatureEditingPanel, {
      */
     'export': true,
 
+    /** api: property['rotate']
+     *  ``Boolean``
+     *  If set to true, automatically creates and add a modifyFeature action
+     *  in rotate mode only.
+     */
+    rotate: false,
+
     /** api: property[toggleGroup]
      *  ``String``
      *  The name of the group used for the buttons created.  If none is
@@ -103,6 +110,7 @@ GeoExt.ux.form.RedLiningPanel = Ext.extend(GeoExt.ux.form.FeatureEditingPanel, {
             'map': this.map,
             'import': this['import'],
             'export': this['export'],
+            'rotate': this['rotate'],
             'toggleGroup': this.toggleGroup,
             'popupOptions': this.popupOptions,
             'selectControlOptions': this.selectControlOptions

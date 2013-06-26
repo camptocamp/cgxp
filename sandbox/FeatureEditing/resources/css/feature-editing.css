@@ -26,6 +26,10 @@
   background-image: url("../images/silk/pencil.png") !important;
 }
 
+.gx-featureediting-rotatefeature {
+  background-image: url("../images/silk/arrow_rotate_clockwise.png") !important;
+}
+
 .gx-featureediting-delete {
   background-image: url("../images/silk/delete.png") !important;
 }
