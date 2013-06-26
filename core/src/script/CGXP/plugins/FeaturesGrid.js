@@ -133,6 +133,12 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     csvSeparator: ',',
 
+    /** api: config[csvIncludeHeader]
+     *  ``Boolean`` Specifies if the header row has to be included in the
+     *  CSV. Default is 'False'.
+     */
+    csvIncludeHeader: false,
+
     /** api: config[quote]
      *  ``String`` Specifies the character to delimit strings in the
      *  exported CSV docs. Default is '"' (double quote).
@@ -283,16 +289,25 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             if (records.length === 0) {
                 return;
             }
-            Ext.each(records, function(r) {
+            Ext.each(records, function(r, index) {
                 var attributes = r.getFeature().attributes;
                 var properties = [];
+                var q = this.quote;
+                // Include header row
+                if (this.csvIncludeHeader && index==0) {
+                    var header = [];
+                    Ext.iterate(attributes, function iter(key, attr) {
+                        header.push(q + OpenLayers.i18n(key).replace(q, q+q) + q);
+                    }, this);
+                    csv.push(header.join(this.csvSeparator));
+                }
                 for (var prop in attributes) {
                     if (attributes.hasOwnProperty(prop)) {
                         // special IE as it doesn't handle null element as string
                         if (attributes[prop] !== null) {
-                            properties.push(this.quote + attributes[prop].replace(this.quote, this.quote+this.quote) + this.quote);
+                            properties.push(q + attributes[prop].replace(q, q+q) + q);
                         } else {
-                            properties.push(this.quote + this.quote);
+                            properties.push(q + q);
                         }
                     }
                 }
