@@ -16,7 +16,10 @@ Ext.onReady(function() {
             type: "->"
         },{
             ptype: "cgxp_redlining",
+            stateId: 'red',
             toggleGroup: 'maptools'
+        },{
+            ptype: "cgxp_permalink"
         }],
         sources: {
             osm: {
