@@ -244,6 +244,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.on('checkchange', function(node, checked) {
             this.fireEvent("layervisibilitychange");
             if (!this.changing) {
+                if (checked) {
+                    node.expand();
+                }
                 this.changing = true;
                 node.cascade(function(node){
                     node.getUI().toggleCheck(checked);
