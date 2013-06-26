@@ -292,11 +292,12 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             Ext.each(records, function(r, index) {
                 var attributes = r.getFeature().attributes;
                 var properties = [];
+                var q = this.quote;
                 // Include header row
                 if (this.csvIncludeHeader && index==0) {
                     var header = [];
                     Ext.iterate(attributes, function iter(key, attr) {
-                        header.push(this.quote + OpenLayers.i18n(key).replace(this.quote, this.quote+this.quote) + this.quote);
+                        header.push(q + OpenLayers.i18n(key).replace(q, q+q) + q);
                     }, this);
                     csv.push(header);
                 }
@@ -304,9 +305,9 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     if (attributes.hasOwnProperty(prop)) {
                         // special IE as it doesn't handle null element as string
                         if (attributes[prop] !== null) {
-                            properties.push(this.quote + attributes[prop].replace(this.quote, this.quote+this.quote) + this.quote);
+                            properties.push(q + attributes[prop].replace(q, q+q) + q);
                         } else {
-                            properties.push(this.quote + this.quote);
+                            properties.push(q + q);
                         }
                     }
                 }
