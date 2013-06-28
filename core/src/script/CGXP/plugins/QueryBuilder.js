@@ -164,6 +164,11 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``Ext.LoadMask``
      */
     mask: null,
+    
+    /** private: property[storeUriProperty]
+     *  ``String``
+     */
+    storeUriProperty: "url",
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -347,7 +352,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     listWidth: 200
                 },
                 values: {
-                    storeUriProperty: 'url',
+                    storeUriProperty: this.storeUriProperty,
                     storeOptions: {
                         root: 'items',
                         fields: ['label', 'value']
@@ -453,8 +458,8 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                         r.set("displayName", OpenLayers.i18n(r.get("name")));
                         if (featureType in this.attributeURLs &&
                             r.get("name") in this.attributeURLs[featureType]) {
-                            r.set("url", this.attributeURLs[featureType]
-                                                           [r.get("name")]);
+                            r.set(this.storeUriProperty,
+                                  this.attributeURLs[featureType][r.get("name")]);
                         }
                     }, this);
                     this.createProtocol(store, featureType);
