@@ -276,4 +276,16 @@ window.onload = function() {
         overview: true,
         overviewExpanded: true
     });
+
+    var map3 = new XMap({
+        div: 'map3',
+        center: [544500, 210100],
+        zoom: 8,
+        layerSwitcher: true,
+        layerSwitcherExpanded: true,
+        overview: true,
+        overviewExpanded: true
+    });
+    map3.addCustomLayer('text', 'My custom txt layer', 'MonFichier.txt');
+    map3.selectObject(2);
 };
