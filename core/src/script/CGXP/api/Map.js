@@ -424,6 +424,44 @@ cgxp.api.Map.prototype = {
         ]);
     },
 
+    /** api: method[selectObject]
+     *  :arg id: ``String`` The id of the feature to select.
+     */
+    selectObject: function(id) {
+        if (!this.map) {
+            this.deferedCalls.push(
+                OpenLayers.Function.bind(this.selectObject, this, id));
+            return;
+        }
+        var layer = this.getVectorLayer();
+        if (layer.features.length==0) {
+            layer.events.register('featuresadded', this,
+                OpenLayers.Function.bind(this.selectObject, this, id));
+            return;
+        }
+        var feature = layer.getFeaturesByAttribute('id', id.toString())[0],
+            control = this.getSelectFeatureControl();
+        if (feature && control) {
+            control.select(feature);
+        }
+    },
+
+    /** api: method[selectObject]
+     *  :arg id: ``String`` The id of the feature to unselect.
+     */
+    unselectObject: function(id) {
+        if (!this.map) {
+            this.deferedCalls.push(
+                OpenLayers.Function.bind(this.unselectObject, this, id));
+            return;
+        }
+        var feature = this.getVectorLayer().getFeaturesByAttribute('id', id.toString())[0],
+            control = this.getSelectFeatureControl();
+        if (feature && control) {
+            control.unselect(feature);
+        }
+    },
+
     /** private: method[getVectorLayer]
      */
     getVectorLayer: function() {
@@ -435,6 +473,12 @@ cgxp.api.Map.prototype = {
         }
 
         return this.vectorLayer;
+    },
+
+    /** private: method[getSelectFeatureControl]
+     */
+    getSelectFeatureControl: function() {
+        return this.map.getControlsByClass('OpenLayers.Control.SelectFeature')[0];
     },
 
     /** private: method[createQueryControl]

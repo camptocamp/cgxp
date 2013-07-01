@@ -1,0 +1,16 @@
+point	id	title	description	icon	iconSize
+146337,554168	1	Information	Office de l'information<br />Tél: 032 000 00 00<br>Email: <a href="mailto:info@example.com">info@example.com</a><br />Internet: <a href="http://fr.wikipedia.org/wiki/La_Chaux-de-Fonds" target=new>Cliquer ici</a>	http://openlayers.org/dev/img/marker.png	21,25
+146205,553800	2	Ma première station	Diesel pas cher	http://openlayers.org/dev/img/marker-blue.png	21,25
+145605,554060	3	Mon parking	C'est celui-là le meilleur.	http://openlayers.org/dev/img/marker-gold.png	21,25
+145542,554688	4	Mon parking	Ce parking est<br/>le meillleur.	http://openlayers.org/dev/img/marker-gold.png	21,25
+145977,555638	5	Ma deuxième station	Sans-plomb pas cher.	http://openlayers.org/dev/img/marker-blue.png	21,25
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
