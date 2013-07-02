@@ -637,7 +637,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         layers = layers.split(',');
                     }
                 }
-                else {
+                else if (olLayer.params && olLayer.params.LAYERS) {
                     layers = olLayer.params.LAYERS;
                     if (!Ext.isArray(layers)) {
                         layers = layers.split(',');
