@@ -53,7 +53,8 @@ Ext.namespace("cgxp.plugins");
  *              // don't work with actual version of mapserver, the proxy will limit to 200
  *              // it is intended to be reactivated this once mapserver is fixed
  *              srsName: 'EPSG:21781',
- *              featureTypes: ['layer1', 'layer2']
+ *              featureTypes: ['layer1', 'layer2'],
+ *              attributeURLs: { 'layer1': { 'fieldA': 'http://path/to/json' }}
  *          }
  *      % endif
  *          ]
@@ -119,6 +120,12 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Title for the panel (i18n)
      */
     querierText: "Querier",
+    
+    /** api: config[attributeURLs]
+     *  ``Object`` Optional list of URL to feed combos for given fields
+     *  for given layer.
+     */
+    attributeURLs: null,
 
     /* i18n */
     incompleteFormText: 'Incomplete form.',
@@ -157,6 +164,11 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``Ext.LoadMask``
      */
     mask: null,
+    
+    /** private: property[storeUriProperty]
+     *  ``String``
+     */
+    storeUriProperty: "url",
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -340,7 +352,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     listWidth: 200
                 },
                 values: {
-                    storeUriProperty: 'url',
+                    storeUriProperty: this.storeUriProperty,
                     storeOptions: {
                         root: 'items',
                         fields: ['label', 'value']
@@ -444,7 +456,12 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     // attributes translation:
                     store.each(function(r) {
                         r.set("displayName", OpenLayers.i18n(r.get("name")));
-                    });
+                        if (featureType in this.attributeURLs &&
+                            r.get("name") in this.attributeURLs[featureType]) {
+                            r.set(this.storeUriProperty,
+                                  this.attributeURLs[featureType][r.get("name")]);
+                        }
+                    }, this);
                     this.createProtocol(store, featureType);
                     this.createFilterBuilder(store);
                     if (this.mask) {
