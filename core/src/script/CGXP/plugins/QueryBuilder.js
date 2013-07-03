@@ -125,7 +125,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``Object`` Optional list of URL to feed combos for given fields
      *  for given layer.
      */
-    attributeURLs: null,
+    attributeURLs: {},
 
     /* i18n */
     incompleteFormText: 'Incomplete form.',
