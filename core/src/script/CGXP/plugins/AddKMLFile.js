@@ -77,6 +77,21 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
      */
     actionConfig: null,
 
+    /** api: config[googleEarthPluginId]
+     *  ``String``
+     *  A reference id to the ``GoogleEarthView`` plugin, mandatory 
+     *  if you want to auto-load that plugin when loading a kml file.
+     */
+    googleEarthPluginId: null,
+
+    /** api: config[autoloadGoogleEarth]
+     *  ``Boolean``
+     *  Enable or disable ``GoogleEarthView`` plugin auto-loading.
+     *
+     *  default to false
+     */
+    autoloadGoogleEarth: false,
+
     /** private: method[addActions]
      */
     addActions: function() {
@@ -120,14 +135,30 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
                 layer.addFeatures(kmlFormat.read(kmlString));
                 map.addLayer(layer);
 
-                // Add KML file to GoogleEarthPanel
                 var googleEarthPanel = Ext.getCmp("googleearthpanel");
+                // Autoload GoogleEarthPanel
+                if (!googleEarthPanel && this.autoloadGoogleEarth) {
+                    if (!this.googleEarthPluginId) {
+                        alert('googleEarthPluginId must be defined in your cgxp_addkmlfile config.')
+                    } else {
+                        var ge = this.target.tools[this.googleEarthPluginId];
+                        ge.loadGoogleEarth();
+                        // change button state to reflect current enabled state
+                        ge.actions[0].items[0].toggle(true, true);
+                    }
+                }
+                // Add KML file to GoogleEarthPanel
                 if (googleEarthPanel) {
                     var gePlugin = googleEarthPanel.earth;
                     if (gePlugin) {
                         var kmlObject = gePlugin.parseKml(kmlString);
                         gePlugin.getFeatures().appendChild(kmlObject);
                     }
+                } 
+                // Store kmlString to load them in GoogleEarth later
+                if (this.googleEarthPluginId) {
+                    var ge = this.target.tools[this.googleEarthPluginId];
+                    ge.kmlList.push(kmlString);
                 }
 
                 form.reset();
