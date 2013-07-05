@@ -328,18 +328,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         editable: item.editable,
                         uiProvider: 'layer'
                     });
+                    if (item.legendImage && styles) {
+                        styles.push({
+                            layerName: item.name,
+                            legend: {
+                                href: item.legendImage
+                            }
+                        });
+                    }
                 }
                 item.node = parentNode.appendChild(nodeConfig);
                 if (item.children) {
                     addNodes.call(this, item.children, item.node, level+1);
-                }
-                if (item.legendImage) {
-                    styles.push({
-                        layerName: item.name,
-                        legend: {
-                            href: item.legendImage
-                        }
-                    });
                 }
             }, this);
         }
