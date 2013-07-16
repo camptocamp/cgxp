@@ -581,8 +581,11 @@ cgxp.api.Map.prototype = {
      *      (either "text" or "gpx")
      *  :arg layerName: ``String`` A text description for the layer
      *  :arg layerUrl: ``String`` The url the file to load
-     *  :arg options: ``Object`` Optional (only if layerType="gpx") styling
-     *      properties (ie. strokeColor, strokeWidth, strokeOpacity)
+     *  :arg options: ``Object`` Options object with optional style properties,
+     *      ``strokeColor``, ``strokeWidth``, ``strokeOpacity``
+     *      only apply for GPX layers (i.e. ``layerType`` set to ``"gxp"``),
+     *      and optional callback functions for the HTTP request,
+     *      ``success`` and ``error``.
      */
     addCustomLayer: function (layerType, layerName, layerUrl, options) {
         if (!this.map) {
@@ -618,6 +621,12 @@ cgxp.api.Map.prototype = {
                             this.map.zoomToExtent(
                                 this.getVectorLayer().getDataExtent());
                         }
+                        if (options.success) {
+                            options.success();
+                        }
+                    }
+                    else if (options.error) {
+                        options.error();
                     }
                 },
                 scope: this
@@ -634,6 +643,13 @@ cgxp.api.Map.prototype = {
                         this.getVectorLayer().addFeatures(features);
                         this.map.zoomToExtent(
                             this.getVectorLayer().getDataExtent());
+
+                        if (options.success) {
+                            options.success();
+                        }
+                    }
+                    else if (options.error) {
+                        options.error();
                     }
                 },
                 scope: this
