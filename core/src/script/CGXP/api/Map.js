@@ -268,7 +268,7 @@ cgxp.api.Map.prototype = {
         // get class based on type in config
         var Class = window;
         var parts = config.type.split(".");
-        for (var i=0, ii=parts.length; i<ii; ++i) {
+        for (var i = 0, ii = parts.length ; i < ii ; ++i) {
             Class = Class[parts[i]];
             if (!Class) {
                 break;
@@ -370,8 +370,8 @@ cgxp.api.Map.prototype = {
         var response = protocol.read({
             params: params,
             callback: function(result) {
-                if(result.success()) {
-                    if(result.features.length) {
+                if (result.success()) {
+                    if (result.features.length) {
                         var bounds = new OpenLayers.Bounds();
                         for (var i = 0; i < result.features.length; i++) {
                             bounds.extend(result.features[i].geometry.getBounds());
@@ -497,7 +497,7 @@ cgxp.api.Map.prototype = {
                     var layer = layers[i];
                     if (layer instanceof OpenLayers.Layer.WMS &&
                         layer.getVisibility() &&
-                        layer.params.LAYERS != null) {
+                        layer.params.LAYERS !== null) {
                         for (var j = 0; j < queryableLayers.length; j++) {
                             if (layer.params.LAYERS.indexOf(queryableLayers[j]) != -1){
                                 layerNames.push(queryableLayers[j]);
@@ -506,7 +506,7 @@ cgxp.api.Map.prototype = {
                     }
                 }
 
-                if (layerNames.length != 0) {
+                if (layerNames.length !== 0) {
                     return {
                         service: "WMS",
                         version: "1.1.1",
@@ -522,7 +522,7 @@ cgxp.api.Map.prototype = {
                         layers: layerNames,
                         query_layers: layerNames,
                         styles: 'default'
-                    }
+                    };
                 }
             }
         });
@@ -592,9 +592,10 @@ cgxp.api.Map.prototype = {
             return;
         }
         options = options || {};
+        var protocol;
 
         if (layerType=="gpx") {
-            var protocol = new OpenLayers.Protocol.HTTP({
+            protocol = new OpenLayers.Protocol.HTTP({
                 url: layerUrl,
                 format: new OpenLayers.Format.GPX({
                     externalProjection: new OpenLayers.Projection("EPSG:4326"),
@@ -603,10 +604,10 @@ cgxp.api.Map.prototype = {
             });
             protocol.read({
                 callback: function(result) {
-                    if(result.success()) {
+                    if (result.success()) {
                         var features = result.features;
-                        if(features.length) {
-                            for (var i = 0; i < features.length; i++) {
+                        if (features.length) {
+                            for (var i = 0 ; i < features.length ; i++) {
                                 features[i].style = OpenLayers.Util.applyDefaults({
                                     strokeColor: options.strokeColor || 'red',
                                     strokeWidth: options.strokeWidth || 3,
@@ -621,14 +622,14 @@ cgxp.api.Map.prototype = {
                 },
                 scope: this
             });
-        } else if (layerType=="text") {
-            var protocol = new OpenLayers.Protocol.HTTP({
+        } else if (layerType == "text") {
+            protocol = new OpenLayers.Protocol.HTTP({
                 url: layerUrl,
                 format: new OpenLayers.Format.Text()
             });
             protocol.read({
                 callback: function(result) {
-                    if(result.success()) {
+                    if (result.success()) {
                         var features = result.features;
                         this.getVectorLayer().addFeatures(features);
                         this.map.zoomToExtent(
@@ -643,17 +644,17 @@ cgxp.api.Map.prototype = {
             control.activate();
 
             var popup;
-            function onPopupClose(evt) {
+            var onPopupClose = function(evt) {
                 control.unselectAll();
-            }
-            function onFeatureSelect(evt) {
+            };
+            var onFeatureSelect = function(evt) {
                 var feature = evt.feature;
                 if (feature.attributes.title && feature.attributes.description) {
                     popup = new OpenLayers.Popup.FramedCloud(
                         "featurePopup",
                         feature.geometry.getBounds().getCenterLonLat(),
                         new OpenLayers.Size(200,120),
-                        "<b>"+feature.attributes.title + "</b><br />" +
+                        "<b>" + feature.attributes.title + "</b><br />" +
                             feature.attributes.description,
                         null,
                         true,
@@ -661,18 +662,18 @@ cgxp.api.Map.prototype = {
                     );
                     this.map.addPopup(popup);
                 }
-            }
-            function onFeatureUnselect(evt) {
+            };
+            var onFeatureUnselect = function(evt) {
                 if (popup) {
                     popup.destroy();
                     popup = null;
                 }
-            }
+            };
             this.getVectorLayer().events.on({
                 'featureselected': OpenLayers.Function.bind(onFeatureSelect, this),
                 'featureunselected': OpenLayers.Function.bind(onFeatureUnselect, this),
                 'featuresadded': function(obj) {
-                    for (var i=0;i<obj.features.length;i++) {
+                    for (var i = 0 ; i < obj.features.length ; i++) {
                         var feature = obj.features[i];
                         feature.style.cursor = 'pointer';
                     }
