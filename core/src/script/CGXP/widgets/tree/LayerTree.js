@@ -317,6 +317,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.addShowIn3DAction(item, nodeConfig);
                     this.addLegend(item, nodeConfig, level);
                     this.addScaleAction(item, nodeConfig);
+                    // FIXME We create a cgxp_layerparam node for a WMTS layer.
+                    // That doesn't make sense, but cgxp_layerparam does work
+                    // for us.
                     Ext.apply(nodeConfig, {
                         nodeType: 'cgxp_layerparam',
                         leaf: true,
@@ -328,18 +331,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         editable: item.editable,
                         uiProvider: 'layer'
                     });
+                    if (item.legendImage && styles) {
+                        styles.push({
+                            layerName: item.name,
+                            legend: {
+                                href: item.legendImage
+                            }
+                        });
+                    }
                 }
                 item.node = parentNode.appendChild(nodeConfig);
                 if (item.children) {
                     addNodes.call(this, item.children, item.node, level+1);
-                }
-                if (item.legendImage) {
-                    styles.push({
-                        layerName: item.name,
-                        legend: {
-                            href: item.legendImage
-                        }
-                    });
                 }
             }, this);
         }
