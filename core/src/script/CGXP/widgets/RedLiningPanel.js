@@ -50,7 +50,10 @@ cgxp.RedLiningPanel = Ext.extend(
      */
     urlCompressed: new OpenLayers.Format.URLCompressed({
         attributes: {
-            point: {},
+            point: {
+                'isLabel': function(val) { return val == 'true'; },
+                'name': true
+            },
             line: {},
             polygon: {
                 'isCircle': function(val) { return val == 'true'; },
@@ -65,8 +68,7 @@ cgxp.RedLiningPanel = Ext.extend(
                 'strokeColor': true,
                 'fontColor': true,
                 'fontSize': true,
-                'graphic': function(val) { return val == 'true'; },
-                'label': true
+                'graphic': function(val) { return val == 'true'; }
             },
             line: {
                 'strokeColor': true,
@@ -117,6 +119,11 @@ cgxp.RedLiningPanel = Ext.extend(
     /** private: method[saveState]
      */
     getState: function() {
+        Ext.each(this.controler.activeLayer.features, function(feature) {
+            if (feature.isLabel) {
+                feature.attributes.isLabel = true;
+            }
+        });
         return {
             features: this.urlCompressed.write(this.controler.activeLayer.features)
         }
@@ -129,9 +136,17 @@ cgxp.RedLiningPanel = Ext.extend(
             var features = this.urlCompressed.read(state.features);
             Ext.each(features, function(feature) {
                 var style = feature.style;
+                if (feature.attributes.isLabel) {
+                    /* OL SVG renderer disable click event on label (svg's 
+                    pointerEvents is set to none) unless labelSelect
+                    is true , and we need that to be able to edit label features */
+                    style['labelSelect'] = true;
+                    style.label = feature.attributes.name;
+                    feature.isLabel = true;
+                }
                 this.controler.activeLayer.addFeatures([feature]);
                 Ext.apply(feature.style, style);
-                this.controler.activeLayer.drawFeature(feature)
+                this.controler.activeLayer.drawFeature(feature);
             }, this);
         }
     }
