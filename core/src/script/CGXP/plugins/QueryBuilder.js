@@ -122,7 +122,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
 
     /* i18n */
     incompleteFormText: 'Incomplete form.',
-    errorText: 'Unexpected error.',
+    errorText: 'QueryBuilder: Unexpected error.',
     noResultText: 'No result found',
     queryButtonText: 'Query',
     noGeomFieldError: 'No geometry field found.',
