@@ -395,25 +395,27 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         layer.params.LAYERS = self.getQueryableWMSLayers(
                             layer.params.LAYERS, layer.params.EXTERNAL, true);
                     }
-                    var services = layer.params.EXTERNAL ?
-                        externalServices : internalServices;
-                    var url = OpenLayers.Util.isArray(layer.url) ?
-                        layer.url[0] : layer.url;
-                    if (url in services) {
-                        services[url].push(layer);
-                    }
-                    else {
-                        this._numRequests++;
-                        services[url] = [layer];
+                    if (layer.params.LAYERS.length > 0) {
+                        var services = layer.params.EXTERNAL ?
+                            externalServices : internalServices;
+                        var url = OpenLayers.Util.isArray(layer.url) ?
+                            layer.url[0] : layer.url;
+                        if (url in services) {
+                            services[url].push(layer);
+                        }
+                        else {
+                            this._numRequests++;
+                            services[url] = [layer];
+                        }
                     }
                 }
                 for (var url in internalServices) {
-                    var wmsOptions = this.buildWMSOptions(url, services[url],
+                    var wmsOptions = this.buildWMSOptions(url, internalServices[url],
                         clickPosition, 'image/png');
                     OpenLayers.Request.GET(wmsOptions);
                 }
                 for (var url in externalServices) {
-                    var wmsOptions = this.buildWMSOptions(url, services[url],
+                    var wmsOptions = this.buildWMSOptions(url, externalServices[url],
                         clickPosition, 'image/png');
                     wmsOptions.params.EXTERNAL = true;
                     OpenLayers.Request.GET(wmsOptions);
