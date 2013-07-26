@@ -218,7 +218,8 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
                 displayName: layer.titles[idx],
                 name: layerName,
                 layer: layer,
-                editable: false
+                editable: false,
+                legend: true
             });
         });
 
