@@ -40,6 +40,12 @@ cgxp.WMSLegend = Ext.extend(GeoExt.WMSLegend, {
      */
     updateDelay: 0,
 
+    /** api: config[defaultStyleIsFirst]
+     *  ``Boolean``
+     *  If no style can be found for a layer, use a GetLegendGraphic request.
+     */
+    defaultStyleIsFirst: false,
+
     /** private: method[initComponent]
      *  Initialized the WMS legend.
      */

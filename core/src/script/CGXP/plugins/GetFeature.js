@@ -398,26 +398,28 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         layer.params.LAYERS = self.getQueryableWMSLayers(
                             layer.params.LAYERS, layer.params.EXTERNAL, true);
                     }
-                    var services = layer.params.EXTERNAL ?
-                        externalServices : internalServices;
-                    var url = OpenLayers.Util.isArray(layer.url) ?
-                        layer.url[0] : layer.url;
-                    if (url in services) {
-                        services[url].push(layer);
-                    }
-                    else {
-                        this._numRequests++;
-                        services[url] = [layer];
+                    if (layer.params.LAYERS.length > 0) {
+                        var services = layer.params.EXTERNAL ?
+                            externalServices : internalServices;
+                        var url = OpenLayers.Util.isArray(layer.url) ?
+                            layer.url[0] : layer.url;
+                        if (url in services) {
+                            services[url].push(layer);
+                        }
+                        else {
+                            this._numRequests++;
+                            services[url] = [layer];
+                        }
                     }
                 }
 
                 var me = this;
                 var query = function(urls) {
                     for (var url in urls) {
-                        var wmsOptions = me.buildWMSOptions(url, services[url],
+                        var wmsOptions = me.buildWMSOptions(url, urls[url],
                             clickPosition, 'image/png');
                         // Get the params from the first layer
-                        var layer = services[url][0];
+                        var layer = urls[url][0];
                         for (var param in layer.params) {
                             if (wmsOptions.params[param] === undefined &&
                                     param != 'TRANSPARENT') {
