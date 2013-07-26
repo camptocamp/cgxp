@@ -52,6 +52,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     uniqueTheme: false,
 
+    /** api: config[autoExpand]
+     *  ``Boolean``
+     *  True to expand the tree node when we check it, default to true.
+     */
+    autoExpand: true,
+
     /** api: config[frienlyUrl]
      *  ``Boolean``
      *  True to enable friendly URL support (HTML5 browsers only), default to true.
@@ -249,6 +255,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.on('checkchange', function(node, checked) {
             this.fireEvent("layervisibilitychange");
             if (!this.changing) {
+                if (checked && this.autoExpand) {
+                    node.expand();
+                }
                 this.changing = true;
                 node.cascade(function(node){
                     node.getUI().toggleCheck(checked);
