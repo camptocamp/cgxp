@@ -100,7 +100,18 @@ GeoExt.Lang.add("fr", {
         logoutText: "Déconnexion",
         loginText: "Connexion",
         usernameText: "Nom d'utilisateur",
-        passwordText: "Mot de passe"
+        passwordText: "Mot de passe",
+        loginMenuText: "Compte",
+        changePasswordButtonText: "Envoyer",
+        newPasswordText: "Nouveau mot de passe",
+        confirmNewPasswordText: "Confirmation mot de passe",
+        changePasswordText: "Changer le mot de passe",
+        loginButtonTooltip: "Connexion/Déconnexion",
+        accountButtonTooltip: "Gestion des accès",
+        pwdChangeOkTitle: "Mot de passe modifié",
+        pwdChangeOkText: "Le nouveau mot de passe a été enregistré.",
+        pwdChangeForceTitle: "Changer le mot de passe",
+        pwdChangeForceText: "Vous devez modifier votre mot de passe."
     },
 
     "cgxp.plugins.Help.prototype": {

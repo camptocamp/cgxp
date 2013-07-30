@@ -42,10 +42,14 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: 'maptools',
  *      % if user:
  *              username: "${user.username}",
+ *              isPasswordChanged: ${"true" if user.is_password_changed else "false"},
  *      % endif
  *              loginURL: "${request.route_url('login', path='')}",
+ *              loginChangeURL: "${request.route_url('loginchange', path='')}",
  *              logoutURL: "${request.route_url('logout', path='')}",
  *              permalinkId: "permalink",
+ *              enablePasswordChange: true,
+ *              forcePasswordChange: true,
  *          }]
  *          ...
  *      });
@@ -71,6 +75,11 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     loginURL: null,
 
+    /** api: config[loginChangeURL]
+     *  URL of the login change service.
+     */
+    loginChangeURL: null,
+
     /** api: config[logoutURL]
      *  URL of the logout service.
      */
@@ -80,6 +89,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      *  Username of currently logged in user.
      */
     username: null,
+
+    /** api: config[isPasswordChanged]
+     *  ``Boolean``
+     *  State if the user password has been changed.
+     *  Only required if ``forcePasswordChange`` is enabled.
+     *
+     *  Default: false
+     */
+    isPasswordChanged: false,
 
     /** api: config[actionConfig]
      *  ``Object``
@@ -93,8 +111,10 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     extraHtml: null,
 
-    button: null,
     loginForm: null,
+    loginWindow: null,
+    actionButton: null,
+    submitButton: null,
 
     /** api: config[permalinkId]
      *  ``String``
@@ -104,7 +124,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     permalinkId: null,
 
     /** api: config[ignoreExistingPermalink]
-     *  ``Bool``
+     *  ``Boolean``
      *  if set to true, existing permalink in url are ignored and the permalink 
      *  corresponding to the up-to-date state of the application is used.
      *
@@ -112,18 +132,48 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     ignoreExistingPermalink: false,
 
+    /** api: config[enablePasswordChange]
+     *  ``Boolean``
+     *  if set to true, a menu is enabled, allowing the user to change his
+     *  password.
+     * 
+     *  Default: false
+     */
+    enablePasswordChange: false,
+
+    /** api: config[forcePasswordChange]
+     *  ``Boolean``
+     *  if set to true, display a message reminding the user to change his 
+     *  password (if he hasn't already).
+     *  Require ``isPasswordChanged`` to be set.
+     *
+     *  Default: false
+     */
+    forcePasswordChange: false,
+
     /* i18n */
     authenticationFailureText: "Impossible to connect.",
     loggedAsText: "Logged in as ${user}",
     logoutText: "Logout",
     loginText: "Login",
+    loginMenuText: "Account",
+    changePasswordButtonText: "Submit",
     usernameText: "Username",
     passwordText: "Password",
+    newPasswordText: "New Password",
+    confirmNewPasswordText: "Confirm New Password",
+    changePasswordText: "Change password",
+    actionButtonTooltip: "Login/Logout",
+    accountButtonTooltip: "Manage connection",
+    pwdChangeOkTitle: "Password Changed",
+    pwdChangeOkText: "The password change has been applied.",
+    pwdChangeForceTitle: "Change Password",
+    pwdChangeForceText: "You must change your password.",
 
     /** api: method[addActions]
      */
     addActions: function() {
-        this.button = new Ext.Button({
+        this.submitButton = new Ext.Button({
             text: this.loginText,
             formBind: true,
             handler: this.submitForm,
@@ -139,51 +189,183 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             });
         }
 
-        var loginWindow = new cgxp.tool.Window({
+        this.loginWindow = new cgxp.tool.Window({
             width: 250,
-            items: items
+            items: items,
+            listeners: {
+                show: function() {
+                    this.loginForm.startMonitoring();
+                },
+                hide: function() {
+                    this.loginForm.stopMonitoring();
+                },
+                scope: this
+            }
         });
-        loginWindow.render(Ext.getBody());
+        this.loginWindow.render(Ext.getBody());
 
-        var loginButton;
         if (this.username) {
-            loginButton = [
-                new Ext.Toolbar.TextItem({
-                    text: OpenLayers.String.format(this.loggedAsText, {user : this.username})
-                }),
-                new Ext.Button(Ext.apply({
-                    text: this.logoutText,
-                    handler: function() {
-                        Ext.Ajax.request({
-                            url: this.logoutURL,
-                            success: function() {
-                                window.location.href = window.location.href;
-                            }
+
+            var simpleButtonConfig = Ext.apply({
+                text: this.logoutText,
+                tooltip: this.actionButtonTooltip,
+                handler: function() {
+                    Ext.Ajax.request({
+                        url: this.logoutURL,
+                        success: function() {
+                            window.location.href = window.location.href;
+                        }
+                    });
+                },
+                scope: this
+            }, this.actionConfig);
+
+            getActionButton = function () {
+                if (this.enablePasswordChange) {
+                    if (!this.actionButton) {
+                        this.actionButton = new Ext.Toolbar.SplitButton({
+                            text: this.loginMenuText,
+                            tooltip: this.accountButtonTooltip,
+                            iconCls: 'useraccount',
+                            handler: function (b, e) {
+                                b.showMenu();
+                            },
+                            menu : {
+                                items: [
+                                    simpleButtonConfig,
+                                    Ext.apply({
+                                        text: this.changePasswordText,
+                                        enableToggle: true,
+                                        toggleGroup: this.toggleGroup,
+                                        window: this.loginWindow,
+                                        listeners: {
+                                            'click': function() {
+                                                this.toggleLoginWindow();
+                                            },
+                                            scope: this
+                                        }
+                                    }, this.actionConfig)
+                                ]
+                            },
+                            scope: this
                         });
-                    },
-                    scope: this
-                }, this.actionConfig))
+                    }
+                } else {
+                    if (!this.actionButton) {
+                        this.actionButton = new Ext.Button(simpleButtonConfig);
+                    }
+                }
+                return this.actionButton;
+            }.createDelegate(this);
+
+            this.toolbarItems = [
+                new Ext.Toolbar.TextItem({
+                    text: OpenLayers.String.format(this.loggedAsText, 
+                        {user : this.username})
+                }),
+                getActionButton()
             ];
         } else {
-            loginButton = new cgxp.tool.Button(Ext.apply({
+            this.toolbarItems = new cgxp.tool.Button(Ext.apply({
                 text: this.loginText,
+                tooltip: this.actionButtonTooltip,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
-                window: loginWindow
+                window: this.loginWindow
             }, this.actionConfig));
         }
 
-        return cgxp.plugins.Login.superclass.addActions.apply(this, [loginButton]);
+        if (this.username && this.forcePasswordChange && !this.isPasswordChanged) {
+            Ext.Msg.alert(this.pwdChangeForceTitle, this.pwdChangeForceText);
+            this.toggleLoginWindow();
+        }
+
+        return cgxp.plugins.Login.superclass.addActions.apply(this, [this.toolbarItems]);
+    },
+
+    toggleLoginWindow: function() {
+        this.togglePasswordChangeFields(true);
+        if (!this.loginWindow.hidden) {
+            this.loginWindow.hide();
+        } else {
+            this.loginWindow.show();
+            var toolbar = this.getContainer(this.actionTarget);
+            this.loginWindow.anchorTo(toolbar.getEl(), 'tr-br');
+        }
+    },
+
+    togglePasswordChangeFields: function(show) {
+        var l1 = ['login', 'password'];
+        var l2 = ['newPassword', 'confirmNewPassword'];
+        var f = this.loginForm.getForm();
+
+        var showFields = function(l) {
+            Ext.each(l, function(i) {
+              var el = f.findField(i);
+              el.allowBlank = false;
+              el.show();
+              el.enable();
+            }, this);
+        }
+        var hideFields = function(l) {
+            Ext.each(l, function(i) {
+              var el = f.findField(i);
+              el.allowBlank = true;
+              el.hide();
+              el.disable();
+            }, this);
+        }
+
+        if (show) {
+            hideFields(l1)
+            showFields(l2);
+            this.actionChangePassword = true;
+            this.submitButton.setText(this.changePasswordButtonText);
+            f.url = this.loginChangeURL;
+        } else {
+            hideFields(l2)
+            showFields(l1);
+            this.actionChangePassword = false;
+            this.submitButton.setText(this.loginText);
+            f.url = this.loginURL;
+        }
     },
 
     createLoginForm: function() {
+
+        var newPassword = new Ext.form.TextField({
+            fieldLabel: this.newPasswordText,
+            name: 'newPassword',
+            applyTo: 'newPassword',
+            inputType: 'password',
+            width: 120,
+            allowBlank: true,
+            hidden: true
+        });
+
+        var newPasswordConfirm = new Ext.form.TextField({
+            fieldLabel: this.confirmNewPasswordText,
+            name: 'confirmNewPassword',
+            applyTo: 'confirmNewPassword',
+            inputType: 'password',
+            width: 120,
+            allowBlank: true,
+            hidden: true,
+            validator: function(value){
+                if(newPassword.getValue() != value) {
+                    return 'Error! Value not identical';
+                } else {
+                    return true;
+                }
+            }
+        });
+
         return new Ext.FormPanel({
             labelWidth: 100,
             width: 230,
             unstyled: true,
             url: this.loginURL,
             defaultType: 'textfield',
-            monitorValid: true,
             defaults: {
                 enableKeyEvents: true,
                 listeners: {
@@ -208,28 +390,39 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 inputType: 'password',
                 width: 120,
                 allowBlank: false
-            }, {
+            }, 
+            newPassword,
+            newPasswordConfirm,
+            {
                 xtype: 'box',
                 ref: 'failureMsg',
                 html: this.authenticationFailureText,
                 hidden: true
             }],
-            buttons:[this.button]
+            buttons:[this.submitButton]
         });
     },
 
     submitForm: function() {
-        this.button.setIconClass('loading');
+        this.submitButton.setIconClass('loading');
+
         this.loginForm.getForm().submit({
             method: 'POST',
             success: function() {
-                if (Ext.isIE) {
-                    window.external.AutoCompleteSaveForm(this.loginForm.getForm().el.dom);
+                if (this.actionChangePassword) {
+                    this.submitButton.setIconClass('');
+                    this.loginWindow.hide();
+                    Ext.Msg.alert(this.pwdChangeOkTitle, this.pwdChangeOkText);
+                } else {
+                    if (Ext.isIE) {
+                        window.external.AutoCompleteSaveForm(
+                            this.loginForm.getForm().el.dom);
+                    }
+                    window.location = this.getUrl();
                 }
-                window.location = this.getUrl();
             },
             failure: function(form, action) {
-                this.button.setIconClass('');
+                this.submitButton.setIconClass('');
                 this.loginForm.getForm().reset();
                 this.loginForm.failureMsg.show();
             },
@@ -260,8 +453,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             if (this.target.tools[this.permalinkId]) {
                 targetUrl = this.target.tools[this.permalinkId].permalink;
             } else {
-                alert('permalinkId not found, your permalink plugin "id" config is' +
-                      ' either missing or wrong');
+                alert('permalinkId not found, your permalink plugin "id" config' +
+                      ' is either missing or wrong');
                 targetUrl = currentUrl;
             }
         }
