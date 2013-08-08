@@ -44,7 +44,7 @@ Ext.namespace("cgxp.plugins");
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
- *              ptype: 'cgxp_redligning',
+ *              ptype: 'cgxp_redlining',
  *              actionTarget: 'center.tbar',
  *              toggleGroup: 'maptools',
  *              stateId: 'rl', // to save the drawing in the permalink
