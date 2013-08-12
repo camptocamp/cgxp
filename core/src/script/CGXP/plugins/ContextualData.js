@@ -751,7 +751,6 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
                 return false; // For IE browsers.
             }
         };
-        this.map.addControl(this);
         this.activate();
     },
 

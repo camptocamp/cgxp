@@ -695,8 +695,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
     },
 
     destroy: function() {
-        this.layer.destroyFeatures();
-        this.layer.map.removeLayer(this.layer);
+        this.deactivate();
         this.layer.destroy();
         this.hoverHandler.destroy();
         OpenLayers.Control.DrawFeature.prototype.destroy.call(this);
