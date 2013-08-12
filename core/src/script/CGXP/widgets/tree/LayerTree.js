@@ -458,7 +458,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 listeners: {
                     render: function(cmp) {
                         cmp.getEl().setVisibilityMode(Ext.Element.DISPLAY);
-                        cmp.getEl().hide.defer(1, cmp.getEl(), [false]);
+                        if (!item.isLegendExpanded) {
+                            cmp.getEl().hide.defer(1, cmp.getEl(), [false]);
+                        }
                     }
                 }
             });
