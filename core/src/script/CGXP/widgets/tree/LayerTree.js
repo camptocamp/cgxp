@@ -856,7 +856,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 visibility: child.isChecked,
                                 isBaseLayer: false,
                                 mapserverURL: child.wmsUrl,
-                                mapserverLayers: child.wmsLayers
+                                mapserverLayers: child.wmsLayers,
+                                queryLayers: child.queryLayers
                             }, this.wmtsOptions || {}));
                             child.node.attributes.layer = layer;
                             if (this.initialState && this.initialState['opacity_' + child.name]) {

@@ -395,7 +395,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         layer.params.LAYERS = self.getQueryableWMSLayers(
                             layer.params.LAYERS, layer.params.EXTERNAL, true);
                     }
-                    if (layer.params.LAYERS.length > 0) {
+                    if (layer.params.LAYERS && layer.params.LAYERS.length > 0) {
                         var services = layer.params.EXTERNAL ?
                             externalServices : internalServices;
                         var url = OpenLayers.Util.isArray(layer.url) ?
@@ -610,7 +610,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         layers = layers.split(',');
                     }
                 }
-                else {
+                else if (olLayer.params.LAYERS) {
                     layers = olLayer.params.LAYERS;
                     if (!Ext.isArray(layers)) {
                         layers = layers.split(',');
