@@ -174,6 +174,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
                 layerStore: this.target.mapPanel.layers,
                 listeners: this.layerTreeId && this.target.tools[this.layerTreeId] ? {
                     "layeradded":  this.onLayerAdded,
+                    "beforelayeradded":  this.beforeLayerAdded,
                     scope: this
                 } : {}
             };
@@ -186,6 +187,13 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             this.wmsBrowser = new GeoExt.ux.WMSBrowser(config);
         }
         return this.wmsBrowser;
+    },
+
+    beforeLayerAdded: function(o) {
+        var layer = o.layer;
+        layer.titles = layer.name.split(',');
+        layer.name = this.wmsBrowser.treePanel.root.
+                childNodes[0].attributes.text;
     },
 
     onLayerAdded: function(o) {
@@ -201,14 +209,17 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         }
         this.target.mapPanel.map.setLayerIndex(layer, index);
 
-        var layerTitles = layer.name.split(',');
         var children = [];
+
         Ext.each(layer.params.LAYERS, function(layerName, idx) {
+            cgxp.plugins.WMSBrowser.layer_names[layerName] =
+                    layer.titles[idx];
             children.push({
-                displayName: layerTitles[idx],
+                displayName: layer.titles[idx],
                 name: layerName,
                 layer: layer,
-                editable: false
+                editable: false,
+                legend: true
             });
         });
 
@@ -216,19 +227,20 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         var urlObj = OpenLayers.Util.createUrlObject(layer.url, {
             ignorePort80: true
         });
-        var groupName = this.wmsBrowser.treePanel.root.
-                childNodes[0].attributes.text;
         
         // Use internalWMS: true to have the same UI as them.
         this.target.tools[this.layerTreeId].tree.addGroup({
-            displayName: groupName,
+            displayName: layer.name,
             isExpanded: true,
-            name: groupName,
+            name: layer.name,
             allOlLayers: [layer],
             layer: layer,
             children: children
         }, true);
     }
 });
+
+// layer name correspondence
+cgxp.plugins.WMSBrowser.layer_names = {}
 
 Ext.preg(cgxp.plugins.WMSBrowser.prototype.ptype, cgxp.plugins.WMSBrowser);
