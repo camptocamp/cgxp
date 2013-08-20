@@ -157,7 +157,7 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                                     .apply(this, arguments);
                          };
                     }
-                    return item
+                    return item;
                 }
                 else {
                     var config = Ext.applyIf({
@@ -179,7 +179,7 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                 return Ext.menu.Menu.superclass.insert.apply(this,
                         [index, this.getItem(item)]);
             }
-        })
+        });
         var button;
         if (this.splitButton) {
             button = new Ext.SplitButton(Ext.apply({
@@ -207,8 +207,7 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                 menu: menu
             }, this.actionConfig || {}));
             this.button = button;
-        }
-        else {
+        } else {
             button = new Ext.Button(Ext.apply({
                 iconCls: 'no-icon',
                 menu: menu
