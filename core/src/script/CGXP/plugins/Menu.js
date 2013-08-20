@@ -108,6 +108,12 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
      */
     splitButton: false,
 
+    /** api: config[defaultActiveItem]
+     *  ``Number`` Optional index of an action that should be active by default.
+     *  Works only when using the splitButton mode. Default is 0.
+     */
+    defaultActiveItem: 0,
+
     /** api: config[actionTarget]
      *  ``String`` the place where the menu is placed. Default is 'center.tbar'.
      */
@@ -207,6 +213,13 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                 menu: menu
             }, this.actionConfig || {}));
             this.button = button;
+            menu.on({
+                'add': function(menu, item, index) {
+                    if (index == self.defaultActiveItem) {
+                        self.activeItem = item;
+                    }
+                }
+            });
         } else {
             button = new Ext.Button(Ext.apply({
                 iconCls: 'no-icon',
