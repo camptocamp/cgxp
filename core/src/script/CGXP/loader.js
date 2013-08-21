@@ -45,6 +45,7 @@
         "plugins/MapOpacitySlider.js",
         "plugins/MapQuery.js",
         "plugins/Measure.js",
+        "plugins/Menu.js",
         "plugins/MenuShortcut.js",
         "plugins/Permalink.js",
         // <print dependencies>
