@@ -10,7 +10,7 @@ Ext.namespace('GeoExt.ux');
 
 /**
  * @include OpenLayers/Lang.js
- * @include LayerManager/ux/downloadify/js/downloadify.min.js
+ * @include LayerManager/ux/downloadify/src/downloadify.js
  * @include LayerManager/ux/utils/flash.js
  */
 
