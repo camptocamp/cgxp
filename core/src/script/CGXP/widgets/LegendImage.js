@@ -33,12 +33,17 @@ cgxp.LegendImage = Ext.extend(GeoExt.LegendImage, {
      */
     initComponent: function() {
         cgxp.LegendImage.superclass.initComponent.call(this);
+        var name = OpenLayers.i18n(this.itemId);
+        if (name == this.itemId && cgxp.plugins.WMSBrowser &&
+            this.itemId in cgxp.plugins.WMSBrowser.layer_names) {
+            name = cgxp.plugins.WMSBrowser.layer_names[this.itemId];
+        }
         this.autoEl = {
             tag: "div",
             children: [{
                 tag: 'label',
                 cls: 'layerparam-label',
-                html: OpenLayers.i18n(this.itemId)
+                html: name
             },{
                 tag: "img",
                 "class": (this.imgCls ? this.imgCls + " " + this.noImgCls : this.noImgCls),
