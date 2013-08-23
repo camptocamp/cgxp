@@ -65,7 +65,7 @@ cgxp.MouseCoordinates = Ext.extend(gxp.plugins.Tool, {
     separator: ", ",
 
     /** api: config[numDigits]
-     *  ``Integer``
+     *  ``Number``
      *  Number of digits shown after the decimal mark.
      */
     numDigits: 0,

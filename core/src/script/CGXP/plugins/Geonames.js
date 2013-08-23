@@ -66,7 +66,7 @@ cgxp.plugins.Geonames = Ext.extend(gxp.plugins.Tool, {
     url: "http://ws.geonames.org/searchJSON?",
 
     /** api: config[recenterZoom]
-     *  ``Integer``
+     *  ``Number``
      *  Zoomlevel used when recentering on a result.
      */
     recenterZoom: 14,

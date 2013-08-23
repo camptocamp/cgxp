@@ -136,7 +136,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     rasterLayers: null,
 
     /** api: config[nbPoints]
-     *  ``Integer``
+     *  ``Number``
      *  The number of points to show in the charts (optional).
      *  Defaults to 100.
      */

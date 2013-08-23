@@ -115,7 +115,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     coordsRecenteringStyle: null,
 
     /** api: config[comboWidth]
-     *  ``Integer``
+     *  ``Number``
      *  Width in pixels of the search combobox.
      */
     comboWidth: 200,
