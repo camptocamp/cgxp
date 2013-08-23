@@ -58,7 +58,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
     toolTitle: "Themes",
 
     /** api: config[maxHeight]
-     *  ``Integer``
+     *  ``Number``
      *  Maximum height in pixels of the themeSelector panel.
      */
     maxHeight: null,

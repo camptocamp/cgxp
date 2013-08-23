@@ -56,7 +56,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_myposition",
 
     /** api: config[recenteringZoom]
-     *  ``Integer``
+     *  ``Number``
      *  Zoomlevel to use when recentering to the user's location. Default is 11. 
      */
     recenteringZoom: 11,

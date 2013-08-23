@@ -96,7 +96,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
     labelText: "Zoom to: ",
 
     /** api: config[width]
-     *  ``Integer``
+     *  ``Number``
      *  Combo box width in px.
      */
     width: 100,
