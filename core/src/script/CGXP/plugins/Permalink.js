@@ -36,7 +36,8 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: 'cgxp_permalink',
- *              actionTarget: 'center.tbar'
+ *              actionTarget: 'center.tbar',
+ *              shortenerCreateURL: "${request.route_url('shortener_create', path='')}" 
  *          }]
  *          ...
  *      });
@@ -64,6 +65,28 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
      */
     permalink: '',
 
+    /** api: config[email]
+     *  ``Boolean``
+     *  Display the optional email field, default is false.
+     */
+    email: false,
+
+    /** api: config[shortenerCreateURL]
+     *  ``String``
+     *  The URL used to create the short URL.
+     */
+
+    /** private: property[viewShort]
+     *  ``Boolean``
+     *  A short url is displayed
+     */
+    viewShort: false,
+
+    /** private: property[emailField]
+     *  ``Ext.form.TextField``
+     *  The email text field
+     */
+
     /* i18n */
     toolTitle: "Permalink",
     windowTitle: "Permalink",
@@ -71,6 +94,23 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     closeText: "Close",
     incompatibleWithIeText: "Warning: this URL is too long for Microsoft Internet Explorer!",
     menuText: "Permalink",
+    shortText: "Short URL",
+    emailText: "E-mail (optional)",
+
+    /** private: method[getLink]
+     */
+    getLink: function() {
+        // generate a clean url to provide to the PermalinkProvider
+        // to avoid recovering unvanted parameters from the url
+        var base = window.location.protocol + "//" +
+                        window.location.host +
+                        window.location.pathname;
+        var params = OpenLayers.Util.getParameters();
+        if (params.debug !== undefined) {
+            base = Ext.urlAppend(base, 'debug=' + params.debug);
+        }
+        return Ext.state.Manager.getProvider().getLink(base);
+    },
 
     /** api: method[addActions]
      */
@@ -97,15 +137,21 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             unstyled: true
         });
 
-        var permalinkWindow = new Ext.Window({
+        var permalinkWindowConfig = {
             layout: 'form',
             renderTo: Ext.getBody(),
             width: 400,
+            labelWidth: 120, 
             closeAction: 'hide',
             plain: true,
             title: this.windowTitle,
-            resizable: false,
             cls: 'permalink',
+            listeners: {
+                scope: this,
+                'hide': function() {
+                    this.view_short = false;
+                }
+            },
             items: [
                 permalinkTextField,
                 warningLabel
@@ -122,36 +168,59 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                     permalinkWindow.hide();
                 }
             }]
-        });
+        };
+        if (this.shortenerCreateURL) {
+            var shortButton = new Ext.Button({
+                text: this.shortText,
+                scope: this,
+                handler: function() {
+                    this.view_short = true;
+                    var params = {
+                        'url': this.getLink()
+                    };
+                    if (this.email && this.emailField.getValue() !== '') {
+                        params.email = this.emailField.getValue();
+                    }
+                    Ext.Ajax.request({
+                        url: this.shortenerCreateURL,
+                        params: params,
+                        success: function(response) {
+                            var obj = Ext.util.JSON.decode(response.responseText);
+                            permalinkTextField.setValue(obj.short_url);
+                        }
+                    });
+                }
+            });
+            permalinkWindowConfig.buttons.push(shortButton);
+            if (this.email) {
+                this.emailField = new Ext.form.TextField({
+                    fieldLabel: this.emailText
+                });
+                permalinkWindowConfig.items.push(this.emailField);
+            }
+        }
+        var permalinkWindow = new Ext.Window(permalinkWindowConfig);
 
         // Registers a statechange listener to update the value
         // of the permalink text field.
         Ext.state.Manager.getProvider().on({
             statechange: function(provider) {
+                if (!this.view_short) {
+                    link = this.getLink();
+                    permalinkTextField.setValue(link);
+                    this.permalink = link;
 
-                // generate a clean url to provide to the PermalinkProvider
-                // to avoid recovering unvanted parameters from the url
-                var base = window.location.protocol + "//" +
-                                window.location.host +
-                                window.location.pathname;
-                var params = OpenLayers.Util.getParameters();
-                if (params.debug !== undefined) {
-                    base = Ext.urlAppend(base, 'debug=' + params.debug);
+                    var splittedURL = link.split(/\/+/g);
+                    var path = "/" + splittedURL[splittedURL.length - 1];
+                    // IE limits, see: http://support.microsoft.com/kb/208427
+                    if (link.length > 2083 || path.length > 2048) {
+                        warningLabel.show();
+                    }
+                    else {
+                        warningLabel.hide();
+                    }
+                    permalinkWindow.doLayout();
                 }
-                link = provider.getLink(base);
-                permalinkTextField.setValue(link);
-                this.permalink = link;
-
-                var splittedURL = link.split(/\/+/g);
-                var path = "/" + splittedURL[splittedURL.length - 1];
-                // IE limits, see: http://support.microsoft.com/kb/208427
-                if (link.length > 2083 || path.length > 2048) {
-                    warningLabel.show();
-                }
-                else {
-                    warningLabel.hide();
-                }
-                permalinkWindow.doLayout();
             },
             scope: this
         });
@@ -162,9 +231,11 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             tooltip: this.toolTitle,
             menuText: this.menuText,
             handler: function() {
-                // reset the link in case the user deleted/modified it by error
-                permalinkTextField.setValue(link);
-                permalinkWindow.show();
+                if (permalinkWindow.hidden) {
+                    // reset the link in case the user deleted/modified it by error
+                    permalinkTextField.setValue(link);
+                    permalinkWindow.show();
+                }
             }
         }, this.actionConfig);
 
