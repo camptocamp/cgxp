@@ -138,7 +138,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     options: null,
 
     /** api: config[timeout]
-     * ``Integer``
+     * ``Number``
      * The timeout delay for the print in milliseconds. Default to 2 minutes.
      */
     timeout: 120000,

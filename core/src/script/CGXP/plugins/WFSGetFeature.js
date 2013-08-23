@@ -179,7 +179,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
     geometryName: 'geom',
 
     /** api: config[clickTolerance]
-     *  ``Integer``
+     *  ``Number``
      *  Buffer around clicked point, in pixels.
      */
     clickTolerance: 8,

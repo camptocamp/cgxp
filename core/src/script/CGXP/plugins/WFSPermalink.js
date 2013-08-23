@@ -118,7 +118,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
     WFSURL: null,
 
     /** api: config[maxFeatures]
-     *  ``Integer``
+     *  ``Number``
      *  Maximum number of features returned. Default is 100. (Optional)
      */
     maxFeatures: 100,
@@ -136,7 +136,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
     srsName: null,
 
     /** api: config[pointRecenterZoom]
-     *  ``Integer``
+     *  ``Number``
      *  Zoom level to use when result is a single point feature. If
      *  not set the map is not zoomed to a specific zoom level. (Optional)
      */
