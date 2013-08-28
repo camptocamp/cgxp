@@ -18,4 +18,7 @@
 	url = https://github.com/pivotal/jasmine.git
 [submodule "dygraphs/dygraphs/dygraphs"]
 	path = dygraphs/dygraphs/dygraphs
-	url = https://github.com/danvk/dygraphs
+	url = https://github.com/danvk/dygraphs.git
+[submodule "proj4js/proj4js"]
+	path = proj4js/proj4js
+	url = https://github.com/proj4js/proj4js.git
