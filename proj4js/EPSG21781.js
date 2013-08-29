@@ -4,4 +4,3 @@
  * @include proj4js/lib/projCode/somerc.js
  * @include proj4js/lib/projCode/merc.js
  */
-
