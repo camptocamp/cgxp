@@ -211,12 +211,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     fields: ['title', 'comment', 'legend'],
 
-    /** api: config[floorSliderId]
-     *  ``String``
-     *  Id of the floorSlider tool.
-     */
-    floorSliderId: null,
-
     /* i18n */
     printTitle: "Printing",
     titlefieldText: "Title",
@@ -236,6 +230,12 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     failureTitle: "Printing Failure",
     failureText: "An error occured while printing. Please check the parameters.",
     layoutText: "Layout",
+
+    /** api: property[paramRenderer]
+     *  ``Object<String, Function>``
+     *  Map of function used to renderer a parameter
+     */
+    paramRenderer: {},
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -449,14 +449,12 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
             options.legend = this.includeLegend ?
                              this.target.tools[this.legendPanelId].legendPanel : null;
-            if (this.floorSliderId) {
-                var floorSlider = this.target.tools[this.floorSliderId];
-                if (floorSlider) {
-                    var floor = floorSlider.getFloor();
-                    printProvider.customParams.floor =
-                        floor !== undefined ? floor :
-                        cgxp.FloorSlider.prototype.skyText;
+            for (param in this.target.mapPanel.params) {
+                value = this.target.mapPanel.params[param];
+                if (this.paramRenderer[param]) {
+                    value = this.paramRenderer[param](value);
                 }
+                printProvider.customParams['param_' + param] = value;
             }
 
             // need to define the table object even for page0 as java expects it

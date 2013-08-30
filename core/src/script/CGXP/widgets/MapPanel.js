@@ -34,7 +34,7 @@
  *  Used state (prefixed with 'map_' in the Permalink):
  *   * x, y, zoom: map context (read - write)
  *   * crosshair: if true defined a point at the center of the screen with
- *                the style: crosshairStyle. 
+ *                the style: crosshairStyle.
  *   * tooltip: text that will be open in a popup at the center of the screen
  */
 Ext.namespace("cgxp");
@@ -42,15 +42,20 @@ Ext.namespace("cgxp");
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
     /** api: property[vectorLayer]
-     *  :class:`OpenLayers.Layer.Vector`
+     *  :class:``OpenLayers.Layer.Vector``
      */
     vectorLayer: null,
 
     /** api: property[crosshairStyle]
-     *  `object`
+     *  ``Object``
      *  The crosshair style
      */
     crosshairStyle: {},
+
+    /** api: property[params]
+     *  ``Object``
+     *  The layers params, read only.
+     */
 
     /** private: property[initialState]
      */
@@ -58,14 +63,23 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     /** private: method[initComponent]
      */
     initComponent: function() {
+        this.params = {};
+        this.stateEvents.push('paramschange');
         var result = cgxp.MapPanel.superclass.initComponent.call(this);
         this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
         // The crosshair should always be on top
-        this.map.events.register('addlayer', this, function(layer) {
+        this.map.events.register('addlayer', this, function(event) {
             if (this.vectorLayer) {
                 this.map.raiseLayer(this.vectorLayer, 1);
             }
+            this.setLayerParams(event.layer, this.params);
         });
+        this.addEvents(
+            /** private: event[paramschange]
+             *  Throws when a param change.
+             */
+            'paramschange'
+        );
     },
 
     /** private: method[getState]
@@ -81,7 +95,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         // occurs, so the MapPanel may have been destroyed
         // between the time the event occurred and the time
         // getState is called
-        if(!this.map) {
+        if (!this.map) {
             return;
         }
 
@@ -94,6 +108,10 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
             y: center.lat,
             zoom: this.map.getZoom()
         } : {};
+
+        for (param in this.params) {
+            state['param_' + param] = this.params[param];
+        }
 
         // record layer visibility and opacity
         // OVERRIDE / REMOVED !
@@ -125,6 +143,15 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
                 )
             ]);
         }
+        params = {};
+        for (key in state) {
+
+            if (state.hasOwnProperty(key) && key.startsWith && 
+                    key.startsWith('param_')) {
+                params[key.substring(6)] = state[key]
+            }
+        }
+        this.setParams(params);
     },
 
     /** private: method[applyStateOnChangebaselayer]
@@ -158,9 +185,46 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
             this.map.addLayer(this.vectorLayer);
         }
         return this.vectorLayer;
-    }
+    },
+
+    /** public: method[setParams]
+     *  :param params: ``Object`` The new parameters.
+     *
+     *  Set a parameter on all the layers and fire event with modified params.
+     */
+    setParams: function(params) {
+        var dirty = false;
+        for (param in params) {
+            if (this.params[param] !== params[param]) {
+                this.params[param] = params[param];
+                dirty = true;
+            }
+            else {
+                delete params[param];
+            }
+        }
+
+        if (dirty) {
+            Ext.each(this.map.layers, function(layer) {
+                this.setLayerParams(layer, params);
+            }, this);
+            this.fireEvent('paramschange', params);
+        }
+    },
+
+    /** private: method[setLayerParams]
+     *
+     *  Set a parameter on the layer.
+     */
+    setLayerParams: function(layer, params) {
+        if (layer.setParams) {
+            layer.setParams(params);
+        }
+        else if (layer.mergeNewParams) { // WMS or WMTS
+            layer.mergeNewParams(params);
+        }
+    },
 });
 
 /** api: xtype = cgxp_mappanel */
 Ext.reg('cgxp_mappanel', cgxp.MapPanel);
-
