@@ -50,8 +50,8 @@ describe('cgxp.tree.LayerTree', function() {
                     "isInternalWMS": true,
                     "expanded": false,
                     "children": [{
-                        "name": "layer21"
-                        "type": "internal WMS",
+                        "name": "layer21",
+                        "type": "internal WMS"
                     }, {
                         "name": "layer22",
                         "type": "internal WMS",

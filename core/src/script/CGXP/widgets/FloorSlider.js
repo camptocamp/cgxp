@@ -69,12 +69,6 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     anchorOffsets: [45, 10],
 
-    /** private: property[stateEvents]
-     *  ``Array(String)``
-     *  Array of state events
-     */
-    stateEvents: ['floorchange'],
-
     /** api: config[skyText]
      *  ``String``
      *  L10n text for the sky, only used if ``maxIsSky`` is ``true``.
@@ -87,8 +81,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     floorText: 'Floor',
 
-    /**
-     * private: method[constructor]
+    /** private: method[constructor]
      */
     constructor: function(config) {
         var ul = document.createElement('ul');
@@ -103,9 +96,8 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
                         this.skyText : i.toString()
             }, true);
             a.on({
-                click: (function(i) {
-                    this.setFloor(i);
-                    this.slider.setValue(i);
+                click: (function(value) {
+                    this.slider.setValue(value);
                 }).createDelegate(this, [i])
             });
         }
@@ -138,9 +130,13 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         }, config);
         cgxp.FloorSlider.superclass.constructor.call(this, config);
 
-        this.mapPanel.map.events.register('addlayer', this, function(e) {
-            this.setLayerFloor(e.layer, this.getFloor());
-        });
+        if (this.maxIsSky && cgxp.plugins.Print) {
+            var self = this;
+            cgxp.plugins.Print.prototype.paramRenderer['floor'] = 
+                function(value) {
+                    return value === null ? self.skyText : value;
+                }
+        }
 
         this.show();
         this.anchorTo.defer(100, this, [this.mapPanel.body,
@@ -151,67 +147,26 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     initComponent: function() {
         cgxp.FloorSlider.superclass.initComponent.call(this);
-        this.addEvents(
-            /** private: event[floorchange]
-             *  Throws when the floor change.
-             */
-            'floorchange'
-        );
 
         this.slider.on('change', function() {
-            this.fireEvent('floorchange');
-            this.setFloor(this.getFloor());
+            var value = this.slider.getValue();
+            var floor = this.maxIsSky && value == this.maxValue ? null : value;
+            this.mapPanel.setParams({ 'floor': floor })
         }, this);
-    },
-
-    /** public: method[getFloor]
-     *  Get the floor.
-     */
-    getFloor: function() {
-        var value = this.slider.getValue();
-        return this.maxIsSky && value == this.maxValue ? undefined : value;
-    },
-
-    /** private: method[setFloor]
-     *  Change the floor in the layers.
-     */
-    setFloor: function(floor) {
-        Ext.each(this.mapPanel.map.layers, function(layer) {
-            this.setLayerFloor(layer, floor);
-        }, this);
-    },
-
-    /** private_ method[setLayerFloor]
-     *  set a floor to a layer.
-     */
-    setLayerFloor: function(layer, floor) {
-        if (layer.setFloor) {
-            layer.setFloor(floor);
-        }
-        else if (layer.mergeNewParams) { // WMS or WMTS
-            // floor || null don't works for floor = 0
-            if (floor === undefined) {
-                floor = null;
+        this.mapPanel.on('paramschange', function(params) {
+            if ('floor' in params) {
+                floor = params['floor'];
+                if (this.maxIsSky && floor === null) {
+                    floor = this.maxValue;
+                }
+                this.slider.setValue(floor);
             }
-            layer.mergeNewParams({floor: floor});
+        }, this);
+        if ('floor' in this.mapPanel.params) {
+            this.slider.setValue(parseInt(this.mapPanel.params['floor']));
         }
-    },
-
-    /** private: method[saveState]
-     */
-    getState: function() {
-        return {
-            val: this.slider.getValue()
-        };
-    },
-
-    /** private: method[applyState]
-     */
-    applyState: function(state) {
-        if (state.val) {
-            var floor = parseInt(state.val);
-            this.slider.setValue(floor);
-            this.setFloor(floor);
+        else {
+            this.mapPanel.setParams({ 'floor': null })
         }
     }
 });
