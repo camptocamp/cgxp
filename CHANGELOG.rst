@@ -1,5 +1,13 @@
 This file includes migration steps for each release of CGXP.
 
+
+Version 1.3.4
+=============
+
+1. Patch OpenLayers in the camptocamp repository,
+   don't miss to do `git submodule sync`.
+
+
 Version 1.3
 ===========
 
