@@ -12,6 +12,13 @@ Version 1.4
    display the Identifier Attribute on the drawn features.
 
 
+Version 1.3.4
+=============
+
+1. Patch OpenLayers in the camptocamp repository,
+   don't miss to do `git submodule sync`.
+
+
 Version 1.3
 ===========
 
