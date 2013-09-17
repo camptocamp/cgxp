@@ -343,6 +343,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 var feature = record.getFeature();
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
                 this.vectorLayer.addFeatures([feature]);
+                this.target.mapPanel.setParams(feature.attributes.params);
 
                 // center the map on the feature (and eventually zoom to it)
                 if (feature.geometry instanceof OpenLayers.Geometry.Point) {
