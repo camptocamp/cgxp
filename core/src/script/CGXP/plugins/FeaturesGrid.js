@@ -252,6 +252,18 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     highlightStyle: null,
 
+    /** api: config[csvExtension]
+     *  ``String``  The extension to use for the exported csv file.
+     *  Default is 'csv'.
+     */
+    csvExtension: 'csv',
+
+    /** api: config[csvEncoding]
+     *  ``String``  The encoding to use for the exported csv file.
+     *  Default is 'UTF-8'.
+     */
+    csvEncoding: 'UTF-8',
+
     /** private: property[selectAll]
      */
 
@@ -319,7 +331,9 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 method: 'POST',
                 params: {
                     name: this.currentGrid.title,
-                    csv: csv.join('\n')
+                    csv: csv.join('\n'),
+                    csv_extension: this.csvExtension,
+                    csv_encoding: this.csvEncoding
                 },
                 form: this.dummyForm,
                 isUpload: true
