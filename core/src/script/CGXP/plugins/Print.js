@@ -530,7 +530,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         }.createDelegate(this));
 
-        items = [];
+        var items = [];
         Ext.each(this.fields, function(field) {
             if (field == 'title') {
                 items.push({
