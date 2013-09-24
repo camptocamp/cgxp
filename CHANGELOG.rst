@@ -1,5 +1,12 @@
 This file includes migration steps for each release of CGXP.
 
+Verxion 1.X
+===========
+
+1. Refactor ``CGXP/plugins/FullTextSearch.js`` by moving core functionality into
+   ``CGXP/widgets/FullTextSearch.js``.  Most options except URL previously
+   available on the plugin have been moved to widgetOptions.
+
 Version 1.4
 ===========
 
@@ -8,7 +15,7 @@ Version 1.4
    ``cgxp_featuregrid`` to ``cgxp_featuresgrid`` (present in the ``viewer.js``)
    for name consistency.
 
-2. Add new ``themes`` argument to the plugin ``cgxp_featuresgrid`` to be able to 
+2. Add new ``themes`` argument to the plugin ``cgxp_featuresgrid`` to be able to
    display the Identifier Attribute on the drawn features.
 
 
@@ -27,7 +34,7 @@ Version 1.3
    to update your plugins configurations accordingly.
 
 2. Former CGXP plugin ``SwitchableWMTSSource`` has been removed and replaced by
-   an OpenLayers addin, ``OpenLayers.Layer.SwitchableWMTS``, combined to a 
+   an OpenLayers addin, ``OpenLayers.Layer.SwitchableWMTS``, combined to a
    standard ``OLSource``. Here is an example of the new syntax to use:
 
    .. code:: javascript
@@ -39,8 +46,8 @@ Version 1.3
            args: [Ext.applyIf({
                name: OpenLayers.i18n('relief'),
                mapserverLayers: 'relief_raster',
-               queryLayers: [], 
-               zoomThreshold: 11, 
+               queryLayers: [],
+               zoomThreshold: 11,
                ref: 'relief',
                layer: 'dtm_av_relief_02m',
                params:  {'time': '200703'},

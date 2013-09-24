@@ -18,6 +18,7 @@
 (function() {
 
     var jsfiles = [
+        "widgets/FullTextSearch.js",
         "widgets/MapPanel.js",
         "widgets/WMSLegend.js",
         "widgets/tree/LayerTree.js",
