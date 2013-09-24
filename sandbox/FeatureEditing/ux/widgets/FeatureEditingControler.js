@@ -163,7 +163,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     style: null,
 
     /** private: property[defaultStyle]
-     *  ``Object`` Feature style hash to apply to the default 
+     *  ``Object`` Feature style hash to apply to the default
      *   OpenLayers.Feature.Vector.style['default'] if no style was specified.
      */
     defaultStyle: {
@@ -281,7 +281,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         if(this.cosmetic === true) {
             var style = this.style || OpenLayers.Util.applyDefaults(
                 this.defaultStyle, OpenLayers.Feature.Vector.style["default"]);
-            var styleMap = new OpenLayers.StyleMap(style); 
+            var styleMap = new OpenLayers.StyleMap(style);
             var layerOptions = OpenLayers.Util.applyDefaults(
                 this.layerOptions, {
                   styleMap: styleMap,
@@ -860,7 +860,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             options['plugins'] = [new GeoExt.ux.ExportFeature(), new GeoExt.ux.CloseFeatureDialog()];
         }
 
-        clazz = this.featurePanelClass || GeoExt.ux.form.FeaturePanel; 
+        clazz = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
         this.featurePanel = new clazz(options);
 
         // display the popup
@@ -1023,7 +1023,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     /** private: method[applyStyles]
      *  :param style: ``String`` Mandatory.  Can be "normal" or "faded".
      *  :param options: ``Object`` Object of options.
-     *  Apply a specific style to all layers of this controler.  If 
+     *  Apply a specific style to all layers of this controler.  If
      *  'redraw': true was specified in the options, the layer is redrawn after.
      */
     applyStyles: function(style, options) {
@@ -1033,7 +1033,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             layer = this.layers[i];
             for(var j=0; j<layer.features.length; j++) {
                 feature = layer.features[j];
-                // don't apply any style to features coming from the 
+                // don't apply any style to features coming from the
                 // ModifyFeature control
                 if(!feature._sketch) {
                     this.applyStyle(feature, style);
@@ -1050,7 +1050,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      *  :param feature: ``OpenLayers.Feature.Vector``
      *  :param style: ``String`` Mandatory.  Can be "normal" or "faded".
      *  :param options: ``Object`` Object of options.
-     *  Apply a specific style to a specific feature.  If 'redraw': true was 
+     *  Apply a specific style to a specific feature.  If 'redraw': true was
      *  specified in the options, the layer is redrawn after.
      */
     applyStyle: function(feature, style, options) {
@@ -1063,7 +1063,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             break;
           default:
             fRatio = 1 / this.fadeRatio;
-        }   
+        }
 
         for(var i=0; i<this.opacityProperties.length; i++) {
             property = this.opacityProperties[i];
