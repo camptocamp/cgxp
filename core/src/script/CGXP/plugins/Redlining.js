@@ -328,7 +328,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
                 f.geometry.getCentroid(), value, 32, 0
             );
             f.geometry.id = id;
-            this.controler.featureControl.resetVertices();
+            this.controler.modifyControl.resetVertices();
             f.layer.drawFeature(f);
         };
         var radiusField = Ext.create({
