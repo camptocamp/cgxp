@@ -55,6 +55,8 @@
         "plugins/Profile.js",
         "plugins/QueryBuilder.js",
 
+        "data/FeatureReader.js",
+
         // <redlining dependencies>
         "../../../../ext/Ext/examples/ux/Spinner.js",
         "../../../../ext/Ext/examples/ux/SpinnerField.js",
@@ -78,8 +80,8 @@
         "../../../../sandbox/LayerManager/ux/data/Export.js",
         "../../../../sandbox/LayerManager/ux/widgets/LayerManagerExportWindow.js",
         "../../../../sandbox/FeatureEditing/resources/lang/fr.js",
-
         // </redlining dependencies>
+
         "plugins/Redlining.js",
         "plugins/ScaleChooser.js",
         "plugins/FloorSlider.js",
@@ -96,6 +98,7 @@
 
         "../../../../geoext.ux/ux/FeatureSelectionModel/lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js",
         "../../../../ext/Ext/examples/ux/RowExpander.js",
+
         // <wmsbrowser dependencies>
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/data/Store.js",
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/data/WMSBrowserWMSCapabilitiesStore.js",
@@ -107,15 +110,24 @@
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/widgets/tree/WMSBrowserTreePanel.js",
         "../../../../geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/locale/WMSBrowser-fr.js",
         // </wmsbrowser dependencies>
+
         // <streetview dependencies>
         "../../../../geoext.ux/ux/StreetViewPanel/ux/control/StreetViewClick.js",
         "../../../../geoext.ux/ux/StreetViewPanel/ux/widgets/StreetViewPanel.js",
         // </streetview dependencies>
+
         // <googleearthview dependencies>
         "widgets/GoogleEarthPanel.js",
         "../../../../gxp/src/script/plugins/GoogleEarth.js",
         "../../../../openlayers.addins/GoogleEarthView/lib/OpenLayers/Control/GoogleEarthView.js",
         // </googleearthview dependencies>
+
+        // <fulltextsearch dependencies>
+        "../../../../ext.ux/TwinTriggerComboBox/Ext/ux/form/TwinTriggerComboBox.js",
+        "../../../../ext.ux/GroupComboBox/Ext/ux/form/GroupComboBox.js",
+        "../../../../ext.ux/GroupComboBox/Ext/ux/form/GroupingView.js",
+        // </fulltextsearch dependencies>
+
         "locale/fr.js",
         "locale/de.js",
         "locale/it.js"
