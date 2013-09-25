@@ -52,11 +52,15 @@ cgxp.RedLiningPanel = Ext.extend(
         attributes: {
             point: {
                 'isLabel': function(val) { return val == 'true'; },
+                'showMeasure': function(val) { return val == 'true'; },
                 'name': true
             },
-            line: {},
+            line: {
+                'showMeasure': function(val) { return val == 'true'; }
+            },
             polygon: {
                 'isCircle': function(val) { return val == 'true'; },
+                'showMeasure': function(val) { return val == 'true'; },
                 'isBox': function(val) { return val == 'true'; }
             }
         },
@@ -126,7 +130,7 @@ cgxp.RedLiningPanel = Ext.extend(
         });
         return {
             features: this.urlCompressed.write(this.controler.activeLayer.features)
-        }
+        };
     },
 
     /** private: method[applyState]

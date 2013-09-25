@@ -216,6 +216,9 @@ GeoExt.ux.form.FeaturePanel.prototype.strokeWidthFieldText = "Stroke width";
 GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Size";
 GeoExt.ux.form.FeaturePanel.prototype.radiusFieldText = "Radius";
 GeoExt.ux.form.FeaturePanel.prototype.attributesText = "Attributes";
+GeoExt.ux.form.FeaturePanel.prototype.areaFieldText = "Display area";
+GeoExt.ux.form.FeaturePanel.prototype.lengthFieldText = "Display length";
+GeoExt.ux.form.FeaturePanel.prototype.coordsFieldText = "Display coordinates";
 
 // some more redlining patch
 GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
@@ -350,6 +353,77 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             radiusField.setValue(e.feature.geometry.getBounds().getWidth()/2);
         });
         oGroupItems.push(radiusField);
+    }
+
+    if (!feature.isLabel) {
+        var map = feature.layer.map;
+        // we assume that there is at least one DynamicMeasure control
+        var mc = 
+            map.getControlsByClass('OpenLayers.Control.DynamicMeasure')[0];
+        function formatMeasure(v) {
+            return OpenLayers.Number.format(Number(v.toPrecision(5)), null) ;
+        }
+        function showMeasure(feature) {
+            var f = feature,
+                geom = f.geometry,
+                measure;
+            if (f.attributes.showMeasure) {
+                switch (geom.CLASS_NAME) {
+                    case 'OpenLayers.Geometry.Polygon':
+                    case 'OpenLayers.Geometry.MultiPolygon':
+                        measure = mc.getBestArea(geom);
+                        measure[1] += '²';
+                        measure[0] = formatMeasure(measure[0]);
+                        break;
+                    case 'OpenLayers.Geometry.LineString':
+                    case 'OpenLayers.Geometry.MultiLineString':
+                        measure = mc.getBestLength(geom);
+                        measure[0] = formatMeasure(measure[0]);
+                        break;
+                    case 'OpenLayers.Geometry.Point':
+                        measure = [
+                            Number(geom.x.toFixed(5)),
+                            Number(geom.y.toFixed(5))];
+                        break;
+                }
+                f.style.label = measure.join(' ');
+                f.style.fontSize = "12px";
+            } else {
+                delete f.style.label;
+            }
+            f.layer.drawFeature(f);
+        }
+        var label;
+        switch (feature.geometry.CLASS_NAME) {
+            case 'OpenLayers.Geometry.Polygon':
+            case 'OpenLayers.Geometry.MultiPolygon':
+                label = this.areaFieldText;
+                break;
+            case 'OpenLayers.Geometry.LineString':
+            case 'OpenLayers.Geometry.MultiLineString':
+                label = this.lengthFieldText;
+                break;
+            case 'OpenLayers.Geometry.Point':
+                label = this.coordsFieldText;
+                break;
+        }
+
+        oGroupItems.push({
+            xtype: 'checkbox',
+            name: 'measure',
+            fieldLabel: label,
+            checked: feature.attributes.showMeasure,
+            listeners: {
+                check: function(checkbox, checked) {
+                    feature.attributes.showMeasure = checked;
+                    showMeasure(feature);
+                }
+            }
+        });
+        feature.layer.events.register('featuremodified', null, function(e){
+            if (e.feature != feature) { return; }
+            showMeasure(feature);
+        });
     }
 
     oGroup.items = oGroupItems;
