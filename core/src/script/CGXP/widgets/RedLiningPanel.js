@@ -141,7 +141,7 @@ cgxp.RedLiningPanel = Ext.extend(
             Ext.each(features, function(feature) {
                 var style = feature.style;
                 if (feature.attributes.isLabel) {
-                    /* OL SVG renderer disable click event on label (svg's 
+                    /* OL SVG renderer disable click event on label (svg's
                     pointerEvents is set to none) unless labelSelect
                     is true , and we need that to be able to edit label features */
                     style['labelSelect'] = true;
