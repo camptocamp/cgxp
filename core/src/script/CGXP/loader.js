@@ -75,6 +75,7 @@
         "../../../../sandbox/LayerManager/ux/widgets/LayerManagerImportPanel.js",
         "../../../../sandbox/LayerManager/ux/downloadify/js/downloadify.min.js",
         "../../../../sandbox/FeatureEditing/ux/widgets/plugins/ExportFeature.js",
+        "../../../../sandbox/FeatureEditing/ux/widgets/DynamicMeasure.js",
         "../../../../sandbox/LayerManager/ux/data/Export.js",
         "../../../../sandbox/LayerManager/ux/widgets/LayerManagerExportWindow.js",
         "../../../../sandbox/FeatureEditing/resources/lang/fr.js",
