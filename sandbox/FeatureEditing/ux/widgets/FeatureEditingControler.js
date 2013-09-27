@@ -1117,6 +1117,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     measure = [
                         Number(geom.x.toFixed(5)),
                         Number(geom.y.toFixed(5))];
+                    f.style.labelAlign = "lb";
                     break;
             }
             f.style.label = measure.join(' ');
