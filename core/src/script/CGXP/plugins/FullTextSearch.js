@@ -79,14 +79,6 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     coordsRecenterZoom: null,
 
-    /** api: config[projectionCodes]
-     *  ``Array``
-     *  List of EPSG codes of projections that should be used when trying to
-     *  recenter on coordinates. Leftmost projections are used preferably.
-     *  Default is current map projection.
-     */
-    projectionCodes: null,
-
     /** api: config[showCenter]
      *  ``Boolean``
      * If true, center point is materialized when centering on coordinates
@@ -143,26 +135,14 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     viewerReady: function() {
         this.target.mapPanel.map.addLayer(this.vectorLayer);
-
-        // define projections that may be used for coordinates recentering
-        this.projections = {};
-        if (!this.projectionCodes) {
-            this.projectionCodes = [this.target.mapPanel.map.getProjection()];
-        }
-        for (var i = 0, len = this.projectionCodes.length, code; i < len; i++) {
-            code = String(this.projectionCodes[i]).toUpperCase();
-            if (code.substr(0, 5) != "EPSG:") {
-                code = "EPSG:" + code;
-            }
-            this.projections[code] = new OpenLayers.Projection(code);
-        }
+        this.fullTextSearch.map = this.target.mapPanel.map;
     },
 
     /** private: method[addActions]
      */
     addActions: function() {
         this.fullTextSearch = this.createCombo();
-        return cgxp.plugins.FullTextSearch.superclass.addActions.apply(this, [combo]);
+        return cgxp.plugins.FullTextSearch.superclass.addActions.apply(this, [this.fullTextSearch]);
     },
 
     /** private: method[applyPosition]
@@ -189,7 +169,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     createCombo: function() {
         var map = this.target.mapPanel.map;
-        var combo = cgxp.FullTextSearch(Ext.apply({
+        var combo = new cgxp.FullTextSearch(Ext.apply({
             url: this.url
         }, this.widgetOptions));
 
@@ -199,46 +179,16 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         }, this);
 
         combo.on({
-            'beforeload': function(store, options) {
-                var coords = store.baseParams.query.match(
-                    /([\d\.']+)[\s,]+([\d\.']+)/
-                );
-                this.position = null;
-                this.closeLoading.cancel();
-                this.applyPositionTask.cancel();
-                if (coords) {
-                    var map = this.target.mapPanel.map;
-                    var left = parseFloat(coords[1].replace("'", ""));
-                    var right = parseFloat(coords[2].replace("'", ""));
-
-                    var tryProjection = function(lon, lat, projection) {
-                        var position = new OpenLayers.LonLat(lon, lat);
-                        position.transform(projection, map.getProjectionObject());
-                        if (map.maxExtent.containsLonLat(position)) {
-                            this.position = position;
-                            return true;
-                        }
-                        return false;
-                    }.createDelegate(this);
-
-                    for (var projection in this.projections) {
-                        if (tryProjection(left, right, projection) ||
-                            tryProjection(right, left, projection)) {
-                            break;
-                        }
-                    }
-
-                    if (this.position) {
-                        // close the loading twin box.
-                        this.closeLoading.delay(10);
-                        // apply the position
-                        this.applyPositionTask.delay(1000);
-                        return false;
-                    }
-                }
-                return true;
-            },
-            'select': function(combo, record, index) {
+          'applyposition': function(position) {
+            this.position = position;
+            this.closeLoading.cancel();
+            this.applyPositionTask.cancel();
+            // close the loading twin box.
+            this.closeLoading.delay(10);
+            // apply the position
+            this.applyPositionTask.delay(1000);
+          },
+          'select': function(combo, record, index) {
                 // add feature to vector layer
                 var feature = record.getFeature();
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);

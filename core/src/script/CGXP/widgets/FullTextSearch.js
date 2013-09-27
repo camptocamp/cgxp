@@ -35,6 +35,12 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      *  :attr:`tooltip` is ``true``.
      */
     tooltipTitle: "Search",
+
+    /** api: config[tooltipEl]
+     *  ``String`` Optional id of an element to place the tooltip in.
+     */
+    tooltipEl: null,
+
     /** api: config[emptyText]
      *  ``String`` Text to use when the field is empty (i18n).
      */
@@ -97,32 +103,21 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      */
     limits: {},
 
-    /** private: method[constructor]
+    /** api: config[projectionCodes]
+     *  ``Array``
+     *  List of EPSG codes of projections that should be used when trying to
+     *  recenter on coordinates. Leftmost projections are used preferably.
+     *  Default is current map projection.
      */
-    constructor: function(config) {
-
-      config = config || {};
-      Ext.apply({
-        store: this.createStore(),
-        tpl: tpl,
-        minChars: 1,
-        queryDelay: 50,
-        emptyText: this.emptyText,
-        loadingText: this.loadingText,
-        displayField: 'label',
-        triggerAction: 'all',
-        trigger2Class: 'x-form-trigger-no-width x-hidden',
-        trigger3Class: 'x-form-trigger-no-width x-hidden',
-        width: this.comboWidth,
-        selectOnFocus: true
-      }, config);
-      cgxp.FullTextSearch.superclass.constructor.call(this, config);
-
-    },
+    projectionCodes: null,
 
     /** private: method[initComponent]
      */
     initComponent: function() {
+        Ext.apply(this, {
+          items: [this.createCombo()],
+          unstyled: true
+        });
         cgxp.FullTextSearch.superclass.initComponent.call(this);
     },
 
@@ -142,7 +137,40 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             sortInfo: this.grouping ? {field: 'layer_name', direction: 'ASC'} : null
         });
 
-        store.on('beforeload', this.fireEvent('beforeload', store), this);
+        store.on('beforeload', function(store, options) {
+            var coords = store.baseParams.query.match(
+                /([\d\.']+)[\s,]+([\d\.']+)/
+            );
+            this.position = null;
+            if (coords) {
+                var map = this.target.mapPanel.map;
+                var left = parseFloat(coords[1].replace("'", ""));
+                var right = parseFloat(coords[2].replace("'", ""));
+
+                var tryProjection = function(lon, lat, projection) {
+                    var position = new OpenLayers.LonLat(lon, lat);
+                    position.transform(projection, map.getProjectionObject());
+                    if (map.maxExtent.containsLonLat(position)) {
+                        this.position = position;
+                        return true;
+                    }
+                    return false;
+                }.createDelegate(this);
+
+                for (var projection in this.projections) {
+                    if (tryProjection(left, right, projection) ||
+                        tryProjection(right, left, projection)) {
+                        break;
+                    }
+                }
+
+                if (this.position) {
+                    this.fireEvent('applyposition', this.position);
+                    return false;
+                }
+            }
+            return true;
+        }, this);
         return store;
     },
 
@@ -151,7 +179,6 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      *  :returns ``Ext.form.ComboBox`` The search combo.
      */
     createCombo: function() {
-        var map = this.target.mapPanel.map;
         var tpl = new Ext.XTemplate(
             '<tpl for="."><div class="x-combo-list-item">',
             '{label}',
@@ -178,13 +205,16 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             combo.list.hide();
         }, this);
         combo.on({
+            'select': function(combo, record, index) {
+              this.fireEvent('select', combo, record, index);
+            },
             'render': function(component) {
                 if (this.tooltip) {
                     new Ext.ToolTip({
                         target: combo.getEl(),
                         title: this.tooltipTitle,
+                        contentEl: this.tooltipEl,
                         width: 500,
-                        contentEl: 'search-tip',
                         trackMouse: true,
                         dismissDelay: 15000
                     });
