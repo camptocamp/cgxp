@@ -500,6 +500,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             options = {
                 drawingLayer: layer,
                 layerSegmentsOptions: null,
+                layerLengthOptions: null,
                 accuracy: 3,
                 handlerOptions: {
                     stopDown: true,
