@@ -356,43 +356,6 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
     }
 
     if (!feature.isLabel) {
-        var map = feature.layer.map;
-        // we assume that there is at least one DynamicMeasure control
-        var mc = 
-            map.getControlsByClass('OpenLayers.Control.DynamicMeasure')[0];
-        function formatMeasure(v) {
-            return OpenLayers.Number.format(Number(v.toPrecision(5)), null) ;
-        }
-        function showMeasure(feature) {
-            var f = feature,
-                geom = f.geometry,
-                measure;
-            if (f.attributes.showMeasure) {
-                switch (geom.CLASS_NAME) {
-                    case 'OpenLayers.Geometry.Polygon':
-                    case 'OpenLayers.Geometry.MultiPolygon':
-                        measure = mc.getBestArea(geom);
-                        measure[1] += '²';
-                        measure[0] = formatMeasure(measure[0]);
-                        break;
-                    case 'OpenLayers.Geometry.LineString':
-                    case 'OpenLayers.Geometry.MultiLineString':
-                        measure = mc.getBestLength(geom);
-                        measure[0] = formatMeasure(measure[0]);
-                        break;
-                    case 'OpenLayers.Geometry.Point':
-                        measure = [
-                            Number(geom.x.toFixed(5)),
-                            Number(geom.y.toFixed(5))];
-                        break;
-                }
-                f.style.label = measure.join(' ');
-                f.style.fontSize = "12px";
-            } else {
-                delete f.style.label;
-            }
-            f.layer.drawFeature(f);
-        }
         var label;
         switch (feature.geometry.CLASS_NAME) {
             case 'OpenLayers.Geometry.Polygon':
@@ -416,13 +379,10 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             listeners: {
                 check: function(checkbox, checked) {
                     feature.attributes.showMeasure = checked;
-                    showMeasure(feature);
-                }
+                    this.controler.showMeasure(feature);
+                },
+                scope: this
             }
-        });
-        feature.layer.events.register('featuremodified', null, function(e){
-            if (e.feature != feature) { return; }
-            showMeasure(feature);
         });
     }
 

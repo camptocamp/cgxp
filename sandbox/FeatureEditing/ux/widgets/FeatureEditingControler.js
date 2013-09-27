@@ -933,6 +933,11 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         var feature = event.feature;
         this.parseFeatureStyle(feature);
         this.parseFeatureDefaultAttributes(feature);
+
+        this.showMeasure(feature);
+        feature.layer.events.register('featuremodified', this, function(e){
+            this.showMeasure(feature);
+        });
     },
 
     /** private: method[parseFeatureStyle]
@@ -1076,6 +1081,49 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         if(options['redraw'] === true) {
             feature.layer.drawFeature(feature);
         }
+    },
+
+    /** private: method[showMeasure]
+     *  :param feature: ``OpenLayers.Feature.Vector``
+     *  Displays the measure (coordinates, length or area) of the feature.
+     */
+    showMeasure: function(feature) {
+        var map = feature.layer.map;
+        // we assume that there is at least one DynamicMeasure control
+        var mc =
+            map.getControlsByClass('OpenLayers.Control.DynamicMeasure')[0];
+        function formatMeasure(v) {
+            return OpenLayers.Number.format(Number(v.toPrecision(5)), null) ;
+        }
+
+        var f = feature,
+            geom = f.geometry,
+            measure;
+        if (f.attributes.showMeasure) {
+            switch (geom.CLASS_NAME) {
+                case 'OpenLayers.Geometry.Polygon':
+                case 'OpenLayers.Geometry.MultiPolygon':
+                    measure = mc.getBestArea(geom);
+                    measure[1] += '²';
+                    measure[0] = formatMeasure(measure[0]);
+                    break;
+                case 'OpenLayers.Geometry.LineString':
+                case 'OpenLayers.Geometry.MultiLineString':
+                    measure = mc.getBestLength(geom);
+                    measure[0] = formatMeasure(measure[0]);
+                    break;
+                case 'OpenLayers.Geometry.Point':
+                    measure = [
+                        Number(geom.x.toFixed(5)),
+                        Number(geom.y.toFixed(5))];
+                    break;
+            }
+            f.style.label = measure.join(' ');
+            f.style.fontSize = "12px";
+        } else {
+            delete f.style.label;
+        }
+        f.layer.drawFeature(f);
     },
 
     CLASS_NAME: "GeoExt.ux.FeatureEditingControler"
