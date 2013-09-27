@@ -13,31 +13,36 @@ Ext.onReady(function() {
         },
         tools: [{
             ptype: 'cgxp_fulltextsearch',
-            url: "http://mapfish-geoportal.demo-camptocamp.com/sitn/wsgi/fulltextsearch",
+            url: "http://mapfish-geoportal.demo-camptocamp.com/demo/wsgi/fulltextsearch",
             actionTarget: "map.tbar",
-            comboWidth: 300,
-            emptyText: 'Search a place or a coordinate',
-            limits: {
-                limit: 30
-            },
             showCenter: true,
             pointRecenterZoom: 11,
             coordsRecenterZoom: 11,
-            projectionCodes: [21781, 4326]
+            widgetOptions: {
+              tooltipEl: 'search-tip',
+              projectionCodes: [21781, 4326],
+              comboWidth: 300,
+              emptyText: 'Search a place or a coordinate',
+              limits: {
+                  limit: 30
+              }
+            }
         },
         {
             ptype: 'cgxp_fulltextsearch',
-            url: "http://mapfish-geoportal.demo-camptocamp.com/sitn/wsgi/fulltextsearch",
+            url: "http://mapfish-geoportal.demo-camptocamp.com/demo/wsgi/fulltextsearch",
             actionTarget: "map.tbar",
-            grouping: true,
-            comboWidth: 300,
-            emptyText: 'Search a place (grouped results)',
-            limits: {
-                limit: 100,
-                partitionlimit: 5
-            },
             showCenter: true,
-            pointRecenterZoom: 11
+            pointRecenterZoom: 11,
+            widgetOptions: {
+              grouping: true,
+              comboWidth: 300,
+              emptyText: 'Search a place (grouped results)',
+              limits: {
+                  limit: 100,
+                  partitionlimit: 5
+              }
+            }
         }],
         sources: {
             osm: {
