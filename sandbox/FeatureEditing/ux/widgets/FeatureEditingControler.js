@@ -516,6 +516,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     iconCls = "gx-featureediting-draw-line";
                     tooltip = OpenLayers.i18n("Create line");
                     idControl = 'linestring';
+                    options.layerLengthOptions = undefined;
                     break;
                 case OpenLayers.i18n("Point"):
                 case OpenLayers.i18n("MultiPoint"):
