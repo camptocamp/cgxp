@@ -57,6 +57,7 @@
         "plugins/QueryBuilder.js",
 
         "data/FeatureReader.js",
+        "data/OSRM.js",
 
         // <redlining dependencies>
         "../../../../ext/Ext/examples/ux/Spinner.js",
@@ -84,6 +85,11 @@
         // </redlining dependencies>
 
         "plugins/Redlining.js",
+
+        // <routing dependencies>
+        "../../../../core/src/script/CGXP/widgets/RoutingPanel.js",
+        // </routing dependencies>
+        "plugins/Routing.js",
         "plugins/ScaleChooser.js",
         "plugins/FloorSlider.js",
         "plugins/StreetView.js",
