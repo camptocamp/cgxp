@@ -90,6 +90,7 @@
 
         // <routing dependencies>
         "../../../../core/src/script/CGXP/widgets/RoutingPanel.js",
+        "../../../../openlayers.addins/AddViaPoint/lib/OpenLayers/Control/AddViaPoint.js",
         // </routing dependencies>
         "plugins/Routing.js",
         "plugins/ScaleChooser.js",
