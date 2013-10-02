@@ -51,17 +51,6 @@ Ext.onReady(function() {
                 },
                 autoFit: true
             }
-        },{
-            ptype: 'cgxp_routing',
-            printURL: "./",
-            actionTarget: "map.tbar",
-            options: {
-                labelAlign: 'top',
-                defaults: {
-                    anchor: '100%'
-                },
-                autoFit: true
-            }
         }],
         sources: {
             osm: {
