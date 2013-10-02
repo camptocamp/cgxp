@@ -216,6 +216,9 @@ GeoExt.ux.form.FeaturePanel.prototype.strokeWidthFieldText = "Stroke width";
 GeoExt.ux.form.FeaturePanel.prototype.fontSizeFieldText = "Size";
 GeoExt.ux.form.FeaturePanel.prototype.radiusFieldText = "Radius";
 GeoExt.ux.form.FeaturePanel.prototype.attributesText = "Attributes";
+GeoExt.ux.form.FeaturePanel.prototype.areaFieldText = "Display area";
+GeoExt.ux.form.FeaturePanel.prototype.lengthFieldText = "Display length";
+GeoExt.ux.form.FeaturePanel.prototype.coordsFieldText = "Display coordinates";
 
 // some more redlining patch
 GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
@@ -328,7 +331,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
                 f.geometry.getCentroid(), value, 32, 0
             );
             f.geometry.id = id;
-            this.controler.featureControl.resetVertices();
+            this.controler.modifyControl.resetVertices();
             f.layer.drawFeature(f);
         };
         var radiusField = Ext.create({
@@ -350,6 +353,37 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             radiusField.setValue(e.feature.geometry.getBounds().getWidth()/2);
         });
         oGroupItems.push(radiusField);
+    }
+
+    if (!feature.isLabel) {
+        var label;
+        switch (feature.geometry.CLASS_NAME) {
+            case 'OpenLayers.Geometry.Polygon':
+            case 'OpenLayers.Geometry.MultiPolygon':
+                label = this.areaFieldText;
+                break;
+            case 'OpenLayers.Geometry.LineString':
+            case 'OpenLayers.Geometry.MultiLineString':
+                label = this.lengthFieldText;
+                break;
+            case 'OpenLayers.Geometry.Point':
+                label = this.coordsFieldText;
+                break;
+        }
+
+        oGroupItems.push({
+            xtype: 'checkbox',
+            name: 'measure',
+            fieldLabel: label,
+            checked: feature.attributes.showMeasure,
+            listeners: {
+                check: function(checkbox, checked) {
+                    feature.attributes.showMeasure = checked;
+                    this.controler.showMeasure(feature);
+                },
+                scope: this
+            }
+        });
     }
 
     oGroup.items = oGroupItems;

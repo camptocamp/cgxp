@@ -273,7 +273,10 @@ GeoExt.Lang.add("fr", {
         strokeWidthFieldText: "Epaisseur du trait",
         labelFieldText: "Étiquette",
         fontSizeFieldText: "Taille",
-        radiusFieldText: "Rayon"
+        radiusFieldText: "Rayon",
+        coordsFieldText: "Afficher les coordonnées",
+        lengthFieldText: "Afficher la longueur",
+        areaFieldText: "Afficher la surface"
     },
 
     "GeoExt.ux.FeatureEditorGrid.prototype": {

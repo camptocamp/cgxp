@@ -52,11 +52,15 @@ cgxp.RedLiningPanel = Ext.extend(
         attributes: {
             point: {
                 'isLabel': function(val) { return val == 'true'; },
+                'showMeasure': function(val) { return val == 'true'; },
                 'name': true
             },
-            line: {},
+            line: {
+                'showMeasure': function(val) { return val == 'true'; }
+            },
             polygon: {
                 'isCircle': function(val) { return val == 'true'; },
+                'showMeasure': function(val) { return val == 'true'; },
                 'isBox': function(val) { return val == 'true'; }
             }
         },
@@ -126,7 +130,7 @@ cgxp.RedLiningPanel = Ext.extend(
         });
         return {
             features: this.urlCompressed.write(this.controler.activeLayer.features)
-        }
+        };
     },
 
     /** private: method[applyState]
@@ -137,7 +141,7 @@ cgxp.RedLiningPanel = Ext.extend(
             Ext.each(features, function(feature) {
                 var style = feature.style;
                 if (feature.attributes.isLabel) {
-                    /* OL SVG renderer disable click event on label (svg's 
+                    /* OL SVG renderer disable click event on label (svg's
                     pointerEvents is set to none) unless labelSelect
                     is true , and we need that to be able to edit label features */
                     style['labelSelect'] = true;

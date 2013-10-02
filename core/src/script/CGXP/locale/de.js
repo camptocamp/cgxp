@@ -252,7 +252,10 @@ GeoExt.Lang.add("de", {
         colorFieldText: "Farbe",
         strokeWidthFieldText: "Breite",
         labelFieldText: "Text",
-        fontSizeFieldText: "Grösse"
+        fontSizeFieldText: "Grösse",
+        coordsFieldText: "Koordinaten anzeigen",
+        lengthFieldText: "Distanz anzeigen",
+        areaFieldText: "Fläche anzeigen"
     },
 
     "GeoExt.ux.FeatureEditorGrid.prototype": {

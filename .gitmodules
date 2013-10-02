@@ -22,3 +22,6 @@
 [submodule "proj4js/proj4js"]
 	path = proj4js/proj4js
 	url = https://github.com/proj4js/proj4js.git
+[submodule "openlayers.addins/DynamicMeasure"]
+	path = openlayers.addins/DynamicMeasure
+	url = https://github.com/jorix/OL-DynamicMeasure.git
