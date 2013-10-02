@@ -21,6 +21,7 @@
  * @include GeoExt/data/FeatureStore.js
  * @include Ext/ux/form/TwinTriggerComboBox.js
  * @include CGXP/data/FeatureReader.js
+ * @include CGXP/widgets/FullTextSearch.js
  */
 
 /** api: (define)
@@ -105,8 +106,6 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
-    projections: null,
-
     /** api: config[vectorLayerConfig]
      *  ``Object``
      *  Optional configuration of the vector layer.
@@ -135,7 +134,6 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     viewerReady: function() {
         this.target.mapPanel.map.addLayer(this.vectorLayer);
-        this.fullTextSearch.map = this.target.mapPanel.map;
     },
 
     /** private: method[addActions]
@@ -170,7 +168,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     createCombo: function() {
         var map = this.target.mapPanel.map;
         var combo = new cgxp.FullTextSearch(Ext.apply({
-            url: this.url
+            url: this.url,
+            map: map
         }, this.widgetOptions));
 
         // used to apply the position
@@ -179,16 +178,13 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         }, this);
 
         combo.on({
-          'applyposition': function(position) {
-            this.position = position;
-            this.closeLoading.cancel();
-            this.applyPositionTask.cancel();
-            // close the loading twin box.
-            this.closeLoading.delay(10);
-            // apply the position
-            this.applyPositionTask.delay(1000);
-          },
-          'select': function(combo, record, index) {
+            'applyposition': function(position) {
+                this.position = position;
+                this.applyPositionTask.cancel();
+                // apply the position
+                this.applyPositionTask.delay(1000);
+            },
+            'select': function(combo, record, index) {
                 // add feature to vector layer
                 var feature = record.getFeature();
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
