@@ -775,8 +775,9 @@ cgxp.RoutingPanel = Ext.extend(
           this.directionsStore.loadData([]);
 
           this.find('itemId', 'directionsPanel')[0].hide();
+          this.find('itemId', 'sourceComposite')[0].items.items[0].setValue('');
+          this.find('itemId', 'targetComposite')[0].items.items[0].setValue('');
 
-          // TODO: clear source and target fields
         }, this)
       },{
         xtype: 'button',
