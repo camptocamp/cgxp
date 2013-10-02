@@ -111,6 +111,10 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      */
     projectionCodes: null,
 
+    /** private: property[projections]
+     */
+    projections: null,
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -119,6 +123,19 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
           unstyled: true
         });
         cgxp.FullTextSearch.superclass.initComponent.call(this);
+
+        // define projections that may be used for coordinates recentering
+        this.projections = {};
+        if (!this.projectionCodes) {
+            this.projectionCodes = [this.map.getProjection()];
+        }
+        for (var i = 0, len = this.projectionCodes.length, code; i < len; i++) {
+            code = String(this.projectionCodes[i]).toUpperCase();
+            if (code.substr(0, 5) != "EPSG:") {
+                code = "EPSG:" + code;
+            }
+            this.projections[code] = new OpenLayers.Projection(code);
+        }
     },
 
     createStore: function() {
@@ -143,7 +160,7 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             );
             this.position = null;
             if (coords) {
-                var map = this.target.mapPanel.map;
+                var map = this.map;
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
 
@@ -165,6 +182,9 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
                 }
 
                 if (this.position) {
+                    this.closeLoading.cancel();
+                    // close the loading twin box.
+                    this.closeLoading.delay(10);
                     this.fireEvent('applyposition', this.position);
                     return false;
                 }
@@ -208,6 +228,12 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             'select': function(combo, record, index) {
               this.fireEvent('select', combo, record, index);
             },
+            'clear': function(combo) {
+              this.fireEvent('clear', combo);
+            },
+            'specialkey': function(combo, event) {
+              this.fireEvent('specialkey', combo, event);
+            },
             'render': function(component) {
                 if (this.tooltip) {
                     new Ext.ToolTip({
@@ -228,6 +254,7 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
                     }
                 }
                 component.getEl().dom.onkeydown = stop;
+                this.fireEvent('render', component);
             },
             scope: this
         });
