@@ -40,6 +40,13 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
    * the url to the OSRM server
    */
 
+  /** api: config[dynamic]
+   *  ``Boolean``
+   *  Is the routing service supposed to issue requests dynamically
+   *  as the user drags a route marker?
+   */
+  dynamic: false,
+
   /** private: property[_cacheHints]
    *  hints from previous OSRM requests
    */
@@ -51,6 +58,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
    */
   constructor: function(config) {
     this.url = config.url;
+    this.dynamic = config.dynamic;
 
     this.listeners = config.listeners;
 
