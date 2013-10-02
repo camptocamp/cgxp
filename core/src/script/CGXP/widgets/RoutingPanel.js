@@ -405,6 +405,7 @@ cgxp.RoutingPanel = Ext.extend(
       if (!routeFeature) {
         routeFeature = new OpenLayers.Feature.Vector(null, {}, style);
       }
+      this.find('itemId', 'directionsPanel')[0].show();
       this.directionsStore.fireEvent('beforeload');
       this.routingService[this.currentEngine].getRoute({
         source: source,
@@ -767,6 +768,9 @@ cgxp.RoutingPanel = Ext.extend(
           this.viaFeatures = [];
 
           this.directionsStore.loadData([]);
+
+          this.find('itemId', 'directionsPanel')[0].hide();
+
           // TODO: clear source and target fields
         }, this)
       },{
@@ -796,6 +800,8 @@ cgxp.RoutingPanel = Ext.extend(
       xtype: 'panel',
       layout: 'border',
       bodyStyle: 'background-color: #ffffff',
+      itemId: 'directionsPanel',
+      hidden: true,
       title: this.routeDescriptionLabel,
       height: 400,
       items: [{
