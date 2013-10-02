@@ -22,7 +22,7 @@ Ext.namespace("GeoExt.ux");
  * @include FeatureEditing/ux/widgets/form/FeaturePanel.js
  * @include FeatureEditing/ux/widgets/plugins/CloseFeatureDialog.js
  * @include FeatureEditing/ux/widgets/plugins/ExportFeature.js
- * @include FeatureEditing/ux/widgets/DynamicMeasure.js
+ * @include OpenLayers/Control/DynamicMeasure.js
  * @include LayerManager/ux/data/Export.js
  * @include LayerManager/ux/data/Import.js
  */
