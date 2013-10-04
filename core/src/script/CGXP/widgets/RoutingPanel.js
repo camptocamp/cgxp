@@ -236,13 +236,11 @@ cgxp.RoutingPanel = Ext.extend(
         if (evt.feature == this.targetFeature) {
           this.updateTarget();
         }
-        // console.log('removing temporary route');
         this.vectorLayer.removeFeatures([this.newRouteFeature]);
         this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
       },
       'vertexmodified': function(evt) {
         if (evt.feature == this.sourceFeature || evt.feature == this.targetFeature) {
-          // console.log('modifying route start/end');
           this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle, false);
         }
       },
@@ -432,6 +430,9 @@ cgxp.RoutingPanel = Ext.extend(
             this.vectorLayer.removeFeatures([routeFeature],{silent:true});
           }
           routeFeature.geometry = geom;
+          if (routeFeature == this.routeFeature && this.newRouteFeature) {
+            this.vectorLayer.removeFeatures([this.newRouteFeature]);
+          }
           this.vectorLayer.addFeatures([routeFeature], {silent:true});
           if (withInstructions && route.instructions) {
             this.updateDirections(route);
@@ -533,11 +534,11 @@ cgxp.RoutingPanel = Ext.extend(
         this.sourceFeature.destroy();
         this.sourceFeature = null;
         this.find('itemId', 'sourceComposite')[0].items.items[0].setValue('');
-        Ext.Msg.show({
-          icon: Ext.MessageBox.ERROR,
-          msg: nearest.message,
-          title: this.routeErrorTitle
-        });
+        if (this.routeFeature) {
+          this.vectorLayer.removeFeatures([this.routeFeature]);
+          this.directionsStore.loadData([]);
+        }
+        this.find('itemId', 'directionsPanel')[0].hide();
       } else {
         this.sourceFeature.geometry.x = nearest.x;
         this.sourceFeature.geometry.y = nearest.y;
@@ -563,11 +564,11 @@ cgxp.RoutingPanel = Ext.extend(
         this.targetFeature.destroy();
         this.targetFeature = null;
         this.find('itemId', 'targetComposite')[0].items.items[0].setValue('');
-        Ext.Msg.show({
-          icon: Ext.MessageBox.ERROR,
-          msg: nearest.message,
-          title: this.routeErrorTitle
-        });
+        if (this.routeFeature) {
+          this.vectorLayer.removeFeatures([this.routeFeature]);
+          this.directionsStore.loadData([]);
+        }
+        this.find('itemId', 'directionsPanel')[0].hide();
       } else {
         this.targetFeature.geometry.x = nearest.x;
         this.targetFeature.geometry.y = nearest.y;
@@ -798,7 +799,6 @@ cgxp.RoutingPanel = Ext.extend(
             this.viaFeatures[i].style.label = '' + (i+1);
             this.vectorLayer.drawFeature(this.viaFeatures[i]);
           }
-
           this.routeFeature = this.computeRoute(this.routeFeature, this.routeFeatureStyle, true);
         }, this)
       }]
