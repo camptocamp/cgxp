@@ -236,10 +236,13 @@ cgxp.RoutingPanel = Ext.extend(
         if (evt.feature == this.targetFeature) {
           this.updateTarget();
         }
+        // console.log('removing temporary route');
+        this.vectorLayer.removeFeatures([this.newRouteFeature]);
         this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
       },
       'vertexmodified': function(evt) {
         if (evt.feature == this.sourceFeature || evt.feature == this.targetFeature) {
+          // console.log('modifying route start/end');
           this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle, false);
         }
       },
@@ -363,7 +366,7 @@ cgxp.RoutingPanel = Ext.extend(
     evt.feature.style = OpenLayers.Util.extend({},this.viaStyle);
     this.insertViaPoint(evt.feature);
     if (this.routingService[this.currentEngine].dynamic) {
-      this.newRouteFeature = this.computeRoute(null, this.newRouteStyle);
+      this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle);
     }
   },
 
@@ -373,7 +376,7 @@ cgxp.RoutingPanel = Ext.extend(
    */
   moveViaPoint: function(evt) {
     if (this.routingService[this.currentEngine].dynamic) {
-      this.computeRoute(this.newRouteFeature);
+      this.computeRoute(this.newRouteFeature, this.newRouteStyle);
     }
   },
 
@@ -384,6 +387,7 @@ cgxp.RoutingPanel = Ext.extend(
   endViaPoint: function(evt) {
     if (this.newRouteFeature) {
       this.vectorLayer.removeFeatures([this.newRouteFeature], {silent:true});
+      this.newRouteFeature.destroy();
       this.newRouteFeature = null;
     }
     this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
@@ -420,11 +424,7 @@ cgxp.RoutingPanel = Ext.extend(
         instructions: withInstructions
       }, function(err, route) {
         if (err) {
-          Ext.Msg.show({
-            icon: Ext.MessageBox.ERROR,
-            msg: route.message,
-            title: this.routeErrorTitle
-          });
+          this.vectorLayer.removeFeatures([routeFeature],{silent:true});
         } else {
           var geom = new OpenLayers.Geometry.LineString(route.geometry);
           geom.transform(this.epsg4326, this.map.projection);
