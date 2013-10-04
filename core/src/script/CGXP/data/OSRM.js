@@ -74,11 +74,14 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
 
   /** api: method[getNearest]
    *  Find the nearest location on the routing network
+   *
+   *  :return ``Object`` a handle that can be used to cancel the
+   *    asynchronous method
    */
   getNearest: function(loc, callback, scope) {
     var url = this.url + '/nearest';
     url = OpenLayers.Util.urlAppend(url,'loc='+loc.y+','+loc.x);
-    this.protocol.read({
+    return this.protocol.read({
       url: url,
       callback: function(response) {
         if (callback) {
@@ -178,6 +181,9 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
    *  :arg options: ``Object`` object containing routing options with
    *    the following properties:
    *
+   *  :return ``Object`` a handle that can be used to cancel the
+   *    asynchronous method
+   *
    *  * ``source`` - ``OpenLayers.Geometry.Point`` in EPSG:4326
    *  * ``target`` - ``OpenLayers.Geometry.Point`` in EPSG:4326
    *  * ``via`` - ``Array(OpenLayers.Geometry.Point)()`` in EPSG:4326
@@ -188,38 +194,58 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
    *    turn-by-turn instructions
    */
   getRoute: function(options, callback, scope) {
+    if (this._current) {
+      this._next = OpenLayers.Function.bind(function() {
+        this.getRoute(options, callback, scope);
+      }, this);
+    } else {
+      this._current = this.protocol.read({
+        url: this.getUrl(options),
+        callback: function(response) {
+          var data = response.data;
+          if (callback) {
+            var route = {
+              status: data.status,
+              message: OpenLayers.i18n("STATUS_"+data.status),
+            };
 
-    this.protocol.read({
-      url: this.getUrl(options),
-      callback: function(response) {
-        var data = response.data;
-        if (callback) {
-          var route = {
-            status: data.status,
-            message: OpenLayers.i18n("STATUS_"+data.status),
-          };
+            if (data.status == 0) {
+              this.cacheHintData(options.source, options.target, options.via, data.hint_data);
+              var geometry =
 
-          if (data.status == 0) {
-            this.cacheHintData(options.source, options.target, options.via, data.hint_data);
-            var geometry =
-
-            route.geometry = this.parseRouteGeometry(data.route_geometry);
-            route.distance = data.route_summary.total_distance;
-            route.time = data.route_summary.total_time;
-            if (options.instructions) {
-              var instructions = [];
-              for (var i=0, n=data.route_instructions.length; i<n; i++) {
-                instructions.push(this.formatInstruction(i, data.route_instructions[i]));
+              route.geometry = this.parseRouteGeometry(data.route_geometry);
+              route.distance = data.route_summary.total_distance;
+              route.time = data.route_summary.total_time;
+              if (options.instructions) {
+                var instructions = [];
+                for (var i=0, n=data.route_instructions.length; i<n; i++) {
+                  instructions.push(this.formatInstruction(i, data.route_instructions[i]));
+                }
+                route.instructions = instructions;
               }
-              route.instructions = instructions;
+            }
+
+            callback.apply(scope, [data.status, route]);
+            this._current = null;
+            if (this._next) {
+              this._next();
+              this._next = null;
             }
           }
+        },
+        scope: this
+      });
+      return this._current;
+    }
 
-          callback.apply(scope, [data.status, route]);
-        }
-      },
-      scope: this
-    });
+  },
+
+  /** private: method[parseRouteGeometry]
+   *
+   *  algorithm based on
+   */
+  cancel: function(handle) {
+    this.protocol.abort(handle);
   },
 
   /** private: method[parseRouteGeometry]
