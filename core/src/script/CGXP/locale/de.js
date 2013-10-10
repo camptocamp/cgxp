@@ -135,6 +135,10 @@ GeoExt.Lang.add("de", {
         opacityText: "Layertransparenz anpassen",
         zoomtoscaleText: "Der Layer ist nicht sichtbar in diesem Massstab.",
         opacitylabelText: "Transparenz",
+        dateyearlabelText: "Y",
+        datemonthlabelText: "m/Y",
+        datelabelText: "d/m/Y",
+        datetimelabelText: "d/m/Y H:i:s",
         showhidelegendText: "Legende anzeigen/verstecken",
         themealreadyloadedText: "Dieses Thema ist schon geladen.",
         showIn3dText: 'Ansicht in 3D'
