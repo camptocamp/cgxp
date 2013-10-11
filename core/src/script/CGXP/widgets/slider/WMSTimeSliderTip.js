@@ -19,6 +19,11 @@
  * @requires GeoExt/widgets/tips/SliderTip.js
  */
 
+/** api: (define)
+ *  module = cgxp.slider
+ *  class = WMSTimeSliderTip
+ */
+
 Ext.namespace("cgxp.slider");
 
 /** api: constructor

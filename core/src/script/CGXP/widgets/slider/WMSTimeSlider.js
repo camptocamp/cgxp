@@ -20,12 +20,17 @@
  * @require OpenLayers/Layer.js
  */
 
+/** api: (define)
+ *  module = cgxp.slider
+ *  class = WMSTimeSlider
+ */
+
 Ext.ns("cgxp.slider");
 
 cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
 
     /** api: config[layer]
-     *  ``OpenLayers.Layer`` or :class:`GeoExt.data.LayerRecord`
+     *  ``OpenLayers.Layer`` or ``GeoExt.data.LayerRecord``
      *  The layer this slider changes the time of. (required)
      */
     /** private: property[layer]
@@ -67,7 +72,7 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
      */
     timeInterval: null,
 
-    /** private: property[dateLabelFormat]
+    /** api: config[dateLabelFormat]
      *  ``String`` The format to use when formatting a label
      */
     dateLabelFormat: 'Y-m-d H:i:s',
@@ -81,7 +86,7 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
      */
     resolution: null,
 
-    /** private property[timeMode]
+    /** private: property[timeMode]
      *  ``String`` how to handle the time:
      *  * "value" display a single thumb
      *  * "range" display two thumbs
@@ -241,11 +246,11 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         return true;
     },
 
-    /** private: method[formatLayerTimeValue]
+    /** api: method[formatLayerTimeValue]
      *  :param time: ``Number`` Timestamp
      *
      *  Returns the time value to pass to the layer formatted according
-     *  to ̀``this.resolution``
+     *  to ``this.resolution``
      */
     formatLayerTimeValue: function(time) {
         var date = new Date(time);
