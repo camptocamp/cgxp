@@ -22,6 +22,7 @@ Ext.namespace("GeoExt.ux");
  * @include FeatureEditing/ux/widgets/form/FeaturePanel.js
  * @include FeatureEditing/ux/widgets/plugins/CloseFeatureDialog.js
  * @include FeatureEditing/ux/widgets/plugins/ExportFeature.js
+ * @include OpenLayers/Control/DynamicMeasure.js
  * @include LayerManager/ux/data/Export.js
  * @include LayerManager/ux/data/Import.js
  */
@@ -65,11 +66,17 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     actions: null,
 
     /** api: config[featureControl]
-     *  ``OpenLayers.Control.ModifyFeature or OpenLayers.Control.SelectFeature``
+     *  ``OpenLayers.Control.SelectFeature``
      *  The OpenLayers control responsible of selecting the feature by clicks
      *  on the screen and, optionnaly, edit feature geometry.
      */
     featureControl: null,
+
+    /** api: config[modifyControl]
+     *  ``OpenLayers.Control.ModifyFeature``
+     *  The OpenLayers control responsible of modifying the feature.
+     */
+    modifyControl: null,
 
     /** api: config[layers]
      *  ``Array(OpenLayers.Layer.Vector)``
@@ -157,7 +164,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     style: null,
 
     /** private: property[defaultStyle]
-     *  ``Object`` Feature style hash to apply to the default 
+     *  ``Object`` Feature style hash to apply to the default
      *   OpenLayers.Feature.Vector.style['default'] if no style was specified.
      */
     defaultStyle: {
@@ -275,7 +282,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         if(this.cosmetic === true) {
             var style = this.style || OpenLayers.Util.applyDefaults(
                 this.defaultStyle, OpenLayers.Feature.Vector.style["default"]);
-            var styleMap = new OpenLayers.StyleMap(style); 
+            var styleMap = new OpenLayers.StyleMap(style);
             var layerOptions = OpenLayers.Util.applyDefaults(
                 this.layerOptions, {
                   styleMap: styleMap,
@@ -383,11 +390,36 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     this.mode = MF.RESHAPE | MF.RESIZE & ~MF.RESHAPE | MF.DRAG;
                 }
                 MF.prototype.selectFeature.apply(this, arguments);
-            }
+            },
+            standalone: true
         }, this.selectControlOptions);
-        control = new OpenLayers.Control.ModifyFeature(layer, options);
+        var modifyControl = new OpenLayers.Control.ModifyFeature(
+            layer,
+            options
+        );
+        layer.map.addControls([modifyControl]);
+        layer.events.on({
+            featureselected: function(obj) {
+                modifyControl.selectFeature(obj.feature);
+            },
+            featureunselected: function(obj) {
+                modifyControl.unselectFeature(obj.feature);
+            }
+        });
+
+        control = new OpenLayers.Control.SelectFeature(layer);
+
+        control.events.on({
+            activate: function() {
+                modifyControl.activate();
+            },
+            deactivate: function() {
+                modifyControl.deactivate();
+            }
+        });
 
         this.featureControl = control;
+        this.modifyControl = modifyControl;
 
         actionOptions = {
             control: control,
@@ -466,6 +498,10 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
 
         for (var i = 0; i < geometryTypes.length; i++) {
             options = {
+                drawingLayer: layer,
+                layerSegmentsOptions: null,
+                layerLengthOptions: null,
+                accuracy: 3,
                 handlerOptions: {
                     stopDown: true,
                     stopUp: true
@@ -479,12 +515,15 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     handler = OpenLayers.Handler.Path;
                     iconCls = "gx-featureediting-draw-line";
                     tooltip = OpenLayers.i18n("Create line");
+                    idControl = 'linestring';
+                    options.layerLengthOptions = undefined;
                     break;
                 case OpenLayers.i18n("Point"):
                 case OpenLayers.i18n("MultiPoint"):
                     handler = OpenLayers.Handler.Point;
                     iconCls = "gx-featureediting-draw-point";
                     tooltip = OpenLayers.i18n("Create point");
+                    idControl = 'point';
                     break;
                 case OpenLayers.i18n("Circle"):
                     handler = OpenLayers.Handler.RegularPolygon;
@@ -492,12 +531,14 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     options.handlerOptions.irregular = false;
                     iconCls = "gx-featureediting-draw-circle";
                     tooltip = OpenLayers.i18n("Create circle");
+                    idControl = 'circle';
                     break;
                 case OpenLayers.i18n("Polygon"):
                 case OpenLayers.i18n("MultiPolygon"):
                     handler = OpenLayers.Handler.Polygon;
                     iconCls = "gx-featureediting-draw-polygon";
                     tooltip = OpenLayers.i18n("Create polygon");
+                    idControl = 'polygon';
                     break;
                 case OpenLayers.i18n("Box"):
                     handler = OpenLayers.Handler.RegularPolygon;
@@ -505,16 +546,19 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     options.handlerOptions.irregular = true;
                     iconCls = "gx-featureediting-draw-box";
                     tooltip = OpenLayers.i18n("Create box");
+                    idControl = 'polygon';
                     break;
                 case OpenLayers.i18n("Label"):
                     handler = OpenLayers.Handler.Point;
                     iconCls = "gx-featureediting-draw-label";
                     tooltip = OpenLayers.i18n("Create label");
+                    idControl = 'label';
                     break;
             }
 
-            control = new OpenLayers.Control.DrawFeature(
-                    layer, handler, options);
+            control = new OpenLayers.Control.DynamicMeasure(
+                    handler, options);
+            control.idControl = idControl;
 
             this.drawControls.push(control);
 
@@ -669,26 +713,42 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         GeoExt.ux.data.Export.KMLExport(this.map, this.layers, null, this.downloadService);
     },
 
-    /** private: method[select]
-     *  Wrapper of the selecting method of the underlying control.
+    /** private: method[selectFeature]
+     *  Convenience method to select a feature depending on current feature
+     *  control.
      */
-    select: function(feature) {
-        if (this.featureControl instanceof OpenLayers.Control.SelectFeature) {
-            this.featureControl.select(feature);
-        } else if (this.featureControl instanceof OpenLayers.Control.ModifyFeature) {
-            this.featureControl.selectFeature(feature);
+    selectFeature: function(feature) {
+        var control;
+
+        switch (this.featureControl.CLASS_NAME) {
+            case "OpenLayers.Control.SelectFeature":
+                control = this.featureControl;
+                break;
+            case "OpenLayers.Control.DeleteFeature":
+                control = this.featureControl.selectControl;
+                break;
         }
+
+        control.select.call(control, feature);
     },
 
-    /** private: method[unselect]
-     *  Wrapper of the unselecting method of the underlying control.
+    /** private: method[unselectFeature]
+     *  Convenience method to unselect a feature depending on current feature
+     *  control.
      */
-    unselect: function(feature) {
-        if (this.featureControl instanceof OpenLayers.Control.SelectFeature) {
-            this.featureControl.unselect(feature);
-        } else if (this.featureControl instanceof OpenLayers.Control.ModifyFeature) {
-            this.featureControl.unselectFeature(feature);
+    unselectFeature: function(feature) {
+        var control;
+
+        switch (this.featureControl.CLASS_NAME) {
+            case "OpenLayers.Control.SelectFeature":
+                control = this.featureControl;
+                break;
+            case "OpenLayers.Control.DeleteFeature":
+                control = this.featureControl.selectControl;
+                break;
         }
+
+        control.unselect.call(control, feature);
     },
 
     /** private: method[getActiveDrawControl]
@@ -758,7 +818,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
 
         this.featureControl.activate();
 
-        this.select.defer(1, this, [feature]);
+        this.selectFeature.defer(1, this, [feature]);
     },
 
     /** private: method[onModificationStart]
@@ -803,7 +863,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             options['plugins'] = [new GeoExt.ux.ExportFeature(), new GeoExt.ux.CloseFeatureDialog()];
         }
 
-        clazz = this.featurePanelClass || GeoExt.ux.form.FeaturePanel; 
+        clazz = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
         this.featurePanel = new clazz(options);
 
         // display the popup
@@ -827,11 +887,12 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         feature.popup = popup;
         this.popup = popup;
         popup.on({
-            close: function() {
-                if (OpenLayers.Util.indexOf(this.controler.activeLayer.selectedFeatures, this.feature) > -1) {
-                    this.controler.unselect(this.feature);
+            close: function(popup) {
+                if (OpenLayers.Util.indexOf(this.activeLayer.selectedFeatures, popup.feature) > -1) {
+                    this.unselectFeature(popup.feature);
                 }
-            }
+            },
+            scope: this
         });
         popup.show();
 
@@ -874,6 +935,11 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         var feature = event.feature;
         this.parseFeatureStyle(feature);
         this.parseFeatureDefaultAttributes(feature);
+
+        this.showMeasure(feature);
+        feature.layer.events.register('featuremodified', this, function(e){
+            this.showMeasure(feature);
+        });
     },
 
     /** private: method[parseFeatureStyle]
@@ -965,7 +1031,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     /** private: method[applyStyles]
      *  :param style: ``String`` Mandatory.  Can be "normal" or "faded".
      *  :param options: ``Object`` Object of options.
-     *  Apply a specific style to all layers of this controler.  If 
+     *  Apply a specific style to all layers of this controler.  If
      *  'redraw': true was specified in the options, the layer is redrawn after.
      */
     applyStyles: function(style, options) {
@@ -975,7 +1041,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             layer = this.layers[i];
             for(var j=0; j<layer.features.length; j++) {
                 feature = layer.features[j];
-                // don't apply any style to features coming from the 
+                // don't apply any style to features coming from the
                 // ModifyFeature control
                 if(!feature._sketch) {
                     this.applyStyle(feature, style);
@@ -992,7 +1058,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      *  :param feature: ``OpenLayers.Feature.Vector``
      *  :param style: ``String`` Mandatory.  Can be "normal" or "faded".
      *  :param options: ``Object`` Object of options.
-     *  Apply a specific style to a specific feature.  If 'redraw': true was 
+     *  Apply a specific style to a specific feature.  If 'redraw': true was
      *  specified in the options, the layer is redrawn after.
      */
     applyStyle: function(feature, style, options) {
@@ -1005,11 +1071,11 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             break;
           default:
             fRatio = 1 / this.fadeRatio;
-        }   
+        }
 
         for(var i=0; i<this.opacityProperties.length; i++) {
             property = this.opacityProperties[i];
-            if(feature.style[property]) {
+            if(feature.style!=null && feature.style[property]) {
                 feature.style[property] *= fRatio;
             }
         }
@@ -1017,6 +1083,50 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         if(options['redraw'] === true) {
             feature.layer.drawFeature(feature);
         }
+    },
+
+    /** private: method[showMeasure]
+     *  :param feature: ``OpenLayers.Feature.Vector``
+     *  Displays the measure (coordinates, length or area) of the feature.
+     */
+    showMeasure: function(feature) {
+        var map = feature.layer.map;
+        // we assume that there is at least one DynamicMeasure control
+        var mc =
+            map.getControlsByClass('OpenLayers.Control.DynamicMeasure')[0];
+        function formatMeasure(v) {
+            return OpenLayers.Number.format(Number(v.toPrecision(5)), null) ;
+        }
+
+        var f = feature,
+            geom = f.geometry,
+            measure;
+        if (f.attributes.showMeasure) {
+            switch (geom.CLASS_NAME) {
+                case 'OpenLayers.Geometry.Polygon':
+                case 'OpenLayers.Geometry.MultiPolygon':
+                    measure = mc.getBestArea(geom);
+                    measure[1] += '²';
+                    measure[0] = formatMeasure(measure[0]);
+                    break;
+                case 'OpenLayers.Geometry.LineString':
+                case 'OpenLayers.Geometry.MultiLineString':
+                    measure = mc.getBestLength(geom);
+                    measure[0] = formatMeasure(measure[0]);
+                    break;
+                case 'OpenLayers.Geometry.Point':
+                    measure = [
+                        Number(geom.x.toFixed(5)),
+                        Number(geom.y.toFixed(5))];
+                    f.style.labelAlign = "lb";
+                    break;
+            }
+            f.style.label = measure.join(' ');
+            f.style.fontSize = "12px";
+        } else {
+            delete f.style.label;
+        }
+        f.layer.drawFeature(f);
     },
 
     CLASS_NAME: "GeoExt.ux.FeatureEditingControler"
