@@ -155,6 +155,10 @@ GeoExt.Lang.add("fr", {
         opacityText: "Modifier l'opacité de la couche",
         zoomtoscaleText: "Cette couche n'est pas visible à ce niveau de zoom.",
         opacitylabelText: "Opacité",
+        dateyearlabelText: "Y",
+        datemonthlabelText: "m/Y",
+        datelabelText: "d/m/Y",
+        datetimelabelText: "d/m/Y H:i:s",
         showhidelegendText: "Afficher/masquer la légende",
         themealreadyloadedText: "Ce thème est déjà chargé.",
         showIn3dText: 'Afficher en 3D'

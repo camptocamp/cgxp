@@ -31,6 +31,8 @@
  * @include CGXP/widgets/tree/TreeNodeLoading.js
  * @include CGXP/widgets/tree/TreeNodeComponent.js
  * @include CGXP/widgets/tree/TreeNodeTriStateUI.js
+ * @include CGXP/widgets/slider/WMSTimeSlider.js
+ * @include CGXP/widgets/slider/WMSTimeSliderTip.js
  */
 
 Ext.namespace("cgxp.tree");
@@ -114,6 +116,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     opacityText: "Modify layer opacity",
     zoomtoscaleText: "This layer is not visible at this zoom level.",
     opacitylabelText: "Opacity",
+    dateyearlabelText: 'Y',
+    datemonthlabelText: 'Y-m',
+    datelabelText: "Y-m-d",
+    datetimelabelText: 'Y-m-d H:i:s',
     showhidelegendText: "Show/hide legend",
     themealreadyloadedText: "This theme is already loaded",
     showIn3dText: 'Show in 3D',
@@ -196,6 +202,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.plugins = [
             this.actionsPlugin,
             new GeoExt.plugins.TreeNodeComponent(),
+            new cgxp.tree.TreeNodeComponent({
+                configKey: "timeSlider"
+            }),
             new cgxp.tree.TreeNodeComponent({
                 divCls: "legend-component",
                 configKey: "legend"
@@ -375,10 +384,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         // internalWMS or layer leaf
-        var actions = internalWMS || group.type ? [{
-            action: "opacity",
-            qtip: this.opacityText
-        }] : [];
+        var actions = [];
+        var timeSlider;
+        if (internalWMS || group.type) {
+            actions = [{
+                action: "opacity",
+                qtip: this.opacityText
+            }];
+            if (group.time) {
+                timeSlider = this.getTimeSlider(group);
+            }
+        }
         actions.push({
             action: "up",
             qtip: this.moveupText,
@@ -406,6 +422,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             layer: group.layer,
             allOlLayers: group.allOlLayers,
             component: internalWMS || group.type ? this.getOpacitySlider(group) : null,
+            timeSlider: timeSlider,
             hasOpacity: internalWMS || group.type,
             actions: actions
         };
@@ -579,12 +596,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     /** private: method[getOpacitySlider]
      *  Adds the opacity slider block.
      *
-     * :arg theme: ``Object``
+     * :arg node: ``Object``
      * :arg anchor: ``String``
      */
-    getOpacitySlider: function(theme, anchor) {
-        theme.slider = new GeoExt.LayerOpacitySlider({
-            layer: theme.layer,
+    getOpacitySlider: function(node, anchor) {
+        node.slider = new GeoExt.LayerOpacitySlider({
+            layer: node.layer,
             isFormField: true,
             hideLabel: true,
             aggressive: true,
@@ -593,18 +610,82 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 template: '<div>' + this.opacitylabelText + ' {opacity}%</div>'
             })
         });
-        theme.slider.on('changecomplete', function() {
+        node.slider.on('changecomplete', function() {
             this.fireEvent('themeopacitychange');
         }, this);
         return new Ext.Container({
             layout: 'form',
-            items: [theme.slider],
+            items: [node.slider],
             listeners: {
                 render: function(cmp) {
                     cmp.getEl().setVisibilityMode(Ext.Element.DISPLAY);
                     cmp.getEl().hide.defer(1, cmp.getEl(), [false]);
                 }
             }
+        });
+    },
+
+    /** private: method[getTimeSlider]
+     *  Adds the time slider block.
+     *
+     * :arg node: ``Object``
+     * :arg anchor: ``String``
+     */
+    getTimeSlider: function(node, anchor) {
+        if (node.time.mode == 'disabled') {
+            return null;
+        }
+
+        var labelFormat;
+
+        switch (node.time.resolution) {
+            case 'year':
+                labelFormat = this.dateyearlabelText;
+                break;
+            case 'month':
+                labelFormat = this.datemonthlabelText;
+                break;
+            case 'day':
+                labelFormat = this.datelabelText;
+                break;
+            case 'second':
+            default:
+                labelFormat = this.datetimelabelText;
+        }
+
+        var slider = new cgxp.slider.WMSTimeSlider({
+            dateLabelFormat: labelFormat,
+            layer: node.layer,
+            wmsTime: node.time,
+            plugins: new cgxp.slider.WMSTimeSliderTip(),
+            flex: 1,
+            style: {
+                marginLeft: 0
+            }
+        });
+
+        var tooltip = slider.formatLayerTimeLabel(new Date(slider.minValue))
+            + '<br/>'
+            + slider.formatLayerTimeLabel(new Date(slider.maxValue));
+
+        return new Ext.Container({
+            layout: 'hbox',
+            cls: 'gx-tree-timeslider-container',
+            items: [
+                {
+                    xtype: 'box',
+                    html: '<div class="gx-tree-timeslider-icon"></div>',
+                    listeners: {
+                        render: function(cmp) {
+                            new Ext.ToolTip({
+                                target: cmp.el,
+                                html: tooltip
+                            });
+                        }
+                    }
+                },
+                slider
+            ]
         });
     },
 

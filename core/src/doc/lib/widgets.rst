@@ -18,5 +18,12 @@ A collection of tree related classes.
 .. toctree::
     :maxdepth: 1
     :glob:
-    
+
     widgets/tree/*
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+    :hidden:
+
+    widgets/slider/*

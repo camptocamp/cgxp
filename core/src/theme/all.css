@@ -198,6 +198,17 @@ div.baseLayersOpacitySlider .opacityToolbar {
 .gx-tree-layer-actions .opacity {
     background: transparent url(img/layer_opacity.png) no-repeat;
 }
+
+.gx-tree-timeslider-icon {
+    width: 20px;
+    height: 20px;
+    background: transparent url(img/layer_time.png) no-repeat 0 50%;
+}
+
+.gx-tree-timeslider-container {
+    padding: 0 18px;
+}
+
 .gx-tree-layer-actions .delete {
     background: transparent url(img/layer_delete.gif) no-repeat center center;
 }
