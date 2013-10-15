@@ -24,6 +24,8 @@
  * @include OpenLayers/Renderer/VML.js
  * @include OpenLayers/Control/DrawFeature.js
  * @include OpenLayers/Control/ModifyFeature.js
+ * @include OpenLayers/Control/AddViaPoint.js
+ * @include OpenLayers/Handler/Point.js
  */
 
 /** api: (define)
@@ -124,27 +126,13 @@ cgxp.RoutingPanel = Ext.extend(
      *  ``Object``
      *  Optional configuration of the source feature.
      */
-    sourceStyleConfig: {
-      graphicOpacity: 1,
-      graphicWidth: 23,
-      graphicHeight: 34,
-      graphicYOffset: -34,
-      graphicZIndex: 2000,
-      externalGraphic: '../src/theme/img/route_source.png'
-    },
+    sourceStyleConfig: null,
 
     /** api: config[targetStyleConfig]
      *  ``Object``
      *  Optional configuration of the target feature.
      */
-    targetStyleConfig: {
-      graphicOpacity: 1,
-      graphicWidth: 23,
-      graphicHeight: 34,
-      graphicYOffset: -34,
-      graphicZIndex: 2000,
-      externalGraphic: '../src/theme/img/route_target.png'
-    },
+    targetStyleConfig: null,
 
     /** api: config[highlightStyleConfig]
      *  ``Object``
@@ -164,7 +152,30 @@ cgxp.RoutingPanel = Ext.extend(
      *  ``Object``
      *  Optional configuration of the via features.
      */
-    viaStyleConfig: {
+    viaStyleConfig: null,
+
+  /** private: method[initComponent]
+   */
+  initComponent: function() {
+    this.sourceStyleConfig = this.sourceStyleConfig || {
+      graphicOpacity: 1,
+      graphicWidth: 23,
+      graphicHeight: 34,
+      graphicYOffset: -34,
+      graphicZIndex: 2000,
+      externalGraphic: OpenLayers.Util.getImagesLocation() + '../route_source.png'
+    };
+
+    this.targetStyleConfig = this.targetStyleConfig || {
+      graphicOpacity: 1,
+      graphicWidth: 23,
+      graphicHeight: 34,
+      graphicYOffset: -34,
+      graphicZIndex: 2000,
+      externalGraphic: OpenLayers.Util.getImagesLocation() + '../route_target.png'
+    };
+
+    this.viaStyleConfig = this.viaStyleConfig || {
       graphicOpacity: 1,
       graphicWidth: 23,
       graphicHeight: 34,
@@ -176,12 +187,9 @@ cgxp.RoutingPanel = Ext.extend(
       fontColor: '#000000',
       fontOpacity: 1,
       fontSize: '8px',
-      externalGraphic: '../src/theme/img/route_via.png'
-    },
+      externalGraphic: OpenLayers.Util.getImagesLocation() + '../route_via.png'
+    };
 
-  /** private: method[initComponent]
-   */
-  initComponent: function() {
 
     this.directionsStore = new Ext.data.JsonStore({
        fields: ['index', 'position', 'directionType', 'roadName', 'distance', 'time', 'compassDirection']
@@ -809,7 +817,8 @@ cgxp.RoutingPanel = Ext.extend(
       itemId: 'directionsPanel',
       hidden: true,
       title: this.routeDescriptionLabel,
-      height: 400,
+      height: 700,
+      border: false,
       items: [{
         xtype: 'panel',
         region: 'north',
@@ -819,7 +828,7 @@ cgxp.RoutingPanel = Ext.extend(
           distance: '',
           time: ''
         },
-        tpl: '<div style=""><div style="margin: 5px 0"><span class="total-distance-title">'+this.totalDistanceLabel+':</span> <span class="total-distance-value">{distance}</span></div><div style="margin: 5px 0"><span class="total-time-title">'+this.totalTimeLabel+':</span> <span class="total-time-value">{time}</span></div><div style="margin: 5px 0"><span class="">'+this.directionsLabel+':</span></div></div>',
+        tpl: '<div style="font-size: 12px;"><div style="margin: 5px 0;"><span class="total-distance-title">'+this.totalDistanceLabel+':</span> <span class="total-distance-value">{distance}</span></div><div style="margin: 5px 0"><span class="total-time-title">'+this.totalTimeLabel+':</span> <span class="total-time-value">{time}</span></div><div style="margin: 5px 0"><span class="">'+this.directionsLabel+':</span></div></div>',
       },{
         xtype: 'listview',
         region: 'center',
@@ -887,7 +896,8 @@ Ext.util.Format.routeImage = function(directionType) {
     "DIRECTION_11-x":"route_roundabout.png",
     "DIRECTION_15":"route_target.png"
   };
-  return '<img src="../src/theme/img/'+imgs[directionType]+'">';
+  return '<img src="' + OpenLayers.Util.getImagesLocation() + 
+    '../' + imgs[directionType] + '">';
 };
 
 Ext.util.Format.routeDirection = function(record) {
