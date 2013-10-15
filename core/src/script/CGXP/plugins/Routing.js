@@ -17,8 +17,10 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include CGXP/plugins/FullTextSearch.js
  * @include CGXP/widgets/RoutingPanel.js
  * @include GeoExt/widgets/Action.js
+ * @include OpenLayers/Handler/Point.js
  */
 
 /** api: (define)
@@ -241,7 +243,7 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
           routingServices[i] = this.createRoutingService(this.routingService[i]);
         }
 
-        var routingPanel = new cgxp.RoutingPanel({
+        var routingPanel = new cgxp.RoutingPanel(Ext.apply({
           title: this.routingTitle,
           map: this.target.mapPanel.map,
           routingService: routingServices,
@@ -264,13 +266,8 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
           noRouteLabel: this.noRouteLabel,
           bodyStyle: {
             'padding': '10px'
-          },
-          style: {
-            'border-color': '#D0D0D0',
-            'border-style': 'none solid solid',
-            'border-width': '0 1px 1px'
           }
-        });
+        }, this.outputConfig));
 
         this.routingPanel = cgxp.plugins.Routing.superclass.addOutput.call(this, routingPanel);
 

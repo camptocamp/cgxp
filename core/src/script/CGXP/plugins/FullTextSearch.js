@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include CGXP/widgets/FullTextSearch.js
  * @include OpenLayers/Format/GeoJSON.js
  * @include GeoExt/data/FeatureStore.js
  * @include Ext/ux/form/TwinTriggerComboBox.js
