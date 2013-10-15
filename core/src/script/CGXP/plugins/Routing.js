@@ -190,7 +190,7 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
      *  * ``Ext.util.Format.routeDirection`` - formats a translated version of
      *    the driving directions for a given directionType.  This formatter
      *    expects to be passed the entire record and should be invoked using
-     *    ``{[Ext.util.Format.routeDirection(values)]} to work correctly.
+     *    ``{[Ext.util.Format.routeDirection(values)]}`` to work correctly.
      */
 
     directionsTpl: '<div style="float:left; width: 30px;">{directionType:routeImage}</div><div style="float: right; width: 40px; text-align: right; ">{distance:routeDistance}</div><div style="margin:0 40px 0 30px; white-space: normal">{[Ext.util.Format.routeDirection(values)]}</div>',
