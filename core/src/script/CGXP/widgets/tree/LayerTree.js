@@ -806,7 +806,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     result.allOlLayers.push(child.layer);
                     this.mapPanel.layers.insert(currentIndex, [
                         new this.recordType({
-                            disclaimer: child.disclaimer,
+                            disclaimer: result.disclaimer,
                             legendURL: child.legendImage,
                             layer: child.layer
                         }, child.layer.id)]);
