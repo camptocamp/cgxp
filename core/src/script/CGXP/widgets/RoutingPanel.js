@@ -248,9 +248,7 @@ cgxp.RoutingPanel = Ext.extend(
         this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
       },
       'vertexmodified': function(evt) {
-        if (evt.feature == this.sourceFeature || evt.feature == this.targetFeature) {
-          this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle, false);
-        }
+        this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle, false);
       },
       'afterfeaturemodified': function(evt) {
         if (!evt.modified && evt.feature.geometry.CLASS_NAME == 'OpenLayers.Geometry.Point') {
