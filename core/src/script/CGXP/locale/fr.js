@@ -164,6 +164,30 @@ GeoExt.Lang.add("fr", {
         showIn3dText: 'Afficher en 3D'
     },
 
+    "cgxp.plugins.Routing": {
+      routingTitle: "Routing", // TODO: translate me
+      routingwindowTitle: "Routing", // TODO: translate me
+      routingbuttonText: "Routing", // TODO: translate me
+      routingbuttonTooltip: "Routing", // TODO: translate me
+      sourcefieldLabelText: "From", // TODO: translate me
+      sourcefieldValueText: "From", // TODO: translate me
+      sourceButtonLabel: "Set", // TODO: translate me
+      targetfieldLabelText: "To", // TODO: translate me
+      targetfieldValueText: "To", // TODO: translate me
+      targetButtonLabel: "Set", // TODO: translate me
+      routeenginefieldLabel: 'Travel by', // TODO: translate me
+      zoombuttonLabel: 'Zoom', // TODO: translate me
+      resetbuttonLabel: 'Reset', // TODO: translate me
+      reversebuttonLabel: 'Reverse', // TODO: translate me
+      routeDescriptionLabel: "Description de l’itinéraire",
+      totalDistanceLabel: 'Total Distance', // TODO: translate me
+      totalTimeLabel: 'Total Time', // TODO: translate me
+      directionsLabel: 'Directions', // TODO: translate me
+      loadingRouteLabel: "Votre itinéraire est en cours de calcul",
+      noRouteFoundLabel: "Pas d’itinéraire possible",
+      routeErrorTitle: 'Erreur'
+    },
+
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "Ajouter WMS",
         windowTitleText: "Ajouter des couches WMS",
@@ -297,4 +321,57 @@ GeoExt.Lang.add("fr", {
         nameHeader: "Nom",
         valueHeader: "Valeur"
     }
+});
+
+OpenLayers.Lang["fr"] = OpenLayers.Util.applyDefaults({
+  "STATUS_0": "Successful",
+  "STATUS_1": "Unknown server error",
+  "STATUS_2": "Invalid parameter",
+  "STATUS_3": "Parameter out of range",
+  "STATUS_4": "Required parameter missing",
+  "STATUS_5": "Service unavailable",
+  "STATUS_202": "Route is blocked",
+  "STATUS_205": "DB corrupted",
+  "STATUS_206": "DB is not open",
+  "STATUS_207": "No route",
+  "STATUS_208": "Invalid start point",
+  "STATUS_209": "Invalid end point",
+  "STATUS_210": "Start and end points are equal",
+
+  "ENGINE_0": "voiture (le plus rapide)",
+  "N": "nord",
+  "E": "est",
+  "S": "sud",
+  "W": "ouest",
+  "NE": "nord-est",
+  "SE": "sud-est",
+  "SW": "sud-ouest",
+  "NW": "nord-ouest",
+  // driving directions
+  // ${roadName}: road name
+  // ${compassDirection}: compass direction
+  // ${distance}: distance
+  // ${duration}: duration
+  // [*]: will only be printed when there actually is a road name
+  "DIRECTION_0":"Instruction inconnue[ sur <b>${roadName}</b>]",
+  "DIRECTION_1":"Continuez[ sur <b>${roadName}</b>]",
+  "DIRECTION_2":"Tournez légèrement à droite[ sur <b>${roadName}</b>]",
+  "DIRECTION_3":"Tournez à droite[ sur <b>${roadName}</b>]",
+  "DIRECTION_4":"Tournez fortement à droite[ sur <b>${roadName}</b>]",
+  "DIRECTION_5":"Faites demi-tour[ sur <b>${roadName}</b>]",
+  "DIRECTION_6":"Tournez fortement à gauche[ sur <b>${roadName}</b>]",
+  "DIRECTION_7":"Tournez à gauche[ sur <b>${roadName}</b>]",
+  "DIRECTION_8":"Tournez légèrement à gauche[ sur <b>${roadName}</b>]",
+  "DIRECTION_10":"Direction <b>${compassDirection}</b>[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-1":"Au rond-point, prenez la première sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-2":"Au rond-point, prenez la deuxième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-3":"Au rond-point, prenez la troisième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-4":"Au rond-point, prenez la quatrième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-5":"Au rond-point, prenez la cinquième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-6":"Au rond-point, prenez la sixième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-7":"Au rond-point, prenez la septième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-8":"Au rond-point, prenez la huitième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-9":"Au rond-point, prenez la neuvième sortie[ sur <b>${roadName}</b>]",
+  "DIRECTION_11-x":"Au rond-point, prenez l’une des trop nombreuses sorties[ sur <b>${roadName}</b>]",
+  "DIRECTION_15":"Vous êtes arrivé"
 });
