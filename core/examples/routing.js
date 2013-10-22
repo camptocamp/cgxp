@@ -1,4 +1,5 @@
 var app;
+OpenLayers.ImgPath = "../src/theme/img/ol/";
 
 Ext.onReady(function() {
     GeoExt.Lang.set("en");
