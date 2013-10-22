@@ -729,8 +729,9 @@ cgxp.RoutingPanel = Ext.extend(
       store: routeEngines,
       value: this.currentEngine,
       listeners: {
-        change: {
-          fn: function(combo, newValue, oldValue) {
+        select: {
+          fn: function(combo, record, index) {
+            var newValue = combo.getValue();
             if (this.currentEngine !== newValue) {
               this.currentEngine = newValue;
               this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
