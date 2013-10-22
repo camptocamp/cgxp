@@ -634,6 +634,7 @@ cgxp.RoutingPanel = Ext.extend(
       itemId: 'sourceComposite',
       fieldLabel: this.sourcefieldLabel,
       items: [new cgxp.FullTextSearch(Ext.apply({
+            map: this.map,
             url: this.searchOptions.url,
             listeners: {
               'applyposition': {
@@ -673,6 +674,7 @@ cgxp.RoutingPanel = Ext.extend(
       itemId: 'targetComposite',
       fieldLabel: this.targetfieldLabel,
       items: [new cgxp.FullTextSearch(Ext.apply({
+            map: this.map,
             url: this.searchOptions.url,
             listeners: {
               'applyposition': {
