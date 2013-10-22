@@ -46,7 +46,7 @@ cgxp.RoutingPanel = Ext.extend(
      */
     map: null,
 
-    /** private: property[map]
+    /** private: property[routingService:]
      */
     routingService: null,
 
