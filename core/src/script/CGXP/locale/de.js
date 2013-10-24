@@ -20,7 +20,7 @@ GeoExt.Lang.add("de", {
         measureTooltip: "Messen"
     },
 
-    "cgxp.plugins.FullTextSearch.prototype": {
+    "cgxp.FullTextSearch.prototype": {
         tooltipTitle: "Suchen",
         emptyText: "Suche Ort, Objekte...",
         loadingText: "Suchen..."
