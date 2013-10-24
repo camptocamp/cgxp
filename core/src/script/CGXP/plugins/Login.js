@@ -418,7 +418,13 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                         window.external.AutoCompleteSaveForm(
                             this.loginForm.getForm().el.dom);
                     }
-                    window.location = this.getUrl();
+                    /* this is needed to trigger the save password behavior in the 
+                       browser, which only take into account normal form submit and
+                       not ajax form submit, so we submit the form a 2nd time just 
+                       to save the password */
+                    this.loginForm.getForm().el.dom.action = this.getUrl();
+                    this.loginForm.getForm().standardSubmit = true;
+                    this.loginForm.getForm().submit();
                 }
             },
             failure: function(form, action) {
