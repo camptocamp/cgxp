@@ -462,7 +462,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     },
 
     /** private: method[showFeatures]
-     *  ``Array`` Array of Ext.data.Record
+     *  ``Array(Ext.data.Record)``
      */
     showFeatures: function(records) {
         Ext.each(records, this.showFeature, this);
@@ -477,7 +477,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     },
 
     /** private: method[hideFeatures]
-     *  ``Array`` Array of Ext.data.Record
+     *  ``Array(Ext.data.Record)``
      */
     hideFeatures: function(records) {
         Ext.each(records, function(record) {
