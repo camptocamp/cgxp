@@ -106,7 +106,11 @@ Ext.namespace("cgxp.plugins");
  *          {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
- *              themes: THEMES,,
+ *              themes: THEMES,
+ *              uniqueTheme: true,
+ *              % if permalink_themes:
+ *                  permalinkThemes: ${permalink_themes | n},
+ *              % endif
  *              // default themes works only with theme groups
  *              defaultThemes: ["default_theme_to_load"],
  *              wmsURL: "${request.route_url('mapserverproxy', path='')}",
@@ -147,9 +151,15 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[defaultThemes]
      *  ``Array(String)``
-     *  The themes to load at init time. Optional.
+     *  The default themes to load at init time. Optional.
      */
     defaultThemes: null,
+
+    /** api: config[permalinkThemes]
+     *  ``Array(String)``
+     *  The themes to load at init time. It should be set automatically. Optional.
+     */
+    permalinkThemes: null,
 
     /** api: config[showKMLIn2D]
      *  ``Boolean`
@@ -198,7 +208,8 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             mapPanel: this.target.mapPanel,
             themes: this.themes,
             wmsURL: this.wmsURL,
-            defaultThemes: this.defaultThemes
+            defaultThemes: this.defaultThemes,
+            permalinkThemes: this.permalinkThemes
         }, config || {});
 
         this.tree = cgxp.plugins.LayerTree.superclass.addOutput.call(this, config);
