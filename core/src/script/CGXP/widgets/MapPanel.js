@@ -223,7 +223,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         else if (layer.mergeNewParams) { // WMS or WMTS
             layer.mergeNewParams(params);
         }
-    },
+    }
 });
 
 /** api: xtype = cgxp_mappanel */
