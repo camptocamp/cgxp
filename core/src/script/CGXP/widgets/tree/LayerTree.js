@@ -1368,7 +1368,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         if (this.initialState.groups !== undefined) {
             this.defaultThemes = null;
-        } 
+        }
         // handle layer groups from permalinkThemes and initialState
         var groups = [];
         // get groups from permalinkThemes
@@ -1391,7 +1391,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 groups.push(initialStateGroups[i]);
             }
         }
-  
+
         Ext.each(groups.reverse(), function(t) {
             if (!this.checkGroupIsAllowed(t)) {
                 return;
@@ -1696,6 +1696,43 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
         // on the map in the same order than in the layertree
         items2.reverse();
         return cgxp.tree.LayerParamNode.superclass.createParams.apply(this, [items2]);
+    },
+
+    /** private: method[onCheckChange]
+     * :arg node: ``GeoExt.tree.LayerParamNode``
+     * :arg checked: ``Boolean``
+     *
+     * Handler for checkchange events.
+     */
+    onCheckChange: function(node, checked) {
+        var layer = this.layer;
+        // Temporary set layer visibility property to false in order
+        // to avoid to request a GetMap on each intermediate layer remove,
+        // use the property to avoid a flash effect.
+        layer.visibility = false;
+
+        var newItems = [];
+        var curItems = this.getItemsFromLayer();
+        Ext.each(this.allItems, function(item) {
+            if ((item !== this.item && curItems.indexOf(item) !== -1) ||
+                    (checked === true && item === this.item)) {
+                newItems.push(item);
+            }
+        }, this);
+
+        var visible = (newItems.length > 0);
+        // if there is something to display, we want to update the params
+        // before the layer is turned on
+        visible && layer.mergeNewParams(this.createParams(newItems));
+        if (visible) {
+            window.setTimeout(function() {
+                layer.setVisibility(true);
+            }, 10);
+        }
+        // if there is nothing to display, we want to update the params
+        // when the layer is turned off, so we don't fire illegal requests
+        // (i.e. param value being empty)
+        (!visible) && layer.mergeNewParams(this.createParams([]));
     },
 
     // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
