@@ -78,10 +78,16 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     themes: null,
 
     /** api: config[defaultThemes]
-     *  ``Array of strings``
-     *  The themes to load on start up
+     *  ``Array(String)``
+     *  The default themes to load at init time.
      */
     defaultThemes: null,
+
+    /** api: config[permalinkThemes]
+     *  ``Array(String)``
+     *  The themes to load at init time. Automatically set.
+     */
+    permalinkThemes: null,
 
     /** api: config[wmsURL]
      *  ``String``
@@ -1354,14 +1360,38 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     /** private: method[delayedApplyState]
      */
     delayedApplyState: function() {
+        if (this.permalinkThemes) {
+            this.defaultThemes = this.permalinkThemes;
+        }
         if (!this.initialState) {
             return;
         }
         if (this.initialState.groups !== undefined) {
             this.defaultThemes = null;
+        } 
+        // handle layer groups from permalinkThemes and initialState
+        var groups = [];
+        // get groups from permalinkThemes
+        if (this.permalinkThemes) {
+            // recovering all the first level groups from the selected themes
+            for (var i=0, l=this.permalinkThemes.length; i<l; i++) {
+                var theme = this.findThemeByName(this.permalinkThemes[i]);
+                Ext.each(theme.children, function(child) {
+                    this.push(child.name);
+                }, groups);
+            }
         }
-        var groups = Ext.isArray(this.initialState.groups) ?
+        // get groups from initialState
+        var initialStateGroups = Ext.isArray(this.initialState.groups) ?
             this.initialState.groups : [this.initialState.groups];
+        // merge permalinkThemes's groups and initialState groups
+        var groupsAsString = groups.join(',');
+        for (var i=0, l=initialStateGroups.length; i<l; i++) {
+            if (groupsAsString.indexOf(initialStateGroups[i]) < 0) {
+                groups.push(initialStateGroups[i]);
+            }
+        }
+  
         Ext.each(groups.reverse(), function(t) {
             if (!this.checkGroupIsAllowed(t)) {
                 return;
