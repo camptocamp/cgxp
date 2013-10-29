@@ -1368,7 +1368,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         if (this.initialState.groups !== undefined) {
             this.defaultThemes = null;
-        } 
+        }
         // handle layer groups from permalinkThemes and initialState
         var groups = [];
         // get groups from permalinkThemes
@@ -1391,7 +1391,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 groups.push(initialStateGroups[i]);
             }
         }
-  
+
         Ext.each(groups.reverse(), function(t) {
             if (!this.checkGroupIsAllowed(t)) {
                 return;
