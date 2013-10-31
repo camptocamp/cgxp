@@ -37,6 +37,12 @@ Ext.namespace("cgxp.plugins");
  *
  *  .. code-block:: javascript
  *
+ *      ...
+ *      Ext.namespace("cgxp");
+ *      // WFS namespace, depends of the backend used, default is for Mapserver
+ *      cgxp.WFS_FEATURE_NS = "http://mapserver.gis.umn.edu/mapserver";
+ *
+ *      ...
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -237,7 +243,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             geometryName: this.geometryName,
             srsName: this.target.mapPanel.map.getProjection(),
             formatOptions: {
-                featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+                featureNS: cgxp.WFS_FEATURE_NS,
                 autoconfig: false
             }
         });
@@ -246,7 +252,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
             geometryName: this.geometryName,
             srsName: this.target.mapPanel.map.getProjection(),
             formatOptions: {
-                featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+                featureNS: cgxp.WFS_FEATURE_NS,
                 autoconfig: false
             }
         });

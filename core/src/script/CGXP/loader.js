@@ -18,6 +18,8 @@
 (function() {
 
     var jsfiles = [
+        "cgxp.js",
+
         "widgets/FullTextSearch.js",
         "widgets/MapPanel.js",
         "widgets/WMSLegend.js",

@@ -41,6 +41,12 @@ Ext.namespace("cgxp.plugins");
  *
  *  .. code-block:: javascript
  *
+ *      ...
+ *      Ext.namespace("cgxp");
+ *      // WFS namespace, depends of the backend used, default is for Mapserver
+ *      cgxp.WFS_FEATURE_NS = "http://mapserver.gis.umn.edu/mapserver";
+ *
+ *      ...
  *      new gxp.Viewer({
  *          ...
  *          tools: [
@@ -416,7 +422,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         this.protocol = new OpenLayers.Protocol.WFS({
             url: this.mapserverproxyURL,
             featureType: featureType,
-            featureNS: "http://mapserver.gis.umn.edu/mapserver",
+            featureNS: cgxp.WFS_FEATURE_NS,
             srsName: this.srsName,
             version: "1.1.0",
             geometryName: this.geometryName

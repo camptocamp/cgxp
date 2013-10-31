@@ -38,6 +38,12 @@ Ext.namespace("cgxp.plugins");
  *
  *  .. code-block:: javascript
  *
+ *      ...
+ *      Ext.namespace("cgxp");
+ *      // WFS namespace, depends of the backend used, default is for Mapserver
+ *      cgxp.WFS_FEATURE_NS = "http://mapserver.gis.umn.edu/mapserver";
+ *
+ *      ...
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -187,7 +193,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             url: this.WFSURL,
             featureType: layerName,
             srsName: this.srsName,
-            featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+            featureNS: cgxp.WFS_FEATURE_NS,
             version: "1.1.0"
         });
 
