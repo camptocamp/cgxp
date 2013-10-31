@@ -144,7 +144,8 @@ GeoExt.Lang.add("fr", {
         helpText: "Cliquer sur la carte pour <b>éditer des objets</b>, ou",
         layerMenuText: "Choisir une couche",
         createBtnText: "Créer un nouvel objet",
-        forbiddenText: "Vous n'êtes pas autorisé à réaliser cette action&nbsp;!"
+        forbiddenText: "Vous n'êtes pas autorisé à réaliser cette action&nbsp;!",
+        serverErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur."
     },
 
     "cgxp.tree.LayerTree.prototype": {
