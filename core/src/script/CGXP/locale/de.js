@@ -124,7 +124,8 @@ GeoExt.Lang.add("de", {
         helpText: "Klicken Sie auf die Karten um <b>ein bestehendes Element zu editieren</b>, oder",
         layerMenuText: "Wählen Sie eine Ebene",
         createBtnText: "Erstellen Sie ein neues Element",
-        forbiddenText: "Diese Aktion ist nicht erlaubt!"
+        forbiddenText: "Diese Aktion ist nicht erlaubt!",
+        serverErrorText: "Unmöglich zu speichern wegen eines Serverfehlers."
     },
 
     "cgxp.tree.LayerTree.prototype": {

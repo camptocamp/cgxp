@@ -160,6 +160,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     forbiddenText: 'You are not allowed to do this action!',
 
+    /** api: config[serverErrorText]
+     *  ``String``
+     *  Message display when the save failed
+     */
+    serverErrorText: 'Saving failed because of a server error.',
+
     /** private: config[pendingRequests]
      *  ``GeoExt.data.AttributeStore``
      *  The list of pendingRequests (actually the attribute stores)
@@ -646,6 +652,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 if (response.code === 1) {
                     this.closeEditing();
                     this.redrawWMSLayers(feature.attributes.__layer_id__);
+                }
+                else {
+                    window.alert(this.serverErrorText)
                 }
             },
             scope: this
