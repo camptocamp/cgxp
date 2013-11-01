@@ -24,7 +24,7 @@
  *  module = cgxp.plugins
  *  class = MouseCoordinates
  */
-Ext.namespace("cgxp");
+Ext.namespace("cgxp.plugins");
 
 /** api: example
  *  Sample code showing how to add a MouseCoordinates plugin to a
@@ -53,7 +53,7 @@ Ext.namespace("cgxp");
  *
  *  Provides an action to show map coordinates in an Ext toolbar.
  */
-cgxp.MouseCoordinates = Ext.extend(gxp.plugins.Tool, {
+cgxp.plugins.MouseCoordinates = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_mousecoordinates */
     ptype: "cgxp_mousecoordinates",
@@ -94,8 +94,8 @@ cgxp.MouseCoordinates = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        return cgxp.MouseCoordinates.superclass.addActions.apply(this, [statustext]);
+        return cgxp.plugins.MouseCoordinates.superclass.addActions.apply(this, [statustext]);
     }
 });
 
-Ext.preg(cgxp.MouseCoordinates.prototype.ptype, cgxp.MouseCoordinates);
+Ext.preg(cgxp.plugins.MouseCoordinates.prototype.ptype, cgxp.plugins.MouseCoordinates);
