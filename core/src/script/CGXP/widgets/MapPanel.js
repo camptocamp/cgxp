@@ -65,6 +65,52 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     initComponent: function() {
         this.params = {};
         this.stateEvents.push('paramschange');
+        this.map = this.map || {};
+        this.map.setBaseLayer = function(newBaseLayer) {
+            if (newBaseLayer != this.baseLayer) {
+                // ensure newBaseLayer is already loaded
+                if (OpenLayers.Util.indexOf(this.layers, newBaseLayer) != -1) {
+
+                    var oldResolution = this.getResolution()
+                    // preserve center and scale when changing base layers
+                    //var center = this.getCachedCenter();
+                    var newResolution = OpenLayers.Util.getResolutionFromScale(
+                        this.getScale(), newBaseLayer.units
+                    );
+
+                    // make the old base layer invisible
+                    if (this.baseLayer != null && !this.allOverlays) {
+                        this.baseLayer.setVisibility(false);
+                    }
+
+                    // set new baselayer
+                    this.baseLayer = newBaseLayer;
+
+                    if(!this.allOverlays || this.baseLayer.visibility) {
+                        this.baseLayer.setVisibility(true);
+                        // Layer may previously have been visible but not in range.
+                        // In this case we need to redraw it to make it visible.
+                        if (this.baseLayer.inRange === false) {
+                            this.baseLayer.redraw();
+                        }
+                    }
+
+                    // recenter the map
+                    if (center != null) {
+                        // new zoom level derived from old scale
+                        var newZoom = this.getZoomForResolution(
+                            newResolution || this.resolution, true
+                        );
+                        // zoom and force zoom change
+                        this.setCenter(center, newZoom, false, oldResolution != newResolution);
+                    }
+
+                    this.events.triggerEvent("changebaselayer", {
+                        layer: this.baseLayer
+                    });
+                }
+            }
+        };
         var result = cgxp.MapPanel.superclass.initComponent.call(this);
         this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
         // The crosshair should always be on top
@@ -146,7 +192,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         params = {};
         for (key in state) {
 
-            if (state.hasOwnProperty(key) && key.startsWith && 
+            if (state.hasOwnProperty(key) && key.startsWith &&
                     key.startsWith('param_')) {
                 params[key.substring(6)] = state[key]
             }
