@@ -78,7 +78,7 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
             }
         });
         this.loader = new GeoExt.tree.WMSCapabilitiesLoader({
-            url: "__foo__",
+            url: this.INIT_URL,
             layerOptions: {buffer: 0, ratio: 1},
             layerParams: {'TRANSPARENT': 'TRUE'},
             // customize the createNode method to add a checkbox to nodes
@@ -89,6 +89,12 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
             },
             uiProviders: {
                 wmsbrowser: wmsBrowserTreeNodeUI
+            },
+            listeners: {
+                beforeload: function(loader, node, callback) {
+                    return loader.url != this.INIT_URL;
+                },
+                scope: this
             }
         });
 
@@ -119,7 +125,7 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
                 node.expanded = true;
             });
             this.wmsbrowser.fireEvent('getcapabilitiessuccess');
-        } else if (this.loader.url != this.INIT_URL) {
+        } else {
             this.onWMSCapabilitiesStoreLoadException();
         }
     },
