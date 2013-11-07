@@ -213,7 +213,9 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                     Ext.Ajax.request({
                         url: this.logoutURL,
                         success: function() {
-                            window.location.href = window.location.href;
+                            url = window.location.href;
+                            url = url.replace(/#.*$/, '');
+                            window.location.href = url;
                         }
                     });
                 },
