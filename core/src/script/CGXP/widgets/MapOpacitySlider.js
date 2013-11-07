@@ -77,6 +77,22 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     stateBaseLayerRef: null,
 
+    /** private: property[enabledLinkedLayers]
+     *  `Array(String)``
+     *  List of enabled linked layers. These layers are not directly listed in
+     *  the base layers dropdown but are secondary layers enabled/disabled
+     *  depending of the related base layer.
+     */
+    enabledLinkedLayers: [],
+
+    /** private: property[enabledLinkedSliderLayers]
+     *  `Array(String)``
+     *  List of enabled linked layers to the slider. These layers are not directly listed in
+     *  the base layers dropdown but are secondary layers enabled/disabled
+     *  depending of the related base layer.
+     */
+    enabledLinkedSliderLayers: [],
+
     /**
      * private: method[initComponent]
      * Creates the map toolbar.
@@ -142,6 +158,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      */
     createOpacitySlider: function() {
         var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
+        var maxvalue = 100;
         var slider = new GeoExt.LayerOpacitySlider({
             width: 100,
             layer: orthoLayer,
@@ -149,15 +166,36 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             aggressive: true,
             changeVisibility: true,
             complementaryLayer: this.map.baseLayer,
-            maxvalue: 100,
+            maxvalue: maxvalue,
             style: "margin-right: 10px;"
         });
         this.map.events.register("changebaselayer", this, function(e) {
             slider.complementaryLayer = e.layer;
             slider.complementaryLayer.setVisibility(!(orthoLayer.opacity == 1));
         });
+        var updateLinkedLayers = function(scope) {
+            var sliderValue = slider.getValue();
+            if ((slider.inverse && sliderValue == maxvalue) || 
+                   (!slider.inverse && sliderValue == 0)) {
+                scope.hideLinkedLayers(scope.enabledLinkedSliderLayers);
+            } else {
+                if (slider.inverse) {
+                    sliderValue = maxvalue-sliderValue;
+                }
+                scope.showLinkedLayers(orthoLayer.linkedLayers, 
+                  scope.enabledLinkedSliderLayers, sliderValue/maxvalue);
+            }
+        }
         slider.on('changecomplete', function() {
             this.fireEvent('opacitychange');
+            if (orthoLayer.linkedLayers) {
+                updateLinkedLayers(this);
+            }
+        }, this);
+        slider.on('change', function() {
+            if (orthoLayer.linkedLayers) {
+                updateLinkedLayers(this);
+            }
         }, this);
         return slider;
     },
@@ -221,6 +259,33 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         return combo;
     },
 
+    /** private: method[showLinkedLayers]
+     *  Show linked layers (if any)
+     *
+     *  :arg linkedLayers: ``Array(String)`` List of linked layers names
+     *  :arg opacity: ``Number`` (optional, default: 1)
+     */
+    showLinkedLayers: function(linkedLayers, targetStorage, opacity) {
+        opacity = opacity || 1;
+        for (var i=0, l=linkedLayers.length; i<l; i++) {
+            var layer = this.map.getLayersBy('ref', linkedLayers[i])[0];
+            layer.setOpacity(opacity);
+            layer.setVisibility(true);
+            targetStorage.push(linkedLayers[i]);
+        }
+    },
+
+    /** private: method[hideLinkedLayers]
+     *  Hide linked layers (if any)
+     */
+    hideLinkedLayers: function(targetStorage) {
+        for (var i=0, l=targetStorage.length; i<l; i++) {
+            var layer = this.map.getLayersBy('ref', targetStorage[i])[0];
+            layer.setVisibility(false);
+        }
+        targetStorage = [];
+    },
+
     /** private: method[updateBaseLayer]
      *  Updates the base layer.
      *
@@ -229,11 +294,16 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     updateBaseLayer: function(newBaseLayer) {
         if (this.map.allOverlays) {
             Ext.invoke(this.layers, "setVisibility", false);
+            this.hideLinkedLayers(this.enabledLinkedLayers);
             this.map.setLayerIndex(newBaseLayer, 0);
             if (!this.orthoRef ||
                 this.map.getLayersBy('ref', this.orthoRef)[0].opacity != 1) {
                 // show new base layer only if ortho layer is not fully opaque
                 newBaseLayer.setVisibility(true);
+                if (newBaseLayer.linkedLayers && newBaseLayer.linkedLayers.length > 0) {
+                    this.showLinkedLayers(newBaseLayer.linkedLayers, 
+                      this.enabledLinkedLayers);
+                }
             }
         } else {
             this.map.setBaseLayer(newBaseLayer);
