@@ -379,11 +379,11 @@ div.legend label.layerparam-label {
     padding: 5px;
     cursor: pointer;
 }
-.theme-selector .thumb-wrap span {
-    display: block;
+.theme-selector .thumb-label {
     overflow: hidden;
     text-align: center;
     margin-top: 2px;
+    line-height: normal;
 }
 
 .theme-selector .x-view-over {
