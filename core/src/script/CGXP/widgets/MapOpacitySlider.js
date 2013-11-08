@@ -269,6 +269,15 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         opacity = opacity || 1;
         for (var i=0, l=linkedLayers.length; i<l; i++) {
             var layer = this.map.getLayersBy('ref', linkedLayers[i])[0];
+            // be sure the ortho layers is above the linked layer
+            if (this.orthoRef) {
+                var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
+                var indexOrtho = this.map.getLayerIndex(orthoLayer);
+                var indexLinked = this.map.getLayerIndex(layer);
+                if (indexOrtho < indexLinked) {
+                    this.map.setLayerIndex(orthoLayer, indexLinked + 1);
+                }
+            }
             layer.setOpacity(opacity);
             layer.setVisibility(true);
             targetStorage.push(linkedLayers[i]);
