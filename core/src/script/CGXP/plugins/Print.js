@@ -658,7 +658,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         printProvider.on('printexception', function(printProvider, response) {
             printPanel.busyMask.hide();
             Ext.Msg.alert(this.failureTitle, this.failureText);
-        });
+        }, this);
 
         printProvider.loadCapabilities();
 
