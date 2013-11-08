@@ -188,7 +188,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         });
         this.map.events.register("changebaselayer", this, function(e) {
             slider.complementaryLayer = e.layer;
-            slider.complementaryLayer.setVisibility(!(orthoLayer.opacity == 1));
+            slider.complementaryLayer.setVisibility(orthoLayer.opacity != 1);
         });
         var updateLinkedLayers = function(scope) {
             var sliderValue = slider.getValue();
@@ -350,7 +350,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             if (state.opacity != 100) {
                 orthoLayer.setVisibility(true);
             }
-            orthoLayer.setOpacity(1 - parseInt(state.opacity) / 100);
+            orthoLayer.setOpacity(1 - parseInt(state.opacity, 10) / 100);
         }
     }
 });
