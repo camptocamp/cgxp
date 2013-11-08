@@ -72,7 +72,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             '<tpl for=".">',
                 '<div class="thumb-wrap">',
                 '<div class="thumb"><img src="{icon}" onError="if (event.target) event.target.src=Ext.BLANK_IMAGE_URL"></div>',
-                '<span>{[OpenLayers.i18n(values.name)]}</span></div>',
+                '<div class="thumb-label">{[OpenLayers.i18n(values.name)]}</div></div>',
             '</tpl>',
             '<div class="x-clear"></div>'
         );
