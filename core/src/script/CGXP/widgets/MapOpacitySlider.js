@@ -118,14 +118,17 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         // changing the base layer to have the right order.
         this.layers = this.map.getLayersBy('group', 'background');
 
-        if (this.orthoRef) {
+        if (this.orthoRef && this.map.getLayersBy('ref', this.orthoRef).length === 0) {
+            this.orthoRef = undefined;
+        }
+        if (this.orthoRef && this.layers.length > 0) {
             this.opacitySlider = this.createOpacitySlider();
             this.add([
                 this.createOrthoLabel(),
                 this.opacitySlider,
                 this.createBaselayerCombo()
             ]);
-        } else {
+        } else if (this.layers.length > 1) {
             this.add(this.createBaselayerCombo());
         }
 
@@ -146,6 +149,20 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         }
         if (baseLayer) {
             this.updateBaseLayer(baseLayer);
+        }
+        else if (this.layers.length > 0) {
+            this.updateBaseLayer(this.layers[0]);
+        }
+        // if only one ortho layer (needed for API)
+        else if (this.orthoRef) {
+            var layer = this.map.getLayersBy('ref', this.orthoRef)[0];
+            layer.setOpacity(1);
+            if (this.map.allOverlays) {
+                layer.setVisibility(true);
+            }
+            else {
+                this.map.setBaseLayer(layer);
+            }
         }
     },
 
