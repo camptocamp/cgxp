@@ -21,7 +21,7 @@ GeoExt.Lang.add("fr", {
         lengthTooltip: "Mesure de longueur",
         areaTooltip: "Mesure de surface",
         azimuthTooltip: "Mesure d'azimut",
-        measureTooltip: "Mesure"
+        measureTooltip: "Mesurer"
     },
 
    "cgxp.FullTextSearch.prototype": {
@@ -41,7 +41,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Permalink.prototype": {
-        toolTitle: "Permalien",
+        toolTitle: "Afficher le permalien courant",
         windowTitle: "Permalien",
         openlinkText: "Ouvrir le lien",
         closeText: "Fermer",
@@ -108,8 +108,8 @@ GeoExt.Lang.add("fr", {
         newPasswordText: "Nouveau mot de passe",
         confirmNewPasswordText: "Confirmation mot de passe",
         changePasswordText: "Changer le mot de passe",
-        loginButtonTooltip: "Connexion/Déconnexion",
-        accountButtonTooltip: "Gestion des accès",
+        actionButtonTooltip: "Se connecter / Se déconnecter",
+        accountButtonTooltip: "Gérer les accès",
         pwdChangeOkTitle: "Mot de passe modifié",
         pwdChangeOkText: "Le nouveau mot de passe a été enregistré.",
         pwdChangeForceTitle: "Changer le mot de passe",
@@ -117,13 +117,14 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.Help.prototype": {
-        helpactiontooltipText: "Aide",
-        menuText: 'Aide'
+        helpactiontooltipText: "Afficher l'aide",
+        menuText: "Aide"
     },
 
     "cgxp.plugins.Redlining.prototype": {
         redliningText: "Surlignage",
-        attributesText: 'Attributs'
+        redliningTooltip: "Dessiner des objets sur la carte",
+        attributesText: "Attributs"
     },
 
     "cgxp.MapOpacitySlider.prototype": {
@@ -162,14 +163,14 @@ GeoExt.Lang.add("fr", {
         datetimelabelText: "d/m/Y H:i:s",
         showhidelegendText: "Afficher/masquer la légende",
         themealreadyloadedText: "Ce thème est déjà chargé.",
-        showIn3dText: 'Afficher en 3D'
+        showIn3dText: "Afficher en 3D"
     },
 
     "cgxp.plugins.Routing": {
       routingTitle: "Routing", // TODO: translate me
       routingwindowTitle: "Routing", // TODO: translate me
       routingbuttonText: "Routing", // TODO: translate me
-      routingbuttonTooltip: "Routing", // TODO: translate me
+      routingbuttonTooltip: "Calculer un itinéraire",
       sourcefieldLabelText: "From", // TODO: translate me
       sourcefieldValueText: "From", // TODO: translate me
       sourceButtonLabel: "Set", // TODO: translate me
@@ -180,19 +181,20 @@ GeoExt.Lang.add("fr", {
       zoombuttonLabel: 'Zoom', // TODO: translate me
       resetbuttonLabel: 'Reset', // TODO: translate me
       reversebuttonLabel: 'Reverse', // TODO: translate me
-      routeDescriptionLabel: "Description de l’itinéraire",
+      routeDescriptionLabel: "Description de l'itinéraire",
       totalDistanceLabel: 'Total Distance', // TODO: translate me
       totalTimeLabel: 'Total Time', // TODO: translate me
       directionsLabel: 'Directions', // TODO: translate me
       loadingRouteLabel: "Votre itinéraire est en cours de calcul",
-      noRouteFoundLabel: "Pas d’itinéraire possible",
+      noRouteFoundLabel: "Pas d'itinéraire possible",
       routeErrorTitle: 'Erreur'
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "Ajouter WMS",
         windowTitleText: "Ajouter des couches WMS",
-        menuText: "Ajouter WMS"
+        menuText: "Ajouter WMS",
+        menuTooltip: "Ajouter des couches WMS à la carte"
     },
 
     "cgxp.plugins.AddKMLFile.prototype": {
@@ -201,15 +203,15 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.ContextualData.prototype": {
-        actionTooltipText: "Tooltips d'informations contextuelles",
-        menuText: 'Informations contextuel'
+        actionTooltipText: "Afficher des informations contextuelles",
+        menuText: "Informations contextuel"
     },
 
     "cgxp.plugins.ContextualData.Control.prototype": {
-        streetviewLabelText: 'Lien StreetView',
+        streetviewLabelText: "Lien StreetView",
         userValueErrorText: "La valeur retournée par la méthode handleServerData" +
             "methode doit être un objet. Voir l'exemple dans la documentation de l'API",
-        userValueErrorTitleText: 'Erreur'
+        userValueErrorTitleText: "Erreur"
     },
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
@@ -239,48 +241,48 @@ GeoExt.Lang.add("fr", {
         yLabelText: "Altitude (m)",
         errorMsg: "Une erreur s'est produite. Veuillez recommencer.",
         exportCsvText: "Exporter en CSV",
-        tooltipText: 'Profil altimétrique',
-        menuText: 'Profil altimétrique'
+        tooltipText: "Afficher le profil altimétrique",
+        menuText: "Profil altimétrique"
     },
 
     "cgxp.plugins.GoogleEarth.prototype": {
-        tooltipText: 'GoogleEarth',
-        menuText: 'GoogleEarth'
+        tooltipText: "Visualiser dans GoogleEarth",
+        menuText: "GoogleEarth"
     },
 
     "cgxp.plugins.StreetView.prototype": {
-        tooltipText: 'StreetView',
-        menuText: 'StreetView'
+        tooltipText: "Visualiser dans StreetView",
+        menuText: "StreetView"
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
         layerText: "Couche",
         querierText: "Requêteur",
-        loadingText: 'Chargement...',
-        incompleteFormText: 'Formulaire incomplet.',
-        noResultText: 'Pas de résultat trouvé.',
-        queryButtonText: 'Effectuer la requête',
-        errorText: 'Une erreur est survenue.',
-        noGeomFieldError: 'Pas de champs géometrique trouvé.'
+        loadingText: "Chargement...",
+        incompleteFormText: "Formulaire incomplet.",
+        noResultText: "Pas de résultat trouvé.",
+        queryButtonText: "Effectuer la requête",
+        errorText: "Une erreur est survenue.",
+        noGeomFieldError: "Pas de champs géometrique trouvé."
     },
 
     "cgxp.plugins.MapQuery.prototype": {
-        actionTooltip: 'Interroge la carte',
-        menuText: 'Interroge la carte'
+        actionTooltip: "Interroger des objets sur la carte",
+        menuText: "Interroger la carte"
     },
 
     "cgxp.plugins.WFSGetFeature.prototype": {
-        actionTooltip: 'Interroge la carte'
+        actionTooltip: "Interroger des objets sur la carte"
     },
 
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: 'Interroge la carte',
-        noLayerSelectedMessage: 'Pas de couche sélectionnée'
+        actionTooltip: "Interroger des objets sur la carte",
+        noLayerSelectedMessage: "Pas de couche sélectionnée"
     },
 
     "cgxp.plugins.GetFeature.prototype": {
-        tooltipText: 'Interroge la carte',
-        menuText: 'Interroge la carte',
+        tooltipText: "Interroger des objets sur la carte",
+        menuText: "Interroger la carte",
         unqueriedLayerTitle: "Impossible d'interroger cette couche",
         unqueriedLayerText: "Seules les interrogations par simple clic sont " +
             "possibles pour cette couche.",

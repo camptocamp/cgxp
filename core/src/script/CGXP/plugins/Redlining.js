@@ -107,6 +107,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
 
     /* i18n*/
     redliningText: "Redlining",
+    redliningTooltip: "Draw features on the map",
 
     /** private: method[deactivate]
      */
@@ -176,6 +177,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
         var button = new cgxp.tool.Button(
             new Ext.Action(Ext.apply({
                 text: this.redliningText,
+                tooltip: this.redliningTooltip,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
                 window: this.redliningWindow

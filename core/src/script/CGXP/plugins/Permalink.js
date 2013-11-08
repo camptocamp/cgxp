@@ -88,7 +88,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
      */
 
     /* i18n */
-    toolTitle: "Permalink",
+    toolTitle: "Show current permalink",
     windowTitle: "Permalink",
     openlinkText: "Open Link",
     closeText: "Close",

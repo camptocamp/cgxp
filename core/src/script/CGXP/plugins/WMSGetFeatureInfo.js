@@ -78,8 +78,8 @@ cgxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     events: null,
 
     /* i18n */
-    actionTooltip: 'Query the map',
-    noLayerSelectedMessage: 'No layer selected',
+    actionTooltip: "Query objects on the map",
+    noLayerSelectedMessage: "No layer selected",
 
     /** api: method[addActions]
      */

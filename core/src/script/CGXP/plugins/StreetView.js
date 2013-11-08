@@ -94,8 +94,8 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
      */
 
     /** i18n */
-    tooltipText: 'StreetView',
-    menuText: 'StreetView',
+    tooltipText: "Show in StreetView",
+    menuText: "StreetView",
 
     /** api: method[addActions]
      */

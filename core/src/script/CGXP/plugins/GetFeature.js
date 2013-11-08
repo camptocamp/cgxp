@@ -185,10 +185,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     activateToggleGroup: "clickgroup",
 
     /* i18n */
-    tooltipText: 'Query the map',
-    menuText: 'Query the map',
-    noLayerSelectedMessage: 'No layer selected',
-    unqueriedLayerTitle: 'Unable to query this layer',
+    tooltipText: "Query objects on the map",
+    menuText: "Query the map",
+    noLayerSelectedMessage: "No layer selected",
+    unqueriedLayerTitle: "Unable to query this layer",
     unqueriedLayerText: "This Layer only support single click query.",
     queryResultMessage: "Use the {key} key to perform a rectangular selection.",
 

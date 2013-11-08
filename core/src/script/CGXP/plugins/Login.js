@@ -163,7 +163,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     newPasswordText: "New Password",
     confirmNewPasswordText: "Confirm New Password",
     changePasswordText: "Change password",
-    actionButtonTooltip: "Login/Logout",
+    actionButtonTooltip: "Sign in / Sign out",
     accountButtonTooltip: "Manage connection",
     pwdChangeOkTitle: "Password Changed",
     pwdChangeOkText: "The password change has been applied.",
