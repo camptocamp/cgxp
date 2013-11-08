@@ -397,6 +397,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             newPasswordConfirm,
             {
                 xtype: 'box',
+                cls: 'x-form-item login-failure-msg',
                 ref: 'failureMsg',
                 html: this.authenticationFailureText,
                 hidden: true
