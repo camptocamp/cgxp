@@ -162,7 +162,17 @@ describe('plugins.Editing', function() {
                     attributes: 'bar'
                 }
             };
+
+            // don't use timeout to directly gets the result
+            // as I see the current setTimeout function never
+            // call the argument ...
+            oldSTO = window.setTimeout;
+            window.setTimeout = function(f) {
+                f();
+            };
             e.manageLayers();
+            window.setTimeout = oldSTO;
+
             expect(e.win.disabled).toBeFalsy();
         });
 

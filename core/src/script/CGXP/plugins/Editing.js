@@ -229,39 +229,48 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  button.
      */
     manageLayers: function() {
-        var layers = this.getEditableLayers();
-        var size = 0;
-        var menu = this.newFeatureBtn.menu;
-        this.abortPendingRequests();
-        var alreadyAvailableItems = [];
-        menu.items.each(function(item) {
-            if (!item.layerId) {
-                return;
-            }
-            // remove items that are not in the layers list anymore
-            if (!layers[item.layerId]) {
-                menu.remove(item);
-            } else {
-                alreadyAvailableItems.push(item.layerId);
-            }
-        });
-        for (var i in layers) {
-            if (layers.hasOwnProperty(i)) {
-                size++;
-                // only add an item for new editable layers
-                if (alreadyAvailableItems.indexOf(parseInt(i, 10)) == -1) {
-                    this.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
-                        menu.add(this.createMenuItem(layer, geometryType));
-                    }).createDelegate(this, [layers[i]], true));
+        if (this.manageLayersTimer) {
+            clearTimeout(this.manageLayersTimer);
+        }
+        var self = this;
+        // Add a delay to query the md.xsd because previously we query it,
+        // cancel the query, query agane, cancel it again,
+        // and finally do the right query ...
+        this.manageLayersTimer = setTimeout(function() {
+            var layers = self.getEditableLayers();
+            var size = 0;
+            var menu = self.newFeatureBtn.menu;
+            self.abortPendingRequests();
+            var alreadyAvailableItems = [];
+            menu.items.each(function(item) {
+                if (!item.layerId) {
+                    return;
+                }
+                // remove items that are not in the layers list anymore
+                if (!layers[item.layerId]) {
+                    menu.remove(item);
+                } else {
+                    alreadyAvailableItems.push(item.layerId);
+                }
+            });
+            for (var i in layers) {
+                if (layers.hasOwnProperty(i)) {
+                    size++;
+                    // only add an item for new editable layers
+                    if (alreadyAvailableItems.indexOf(parseInt(i, 10)) == -1) {
+                        self.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
+                            menu.add(self.createMenuItem(layer, geometryType));
+                        }).createDelegate(self, [layers[i]], true));
+                    }
                 }
             }
-        }
-        this.win.setDisabled(size === 0);
-        if (size === 0) {
-            this.newFeatureBtn.toggle(false);
-            this.newFeatureBtn.setText(this.createBtnText);
-            this.closeEditing();
-        }
+            self.win.setDisabled(size === 0);
+            if (size === 0) {
+                self.newFeatureBtn.toggle(false);
+                self.newFeatureBtn.setText(self.createBtnText);
+                self.closeEditing();
+            }
+        }, 200);
     },
 
     /** private: method[addEditingLayer]
