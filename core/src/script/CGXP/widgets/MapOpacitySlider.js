@@ -70,28 +70,12 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      *  The list of background layers.
      */
     layers: null,
-    
+
     /** private: property[stateBaseLayerRef]
      *  ``String``
      *  Reference of the base layer provided by the state.
      */
     stateBaseLayerRef: null,
-
-    /** private: property[enabledLinkedLayers]
-     *  `Array(String)``
-     *  List of enabled linked layers. These layers are not directly listed in
-     *  the base layers dropdown but are secondary layers enabled/disabled
-     *  depending of the related base layer.
-     */
-    enabledLinkedLayers: [],
-
-    /** private: property[enabledLinkedSliderLayers]
-     *  `Array(String)``
-     *  List of enabled linked layers to the slider. These layers are not directly listed in
-     *  the base layers dropdown but are secondary layers enabled/disabled
-     *  depending of the related base layer.
-     */
-    enabledLinkedSliderLayers: [],
 
     /**
      * private: method[initComponent]
@@ -117,11 +101,22 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         // we should get the layers list for combobox before
         // changing the base layer to have the right order.
         this.layers = this.map.getLayersBy('group', 'background');
-
-        if (this.orthoRef && this.map.getLayersBy('ref', this.orthoRef).length === 0) {
-            this.orthoRef = undefined;
+        Ext.each(this.layers, function(layer) {
+            this.linkLinkedLayers(layer);
+        }, this);
+        if (this.orthoRef) {
+            var orthoLayers = this.map.getLayersBy('ref', this.orthoRef);
+            if (orthoLayers.length > 0) {
+                this.orthoLayer = orthoLayers[0];
+                this.linkLinkedLayers(this.orthoLayer);
+            }
+            else if (console) {
+                this.orthoRef = undefined;
+                console.log("No ortho layer found with ref '" + this.orthoRef + "'.");
+            }
         }
-        if (this.orthoRef && this.layers.length > 0) {
+
+        if (this.orthoLayer) {
             this.opacitySlider = this.createOpacitySlider();
             this.add([
                 this.createOrthoLabel(),
@@ -136,7 +131,39 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             this.fireEvent('changebaselayer');
         });
 
+        this.map.events.register("changelayer", this, function(event) {
+            if (event.layer.linkedLayers && event.property == 'opacity') {
+                Ext.each(event.layer.linkedLayers, function(linkedLayer) {
+                    linkedLayer.setOpacity(event.layer.opacity);
+                });
+            }
+        });
+
         this.on('beforerender', this.setInitialBaseLayer, this);
+    },
+
+    linkLinkedLayers: function(layer) {
+        if (layer.linkedLayers) {
+            // replace ref with layer
+            var i, ii;
+            var linkedLayers = [];
+            for (i = 0, ii = layer.linkedLayers.length ; i < ii ; i++) {
+                var layers = this.map.getLayersBy('ref', layer.linkedLayers[i]);
+                if (layers.length > 0) {
+                    linkedLayers.push(layers[0]);
+                }
+                else if (console) {
+                    console.warn("No linked layer found with ref '" + layer.linkedLayers[i] + "'.");
+                }
+            }
+            layer.linkedLayers = linkedLayers;
+
+            layer.events.register('visibilitychanged', this, function() {
+                Ext.each(layer.linkedLayers, function(linkedLayer) {
+                    linkedLayer.setVisibility(layer.visibility);
+                });
+            })
+        }
     },
 
     setInitialBaseLayer: function() {
@@ -174,11 +201,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      * {Ext.BoxComponent} The opacity slider
      */
     createOpacitySlider: function() {
-        var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
         var maxvalue = 100;
         var slider = new GeoExt.LayerOpacitySlider({
             width: 100,
-            layer: orthoLayer,
+            layer: this.orthoLayer,
             inverse: true,
             aggressive: true,
             changeVisibility: true,
@@ -188,31 +214,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         });
         this.map.events.register("changebaselayer", this, function(e) {
             slider.complementaryLayer = e.layer;
-            slider.complementaryLayer.setVisibility(orthoLayer.opacity != 1);
+            slider.complementaryLayer.setVisibility(this.orthoLayer.opacity != 1);
         });
-        var updateLinkedLayers = function(scope) {
-            var sliderValue = slider.getValue();
-            if ((slider.inverse && sliderValue == maxvalue) || 
-                   (!slider.inverse && sliderValue == 0)) {
-                scope.hideLinkedLayers(scope.enabledLinkedSliderLayers);
-            } else {
-                if (slider.inverse) {
-                    sliderValue = maxvalue-sliderValue;
-                }
-                scope.showLinkedLayers(orthoLayer.linkedLayers, 
-                  scope.enabledLinkedSliderLayers, sliderValue/maxvalue);
-            }
-        }
         slider.on('changecomplete', function() {
             this.fireEvent('opacitychange');
-            if (orthoLayer.linkedLayers) {
-                updateLinkedLayers(this);
-            }
-        }, this);
-        slider.on('change', function() {
-            if (orthoLayer.linkedLayers) {
-                updateLinkedLayers(this);
-            }
         }, this);
         return slider;
     },
@@ -276,42 +281,6 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         return combo;
     },
 
-    /** private: method[showLinkedLayers]
-     *  Show linked layers (if any)
-     *
-     *  :arg linkedLayers: ``Array(String)`` List of linked layers names
-     *  :arg opacity: ``Number`` (optional, default: 1)
-     */
-    showLinkedLayers: function(linkedLayers, targetStorage, opacity) {
-        opacity = opacity || 1;
-        for (var i=0, l=linkedLayers.length; i<l; i++) {
-            var layer = this.map.getLayersBy('ref', linkedLayers[i])[0];
-            // be sure the ortho layers is above the linked layer
-            if (this.orthoRef) {
-                var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
-                var indexOrtho = this.map.getLayerIndex(orthoLayer);
-                var indexLinked = this.map.getLayerIndex(layer);
-                if (indexOrtho < indexLinked) {
-                    this.map.setLayerIndex(orthoLayer, indexLinked + 1);
-                }
-            }
-            layer.setOpacity(opacity);
-            layer.setVisibility(true);
-            targetStorage.push(linkedLayers[i]);
-        }
-    },
-
-    /** private: method[hideLinkedLayers]
-     *  Hide linked layers (if any)
-     */
-    hideLinkedLayers: function(targetStorage) {
-        for (var i=0, l=targetStorage.length; i<l; i++) {
-            var layer = this.map.getLayersBy('ref', targetStorage[i])[0];
-            layer.setVisibility(false);
-        }
-        targetStorage = [];
-    },
-
     /** private: method[updateBaseLayer]
      *  Updates the base layer.
      *
@@ -320,16 +289,11 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     updateBaseLayer: function(newBaseLayer) {
         if (this.map.allOverlays) {
             Ext.invoke(this.layers, "setVisibility", false);
-            this.hideLinkedLayers(this.enabledLinkedLayers);
             this.map.setLayerIndex(newBaseLayer, 0);
             if (!this.orthoRef ||
                 this.map.getLayersBy('ref', this.orthoRef)[0].opacity != 1) {
                 // show new base layer only if ortho layer is not fully opaque
                 newBaseLayer.setVisibility(true);
-                if (newBaseLayer.linkedLayers && newBaseLayer.linkedLayers.length > 0) {
-                    this.showLinkedLayers(newBaseLayer.linkedLayers, 
-                      this.enabledLinkedLayers);
-                }
             }
         } else {
             this.map.setBaseLayer(newBaseLayer);
@@ -355,11 +319,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             this.stateBaseLayerRef = state.ref;
         }
         if (this.orthoRef) {
-            var orthoLayer = this.map.getLayersBy('ref', this.orthoRef)[0];
             if (state.opacity != 100) {
-                orthoLayer.setVisibility(true);
+                this.orthoLayer.setVisibility(true);
             }
-            orthoLayer.setOpacity(1 - parseInt(state.opacity, 10) / 100);
+            this.orthoLayer.setOpacity(1 - parseInt(state.opacity, 10) / 100);
         }
     }
 });
