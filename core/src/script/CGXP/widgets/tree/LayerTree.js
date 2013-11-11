@@ -37,6 +37,25 @@
 
 Ext.namespace("cgxp.tree");
 
+// Delay `setVisibility(true)` to save unneeded getMap request
+function delayedSetVisibilityTrue(visible) {
+    if (this.visibilityTimeout) {
+        clearTimeout(this.visibilityTimeout);
+        this.visibilityTimeout = null;
+    }
+    if (visible) {
+        layer = this;
+        this.visibilityTimeout = setTimeout(function() {
+            return OpenLayers.Layer.WMS.prototype.
+                setVisibility.call(layer, true);
+        }, 0);
+    }
+    else {
+        return OpenLayers.Layer.WMS.prototype.
+            setVisibility.call(this, false);
+    }
+}
+
 /** api: (define)
  *  module = cgxp.tree
  *  class = LayerTree
@@ -917,7 +936,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             ref: child.name,
                             visibility: child.isChecked,
                             singleTile: true,
-                            isBaseLayer: false
+                            isBaseLayer: false,
+                            visibilityTimeout: null,
+                            setVisibility: delayedSetVisibilityTrue
                         }
                     );
                     result.allOlLayers.push(child.layer);
@@ -1213,7 +1234,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         ref: group.name,
                         visibility: false,
                         singleTile: true,
-                        isBaseLayer: false
+                        isBaseLayer: false,
+                        visibilityTimeout: null,
+                        setVisibility: delayedSetVisibilityTrue
                     }, this.wmsOptions || {})
                 );
 
@@ -1707,11 +1730,6 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
      */
     onCheckChange: function(node, checked) {
         var layer = this.layer;
-        // Temporary set layer visibility property to false in order
-        // to avoid to request a GetMap on each intermediate layer remove,
-        // use the property to avoid a flash effect.
-        layer.visibility = false;
-
         var newItems = [];
         var curItems = this.getItemsFromLayer();
         Ext.each(this.allItems, function(item) {
@@ -1724,12 +1742,16 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
         var visible = (newItems.length > 0);
         // if there is something to display, we want to update the params
         // before the layer is turned on
-        visible && layer.mergeNewParams(this.createParams(newItems));
         if (visible) {
-            window.setTimeout(function() {
-                layer.setVisibility(true);
-            }, 10);
+            // Temporary set layer visibility property to false in order
+            // to avoid to request a GetMap on each intermediate layer remove,
+            // use the property to avoid a flash effect.
+            var oldVisibility = layer.visibility;
+            layer.visibility = false;
+            layer.mergeNewParams(this.createParams(newItems));
+            layer.visibility = oldVisibility;
         }
+        layer.setVisibility(visible);
         // if there is nothing to display, we want to update the params
         // when the layer is turned off, so we don't fire illegal requests
         // (i.e. param value being empty)
