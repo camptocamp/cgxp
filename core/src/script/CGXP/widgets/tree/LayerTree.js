@@ -37,6 +37,25 @@
 
 Ext.namespace("cgxp.tree");
 
+// Delay `setVisibility(true)` to save unneeded getMap request
+function delayedSetVisibilityTrue(visible) {
+    if (this.visibilityTimeout) {
+        clearTimeout(this.visibilityTimeout);
+        this.visibilityTimeout = null;
+    }
+    if (visible) {
+        layer = this;
+        this.visibilityTimeout = setTimeout(function() {
+            return OpenLayers.Layer.WMS.prototype.
+                setVisibility.call(layer, true);
+        }, 0);
+    }
+    else {
+        return OpenLayers.Layer.WMS.prototype.
+            setVisibility.call(this, false);
+    }
+}
+
 /** api: (define)
  *  module = cgxp.tree
  *  class = LayerTree
@@ -670,9 +689,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
         });
 
-        var tooltip = slider.formatLayerTimeLabel(new Date(slider.minValue))
-            + '<br/>'
-            + slider.formatLayerTimeLabel(new Date(slider.maxValue));
+        var tooltip = slider.formatLayerTimeLabel(new Date(slider.minValue)) +
+            '<br/>' +
+            slider.formatLayerTimeLabel(new Date(slider.maxValue));
 
         return new Ext.Container({
             layout: 'hbox',
@@ -917,7 +936,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             ref: child.name,
                             visibility: child.isChecked,
                             singleTile: true,
-                            isBaseLayer: false
+                            isBaseLayer: false,
+                            visibilityTimeout: null,
+                            setVisibility: delayedSetVisibilityTrue
                         }
                     );
                     result.allOlLayers.push(child.layer);
@@ -1213,7 +1234,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         ref: group.name,
                         visibility: false,
                         singleTile: true,
-                        isBaseLayer: false
+                        isBaseLayer: false,
+                        visibilityTimeout: null,
+                        setVisibility: delayedSetVisibilityTrue
                     }, this.wmsOptions || {})
                 );
 
@@ -1371,10 +1394,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         // handle layer groups from permalinkThemes and initialState
         var groups = [];
+        var i, l
         // get groups from permalinkThemes
         if (this.permalinkThemes) {
             // recovering all the first level groups from the selected themes
-            for (var i=0, l=this.permalinkThemes.length; i<l; i++) {
+            for (i=0, l=this.permalinkThemes.length; i<l; i++) {
                 var theme = this.findThemeByName(this.permalinkThemes[i]);
                 Ext.each(theme.children, function(child) {
                     this.push(child.name);
@@ -1386,7 +1410,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             this.initialState.groups : [this.initialState.groups];
         // merge permalinkThemes's groups and initialState groups
         var groupsAsString = groups.join(',');
-        for (var i=0, l=initialStateGroups.length; i<l; i++) {
+        for (i=0, l=initialStateGroups.length; i<l; i++) {
             if (groupsAsString.indexOf(initialStateGroups[i]) < 0) {
                 groups.push(initialStateGroups[i]);
             }
@@ -1706,11 +1730,6 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
      */
     onCheckChange: function(node, checked) {
         var layer = this.layer;
-        // Temporary set layer visibility property to false in order
-        // to avoid to request a GetMap on each intermediate layer remove,
-        // use the property to avoid a flash effect.
-        layer.visibility = false;
-
         var newItems = [];
         var curItems = this.getItemsFromLayer();
         Ext.each(this.allItems, function(item) {
@@ -1723,16 +1742,22 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
         var visible = (newItems.length > 0);
         // if there is something to display, we want to update the params
         // before the layer is turned on
-        visible && layer.mergeNewParams(this.createParams(newItems));
         if (visible) {
-            window.setTimeout(function() {
-                layer.setVisibility(true);
-            }, 10);
+            // Temporary set layer visibility property to false in order
+            // to avoid to request a GetMap on each intermediate layer remove,
+            // use the property to avoid a flash effect.
+            var oldVisibility = layer.visibility;
+            layer.visibility = false;
+            layer.mergeNewParams(this.createParams(newItems));
+            layer.visibility = oldVisibility;
         }
+        layer.setVisibility(visible);
         // if there is nothing to display, we want to update the params
         // when the layer is turned off, so we don't fire illegal requests
         // (i.e. param value being empty)
-        (!visible) && layer.mergeNewParams(this.createParams([]));
+        if (!visible) {
+            layer.mergeNewParams(this.createParams([]));
+        }
     },
 
     // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
