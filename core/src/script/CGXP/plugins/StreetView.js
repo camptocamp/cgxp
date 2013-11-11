@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires CGXP/patches/PatchExt.js
  * @include ux/widgets/StreetViewPanel.js
  */
 
@@ -130,11 +131,15 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                             this.panel.clickControl.activate();
                         }
                         this.outputTarget.add(this.panel);
-                        // mark as not rendered to force to render the new component.
-                        this.outputTarget.layout.rendered = false;
 
                         this.panel.setSize(this.size, 0);
                         this.panel.setVisible(true);
+
+                        /* Marked as not rendered in order to force the rendering of the component.
+                           Otherwise the panel is not rendered correctly when switching between 
+                           GoogleEarth and StreetView. */
+                        this.outputTarget.layout.rendered = false;
+
                         this.panel.doLayout();
 
                         (function() {
@@ -142,6 +147,13 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
                         }).defer(100, this);
                     }
                     else {
+                        /* solve problem with Ext duplicating the splitbar when doLayout is called
+                           because of the rendered = false above */
+                        if (this.outputTarget.layout.east && this.outputTarget.layout.east.splitEl) {
+                            this.outputTarget.layout.east.splitEl.remove();
+                            this.outputTarget.layout.east.splitEl = null;
+                        }
+
                         this.panel.panorama.navigationToolLayer.setVisibility(false);
                         this.panel.panorama.navigationLinkLayer.setVisibility(false);
                         this.panel.clickControl.deactivate();
