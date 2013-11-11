@@ -139,6 +139,10 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         }
 
         this.show();
+        this.mapPanel.addListener('bodyresize', function() {
+            this.anchorTo(this.mapPanel.body,
+                    this.anchorPosition, this.anchorOffsets);
+        }, this)
         this.anchorTo.defer(100, this, [this.mapPanel.body,
                 this.anchorPosition, this.anchorOffsets]);
     },
