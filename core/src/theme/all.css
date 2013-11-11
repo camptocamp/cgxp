@@ -588,3 +588,8 @@ div.x-panel .olControlZoom a:hover {
 .x-toolbar .myposition {
     background-image: url('img/myposition.gif');
 }
+
+/* Login panel */
+.login-failure-msg {
+    color: red;
+}
