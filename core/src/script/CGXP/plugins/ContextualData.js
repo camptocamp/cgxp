@@ -165,7 +165,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  The text displayed as qtips on the tool button (i18n).
      */
-    actionTooltipText: 'Contextual Information Tooltips',
+    actionTooltipText: "Show contextual information",
 
     /** api: config[mouseoverWindowConfig]
      *  ``Object``

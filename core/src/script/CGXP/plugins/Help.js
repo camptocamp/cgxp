@@ -63,7 +63,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  The tooltip for the help button. (i18n).
      */
-    helpactiontooltipText: "Help",
+    helpactiontooltipText: "Show help page",
 
     /** api: config[helpactionText]
      *  ``String``
@@ -72,7 +72,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
     helpactionText: null,
 
     /** i18n */
-    menuText: 'Help',
+    menuText: "Help",
 
     /** api: config[actionConfig]
      *  ``Object``

@@ -212,7 +212,7 @@ cgxp.plugins.WFSGetFeature = Ext.extend(gxp.plugins.Tool, {
      */
 
     /* i18n */
-    actionTooltip: 'Query the map',
+    actionTooltip: "Query objects on the map",
 
     /** api: method[addActions]
      */

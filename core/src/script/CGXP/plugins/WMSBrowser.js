@@ -101,7 +101,8 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
     defaultUrls: null,
 
     /** i18n */
-    menuText: 'Add WMS layers',
+    menuText: "Add WMS layers",
+    menuTooltip: "Add WMS layers to the map",
 
     /** private: method[addActions]
      */
@@ -109,6 +110,7 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
         var btn = Ext.apply({
             text: this.buttonText,
             menuText: this.menuText,
+            tooltip: this.menuTooltip,
             handler: Ext.createDelegate(this.showPopup, this)
         }, this.actionConfig);
         return cgxp.plugins.WMSBrowser.superclass.addActions.apply(this,[btn]);

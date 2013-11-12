@@ -83,8 +83,8 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
      */
 
     /* i18n */
-    actionTooltip: 'Query the map',
-    menuText: 'Query the map',
+    actionTooltip: "Query objects on the map",
+    menuText: "Query the map",
 
     init: function() {
         cgxp.plugins.MapQuery.superclass.init.apply(this, arguments);

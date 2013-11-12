@@ -37,7 +37,7 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.Permalink.prototype": {
-        toolTitle: "Permalink",
+        toolTitle: "Permalink anzeigen",
         windowTitle: "Die aktuelle Seite kann mit folgender URL aufgerufen werden:",
         openlinkText: "Link in neuem Tab öffnen",
         closeText: "Schliessen",
@@ -93,17 +93,29 @@ GeoExt.Lang.add("de", {
         logoutText: "Abmelden",
         loginText: "Anmelden",
         usernameText: "Benutzername",
-        passwordText: "Passwort"
+        passwordText: "Passwort",
+        loginMenuText: "Konto",
+        changePasswordButtonText: "Senden",
+        newPasswordText: "Neues Passwort",
+        confirmNewPasswordText: "Neues Passwort bestätigen",
+        changePasswordText: "Passwort ändern",
+        actionButtonTooltip: "Anmelden / Abmelden",
+        accountButtonTooltip: "Zugänge verwalten",
+        pwdChangeOkTitle: "Passwort geändert",
+        pwdChangeOkText: "Das neue Passwort wurde geändert.",
+        pwdChangeForceTitle: "Passwort ändern",
+        pwdChangeForceText: "Sie müssen Ihr Passwort ändern."
     },
 
     "cgxp.plugins.Help.prototype": {
-        helpactiontooltipText: "Hilfe",
+        helpactiontooltipText: "Hilfe anzeigen",
         menuText: "Hilfe"
     },
 
     "cgxp.plugins.Redlining.prototype": {
         redliningText: "Zeichnen",
-        attributesText: 'Attribute'
+        redliningTooltip: "Elemente auf Karte zeichnen",
+        attributesText: "Attribute"
     },
 
     "cgxp.MapOpacitySlider.prototype": {
@@ -142,7 +154,7 @@ GeoExt.Lang.add("de", {
         datetimelabelText: "d/m/Y H:i:s",
         showhidelegendText: "Legende anzeigen/verstecken",
         themealreadyloadedText: "Dieses Thema ist schon geladen.",
-        showIn3dText: 'Ansicht in 3D'
+        showIn3dText: "Ansicht in 3D"
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
@@ -152,9 +164,10 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
-        buttonText: 'WMS hinzufügen',
-        windowTitleText: 'WMS-Layer hineinladen',
-        menuText: 'WMS hinzufügen'
+        buttonText: "WMS hinzufügen",
+        windowTitleText: "WMS-Layer hineinladen",
+        menuText: "WMS hinzufügen",
+        menuTooltip: "WMS zur Karte hinzufügen"
     },
 
     "cgxp.plugins.AddKMLFile.prototype": {
@@ -163,15 +176,15 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.ContextualData.prototype": {
-        actionTooltipText: "Contextual Informations Tooltips",
-        menuText: 'Contextual Informations'
+        actionTooltipText: "Kontextinformationen anzeigen",
+        menuText: "Kontextinformationen"
     },
 
     "cgxp.plugins.ContextualData.Control.prototype": {
-        streetviewLabelText: 'StreetView Link',
-        userValueErrorText: 'The value returned by the handleServerData methode ' +
-        'must be an object. See the example in the API.',
-        userValueErrorTitleText: 'Error'
+        streetviewLabelText: "StreetView Link",
+        userValueErrorText: "Der Rückgabewert der handleServerData Methode " +
+            "muss ein Objekt sein. Siehe Beispiel im API.",
+        userValueErrorTitleText: "Fehler"
     },
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
@@ -201,55 +214,55 @@ GeoExt.Lang.add("de", {
         yLabelText: "Höhe (m)",
         errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
         exportCsvText: "Export als CSV",
-        menuText: 'Höhenprofil'
+        menuText: "Höhenprofil"
     },
 
     "cgxp.plugins.GoogleEarth.prototype": {
-        tooltipText: 'GoogleEarth',
-        menuText: 'GoogleEarth'
+        tooltipText: "In Google Earth zeigen",
+        menuText: "Google Earth"
     },
 
     "cgxp.plugins.StreetView.prototype": {
-        tooltipText: 'StreetView',
-        menuText: 'StreetView'
+        tooltipText: "In Google StreetView zeigen",
+        menuText: "StreetView"
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
         layerText: "Layer",
         querierText: "Attributabfrage",
-        loadingText: 'Lade Daten...',
-        incompleteFormText: 'Bitte alle erforderlichen Felder ausfüllen.',
-        noResultText: 'Es wurde kein Resultat gefunden.',
-        queryButtonText: 'Abfrage',
-        errorText: 'Bitte alle erforderlichen Felder ausfüllen.',
-        noGeomFieldError: 'Es wurde kein Geometriefeld in dieser Ebene gefunden.'
+        loadingText: "Lade Daten...",
+        incompleteFormText: "Bitte alle erforderlichen Felder ausfüllen.",
+        noResultText: "Es wurde kein Resultat gefunden.",
+        queryButtonText: "Abfrage",
+        errorText: "Bitte alle erforderlichen Felder ausfüllen.",
+        noGeomFieldError: "Es wurde kein Geometriefeld in dieser Ebene gefunden."
     },
 
     "cgxp.plugins.MapQuery.prototype": {
-        actionTooltip: 'Informationen in der Karte abfragen',
-        menuText: 'Informationen abfragen'
+        actionTooltip: "Informationen in der Karte abfragen",
+        menuText: "Informationen abfragen"
     },
 
     "cgxp.plugins.WFSGetFeature.prototype": {
-        actionTooltip: 'Informationen in der Karte abfragen'
+        actionTooltip: "Informationen in der Karte abfragen"
     },
 
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: 'Informationen in der Karte abfragen',
-        noLayerSelectedMessage: 'Keine Ebene ausgewählt'
+        actionTooltip: "Informationen in der Karte abfragen",
+        noLayerSelectedMessage: "Keine Ebene ausgewählt"
     },
 
     "cgxp.plugins.GetFeature.prototype": {
-        actionTooltip: 'Informationen in der Karte abfragen',
-        menuText: 'Abfragen der Karte',
-        unqueriedLayerTitle: 'Diese Ebene kann nicht abgefragt werden.',
+        tooltipText: "Informationen in der Karte abfragen",
+        menuText: "Abfragen der Karte",
+        unqueriedLayerTitle: "Diese Ebene kann nicht abgefragt werden.",
         unqueriedLayerText: "Diese Ebene unterstützt nur Punkt-Abfragen.",
         queryResultMessage: "Informationen in einem Rechteck können mit der " +
             "{key} Taste abgefragt werden."
     },
 
     "cgxp.plugins.MyPosition.prototype": {
-        actionTooltip: "Recenter to my location"
+        actionTooltip: "Auf meinen Standort zentrieren"
     },
 
     "GeoExt.ux.form.FeaturePanel.prototype": {

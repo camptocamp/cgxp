@@ -195,8 +195,8 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     intermediateContainer: null,
 
     /** i18n */
-    tooltipText: 'GoogleEarth',
-    menuText: 'GoogleEarth',
+    tooltipText: "Show in GoogleEarth",
+    menuText: "GoogleEarth",
 
     /** private: method[init]
      */
