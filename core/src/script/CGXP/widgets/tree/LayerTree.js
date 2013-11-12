@@ -1744,8 +1744,8 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
         // before the layer is turned on
         if (visible) {
             // Temporary set layer visibility property to false in order
-            // to avoid to request a GetMap on each intermediate layer remove,
-            // use the property to avoid a flash effect.
+            // to avoid a GetMap request on each intermediate layer remove,
+            // use the visible property to avoid a flash effect.
             var oldVisibility = layer.visibility;
             layer.visibility = false;
             layer.mergeNewParams(this.createParams(newItems));
