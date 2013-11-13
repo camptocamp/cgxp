@@ -44,7 +44,7 @@ function delayedSetVisibilityTrue(visible) {
         this.visibilityTimeout = null;
     }
     if (visible) {
-        layer = this;
+        var layer = this;
         this.visibilityTimeout = setTimeout(function() {
             return OpenLayers.Layer.WMS.prototype.
                 setVisibility.call(layer, true);
@@ -1746,10 +1746,8 @@ cgxp.tree.LayerParamNode = Ext.extend(GeoExt.tree.LayerParamNode, {
             // Temporary set layer visibility property to false in order
             // to avoid a GetMap request on each intermediate layer remove,
             // use the visible property to avoid a flash effect.
-            var oldVisibility = layer.visibility;
             layer.visibility = false;
             layer.mergeNewParams(this.createParams(newItems));
-            layer.visibility = oldVisibility;
         }
         layer.setVisibility(visible);
         // if there is nothing to display, we want to update the params
