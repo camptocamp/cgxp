@@ -480,20 +480,34 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      *  Create the WFS GetFeature control.
      */
     buildWFSControls: function(map) {
+        var self = this;
         var protocol = new OpenLayers.Protocol.WFS({
+            url: this.mapserverURL,
             geometryName: this.geometryName,
             srsName: map.getProjection(),
             formatOptions: {
                 featureNS: cgxp.WFS_FEATURE_NS,
                 autoconfig: false
+            },
+            read: function(options) {
+                options.params = options.params || {};
+                Ext.apply(options.params, self.target.mapPanel.params);
+                OpenLayers.Protocol.WFS.v1.prototype.read.apply(this, arguments);
             }
         });
         var externalProtocol = new OpenLayers.Protocol.WFS({
+            url: this.mapserverURL,
             geometryName: this.geometryName,
             srsName: map.getProjection(),
             formatOptions: {
                 featureNS: cgxp.WFS_FEATURE_NS,
                 autoconfig: false
+            },
+            read: function(options) {
+                options.params = options.params || {};
+                Ext.apply(options.params, self.target.mapPanel.params);
+                Ext.apply(options.params, {'EXTERNAL': 'true'});
+                OpenLayers.Protocol.WFS.v1.prototype.read.apply(this, arguments);
             }
         });
 
@@ -517,27 +531,11 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         };
-        var self = this;
         var request = function() {
             self.events.fireEvent('querystarts');
 
             var olLayers = self.target.mapPanel.map.
                     getLayersByClass("OpenLayers.Layer.WMS");
-            var params = {};
-            if (olLayers.length > 0) {
-                var layer = olLayers[0];
-                for (param in layer.params) {
-                    if (['FORMAT', 'LAYERS', 'REQUEST', 'SERVICE',
-                            'SRS', 'STYLES', 'TRANSPARENT', 'VERSION'].
-                            indexOf(param) < 0) {
-                        params[param] = layer.params[param];
-                    }
-                }
-            }
-            params = OpenLayers.Util.getParameterString(params);
-            protocol.options.url = self.mapserverURL + '?' + params;
-            externalProtocol.options.url = self.mapserverURL +
-                    '?EXTERNAL=true&' + params;
 
             var l = self.getLayers.call(self);
             if (l.internalLayers.length > 0) {
