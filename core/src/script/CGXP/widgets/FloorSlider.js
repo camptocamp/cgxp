@@ -132,13 +132,17 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
         if (this.maxIsSky && cgxp.plugins.Print) {
             var self = this;
-            cgxp.plugins.Print.prototype.paramRenderer['floor'] = 
+            cgxp.plugins.Print.prototype.paramRenderer.floor = 
                 function(value) {
                     return value === null ? self.skyText : value;
                 }
         }
 
         this.show();
+        this.mapPanel.addListener('bodyresize', function() {
+            this.anchorTo(this.mapPanel.body,
+                    this.anchorPosition, this.anchorOffsets);
+        }, this)
         this.anchorTo.defer(100, this, [this.mapPanel.body,
                 this.anchorPosition, this.anchorOffsets]);
     },
@@ -154,7 +158,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             this.mapPanel.setParams({ 'floor': floor })
         }, this);
         this.mapPanel.on('paramschange', function(params) {
-            if ('floor' in params) {
+            if (params.floor) {
                 floor = params['floor'];
                 if (this.maxIsSky && floor === null) {
                     floor = this.maxValue;
@@ -162,7 +166,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
                 this.slider.setValue(floor);
             }
         }, this);
-        if ('floor' in this.mapPanel.params) {
+        if (this.mapPanel.params.floor) {
             this.slider.setValue(parseInt(this.mapPanel.params['floor']));
         }
         else {
