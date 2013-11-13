@@ -421,7 +421,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
                 var me = this;
                 var query = function(urls) {
+                    var queryDone = false;
                     for (var url in urls) {
+                        queryDone = true;
                         var wmsOptions = me.buildWMSOptions(url, urls[url],
                             clickPosition, 'image/png');
                         // Get the params from the first layer
@@ -434,9 +436,16 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                         }
                         OpenLayers.Request.GET(wmsOptions);
                     }
+                    return queryDone;
                 };
-                query(internalServices);
-                query(externalServices);
+                var queryDone = false;
+                queryDone = query(internalServices);
+                queryDone = query(externalServices) || queryDone;
+                if (!queryDone) {
+                    self.events.fireEvent('queryresults', {
+                        features: []
+                    });
+                }
 
                 if (self.autoDeactivate && self.action) {
                     self.action.items[0].toggle(false);
@@ -552,6 +561,12 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 self.events.fireEvent('queryresults', {
                     features: [],
                     unqueriedLayers: l.unqueriedLayers
+                });
+            }
+            if (l.internalLayers.length == 0 && l.externalLayers.length == 0 &&
+                    l.unqueriedLayers.length == 0) {
+                self.events.fireEvent('queryresults', {
+                    features: []
                 });
             }
             if (self.autoDeactivate && self.action) {
