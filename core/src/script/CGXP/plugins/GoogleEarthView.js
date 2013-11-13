@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires CGXP/patches/PatchExt.js
  * @include OpenLayers/Control/GoogleEarthView.js
  * @include plugins/GoogleEarth.js
  * @include CGXP/widgets/GoogleEarthPanel.js
@@ -351,12 +352,16 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.addControl(this.googleEarthViewControl);
 
         this.outputTarget.add(this.intermediateContainer);
-        // mark as not rendered to force to render the new component.
-        this.outputTarget.layout.rendered = false;
-
+        
         this.intermediateContainer.add(this.googleEarthPanel);
         this.intermediateContainer.setSize(this.size, 0);
         this.intermediateContainer.setVisible(true);
+
+        /* Marked as not rendered in order to force the rendering of the component.
+           Otherwise the panel is not rendered correctly when switching between 
+           GoogleEarth and StreetView. */
+        this.outputTarget.layout.rendered = false;
+
         this.outputTarget.doLayout();
     },
 
@@ -364,6 +369,13 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      *  Uninitialize GoogleEarth and unload and close the GoogleEarth panel
      */
     unloadGoogleEarth: function() {
+        /* solve problem with Ext duplicating the splitbar when doLayout is called
+           because of the rendered = false above */
+        if (this.outputTarget.layout.east && this.outputTarget.layout.east.splitEl) {
+            this.outputTarget.layout.east.splitEl.remove();
+            this.outputTarget.layout.east.splitEl = null;
+        }
+        
         this.googleEarthPanel.un("pluginready", this.pluginReadyCallback);
         this.pluginReadyCallback = null;
 
