@@ -6,7 +6,7 @@
 	url = https://github.com/geoext/geoext.git
 [submodule "gxp"]
 	path = gxp
-	url = https://github.com/opengeo/gxp.git
+	url = https://github.com/boundlessgeo/gxp.git
 [submodule "styler"]
 	path = styler
 	url = https://github.com/georchestra/styler.git
