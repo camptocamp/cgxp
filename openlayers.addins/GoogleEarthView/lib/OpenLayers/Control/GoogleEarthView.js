@@ -288,8 +288,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
                 this.layer, {
                     geometryTypes: [OpenLayers.Geometry.Point.prototype.CLASS_NAME],
                     onDrag: OpenLayers.Function.bind(this.onDrag, this),
-                    onStart: OpenLayers.Function.bind(this.onStart, this),
-                    onComplete: OpenLayers.Function.bind(this.onComplete, this)
+                    onStart: OpenLayers.Function.bind(this.onStart, this)
                 });
         }
         return this.div;
