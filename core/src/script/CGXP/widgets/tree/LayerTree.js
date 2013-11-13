@@ -51,6 +51,9 @@ function delayedSetVisibilityTrue(visible) {
         }, 0);
     }
     else {
+        // force to set the visibility, because we
+        // set it to false before we merge the params
+        this.visibility = true;
         return OpenLayers.Layer.WMS.prototype.
             setVisibility.call(this, false);
     }
@@ -1709,7 +1712,9 @@ Ext.reg('cgxp_layertree', cgxp.tree.LayerTree);
 
 cgxp.tree.LayerNode = Ext.extend(GeoExt.tree.LayerNode, {
     // we don't want the layer to manage the checkbox to avoid conflicts with the tristate manager
-    onLayerVisibilityChanged: Ext.emptyFn
+    onLayerVisibilityChanged: Ext.emptyFn,
+    // Let the LayerParamNode manage the layer visibility
+    onCheckChange: Ext.emptyFn
 });
 Ext.tree.TreePanel.nodeTypes.cgxp_layer = cgxp.tree.LayerNode;
 
