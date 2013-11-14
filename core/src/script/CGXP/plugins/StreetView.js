@@ -46,11 +46,19 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *      });
  *
- *  Don't mis to add in the html file:
+ *  To use this plugin we need to create an API key,go to 
+ *  `The Google API console <https://code.google.com/apis/console>`_
+ *  * Sign in
+ *  * In "Services" ckeck "Google Maps API v3" and "Street View Image API".
+ *  * In "API access" click on "Create new Browser key...".
+ *  * Fill the HTTP referers
+ *  * Click on "Create"
+ *  * Get the "API key"
+ *  * Add this in the index.html file with the right <API key>:
  *
  *  .. code-block:: html
  *
- *     <script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;key=<your key>'></script>
+ *     <script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;key=<API key>'></script>
  *
  *  In the jsbuild/app.cfg, add in ``root``::
  *
