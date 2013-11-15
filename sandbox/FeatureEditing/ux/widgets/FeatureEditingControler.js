@@ -904,6 +904,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     onModification: function(event) {
         var feature = (event.geometry) ? event : event.feature;
         //we could execute commits here
+
+        this.showMeasure(feature);
     },
 
     /** private: method[onModificationEnd]
@@ -937,9 +939,6 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         this.parseFeatureDefaultAttributes(feature);
 
         this.showMeasure(feature);
-        feature.layer.events.register('featuremodified', this, function(e){
-            this.showMeasure(feature);
-        });
     },
 
     /** private: method[parseFeatureStyle]
