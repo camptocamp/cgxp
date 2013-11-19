@@ -33,6 +33,20 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
 
+    /** api: config[layerAliases]
+     *  ``Object``
+     *  List of layer aliases. If we need to clone a layer for the
+     *  query builder, we can use the config from the original layer
+     *  with this config:
+     *
+     *  .. code-block:: javascript
+     *
+     *      layerAliases: {
+     *          'original_layer': ['cloned_layer']
+     *      }
+     */
+    layerAliases: {},
+
     /** private: attribute[layers]
      *  ``Array``
      *  The list of layers.
@@ -48,7 +62,16 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
     init: function(target) {
         cgxp.plugins.FeaturesResult.superclass.init.apply(this, arguments);
 
-        var layers = {};
+        this.layers = {};
+        var self = this;
+        function addLayer(name, layer) {
+            self.layers[name] = layer;
+            if (self.layerAliases[name]) {
+                Ext.each(self.layerAliases[name], function(alias) {
+                    self.layers[alias] = layer;
+                });
+            }
+        }
         function browseThemes(nodes) {
             Ext.each(nodes, function(child) {
                 if (child.children) {
@@ -60,11 +83,11 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
                     }
                     // is not a mapserver group
                     if (child.childLayers.length === 0) {
-                        layers[child.name] = child;
+                        addLayer(child.name, child);
                     }
                     else {
                         Ext.each(child.childLayers, function(layer) {
-                            layers[layer.name] = child;
+                            addLayer(layer.name, child);
                         });
                     }
                 }
@@ -74,7 +97,6 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
             browseThemes(this.themes.external || []);
             browseThemes(this.themes.local);
         }
-        this.layers = layers;
 
         this.target.on('ready', function() {
             Ext.each(this.target.mapPanel.map.layers, function(layer) {
