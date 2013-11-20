@@ -259,7 +259,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 if (!this.checkFilter(f)) {
                     return false;
                 }
-            } else if (!(f.value && f.type &&
+            } else if (!(f.value !== '' && f.type &&
                 (f.property || f.CLASS_NAME == "OpenLayers.Filter.Spatial"))) {
                 alert(this.incompleteFormText);
                 return false;
