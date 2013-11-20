@@ -124,8 +124,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.Legend.prototype": {
         legendbuttonText: "Legende",
-        legendbuttonTooltip: "Legende anzeigen",
-        legendwindowTitle: "Legende"
+        legendbuttonTooltip: "Legende anzeigen"
     },
 
     "cgxp.plugins.ScaleChooser.prototype": {
