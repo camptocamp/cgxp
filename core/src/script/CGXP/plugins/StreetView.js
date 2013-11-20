@@ -17,7 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
- * @requires CGXP/patches/PatchExt.js
+ * @requires ExtOverrides/BorderLayout.js
  * @include ux/widgets/StreetViewPanel.js
  */
 

@@ -17,7 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
- * @requires CGXP/patches/PatchExt.js
+ * @requires ExtOverrides/BorderLayout.js
  * @include OpenLayers/Control/GoogleEarthView.js
  * @include plugins/GoogleEarth.js
  * @include CGXP/widgets/GoogleEarthPanel.js
