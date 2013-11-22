@@ -133,8 +133,7 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.Legend.prototype": {
         legendbuttonText: "Légende",
-        legendbuttonTooltip: "Afficher la légende de la carte",
-        legendwindowTitle: "Légende"
+        legendbuttonTooltip: "Afficher la légende de la carte"
     },
 
     "cgxp.plugins.ScaleChooser.prototype": {

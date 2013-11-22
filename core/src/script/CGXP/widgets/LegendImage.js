@@ -42,7 +42,7 @@ cgxp.LegendImage = Ext.extend(GeoExt.LegendImage, {
             tag: "div",
             children: [{
                 tag: 'label',
-                cls: 'layerparam-label',
+                cls: 'x-tree-node layerparam-label',
                 html: name
             },{
                 tag: "img",

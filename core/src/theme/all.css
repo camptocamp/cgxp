@@ -321,13 +321,9 @@ div.legend div.x-plain-tl {
 div.legend img {
     display: block;
 }
-div.legend label {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-div.legend label.layerparam-label {
+div.legend .x-form-item {
     font-size: 1em;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 .pdf-window .x-window-mc {
