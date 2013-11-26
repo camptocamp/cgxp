@@ -136,6 +136,23 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     updateLegendDelay: 2000,
 
+    /** private: property[messageTaskCreate]
+     *  ``Ext.util.DelayedTask``
+     *  The task that creates the message
+     */
+    /** private: property[messageTaskHide]
+     *  ``Ext.util.DelayedTask``
+     *  The task that hides the message
+     */
+    /** private: property[messageTaskRemove]
+     *  ``Ext.util.DelayedTask``
+     *  The task that removes the message
+     */
+    /** private: property[messageElement]
+     *  ``Ext.Element``
+     *  The Ext element that contains the message
+     */
+
     /* i18n */
     moveupText: "Raise",
     movedownText: "Move down",
@@ -1306,14 +1323,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 groupNode.getUI().getEl().scrollIntoView();
             }
             if (!nowarning) {
+                if (this.messageTaskCreate) {
+                    this.messageTaskCreate.cancel();
+                    this.messageTaskCreate = null;
+                }
+                if (this.messageTaskRemove) {
+                    this.messageTaskRemove.cancel();
+                    this.messageTaskRemove = null;
+                }
+                if (this.messageTaskHide) {
+                    this.messageTaskHide.cancel();
+                    this.messageTaskHide = null;
+                }
+                if (this.messageElement) {
+                    this.messageElement.remove();
+                    this.messageElement = null
+                }
                 // delayed to solved conflict with scroll
-                new Ext.util.DelayedTask(function() {
+                this.messageTaskCreate = new Ext.util.DelayedTask(function() {
                     var html = [
                         '<div class="layertree-msg">',
                             this.themealreadyloadedText,
                         '</div>'
                     ].join('');
-                    var msg = Ext.DomHelper.insertBefore(
+                    this.messageElement = Ext.DomHelper.insertBefore(
                         this.body,
                         {
                             html: html,
@@ -1321,16 +1354,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         },
                         true
                     ).fadeIn();
-                    new Ext.util.DelayedTask(function() {
+                    this.messageTaskHide = new Ext.util.DelayedTask(function() {
+                        this.messageTaskHide = null;
                         var duration = 1;
-                        msg.fadeOut({ duration: duration });
-                        new Ext.util.DelayedTask(function() {
+                        this.messageElement.fadeOut({ duration: duration });
+                        this.messageTaskRemove = new Ext.util.DelayedTask(function() {
+                            this.messageTaskRemove = null;
                             // make sure that the message is actually removed
                             // ("remove" option of fadeOut() doesn't seem to work)
-                            msg.remove();
-                        }).delay(duration * 1000);
-                    }).delay(3000);
-                }, this).delay(10);
+                            this.messageElement.remove();
+                            this.messageElement = null;
+                        }, this);
+                        this.messageTaskRemove.delay(duration * 1000);
+                    }, this);
+                    this.messageTaskHide.delay(3000);
+                }, this);
+                this.messageTaskCreate.delay(10);
             }
         }
 
