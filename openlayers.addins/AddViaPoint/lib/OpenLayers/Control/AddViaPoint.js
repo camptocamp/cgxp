@@ -95,10 +95,11 @@ OpenLayers.Control.AddViaPoint = OpenLayers.Class(OpenLayers.Control, {
         var feature;
 
         for (i=0; i<n; i++) {
-            feature = this.layer.features[i];
-            if (this.geometryTypeMatches(feature)) {
-                closestPoint = this.findClosestOnFeature(mousePoint, feature, dist);
+            var f = this.layer.features[i];
+            if (f.geometry && this.geometryTypeMatches(f)) {
+                closestPoint = this.findClosestOnFeature(mousePoint, f, dist);
                 if (closestPoint) {
+                    feature = f;
                     if (this.virtualVertex) {
                         this.virtualVertex.geometry.x = closestPoint.x;
                         this.virtualVertex.geometry.y = closestPoint.y;
@@ -118,7 +119,6 @@ OpenLayers.Control.AddViaPoint = OpenLayers.Class(OpenLayers.Control, {
                     this.dragHandler.activate();
                     break;
                 }
-                feature = null;
             }
         }
         if (!feature && this.virtualVertex) {

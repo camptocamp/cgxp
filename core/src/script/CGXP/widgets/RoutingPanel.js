@@ -215,7 +215,6 @@ cgxp.RoutingPanel = Ext.extend(
      */
     initVectorLayer: function() {
 
-        this.routeFeature = null;
         this.sourceFeature = null;
         this.highlightFeature = null;
         this.targetFeature = null;
@@ -233,6 +232,12 @@ cgxp.RoutingPanel = Ext.extend(
                 displayInLayerSwitcher: false,
                 alwaysInRange: true
         }, this.vectorLayerConfig));
+        this.newRouteFeature = new OpenLayers.Feature.Vector(null, {}, this.newRouteStyle);
+        this.newRouteFeature.style.display = 'none';
+        this.routeFeature = new OpenLayers.Feature.Vector(null, {}, this.routeStyle);
+        this.routeFeature.style.display = 'none';
+        this.vectorLayer.addFeatures([this.newRouteFeature, this.routeFeature]);
+
         this.vectorLayer.events.on({
             'beforefeaturemodified': function(evt) {
                 this.modifyControl._unselect = evt.feature;
@@ -244,11 +249,13 @@ cgxp.RoutingPanel = Ext.extend(
                 if (evt.feature == this.targetFeature) {
                     this.updateTarget();
                 }
-                this.vectorLayer.removeFeatures([this.newRouteFeature]);
-                this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+                this.newRouteFeature.style.display = 'none';
+                this.vectorLayer.drawFeature(this.newRouteFeature);
+                this.newRouteFeature.geometry = null;
+                this.computeRoute(this.routeFeature, true);
             },
             'vertexmodified': function(evt) {
-                this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle, false);
+                this.computeRoute(this.newRouteFeature, false);
             },
             'afterfeaturemodified': function(evt) {
                 if (!evt.modified && evt.feature.geometry.CLASS_NAME == 'OpenLayers.Geometry.Point') {
@@ -304,7 +311,7 @@ cgxp.RoutingPanel = Ext.extend(
                 this.viaFeatures[i].style.label = '' + (i + 1);
                 this.vectorLayer.drawFeature(this.viaFeatures[i]);
             }
-            this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+            this.computeRoute(this.routeFeature, true);
         }
     },
 
@@ -369,7 +376,7 @@ cgxp.RoutingPanel = Ext.extend(
         evt.feature.style = OpenLayers.Util.extend({}, this.viaStyle);
         this.insertViaPoint(evt.feature);
         if (this.routingService[this.currentEngine].dynamic) {
-            this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle);
+            this.computeRoute(this.newRouteFeature);
         }
     },
 
@@ -379,7 +386,7 @@ cgxp.RoutingPanel = Ext.extend(
      */
     moveViaPoint: function(evt) {
         if (this.routingService[this.currentEngine].dynamic) {
-            this.computeRoute(this.newRouteFeature, this.newRouteStyle);
+            this.computeRoute(this.newRouteFeature);
         }
     },
 
@@ -388,12 +395,10 @@ cgxp.RoutingPanel = Ext.extend(
      *  Recalculate the route and render it in the routeStyle.
      */
     endViaPoint: function(evt) {
-        if (this.newRouteFeature) {
-            this.vectorLayer.removeFeatures([this.newRouteFeature], {silent:true});
-            this.newRouteFeature.destroy();
-            this.newRouteFeature = null;
-        }
-        this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+        this.newRouteFeature.style.display = 'none';
+        this.vectorLayer.drawFeature(this.newRouteFeature);
+        this.newRouteFeature.geometry = null;
+        this.computeRoute(this.routeFeature, true);
     },
 
     /** private: method[computeRoute]
@@ -401,7 +406,8 @@ cgxp.RoutingPanel = Ext.extend(
      *  a fake beforeload event on the directionsStore so it will show that the
      *  route is loading. Update directions on callback if requested.
      */
-    computeRoute: function(routeFeature, style, withInstructions) {
+    computeRoute: function(routeFeature, withInstructions) {
+        routeFeature.style.display = 'yes';
         if (this.sourceFeature && this.targetFeature && this.routingService[this.currentEngine]) {
             var mapProj = this.map.projection;
             var source = this.sourceFeature.geometry.clone();
@@ -413,9 +419,6 @@ cgxp.RoutingPanel = Ext.extend(
                 var point = this.viaFeatures[i].geometry.clone();
                 point.transform(mapProj, this.epsg4326);
                 via.push(point);
-            }
-            if (!routeFeature) {
-                routeFeature = new OpenLayers.Feature.Vector(null, {}, style);
             }
             this.find('itemId', 'directionsPanel')[0].show();
             this.directionsStore.fireEvent('beforeload');
@@ -435,17 +438,13 @@ cgxp.RoutingPanel = Ext.extend(
                         this.vectorLayer.removeFeatures([routeFeature], {silent: true});
                     }
                     routeFeature.geometry = geom;
-                    if (routeFeature == this.routeFeature && this.newRouteFeature) {
-                        this.vectorLayer.removeFeatures([this.newRouteFeature]);
-                    }
-                    this.vectorLayer.addFeatures([routeFeature], {silent:true});
+                    this.vectorLayer.addFeatures([routeFeature], {silent: true});
                     if (withInstructions && route.instructions) {
                         this.updateDirections(route);
                     }
                 }
             }, this);
         }
-        return routeFeature;
     },
 
     /** private: method[zoomToNode]
@@ -539,10 +538,10 @@ cgxp.RoutingPanel = Ext.extend(
                 this.sourceFeature.destroy();
                 this.sourceFeature = null;
                 this.find('itemId', 'sourceComposite')[0].items.items[0].setValue('');
-                if (this.routeFeature) {
-                    this.vectorLayer.removeFeatures([this.routeFeature]);
-                    this.directionsStore.loadData([]);
-                }
+                this.routeFeature.style.display = 'none';
+                this.vectorLayer.drawFeature(this.routeFeature);
+                this.routeFeature.geometry = null;
+                this.directionsStore.loadData([]);
                 this.find('itemId', 'directionsPanel')[0].hide();
             } else {
                 this.sourceFeature.geometry.x = nearest.x;
@@ -551,7 +550,7 @@ cgxp.RoutingPanel = Ext.extend(
                 this.vectorLayer.drawFeature(this.sourceFeature);
                 var text = nearest.name || nearest.x + ', ' + nearest.y;
                 this.find('itemId', 'sourceComposite')[0].items.items[0].setValue(text);
-                this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+                this.computeRoute(this.routeFeature, true);
             }
         }, this);
     },
@@ -569,10 +568,10 @@ cgxp.RoutingPanel = Ext.extend(
                 this.targetFeature.destroy();
                 this.targetFeature = null;
                 this.find('itemId', 'targetComposite')[0].items.items[0].setValue('');
-                if (this.routeFeature) {
-                    this.vectorLayer.removeFeatures([this.routeFeature]);
-                    this.directionsStore.loadData([]);
-                }
+                this.routeFeature.style.display = 'none';
+                this.vectorLayer.drawFeature(this.routeFeature);
+                this.routeFeature.geometry = null;
+                this.directionsStore.loadData([]);
                 this.find('itemId', 'directionsPanel')[0].hide();
             } else {
                 this.targetFeature.geometry.x = nearest.x;
@@ -581,7 +580,7 @@ cgxp.RoutingPanel = Ext.extend(
                 this.vectorLayer.drawFeature(this.targetFeature);
                 var text = nearest.name || nearest.x + ', ' + nearest.y;
                 this.find('itemId', 'targetComposite')[0].items.items[0].setValue(text);
-                this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+                this.computeRoute(this.routeFeature, true);
             }
         }, this);
     },
@@ -606,7 +605,7 @@ cgxp.RoutingPanel = Ext.extend(
             this.sourceFeature = new OpenLayers.Feature.Vector(geom, {}, this.sourceStyle);
             this.vectorLayer.addFeatures([this.sourceFeature]);
         }
-        this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+        this.computeRoute(this.routeFeature, true);
     },
 
     setTarget: function(geom) {
@@ -618,7 +617,7 @@ cgxp.RoutingPanel = Ext.extend(
             this.targetFeature = new OpenLayers.Feature.Vector(geom, {}, this.targetStyle);
             this.vectorLayer.addFeatures([this.targetFeature]);
         }
-        this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+        this.computeRoute(this.routeFeature, true);
     },
 
     /** private: method[initFormItems]
@@ -733,7 +732,7 @@ cgxp.RoutingPanel = Ext.extend(
                         var newValue = combo.getValue();
                         if (this.currentEngine !== newValue) {
                             this.currentEngine = newValue;
-                            this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
+                            this.computeRoute(this.routeFeature, true);
                         }
                     },
                     scope: this
@@ -749,10 +748,8 @@ cgxp.RoutingPanel = Ext.extend(
                 text: this.zoombuttonLabel,
                 margins: '10px',
                 handler: Ext.createDelegate(function() {
-                    if (this.routeFeature) {
-                        this.routeFeature.geometry.calculateBounds();
-                        this.map.zoomToExtent(this.routeFeature.geometry.getBounds());
-                    }
+                    this.routeFeature.geometry.calculateBounds();
+                    this.map.zoomToExtent(this.routeFeature.geometry.getBounds());
                 }, this)
             }, {
                 xtype: 'button',
@@ -767,14 +764,6 @@ cgxp.RoutingPanel = Ext.extend(
                     if (this.targetFeature) {
                         this.targetFeature.destroy();
                         this.targetFeature = null;
-                    }
-                    if (this.routeFeature) {
-                        this.routeFeature.destroy();
-                        this.routeFeature = null;
-                    }
-                    if (this.newRouteFeature) {
-                        this.newRouteFeature.destroy();
-                        this.newRouteFeature = null;
                     }
                     for (var i = 0, n = this.viaFeatures.length; i < n; i++) {
                         this.viaFeatures[i].destroy();
@@ -807,7 +796,7 @@ cgxp.RoutingPanel = Ext.extend(
                         this.viaFeatures[i].style.label = '' + (i + 1);
                         this.vectorLayer.drawFeature(this.viaFeatures[i]);
                     }
-                    this.routeFeature = this.computeRoute(this.routeFeature, this.routeFeatureStyle, true);
+                    this.computeRoute(this.routeFeature, true);
                 }, this)
             }]
         }, {
