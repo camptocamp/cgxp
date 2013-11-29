@@ -37,7 +37,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
 
     /** api: config[url]
      *  ``String``
-     * the url to the OSRM server
+     *  The url to the OSRM server
      */
 
     /** api: config[dynamic]
@@ -48,7 +48,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
     dynamic: false,
 
     /** private: property[_cacheHints]
-     *  hints from previous OSRM requests
+     *  Hints from previous OSRM requests
      */
     _cacheHints: {
         checksum: null
@@ -80,7 +80,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
      */
     getNearest: function(loc, callback, scope) {
         var url = this.url + '/nearest';
-        url = OpenLayers.Util.urlAppend(url,'loc='+loc.y+','+loc.x);
+        url = OpenLayers.Util.urlAppend(url, 'loc=' + loc.y + ',' + loc.x);
         return this.protocol.read({
             url: url,
             callback: function(response) {
@@ -91,7 +91,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
                         y: data.mapped_coordinate[0],
                         name: data.name,
                         status: data.status,
-                        message: OpenLayers.i18n("STATUS_"+data.status),
+                        message: OpenLayers.i18n("STATUS_" + data.status),
 
                     };
                     callback.apply(scope, [data.status, location]);
@@ -102,21 +102,21 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
     },
 
     /** private: method[getLocWithHint]
-     *  get a location as a URL parameter with hint from
+     *  Get a location as a URL parameter with hint from
      *  a previous call if available
      */
     getLocWithHint: function(loc, tag) {
-        var param = 'loc='+loc.y+','+loc.x;
+        var param = 'loc=' + loc.y + ',' + loc.x;
 
         if (this._cacheHints[loc.x] &&
                 this._cacheHints[loc.x][loc.y]) {
-            param += '&hint='+this._cacheHints[loc.x][loc.y];
+            param += '&hint=' + this._cacheHints[loc.x][loc.y];
         }
         return param;
     },
 
     /** private: method[cacheOne]
-     *  cache a single location from a previous request
+     *  Cache a single location from a previous request
      */
     cacheOne: function(x, y, hint) {
         if (!this._cacheHints[x]) {
@@ -126,7 +126,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
     },
 
     /** private: method[cacheHintData]
-     *  cache hint data from a previous request
+     *  Cache hint data from a previous request
      */
     cacheHintData: function(source, target, via, hint_data) {
         var hints = hint_data.locations.slice();
@@ -134,14 +134,14 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
 
         this.cacheOne(source.x, source.y, hints.shift());
         this.cacheOne(target.x, target.y, hints.pop());
-        for (var i=0, n=via.length; i<n; i++) {
-            this.cacheOne(via[i].x,via[i].y,hints[i]);
+        for (var i = 0, n = via.length; i < n; i++) {
+            this.cacheOne(via[i].x, via[i].y, hints[i]);
         }
     },
 
     /** private: getUrl
      *
-     *  create a url to OSRM based on the server api documented
+     *  Create a url to OSRM based on the server api documented
      *  at https://github.com/DennisOSRM/Project-OSRM/wiki/Server-api
      *
      *  :arg options: ``Object`` options, see getRoute
@@ -154,16 +154,16 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
         var params = [];
         params.push(this.getLocWithHint(options.source, 'source'));
         if (options.via instanceof Array) {
-            for (var i=0,n=options.via.length; i<n; i++) {
-                params.push(this.getLocWithHint(options.via[i], 'via'+i));
+            for (var i = 0, n = options.via.length; i < n; i++) {
+                params.push(this.getLocWithHint(options.via[i], 'via' + i));
             }
         }
         params.push(this.getLocWithHint(options.target, 'target'));
         if (this._cacheHints.checksum) {
-            params.push('checksum='+this._cacheHints.checksum);
+            params.push('checksum=' + this._cacheHints.checksum);
         }
         if (typeof options.z !== 'undefined') {
-            params.push('z='+options.z);
+            params.push('z=' + options.z);
         }
         if (options.alternates) {
             params.push('alt=true');
@@ -171,7 +171,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
         if (options.instructions) {
             params.push('instructions=true');
         }
-        url += '?'+params.join('&');
+        url += '?' + params.join('&');
 
         return url;
     },
@@ -218,7 +218,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
                             route.time = data.route_summary.total_time;
                             if (options.instructions) {
                                 var instructions = [];
-                                for (var i=0, n=data.route_instructions.length; i<n; i++) {
+                                for (var i = 0, n = data.route_instructions.length; i < n; i++) {
                                     instructions.push(this.formatInstruction(i, data.route_instructions[i]));
                                 }
                                 route.instructions = instructions;
@@ -240,9 +240,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
 
     },
 
-    /** private: method[parseRouteGeometry]
-     *
-     *  algorithm based on
+    /** private: method[cancel]
      */
     cancel: function(handle) {
         this.protocol.abort(handle);
@@ -250,9 +248,9 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
 
     /** private: method[parseRouteGeometry]
      *
-     *  algorithm based on
+     *  Algorithm based on
      *  https://github.com/DennisSchiefer/Project-OSRM-Web/blob/develop/WebContent/routing/OSRM.RoutingGeometry.js
-     *  :returns ``Array`` an array of [lng,lat] pairs
+     *  :returns ``Array`` an array of [lng, lat] pairs
      */
     parseRouteGeometry: function(encoded) {
         var precision = Math.pow(10, -this.OSRM_PRECISION);
@@ -283,7 +281,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
     },
 
     /** private: method[formatInstruction]
-     *  returns a JSON object representing a driving direction on the route
+     *  Returns a JSON object representing a driving direction on the route
      */
     formatInstruction: function(index, info) {
         return {

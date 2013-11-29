@@ -94,7 +94,7 @@ OpenLayers.Control.AddViaPoint = OpenLayers.Class(OpenLayers.Control, {
         var i;
         var feature;
 
-        for (i=0;i<n;i++) {
+        for (i=0; i<n; i++) {
             feature = this.layer.features[i];
             if (this.geometryTypeMatches(feature)) {
                 closestPoint = this.findClosestOnFeature(mousePoint, feature, dist);
@@ -103,7 +103,7 @@ OpenLayers.Control.AddViaPoint = OpenLayers.Class(OpenLayers.Control, {
                         this.virtualVertex.geometry.x = closestPoint.x;
                         this.virtualVertex.geometry.y = closestPoint.y;
                         if (!this.virtualVertex.layer) {
-                            this.layer.addFeatures([this.virtualVertex],{silent:true});
+                            this.layer.addFeatures([this.virtualVertex], {silent: true});
                         }
                         this.layer.drawFeature(this.virtualVertex);
                     } else {
@@ -112,7 +112,7 @@ OpenLayers.Control.AddViaPoint = OpenLayers.Class(OpenLayers.Control, {
                             {},
                             OpenLayers.Util.extend({}, this.vertexStyle)
                         );
-                        this.layer.addFeatures([this.virtualVertex], {silent:true});
+                        this.layer.addFeatures([this.virtualVertex], {silent: true});
                     }
                     this.dragHandler.setMap(this.layer.map);
                     this.dragHandler.activate();
@@ -128,28 +128,28 @@ OpenLayers.Control.AddViaPoint = OpenLayers.Class(OpenLayers.Control, {
     },
 
     geometryTypeMatches: function(feature) {
-            return this.geometryTypes == null ||
-                OpenLayers.Util.indexOf(this.geometryTypes,
-                    feature.geometry.CLASS_NAME) > -1;
+        return this.geometryTypes === null ||
+            OpenLayers.Util.indexOf(this.geometryTypes,
+                feature.geometry.CLASS_NAME) > -1;
     },
 
     getSegments: function(geometry) {
         var components = geometry.components;
         var numSeg = components.length - 1;
         var segments = [];
-        var point1
+        var point1;
         var point2;
         var i;
 
-        for(i=0; i<numSeg; ++i) {
-                point1 = components[i];
-                point2 = components[i + 1];
-                segments[i] = {
-                        x1: point1.x,
-                        y1: point1.y,
-                        x2: point2.x,
-                        y2: point2.y
-                };
+        for (i=0; i<numSeg; ++i) {
+            point1 = components[i];
+            point2 = components[i + 1];
+            segments[i] = {
+                x1: point1.x,
+                y1: point1.y,
+                x2: point2.x,
+                y2: point2.y
+            };
         }
         return segments;
     },

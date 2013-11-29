@@ -46,7 +46,7 @@ cgxp.RoutingPanel = Ext.extend(
          */
         map: null,
 
-        /** private: property[routingService:]
+        /** private: property[routingService]
          */
         routingService: null,
 
@@ -292,17 +292,16 @@ cgxp.RoutingPanel = Ext.extend(
      *  remove a via point from the route and recalculate the route
      */
     removeViaPoint: function(feature) {
-        for (var i=0, n=this.viaFeatures.length; i<n; i++) {
+        for (var i = 0, n = this.viaFeatures.length; i < n; i++) {
             if (this.viaFeatures[i] == feature) {
                 this.vectorLayer.removeFeatures([feature]);
-                feature.destroy();
                 this.viaFeatures.splice(i, 1);
                 break;
             }
         }
         if (i != n) {
-            for (i=0, n=this.viaFeatures.length; i<n; i++) {
-                this.viaFeatures[i].style.label = ''+(i+1);
+            for (i = 0, n = this.viaFeatures.length; i < n; i++) {
+                this.viaFeatures[i].style.label = '' + (i + 1);
                 this.vectorLayer.drawFeature(this.viaFeatures[i]);
             }
             this.routeFeature = this.computeRoute(this.routeFeature, this.routeStyle, true);
@@ -328,10 +327,10 @@ cgxp.RoutingPanel = Ext.extend(
         if (features.length == 0) {
             features.push(feature);
         } else {
-            for (i=1; i<n; i++) {
+            for (i = 1; i < n; i++) {
                 segment = {
-                    x1: components[i-1].x,
-                    y1: components[i-1].y,
+                    x1: components[i - 1].x,
+                    y1: components[i - 1].y,
                     x2: components[i].x,
                     y2: components[i].y
                 };
@@ -355,8 +354,8 @@ cgxp.RoutingPanel = Ext.extend(
                 features.push(feature);
             }
         }
-        for (i=0; i<features.length; i++) {
-            features[i].style.label = '' + (i+1);
+        for (i = 0; i < features.length; i++) {
+            features[i].style.label = '' + (i + 1);
             this.vectorLayer.drawFeature(features[i]);
         }
     },
@@ -367,7 +366,7 @@ cgxp.RoutingPanel = Ext.extend(
      *  and render it in the newRouteStyle
      */
     startViaPoint: function(evt) {
-        evt.feature.style = OpenLayers.Util.extend({},this.viaStyle);
+        evt.feature.style = OpenLayers.Util.extend({}, this.viaStyle);
         this.insertViaPoint(evt.feature);
         if (this.routingService[this.currentEngine].dynamic) {
             this.newRouteFeature = this.computeRoute(this.newRouteFeature, this.newRouteStyle);
@@ -410,7 +409,7 @@ cgxp.RoutingPanel = Ext.extend(
             var target = this.targetFeature.geometry.clone();
             target.transform(mapProj, this.epsg4326);
             var via = [];
-            for (var i=0, n=this.viaFeatures.length; i<n; i++) {
+            for (var i = 0, n = this.viaFeatures.length; i < n; i++) {
                 var point = this.viaFeatures[i].geometry.clone();
                 point.transform(mapProj, this.epsg4326);
                 via.push(point);
@@ -428,12 +427,12 @@ cgxp.RoutingPanel = Ext.extend(
                 instructions: withInstructions
             }, function(err, route) {
                 if (err) {
-                    this.vectorLayer.removeFeatures([routeFeature],{silent:true});
+                    this.vectorLayer.removeFeatures([routeFeature], {silent: true});
                 } else {
                     var geom = new OpenLayers.Geometry.LineString(route.geometry);
                     geom.transform(this.epsg4326, this.map.projection);
                     if (routeFeature.layer) {
-                        this.vectorLayer.removeFeatures([routeFeature],{silent:true});
+                        this.vectorLayer.removeFeatures([routeFeature], {silent: true});
                     }
                     routeFeature.geometry = geom;
                     if (routeFeature == this.routeFeature && this.newRouteFeature) {
@@ -637,7 +636,7 @@ cgxp.RoutingPanel = Ext.extend(
                         listeners: {
                             'applyposition': {
                                 fn: function(pos) {
-                                    var geom = new OpenLayers.Geometry.Point(pos.lon,pos.lat);
+                                    var geom = new OpenLayers.Geometry.Point(pos.lon, pos.lat);
                                     this.setSource(geom);
                                 },
                                 scope: this
@@ -651,7 +650,7 @@ cgxp.RoutingPanel = Ext.extend(
                             }
                         }
                 }, this.searchOptions.widgetOptions)
-            ),{
+            ), {
                 xtype: 'button',
                 text: this.sourceButtonLabel,
                 handler: Ext.createDelegate(function() {
@@ -677,7 +676,7 @@ cgxp.RoutingPanel = Ext.extend(
                         listeners: {
                             'applyposition': {
                                 fn: function(pos) {
-                                    var geom = new OpenLayers.Geometry.Point(pos.lon,pos.lat);
+                                    var geom = new OpenLayers.Geometry.Point(pos.lon, pos.lat);
                                     this.setTarget(geom);
                                 },
                                 scope: this
@@ -691,7 +690,7 @@ cgxp.RoutingPanel = Ext.extend(
                             }
                         }
                 }, this.searchOptions.widgetOptions)
-            ),{
+            ), {
                 xtype: 'button',
                 text: this.targetButtonLabel,
                 handler: Ext.createDelegate(function() {
@@ -755,7 +754,7 @@ cgxp.RoutingPanel = Ext.extend(
                         this.map.zoomToExtent(this.routeFeature.geometry.getBounds());
                     }
                 }, this)
-            },{
+            }, {
                 xtype: 'button',
                 text: this.resetbuttonLabel,
                 margins: '10px',
@@ -777,7 +776,7 @@ cgxp.RoutingPanel = Ext.extend(
                         this.newRouteFeature.destroy();
                         this.newRouteFeature = null;
                     }
-                    for (var i=0, n=this.viaFeatures.length; i<n; i++) {
+                    for (var i = 0, n = this.viaFeatures.length; i < n; i++) {
                         this.viaFeatures[i].destroy();
                     }
                     this.viaFeatures = [];
@@ -789,7 +788,7 @@ cgxp.RoutingPanel = Ext.extend(
                     this.find('itemId', 'targetComposite')[0].items.items[0].setValue('');
 
                 }, this)
-            },{
+            }, {
                 xtype: 'button',
                 text: this.reversebuttonLabel,
                 margins: '10px',
@@ -804,14 +803,14 @@ cgxp.RoutingPanel = Ext.extend(
                         this.vectorLayer.drawFeature(this.targetFeature);
                     }
                     this.viaFeatures.reverse();
-                    for (var i=0, n=this.viaFeatures.length; i<n; i++) {
-                        this.viaFeatures[i].style.label = '' + (i+1);
+                    for (var i = 0, n = this.viaFeatures.length; i < n; i++) {
+                        this.viaFeatures[i].style.label = '' + (i + 1);
                         this.vectorLayer.drawFeature(this.viaFeatures[i]);
                     }
                     this.routeFeature = this.computeRoute(this.routeFeature, this.routeFeatureStyle, true);
                 }, this)
             }]
-        },{
+        }, {
             xtype: 'panel',
             layout: 'border',
             bodyStyle: 'background-color: #ffffff',
@@ -830,7 +829,7 @@ cgxp.RoutingPanel = Ext.extend(
                     time: ''
                 },
                 tpl: '<div style="font-size: 12px;"><div style="margin: 5px 0;"><span class="total-distance-title">'+this.totalDistanceLabel+':</span> <span class="total-distance-value">{distance}</span></div><div style="margin: 5px 0"><span class="total-time-title">'+this.totalTimeLabel+':</span> <span class="total-time-value">{time}</span></div><div style="margin: 5px 0"><span class="">'+this.directionsLabel+':</span></div></div>',
-            },{
+            }, {
                 xtype: 'listview',
                 region: 'center',
                 store: this.directionsStore,
@@ -906,10 +905,10 @@ Ext.util.Format.routeDirection = function(record) {
     context.compassDirection = OpenLayers.i18n(context.compassDirection);
     var text = OpenLayers.i18n(context.directionType, context);
     if (context.roadName) {
-        text = text.replace(/\[/,'','g');
-        text = text.replace(/\]/,'','g');
+        text = text.replace(/\[/, '', 'g');
+        text = text.replace(/\]/, '', 'g');
     } else {
-        text = text.replace(/\[.*\]/,'','g');
+        text = text.replace(/\[.*\]/, '', 'g');
     }
     return text;
 };
