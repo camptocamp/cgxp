@@ -1080,6 +1080,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             queryLayers: layerNode.queryLayers
         }, this.wmtsOptions || {}));
 
+        // Big hack to make createLayer respect the OGC standards.
+        layer.minScale = null;
+        layer.maxScale = null;
+        layer.options.minScale = null;
+        layer.options.maxScale = null;
+
         var treeNode = layerNode.node;
         treeNode.layer = layer;
         treeNode.attributes.layer = layer;
