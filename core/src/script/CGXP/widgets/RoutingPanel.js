@@ -347,7 +347,8 @@ cgxp.RoutingPanel = Ext.extend(
                     features.splice(j, 0, feature);
                     break;
                 } else {
-                    if (features[j].geometry.equals(components[i])) {
+                    dist = OpenLayers.Geometry.distanceToSegment(features[j].geometry, segment);
+                    if (dist.distance < tolerance) {
                         j++;
                         if (j >= features.length) {
                             features.push(feature);
@@ -398,7 +399,19 @@ cgxp.RoutingPanel = Ext.extend(
         this.newRouteFeature.style.display = 'none';
         this.vectorLayer.drawFeature(this.newRouteFeature);
         this.newRouteFeature.geometry = null;
-        this.computeRoute(this.routeFeature, true);
+        var geom = evt.feature.geometry.clone();
+        geom.transform(this.map.projection, this.epsg4326);
+        this.routingService[this.currentEngine].getNearest(geom, function(err, nearest) {
+            if (err) {
+                this.removeViaPoint(evt.feature);
+            } else {
+                evt.feature.geometry.x = nearest.x;
+                evt.feature.geometry.y = nearest.y;
+                evt.feature.geometry.transform(this.epsg4326, this.map.projection);
+                this.vectorLayer.drawFeature(evt.feature);
+                this.computeRoute(this.routeFeature, true);
+            }
+        }, this);
     },
 
     /** private: method[computeRoute]
