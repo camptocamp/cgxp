@@ -445,6 +445,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     self.events.fireEvent('queryresults', {
                         features: []
                     });
+                    // Reset the cursor.
+                    OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
                 }
 
                 if (self.autoDeactivate && self.action) {
