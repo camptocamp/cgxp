@@ -28,6 +28,10 @@
  * @include OpenLayers/Format/QueryStringFilter.js
  * @include GeoExt/data/AttributeStore.js
  * @include GeoExt.ux/FeatureEditorGrid.js
+ * @include OpenLayers/Control/Snapping.js
+ * @include OpenLayers/Layer/Vector.js
+ * @include OpenLayers/Strategy/BBOX.js
+ * @include OpenLayers/Protocol/WFS/v1_0_0.js
  */
 
 /** api: (define)
@@ -43,6 +47,7 @@ Ext.namespace("cgxp.plugins");
  *
  *  .. code-block:: javascript
  *
+ *      // without snapping
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -59,6 +64,40 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
+ *      // with snapping enabled
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_editing',
+ *              layerTreeId: 'layertree',
+ *              layersURL: "${request.route_url('layers_root')}",
+ *              mapServerUrl: "${request.route_url('mapserverproxy', path='')}",
+ *              snapLayers: {
+ *                  "layer_A": {
+ *                      tolerance: 15,
+ *                      edge: false,
+ *                      ...
+ *                  },
+ *                  "layer_B": {}
+ *              },
+ *              snapOptions: {
+ *                  defaults: {
+ *                      ...
+ *                  },
+ *                  greedy: false
+ *              }
+ *          }, {
+ *              ptype: "cgxp_layertree",
+ *              id: "layertree",
+ *              outputConfig: {
+ *                  ...
+ *              },
+ *              outputTarget: 'left-panel'
+ *          }]
+ *          ...
+ *      });
+ *
  */
 
 /** api: constructor
@@ -172,6 +211,52 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     pendingRequests: null,
 
+    /** api: config[mapserverURL]
+     *  ``String``
+     *  The mapserver proxy URL, required when snapping is used. Typically set to
+     *  ``"${request.route_url('mapserverproxy', path='')}"``
+     */
+
+    /** api: config[snapLayers]
+     *  ``Object``
+     *  The keys are the layer id and the values are configuration objects. Those
+     *  configuration objects are similar to the ``OpenLayers.Control.Snapping``
+     *  target properties with two main differences:
+     *
+     *  * the key *layer* must no be specidied,
+     *  * the key *resFactor* is added to specify to  the ``resFactor`` of the
+     *    WFS target layer. It defaults to 1 when no value is specified which is
+     *    a safe value. It is possible to pass a higher value when the WFS layer
+     *    does not contain too many features.
+     */
+
+    /** api: config[snapOptions]
+     *  ``Object``
+     *  An object containing the options for the snap control. It might contain
+     *  up to 2 keys:
+     *
+     *  * *defaults*,
+     *  * *greedy*.
+     */
+
+    /** private: property[snapControl]
+     * ``OpenLayers.Control.Snapping``
+     */
+    snapControl: null,
+
+    /** private: property[snapWMSProperties]
+     *  ``Object`̀
+     *  Store properties about the WMS layers corresponding to the snap targets.
+     */
+    snapWMSProperties: null,
+
+    /** private: property[snapTreeNodes]
+     *  ``Array{String}`̀
+     *  List the names of the layer tree node which contain WMS layers
+     *  corresponding to the WFS snap targets.
+     */
+    snapTreeNodes: [],
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -212,6 +297,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         portal.on({
             ready: function() {
                 var tree = portal.tools[this.layerTreeId].tree;
+                this.initSnapping();
                 tree.on({
                     checkchange: this.manageLayers,
                     addgroup: this.manageLayers,
@@ -237,6 +323,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         // cancel the query, query agane, cancel it again,
         // and finally do the right query ...
         this.manageLayersTimer = setTimeout(function() {
+            if (this.snapControl && this.snapControl.active) {
+                this.checkSnapLayerVisibility();
+            }
             var layers = self.getEditableLayers();
             var size = 0;
             var menu = self.newFeatureBtn.menu;
@@ -326,12 +415,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 toggle: function(button, pressed) {
                     if (!pressed) {
+                        this.deactivateSnap();
                         button.menu.items.each(function(item) {
                             if (item.control) {
                                 item.control.deactivate();
                             }
                         });
                     } else if (button.activeItem) {
+                        this.activateSnap();
                         this.closeEditing();
                         button.activeItem.control.activate();
                     } else {
@@ -363,6 +454,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             this.editingLayer, Handler, {
                 featureAdded: OpenLayers.Function.bind(function(f) {
                     control.deactivate();
+                    this.deactivateSnap();
                     this.newFeatureBtn.toggle(false);
                     f.attributes.__layer_id__ =
                         layer.attributes.layer_id;
@@ -502,6 +594,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         control.activate();
         control.events.on({
             'featureselected': function(e) {
+                this.activateSnap();
                 var f = e.feature;
                 this.editingLayer.addFeatures([f]);
                 var store = this.getAttributesStore(f.attributes.__layer_id__, f, function(store) {
@@ -582,10 +675,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             },
             listeners: {
                 done: function(panel, e) {
+                    this.deactivateSnap();
                     var feature = e.feature;
                     this.save(feature);
                 },
                 cancel: function(panel, e) {
+                    this.deactivateSnap();
                     var feature = e.feature, modified = e.modified;
                     panel.cancel();
                     this.closeEditing();
@@ -668,6 +763,311 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         });
+    },
+
+    /** private: method[initSnapping]
+     *  Creates the snapping control and initializes data structures when
+     *  snapping is enabled.
+     */
+    initSnapping: function() {
+        if (this.snapLayers) {
+            var options = Ext.apply(
+                {},
+                {
+                    layer: this.editingLayer,
+                    targets: []
+                },
+                this.snapOptions
+            );
+
+            this.snapControl = new OpenLayers.Control.Snapping(options);
+
+            this.snapWMSProperties = {};
+            for (l in this.snapLayers) {
+                if (this.snapLayers.hasOwnProperty(l)) {
+                    this.snapLayers[l] = this.snapLayers[l] || {};
+                    this.snapLayers[l].layer = null;
+                    this.snapWMSProperties[l] = {
+                        visibility: false,       // Whether the layer is visible
+                        inRange: false,          // Whether the layer is in range
+                        treeNodes: [],           // Tree nodes that have the WMS layer
+                        url: this.mapserverUrl   // Map server url
+                    }
+                }
+            }
+
+            var treeNodes = this.snapTreeNodes;
+
+            function browse(node, prop, local, parent) {
+                for (var i = 0, leni = node.length; i < leni; i++) {
+                    var child = node[i];
+                    if (child.children) {
+                        browse(child.children, prop, local);
+                    } else {
+                        if (child.childLayers) {
+                            browse(child.childLayers, prop, local, child);
+                        }
+                        var name = child.name;
+                        if (name in prop) {
+                            if (child.url || (parent && parent.url)) {
+                                prop[name].url = child.url || parent.url;
+                            }
+                            if (!local) {
+                                prop[name].url +=
+                                    (prop[name].url.indexOf('?') == -1 ? '?' : '&') +
+                                    'EXTERNAL=true'
+                            }
+                            if (parent) {
+                                treeNodes.push(parent.name);
+                                prop[name].treeNodes.push(parent.name);
+                            } else {
+                                treeNodes.push(name);
+                                prop[name].treeNodes.push(name);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var tree = this.target.tools[this.layerTreeId].tree;
+
+            browse(tree.themes.local, this.snapWMSProperties, true);
+
+            if (tree.themes.external) {
+                browse(tree.themes.external, this.snapWMSProperties, false);
+            }
+
+            this.map.events.on({
+                zoomend: function() {
+                    if (this.snapControl.active) {
+                        this.checkSnapLayerInRange();
+                    }
+                },
+                scope: this
+            });
+        }
+    },
+
+    /** private: method[activateSnap]
+     */
+    activateSnap: function() {
+        if (this.snapControl && !this.snapControl.active) {
+            var targets = [];
+
+            this.checkSnapLayerVisibility();
+            this.checkSnapLayerInRange();
+
+            for (l in this.snapWMSProperties) {
+                if (this.snapWMSProperties.hasOwnProperty(l) &&
+                    this.snapWMSProperties[l].visibility &&
+                    this.snapWMSProperties[l].inRange) {
+                    var target = this.getSnapTarget(l);
+                    this.map.addLayer(target.layer);
+                    targets.push(target);
+                }
+            }
+
+            this.snapControl.setTargets(targets);
+            this.snapControl.activate();
+        }
+    },
+
+    /** private: method[deactivateSnap]
+     */
+    deactivateSnap: function() {
+        if (this.snapControl && this.snapControl.active) {
+            for (var i = 0, len = this.snapControl.targets.length; i < len; i++) {
+                this.map.removeLayer(this.snapControl.targets[i].layer);
+            }
+            this.snapControl.setTargets([]);
+            this.snapControl.deactivate();
+        }
+    },
+
+    /** private: method[checkSnapLayerVisibility]
+     */
+    checkSnapLayerVisibility: function() {
+        if (this.snapControl) {
+            var nodeVisibilities = {};
+            var toVisible = [];
+            var toHidden = [];
+            var tree = this.target.tools[this.layerTreeId].tree;
+
+            Ext.each(
+                this.snapTreeNodes,
+                function(n) {
+                    nodeVisibilities[n] = false;
+                }
+            );
+
+            // Compute the visibility for the current tree nodes
+            tree.root.cascade(function(node) {
+                var name = node.attributes.name;
+                if (name in nodeVisibilities) {
+                    nodeVisibilities[name] = node.attributes.checked;
+                }
+            }, this);
+
+            // Compute the visibility for the WMS layers
+            for (layer in this.snapWMSProperties) {
+                if (this.snapWMSProperties.hasOwnProperty(layer)) {
+                    var visibility = false;
+                    Ext.each(
+                        this.snapWMSProperties[layer].treeNodes,
+                        function(l) {
+                            visibility = visibility || nodeVisibilities[l]
+                        }
+                    )
+                    if (visibility != this.snapWMSProperties[layer].visibility) {
+                        this.snapWMSProperties[layer].visibility = visibility;
+                        if (this.snapWMSProperties[layer].inRange) {
+                            if (visibility) {
+                                toVisible.push(layer);
+                            } else {
+                                toHidden.push(layer);
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.updateSnapTargets(toVisible, toHidden);
+        }
+    },
+
+    /** private: method[checkSnapLayerInRange]
+     */
+    checkSnapLayerInRange: function() {
+        if (this.snapControl) {
+            var tree = this.target.tools[this.layerTreeId].tree;
+            var toVisible = [];
+            var toHidden = [];
+            var currentRes = this.map.getResolution();
+            var nodeInRanges = {};
+
+            function checkInRange(l, res) {
+                if (!l.minResolutionHint && l.minScaleDenominator) {
+                    l.minResolutionHint =
+                        OpenLayers.Util.getResolutionFromScale(l.minScaleDenominator, units);
+                }
+                if (!l.maxResolutionHint && l.maxScaleDenominator) {
+                    l.maxResolutionHint =
+                        OpenLayers.Util.getResolutionFromScale(l.maxScaleDenominator, units);
+                }
+                return (!((l.minResolutionHint && res < l.minResolutionHint) ||
+                    (l.maxResolutionHint && res > l.maxResolutionHint)));
+            }
+
+            Ext.each(
+                this.snapTreeNodes,
+                function(n) {
+                    nodeInRanges[n] = false;
+                }
+            );
+
+            // Compute the "inRange" for the current tree nodes
+            tree.root.cascade(function(node) {
+                var name = node.attributes.name;
+                if (name in nodeInRanges) {
+                    nodeInRanges[name] = checkInRange(node.attributes, currentRes);
+                }
+            }, this);
+
+            // Compute the "inRange" for the WMS layers
+            for (layer in this.snapWMSProperties) {
+                if (this.snapWMSProperties.hasOwnProperty(layer)) {
+                    var inRange = false;
+                    Ext.each(
+                        this.snapWMSProperties[layer].treeNodes,
+                        function(l) {
+                            inRange = inRange || nodeInRanges[l]
+                        }
+                    )
+                    if (inRange != this.snapWMSProperties[layer].inRange) {
+                        this.snapWMSProperties[layer].inRange = inRange;
+                        if (this.snapWMSProperties[layer].visibility) {
+                            if (inRange) {
+                                toVisible.push(layer);
+                            } else {
+                                toHidden.push(layer);
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.updateSnapTargets(toVisible, toHidden);
+        }
+    },
+
+    /** private: method[updateSnapTargets]
+     */
+    updateSnapTargets: function(toVisible, toHidden) {
+        if (this.snapControl.active) {
+            Ext.each(toVisible, function(name) {
+                var target = this.getSnapTarget(name);
+                this.map.addLayer(target.layer);
+                this.snapControl.addTarget(target);
+            }, this);
+
+            Ext.each(toHidden, function(name) {
+                var target = this.getSnapTarget(name);
+                this.map.removeLayer(target.layer);
+                this.snapControl.removeTarget(target);
+            }, this);
+        }
+    },
+
+    /** private: method[getSnapTarget]
+     *  Allows to lazily create the WFS layers acting as snap targets.
+     */
+    getSnapTarget: function(name) {
+        if (!this.snapLayers[name].layer) {
+            var layer = new OpenLayers.Layer.Vector(
+                "wfs-snap-target-" + name,
+                {
+                    displayInLayerSwitcher: false,
+                    visibility: false,
+                    strategies: [
+                        new OpenLayers.Strategy.BBOX({
+                            resFactor: this.snapLayers[name].resFactor || 1.0,
+                            update: function() {
+                                // Hack: the features would not be reloaded when
+                                // the layer is not visible.
+                                this.layer.visibility = true;
+                                OpenLayers.Strategy.BBOX.prototype.update.apply(this, arguments);
+                                this.layer.visibility = false;
+                            },
+                            merge: function() {
+                                // Hack: do not call merge when the layer is not
+                                // in the map
+                                if (this.layer.map) {
+                                    OpenLayers.Strategy.BBOX.prototype.merge.apply(this, arguments);
+                                }
+                            }
+                        })
+                    ],
+                    protocol: new OpenLayers.Protocol.WFS({
+                        version: "1.0.0",
+                        srsName: this.map.getProjection(),
+                        url: this.snapWMSProperties[name].url,
+                        featureType: name,
+                        featureNS: cgxp.WFS_FEATURE_NS || "http://mapserver.gis.umn.edu/mapserver"
+                    })
+                }
+            );
+            this.snapLayers[name].layer = layer;
+            // Hack: the BBOX strategy expects a moveend event on the layer
+            // which is not triggered when the layer is not visible
+            this.map.events.on({
+                "moveend": function() {
+                    layer.events.triggerEvent("moveend");
+                }
+            });
+
+        }
+
+        return this.snapLayers[name];
     }
 });
 
