@@ -892,14 +892,21 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             if (!node[key].getEl().isVisible()) {
                 if (key == 'legend') {
                     var img = this.updateComponentLegend(node, true);
-                    img.on('load', function _show() {
+                    if (img.loaded) {
                         show();
-                        img.un('load', _show, this);
-                    }, this);
-                } else {
+                    }
+                    else {
+                        img.on('load', function _show() {
+                            show();
+                            img.un('load', _show, this);
+                        }, this);
+                    }
+                }
+                else {
                     show();
                 }
-            } else {
+            }
+            else {
                 actionImg.removeClass(cls);
                 node[key].el.setVisibilityMode(Ext.Element.DISPLAY);
                 node[key].el.slideOut('t', {
@@ -1743,10 +1750,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var attr = node.attributes;
         var selector = '.legend-component img';
         var img = Ext.select(selector, false, node.getUI().elNode).item(0);
-        if (img.isVisible(true) || force) {
-            img.dom.src = (attr.legendImage) ?
+        if (force || img.isVisible(true)) {
+            var src = (attr.legendImage) ?
                 attr.legendImage :
                 this.getLegendGraphicUrl(attr.layer, attr.name);
+            img.loaded = img.dom.src == src;
+            img.dom.src = src;
         }
         return img;
     }
