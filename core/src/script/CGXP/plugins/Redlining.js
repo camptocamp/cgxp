@@ -324,35 +324,40 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
         });
     }
     if (feature.attributes.isCircle) {
-        var radius = feature.geometry.getBounds().getWidth()/2;
-        var cb = function(sp) {
-            var f = feature,
-                id = f.geometry.id,
-                value = (sp.field) ? sp.field.getValue() : sp.value;
-            f.geometry = OpenLayers.Geometry.Polygon.createRegularPolygon(
-                f.geometry.getCentroid(), value, 32, 0
+        var radius = feature.geometry.getBounds().getWidth() / 2;
+        var cb = function(spinner) {
+            var id = feature.geometry.id,
+                value = (spinner.field) ? spinner.field.getValue() :
+                    spinner.value;
+            feature.geometry = OpenLayers.Geometry.Polygon.createRegularPolygon(
+                feature.geometry.getCentroid(), value, 32, 0
             );
-            f.geometry.id = id;
+            feature.geometry.id = id;
             this.controler.modifyControl.resetVertices();
-            f.layer.drawFeature(f);
+            feature.layer.drawFeature(feature);
+            feature.layer.events.triggerEvent('featuremodified', {
+                feature: feature,
+                source: spinner
+            });
         };
         var radiusField = Ext.create({
             xtype: 'spinnerfield',
             name: 'radius',
-            fieldLabel: this.radiusFieldText+' ('+feature.layer.map.units+')',
+            fieldLabel: this.radiusFieldText + ' (' + feature.layer.map.units + ')',
             value: radius,
             decimalPrecision: 0,
             width: 130,
-            incrementValue: Math.round(radius)/100,
+            incrementValue: Math.round(radius) / 100,
             listeners: {
                 spin: cb,
                 valid: cb,
                 scope: this
             }
         });
-        feature.layer.events.register('featuremodified', null, function(e){
-            if (e.feature != feature) { return; }
-            radiusField.setValue(e.feature.geometry.getBounds().getWidth()/2);
+        feature.layer.events.register('featuremodified', null, function(e) {
+            if (e.feature == feature && !e.source instanceof Ext.ux.form.SpinnerField) {
+                radiusField.setValue(e.feature.geometry.getBounds().getWidth() / 2);
+            }
         });
         oGroupItems.push(radiusField);
     }
