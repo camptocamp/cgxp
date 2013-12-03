@@ -536,7 +536,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             });
             nodeConfig.actions.push({
-                action: "legend",
+                action: "legend" + (item.isLegendExpanded ? " legend-on" : ''),
                 qtip: this.showhidelegendText
             });
         }
