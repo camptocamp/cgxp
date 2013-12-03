@@ -773,6 +773,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     // calculate the size
                     slider.el.show();
                     slider.doLayout();
+                    // place the thumb at the right place...
+                    real_slider = slider.findByType('slider')[0];
+                    real_slider.moveThumb(
+                        0,
+                        real_slider.translateValue(real_slider.getValue()),
+                        false
+                    );
                     slider.el.hide();
                     slider.el.slideIn('t', {
                         useDisplay: true,
