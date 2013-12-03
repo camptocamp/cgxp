@@ -329,8 +329,10 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             var id = feature.geometry.id,
                 value = (spinner.field) ? spinner.field.getValue() :
                     spinner.value;
+            // The number of segments of the geometry should not be a multiple of 4.
+            // To get the right radius, it should rather be a multiple of 6.
             feature.geometry = OpenLayers.Geometry.Polygon.createRegularPolygon(
-                feature.geometry.getCentroid(), value, 32, 0
+                feature.geometry.getCentroid(), value, 42, 0
             );
             feature.geometry.id = id;
             this.controler.modifyControl.resetVertices();
