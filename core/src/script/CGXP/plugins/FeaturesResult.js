@@ -103,11 +103,11 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
                 if (Ext.isArray(layer.queryLayers)) {
                     Ext.each(layer.queryLayers, function(queryLayer) {
                         if (queryLayer.name && queryLayer.identifierAttribute) {
-                            layers[queryLayer.name] = queryLayer;
+                            this.layers[queryLayer.name] = queryLayer;
                         }
-                    });
+                    }, this);
                 }
-            });
+            }, this);
         }, this);
     },
 
