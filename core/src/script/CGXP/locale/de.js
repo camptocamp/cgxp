@@ -162,6 +162,30 @@ GeoExt.Lang.add("de", {
         itemText: "element"
     },
 
+    "cgxp.plugins.Routing.prototype": {
+        routingTitle: "Route berechnen",
+        routingwindowTitle: "Route berechnen",
+        routingbuttonText: "Route",
+        routingbuttonTooltip: "Route berechnen",
+        sourcefieldLabelText: "Von",
+        sourcefieldValueText: "Startadresse",
+        sourceButtonLabel: "Über Karte",
+        targetfieldLabelText: "Zu",
+        targetfieldValueText: "Zieladresse",
+        targetButtonLabel: "Über Karte",
+        routeenginefieldLabel: "Mit",
+        zoombuttonLabel: "Karte auf Route zentrieren",
+        resetbuttonLabel: "Rücksetzen",
+        reversebuttonLabel: "Rückweg",
+        routeDescriptionLabel: "Route Anweisungen",
+        totalDistanceLabel: "Gesamtstrecke",
+        totalTimeLabel: "Gesamtzeit",
+        directionsLabel: "Route Anweisungen",
+        loadingRouteLabel: "Votre itinéraire est en cours de calcul",
+        noRouteFoundLabel: "Pas d'itinéraire possible",
+        routeErrorTitle: "Fehler"
+    },
+
     "cgxp.plugins.WMSBrowser.prototype": {
         buttonText: "WMS hinzufügen",
         windowTitleText: "WMS-Layer hineinladen",

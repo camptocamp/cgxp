@@ -165,28 +165,28 @@ GeoExt.Lang.add("fr", {
         showIn3dText: "Afficher en 3D"
     },
 
-    "cgxp.plugins.Routing": {
-      routingTitle: "Routing", // TODO: translate me
-      routingwindowTitle: "Routing", // TODO: translate me
-      routingbuttonText: "Routing", // TODO: translate me
-      routingbuttonTooltip: "Calculer un itinéraire",
-      sourcefieldLabelText: "From", // TODO: translate me
-      sourcefieldValueText: "From", // TODO: translate me
-      sourceButtonLabel: "Set", // TODO: translate me
-      targetfieldLabelText: "To", // TODO: translate me
-      targetfieldValueText: "To", // TODO: translate me
-      targetButtonLabel: "Set", // TODO: translate me
-      routeenginefieldLabel: 'Travel by', // TODO: translate me
-      zoombuttonLabel: 'Zoom', // TODO: translate me
-      resetbuttonLabel: 'Reset', // TODO: translate me
-      reversebuttonLabel: 'Reverse', // TODO: translate me
-      routeDescriptionLabel: "Description de l'itinéraire",
-      totalDistanceLabel: 'Total Distance', // TODO: translate me
-      totalTimeLabel: 'Total Time', // TODO: translate me
-      directionsLabel: 'Directions', // TODO: translate me
-      loadingRouteLabel: "Votre itinéraire est en cours de calcul",
-      noRouteFoundLabel: "Pas d'itinéraire possible",
-      routeErrorTitle: 'Erreur'
+    "cgxp.plugins.Routing.prototype": {
+        routingTitle: "Recherche d'itinéraire",
+        routingwindowTitle: "Itinéraire",
+        routingbuttonText: "Itinéraire",
+        routingbuttonTooltip: "Calculer un itinéraire",
+        sourcefieldLabelText: "De",
+        sourcefieldValueText: "Lieu de départ",
+        sourceButtonLabel: "Via la carte",
+        targetfieldLabelText: "À",
+        targetfieldValueText: "Lieu d'arrivée",
+        targetButtonLabel: "Via la carte",
+        routeenginefieldLabel: "Trajet",
+        zoombuttonLabel: "Zoom sur l'itinéraire",
+        resetbuttonLabel: "Réinitialiser",
+        reversebuttonLabel: "Sens inverse",
+        routeDescriptionLabel: "Description de l'itinéraire",
+        totalDistanceLabel: "Distance totale",
+        totalTimeLabel: "Temps total",
+        directionsLabel: "Directions",
+        loadingRouteLabel: "Votre itinéraire est en cours de calcul",
+        noRouteFoundLabel: "Pas d'itinéraire possible",
+        routeErrorTitle: 'Erreur'
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
