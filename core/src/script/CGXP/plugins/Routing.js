@@ -240,33 +240,33 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
         var routingServices = {};
 
         for (var i in this.routingService) {
-          routingServices[i] = this.createRoutingService(this.routingService[i]);
+            routingServices[i] = this.createRoutingService(this.routingService[i]);
         }
 
         var routingPanel = new cgxp.RoutingPanel(Ext.apply({
-          title: this.routingTitle,
-          map: this.target.mapPanel.map,
-          routingService: routingServices,
-          searchOptions: this.searchOptions,
-          sourcefieldLabel: this.sourcefieldLabelText,
-          sourcefieldValue: this.sourcefieldValueText,
-          sourceButtonLabel: this.sourceButtonLabel,
-          targetfieldLabel: this.targetfieldLabelText,
-          targetfieldValue: this.targetfieldValueText,
-          targetButtonLabel: this.targetButtonLabel,
-          routeenginefieldLabel: this.routeenginefieldLabel,
-          zoombuttonLabel: this.zoombuttonLabel,
-          resetbuttonLabel: this.resetbuttonLabel,
-          reversebuttonLabel: this.reversebuttonLabel,
-          routeDescriptionLabel: this.routeDescriptionLabel,
-          totalDistanceLabel: this.totalDistanceLabel,
-          totalTimeLabel: this.totalTimeLabel,
-          directionsLabel: this.directionsLabel,
-          loadingRouteLabel: this.loadingRouteLabel,
-          noRouteLabel: this.noRouteLabel,
-          bodyStyle: {
-            'padding': '10px'
-          }
+            title: this.routingTitle,
+            map: this.target.mapPanel.map,
+            routingService: routingServices,
+            searchOptions: this.searchOptions,
+            sourcefieldLabel: this.sourcefieldLabelText,
+            sourcefieldValue: this.sourcefieldValueText,
+            sourceButtonLabel: this.sourceButtonLabel,
+            targetfieldLabel: this.targetfieldLabelText,
+            targetfieldValue: this.targetfieldValueText,
+            targetButtonLabel: this.targetButtonLabel,
+            routeenginefieldLabel: this.routeenginefieldLabel,
+            zoombuttonLabel: this.zoombuttonLabel,
+            resetbuttonLabel: this.resetbuttonLabel,
+            reversebuttonLabel: this.reversebuttonLabel,
+            routeDescriptionLabel: this.routeDescriptionLabel,
+            totalDistanceLabel: this.totalDistanceLabel,
+            totalTimeLabel: this.totalTimeLabel,
+            directionsLabel: this.directionsLabel,
+            loadingRouteLabel: this.loadingRouteLabel,
+            noRouteLabel: this.noRouteLabel,
+            bodyStyle: {
+                'padding': '10px'
+            }
         }, this.outputConfig));
 
         this.routingPanel = cgxp.plugins.Routing.superclass.addOutput.call(this, routingPanel);
@@ -332,56 +332,56 @@ Ext.preg(cgxp.plugins.Routing.prototype.ptype, cgxp.plugins.Routing);
 // TODO: this probably isn't the right place for these but they need to
 //       be set somewhere
 OpenLayers.Lang['en'] = OpenLayers.Util.applyDefaults({
-  "STATUS_0": "Successful",
-  "STATUS_1": "Unknown server error",
-  "STATUS_2": "Invalid parameter",
-  "STATUS_3": "Parameter out of range",
-  "STATUS_4": "Required parameter missing",
-  "STATUS_5": "Service unavailable",
-  "STATUS_202": "Route is blocked",
-  "STATUS_205": "DB corrupted",
-  "STATUS_206": "DB is not open",
-  "STATUS_207": "No route",
-  "STATUS_208": "Invalid start point",
-  "STATUS_209": "Invalid end point",
-  "STATUS_210": "Start and end points are equal",
+    "STATUS_0": "Successful",
+    "STATUS_1": "Unknown server error",
+    "STATUS_2": "Invalid parameter",
+    "STATUS_3": "Parameter out of range",
+    "STATUS_4": "Required parameter missing",
+    "STATUS_5": "Service unavailable",
+    "STATUS_202": "Route is blocked",
+    "STATUS_205": "DB corrupted",
+    "STATUS_206": "DB is not open",
+    "STATUS_207": "No route",
+    "STATUS_208": "Invalid start point",
+    "STATUS_209": "Invalid end point",
+    "STATUS_210": "Start and end points are equal",
 
-  // routing engines
-  "ENGINE_0": "Car (fastest)",
-  // directions
-  "N": "north",
-  "E": "east",
-  "S": "south",
-  "W": "west",
-  "NE": "northeast",
-  "SE": "southeast",
-  "SW": "southwest",
-  "NW": "northwest",
-  // driving directions
-  // ${roadName}: road name
-  // ${compassDirection}: compass direction
-  // ${distance}: distance
-  // ${duration}: duration
-  // [*]: will only be printed when there actually is a road name
-  "DIRECTION_0":"Unknown instruction[ onto <b>${roadName}</b>]",
-  "DIRECTION_1":"Continue[ onto <b>${roadName}</b>]",
-  "DIRECTION_2":"Turn slightlyå right[ onto <b>${roadName}</b>]",
-  "DIRECTION_3":"Turn right[ onto <b>${roadName}</b>]",
-  "DIRECTION_4":"Turn sharply right[ onto <b>${roadName}</b>]",
-  "DIRECTION_5":"U-Turn[ onto <b>${roadName}</b>]",
-  "DIRECTION_6":"Turn sharply left[ onto <b>${roadName}</b>]",
-  "DIRECTION_7":"Turn left[ onto <b>${roadName}</b>]",
-  "DIRECTION_8":"Turn slightly left[ onto <b>${roadName}</b>]",
-  "DIRECTION_10":"Head <b>${compassDirection}</b>[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-1":"Enter roundabout and leave at first exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-2":"Enter roundabout and leave at second exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-3":"Enter roundabout and leave at third exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-4":"Enter roundabout and leave at fourth exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-5":"Enter roundabout and leave at fifth exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-6":"Enter roundabout and leave at sixth exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-7":"Enter roundabout and leave at seventh exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-8":"Enter roundabout and leave at eighth exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-9":"Enter roundabout and leave at nineth exit[ onto <b>${roadName}</b>]",
-  "DIRECTION_11-x":"Enter roundabout and leave at one of the too many exits[ onto <b>${roadName}</b>]",
-  "DIRECTION_15":"You have reached your destination"
+    // routing engines
+    "ENGINE_0": "Car (fastest)",
+    // directions
+    "N": "north",
+    "E": "east",
+    "S": "south",
+    "W": "west",
+    "NE": "northeast",
+    "SE": "southeast",
+    "SW": "southwest",
+    "NW": "northwest",
+    // driving directions
+    // ${roadName}: road name
+    // ${compassDirection}: compass direction
+    // ${distance}: distance
+    // ${duration}: duration
+    // [*]: will only be printed when there actually is a road name
+    "DIRECTION_0":"Unknown instruction[ onto <b>${roadName}</b>]",
+    "DIRECTION_1":"Continue[ onto <b>${roadName}</b>]",
+    "DIRECTION_2":"Turn slightlyå right[ onto <b>${roadName}</b>]",
+    "DIRECTION_3":"Turn right[ onto <b>${roadName}</b>]",
+    "DIRECTION_4":"Turn sharply right[ onto <b>${roadName}</b>]",
+    "DIRECTION_5":"U-Turn[ onto <b>${roadName}</b>]",
+    "DIRECTION_6":"Turn sharply left[ onto <b>${roadName}</b>]",
+    "DIRECTION_7":"Turn left[ onto <b>${roadName}</b>]",
+    "DIRECTION_8":"Turn slightly left[ onto <b>${roadName}</b>]",
+    "DIRECTION_10":"Head <b>${compassDirection}</b>[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-1":"Enter roundabout and leave at first exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-2":"Enter roundabout and leave at second exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-3":"Enter roundabout and leave at third exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-4":"Enter roundabout and leave at fourth exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-5":"Enter roundabout and leave at fifth exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-6":"Enter roundabout and leave at sixth exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-7":"Enter roundabout and leave at seventh exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-8":"Enter roundabout and leave at eighth exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-9":"Enter roundabout and leave at nineth exit[ onto <b>${roadName}</b>]",
+    "DIRECTION_11-x":"Enter roundabout and leave at one of the too many exits[ onto <b>${roadName}</b>]",
+    "DIRECTION_15":"You have reached your destination"
 });
