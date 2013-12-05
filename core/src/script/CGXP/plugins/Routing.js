@@ -90,7 +90,7 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
     ptype: "cgxp_routing",
 
     /** private: property[routingPanel]
-     *  the routing panel widget
+     *  The routing panel widget
      */
     routingPanel: null,
 
@@ -132,7 +132,7 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[outputConfig]
      *  ``String``
-     *  panel config options.
+     *  Panel config options.
      */
     outputConfig: null,
 
