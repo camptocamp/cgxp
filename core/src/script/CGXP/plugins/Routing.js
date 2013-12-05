@@ -43,7 +43,7 @@ Ext.namespace("cgxp.plugins");
  *              outputTarget: "left-panel",
  *              osrmURL: "${request.route_url('osrmproxy', path='')}",
  *              searchURL: "${request.route_url('ftsproxy', path='')}",
- *              options: {
+ *              outputConfig: {
  *                  labelAlign: 'top',
  *                  defaults: {
  *                      anchor: '100%'
@@ -68,7 +68,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              osrmURL: "${request.route_url('osrmproxy', path='')}",
  *              searchURL: "${request.route_url('ftsproxy', path='')}",
- *              options: {
+ *              outputConfig: {
  *                  labelAlign: 'top',
  *                  defaults: {
  *                      anchor: '100%'
@@ -130,11 +130,11 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
      */
     searchOptions: null,
 
-    /** api: config[options]
+    /** api: config[outputConfig]
      *  ``String``
      *  panel config options.
      */
-    options: null,
+    outputConfig: null,
 
     /** api: config[timeout]
      * ``Number``
