@@ -66,8 +66,8 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      *  ``Boolean``
      *  Tells whether to group the results by ``layer_name``. If set to ``true``,
      *  the data returned by the service is intended to include such a field.
-     *  If set to ``true``, ``GroupComboBox.js`` needs to be included as part
-     *  of the built file if any.
+     *  If set to ``true``, ``Ext/ux/form/GroupComboBox.js`` needs to be
+     *  included as part of the built file if any.
      *  Defaults to ``false``.
      */
     grouping: false,
