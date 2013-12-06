@@ -288,7 +288,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 height: 350,
                 closeAction: 'hide',
                 autoScroll: true,
-                cls: 'toolwindow'
+                cls: 'toolwindow printpanel'
             });
 
             printWin.on({
