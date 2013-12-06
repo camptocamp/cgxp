@@ -589,3 +589,17 @@ div.x-panel .olControlZoom a:hover {
 .login-failure-msg {
     color: red;
 }
+
+/* Print panel */
+.printpanel .x-form-label-top .x-form-element {
+     padding-top: 0;
+}
+.printpanel .x-form-label-top .x-form-item  {
+    padding-bottom: 2px;
+} 
+.printpanel .x-form-item {
+    margin-bottom: 0;
+}
+.printpanel textarea {
+    min-height: 50px;
+}
