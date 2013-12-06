@@ -47,7 +47,8 @@ Ext.namespace("cgxp.plugins");
  *      });
  *
  *  To use this plugin we need to create an API key,go to 
- *  `The Google API console <https://code.google.com/apis/console>`_
+ *  `The Google API console <https://code.google.com/apis/console>`_:
+ *
  *  * Sign in
  *  * In "Services" ckeck "Google Maps API v3" and "Street View Image API".
  *  * In "API access" click on "Create new Browser key...".

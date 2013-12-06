@@ -42,7 +42,7 @@ Ext.namespace("cgxp");
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
     /** api: property[vectorLayer]
-     *  :class:``OpenLayers.Layer.Vector``
+     *  ``OpenLayers.Layer.Vector``
      */
     vectorLayer: null,
 
