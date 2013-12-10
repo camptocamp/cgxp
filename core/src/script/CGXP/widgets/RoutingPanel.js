@@ -55,9 +55,9 @@ cgxp.RoutingPanel = Ext.extend(
         /** api: config[zoomToRouteLevel]
          *  ``Integer``
          *  The zoom level to zoom to when a user clicks on
-         *  one of the directions in the list view.  Default 15
+         *  one of the directions in the list view.  Default 9
          */
-        zoomToRouteLevel: 15,
+        zoomToRouteLevel: 9,
 
         /** api: config[vectorLayerConfig]
          *  ``Object``
