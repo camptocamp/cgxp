@@ -110,15 +110,18 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
         GeoExt.WMSLegend.prototype.update.call(cmp);
 
         // Add a name for all WMS layers
-        var enc = encoders.legends.base.call(this, cmp);
+        var enc = [{
+            name: '',
+            classes: []
+        }];
         var icons = [];
-        for (var i = 1, len = cmp.items.getCount() ; i < len ; ++i) {
+        for (var i = 0, len = cmp.items.getCount() ; i < len ; ++i) {
             var url = cmp.items.get(i).url;
-            if (url.toLowerCase().indexOf('request=getlegendgraphic') != -1) {
+            if (url && url.toLowerCase().indexOf('request=getlegendgraphic') != -1) {
                 var split = url.split("?");
                 var params = Ext.urlDecode(split[1]);
                 if (cmp.useScaleParameter === true) {
-                    params['SCALE'] = scale;
+                    params.SCALE = scale;
                 }
                 url = split[0] + "?" + Ext.urlEncode(params);
                 enc[0].classes.push({
@@ -126,7 +129,7 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
                     icons: [this.getAbsoluteUrl(url)]
                 });
             }
-            else {
+            else if (url) {
                 enc[0].classes.push({
                     name: "",
                     icons: [this.getAbsoluteUrl(url)]
