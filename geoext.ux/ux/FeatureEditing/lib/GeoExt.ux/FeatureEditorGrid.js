@@ -247,7 +247,20 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 header: this.valueHeader,
                 dataIndex: "value",
                 editable: true,
-                getEditor: this.getEditor.createDelegate(this)
+                getEditor: this.getEditor.createDelegate(this),
+                renderer: function(value, meta, record) {
+                    if (Ext.isDate(value)) {
+                        // remove ns prefix
+                        var type = record.get('type').split(":").pop();
+                        if (type == 'date') {
+                            return value.format('Y-m-d');
+                        }
+                        else if (type == 'datetime') {
+                            return value.format('c');
+                        }
+                    }
+                    return value;
+                }
             })
         ];
         if(this.extraColumns) {
