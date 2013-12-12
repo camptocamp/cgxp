@@ -57,10 +57,22 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
     tooltip: true,
 
     /** api: config[comboWidth]
-     *  ``Number``
-     *  Width in pixels of the search combobox.
+     *  ``Number`` Width in pixels of the search combobox.
+     *  Default is 200.
      */
     comboWidth: 200,
+
+    /** api: config[tooltipDuration]
+     *  ``Number`` Duration in milliseconds after which the tooltip is hidden.
+     *  Default is 15000.
+     */
+    tooltipDuration: 15000,
+
+    /** api: config[tooltipWidth]
+     *  ``Number`` Width in pixels of the tooltip window.
+     *  Default is 500.
+     */
+    tooltipWidth: 500,
 
     /** api: config[grouping]
      *  ``Boolean``
@@ -240,9 +252,9 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
                         target: combo.getEl(),
                         title: this.tooltipTitle,
                         contentEl: this.tooltipEl,
-                        width: 500,
+                        width: this.tooltipWidth,
                         trackMouse: true,
-                        dismissDelay: 15000
+                        dismissDelay: this.tooltipDuration
                     });
                 }
                 function stop(e) {
