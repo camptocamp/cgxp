@@ -32,10 +32,12 @@
  *  state.
  *
  *  Used state (prefixed with 'map_' in the Permalink):
- *   * x, y, zoom: map context (read - write)
+ *   * x, y, zoom: map context.
+ *   * param_<>: the parameter value.
  *   * crosshair: if true defined a point at the center of the screen with
- *                the style: crosshairStyle.
+ *                the style: crosshairStyle (read only).
  *   * tooltip: text that will be open in a popup at the center of the screen
+ *              (readonly).
  */
 Ext.namespace("cgxp");
 

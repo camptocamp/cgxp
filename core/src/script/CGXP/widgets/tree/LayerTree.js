@@ -62,6 +62,12 @@ function delayedSetVisibilityTrue(visible) {
 /** api: (define)
  *  module = cgxp.tree
  *  class = LayerTree
+ *
+ *  Used state (prefixed with 'tree_' in the Permalink):
+ *   * groups: The first level layer groups.
+ *   * group_layers_<group>: The visible layers of the first level layer group.
+ *   * group_opacity_<group>: The opacity of the first level layer group.
+ *   * layers: The layers to add (read only).
  */
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
@@ -1467,14 +1473,62 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }, groups);
             }
         }
-        // get groups from initialState
-        var initialStateGroups = Ext.isArray(this.initialState.groups) ?
-            this.initialState.groups : [this.initialState.groups];
-        // merge permalinkThemes's groups and initialState groups
-        var groupsAsString = groups.join(',');
-        for (i=0, l=initialStateGroups.length; i<l; i++) {
-            if (groupsAsString.indexOf(initialStateGroups[i]) < 0) {
-                groups.push(initialStateGroups[i]);
+        if (this.initialState.groups || !this.initialState.layers) {
+            // get groups from initialState
+            var initialStateGroups = Ext.isArray(this.initialState.groups) ?
+                this.initialState.groups : [this.initialState.groups];
+            // merge permalinkThemes's groups and initialState groups
+            var groupsAsString = groups.join(',');
+            for (i=0, l=initialStateGroups.length; i<l; i++) {
+                if (groupsAsString.indexOf(initialStateGroups[i]) < 0) {
+                    groups.push(initialStateGroups[i]);
+                }
+            }
+        }
+        else {
+            // Gets the more pertinent groups for the layers set.
+            var asked_groups = {};
+            var layers = this.initialState.layers;
+            if (!OpenLayers.Util.isArray(layers)) {
+                layers = [layers];
+            }
+            Ext.each(layers, function(layer) {
+                var layer_groups = this.findGroupByLayerName(layer, true);
+                Ext.each(layer_groups, function(group) {
+                    if (!(group.name in asked_groups)) {
+                        asked_groups[group.name] = []
+                    }
+                    asked_groups[group.name].push(layer);
+                });
+            }, this);
+            var asked_groups_array = []
+            for (group in asked_groups) {
+                asked_groups_array.push({
+                    group: group,
+                    layers: asked_groups[group]
+                });
+            }
+
+            while (asked_groups_array.length > 0) {
+                asked_groups_array.sort(function(group1, group2) {
+                    return group2.layers.length - group1.layers.length;
+                });
+                if (asked_groups_array[0].layers.length == 0) {
+                    break;
+                }
+                groups.push(asked_groups_array[0].group);
+                var layers = [];
+                Ext.each([].concat(asked_groups_array[0].layers),
+                    function(layer) {
+                        layers.push(layer);
+                        Ext.each(asked_groups_array, function(group) {
+                            group.layers.remove(layer);
+                        });
+                    }
+                );
+                this.initialState['group_layers_' +
+                    asked_groups_array[0].group] =
+                    layers;
             }
         }
 
@@ -1548,31 +1602,32 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *
      *  :arg name: ``String``
      */
-    findGroupByLayerName: function(name) {
-       var result = null;
-       var parseChildren = function(node, group) {
-           group = group || node;
-           if (node.name && node.name == name) {
-               result = group;
-               return false;
-           }
-           if (node.children) {
-               Ext.each(node.children, function(n) {
-                   return parseChildren(n, group);
-               });
-           }
-           return true;
-       };
-       Ext.each(['local', 'external'], function(location) {
+    findGroupByLayerName: function(name, all) {
+        var result = [];
+        var parseChildren = function(node, group) {
+            group = group || node;
+            if (node.name && node.name == name) {
+                result.push(group);
+                return false;
+            }
+            if (node.children) {
+                Ext.each(node.children, function(n) {
+                    return parseChildren(n, group);
+                });
+            }
+            return true;
+        };
+        Ext.each(['local', 'external'], function(location) {
             Ext.each(this.themes[location], function(t) {
                 Ext.each(t.children, function(n) {
                     // recurse on all children
-                    return parseChildren(n);
+                    return parseChildren(n) || all;
                 });
             });
-           return !result;
-       }, this);
-       return result;
+            return all || result.length !== 0;
+        }, this);
+
+        return all ? result : result[0];
     },
 
     /** api: method[findGroupByName]
