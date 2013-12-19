@@ -46,10 +46,11 @@ do
         mkdir -p ${BUILDDIR}
     fi
 
-    # get the latest files
+    # reset local changes and get the latest files
+    git reset --hard
+    git clean -f -d
     git checkout --force ${VERSION}
     git pull origin ${VERSION}
-    git reset --hard
 
     rm -rf lib/api
     rm -rf lib/plugins
