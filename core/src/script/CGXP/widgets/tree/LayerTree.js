@@ -732,6 +732,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                                 target: cmp.el,
                                 html: tooltip
                             });
+                            cmp.ownerCt.doLayout.defer(
+                                1, cmp.ownerCt, [true, true]
+                            );
                         }
                     }
                 },
