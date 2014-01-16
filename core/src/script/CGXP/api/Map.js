@@ -126,6 +126,29 @@ cgxp.api.Map.prototype = {
         if (!userConfig.showCoords && mousePos) {
             OpenLayers.Util.removeItem(config.controls, mousePos);
         }
+        var nav = getBy(config.controls, "CLASS_NAME",
+            'OpenLayers.Control.Navigation')[0];
+        var panZoomBar = getBy(config.controls, "CLASS_NAME",
+            'OpenLayers.Control.PanZoomBar')[0];
+        if (userConfig.removeNavigation && nav) {
+            OpenLayers.Util.removeItem(config.controls, nav);
+        }
+        if (userConfig.removePanZoomBar && panZoomBar) {
+            OpenLayers.Util.removeItem(config.controls, panZoomBar);
+        }
+        if (userConfig.staticMap) {
+            if (panZoomBar) {
+                OpenLayers.Util.removeItem(config.controls, panZoomBar);
+            }
+            if (nav) {
+                OpenLayers.Util.removeItem(config.controls, nav);
+            }
+        }
+        var attrib = getBy(config.controls, "CLASS_NAME",
+            'OpenLayers.Control.Attribution')[0];
+        if (userConfig.removeAttribution && attrib) {
+            OpenLayers.Util.removeItem(config.controls, attrib);
+        }
 
         // adapt the layers array in the config based on
         // the user config
