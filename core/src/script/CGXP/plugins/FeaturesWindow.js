@@ -91,6 +91,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  * ``queryopen``: sent on open query tool.
      *  * ``queryclose``: sent on closequery tool.
      *  * ``querystarts``: sent when the query button is pressed
+     *  * ``nolayer``: sent when no layer to query.
      *  * ``queryresults(queryresult)``: sent when the result is received
      */
     events: null,
@@ -153,6 +154,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``String`` Loading results message (i18n).
      */
     loadingResults: "Loading results...",
+    /** api: config[noLayerSelectedMessage]
+     *  ``String`` No layer selected message (i18n).
+     */
+    noLayerSelectedMessage: "No layer selected",
 
     /** private: attribute[store]
      *  ``Ext.data.Store``
@@ -229,6 +234,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                 }
             }
             this.showNotification(this.loadingResults);
+        }, this);
+
+        this.events.on('nolayer', function() {
+            this.showNotification(this.noLayerSelectedMessage, 5000);
         }, this);
 
         this.events.on('queryresults', function(queryResult) {
