@@ -151,8 +151,9 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *
      *  * ``queryopen``: sent on open query tool.
      *  * ``queryclose``: sent on closequery tool.
-     *  * ``querystarts``: sent when the query button is pressed
-     *  * ``queryresults(features)``: sent when the result is received
+     *  * ``querystarts``: sent when the query button is pressed.
+     *  * ``nolayer``: sent when no layer to query.
+     *  * ``queryresults(features)``: sent when the result is received.
      */
     events: null,
 
@@ -235,6 +236,10 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``String`` Text for the shortened notice message (i18n).
      */
     suggestionText: "Suggestion",
+    /** api: config[noLayerSelectedMessage]
+     *  ``String`` No layer selected message (i18n).
+     */
+    noLayerSelectedMessage: "No layer selected",
 
     /** api: config[messageStyle]
      *  ``String`` CSS style used for the queryResult message.
@@ -495,6 +500,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             'queryopen': true,
             'queryclose': true,
             'querystarts': true,
+            'nolayer': true,
             'queryresults': true
         });
 
@@ -536,6 +542,10 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
             this.textItem.setText(this.getCount());
             this.messageItem.setText('');
+        }, this);
+
+        this.events.on('nolayer', function() {
+            Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
         }, this);
 
         this.events.on('queryclose', function() {

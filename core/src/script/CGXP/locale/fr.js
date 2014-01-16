@@ -63,7 +63,8 @@ GeoExt.Lang.add("fr", {
         maxFeaturesText: "Nombre maximum de résultats",
         resultText: "Résultat",
         resultsText: "Résultats",
-        suggestionText: "Suggestion"
+        suggestionText: "Suggestion",
+        noLayerSelectedMessage: "Pas de couche sélectionnée"
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
@@ -72,7 +73,8 @@ GeoExt.Lang.add("fr", {
         itemText: "élément",
         suggestionText: "Suggestion",
         noFeatureFound: "Aucun résultat",
-        loadingResults: "Chargement des résultats..."
+        loadingResults: "Chargement des résultats...",
+        noLayerSelectedMessage: "Pas de couche sélectionnée"
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -275,8 +277,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: "Interroger des objets sur la carte",
-        noLayerSelectedMessage: "Pas de couche sélectionnée"
+        actionTooltip: "Interroger des objets sur la carte"
     },
 
     "cgxp.plugins.GetFeature.prototype": {
