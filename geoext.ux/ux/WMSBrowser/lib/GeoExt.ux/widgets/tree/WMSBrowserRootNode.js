@@ -118,22 +118,23 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
     /** private: method[onWMSCapabilitiesLoad]
      *  Called on "load" event.  Fires any "success" or "failure" events/methods
      */
-    onWMSCapabilitiesLoad: function() {
+    onWMSCapabilitiesLoad: function(store) {
         if (this.hasChildNodes()) {
             // Expand WMS services
             Ext.each(this.childNodes, function(node) {
                 node.expanded = true;
             });
             this.wmsbrowser.fireEvent('getcapabilitiessuccess');
-        } else {
-            this.onWMSCapabilitiesStoreLoadException();
+        }
+        else if (store.loader.url != this.INIT_URL) {
+            this.onWMSCapabilitiesLoadException();
         }
     },
 
-    /** private: method[onWMSCapabilitiesStoreLoadException]
+    /** private: method[onWMSCapabilitiesLoadException]
      *  Called on load failure.  Fires the according event.
      */
-    onWMSCapabilitiesStoreLoadException: function() {
+    onWMSCapabilitiesLoadException: function() {
         this.wmsbrowser.fireEvent('getcapabilitiesfail');
     },
 
