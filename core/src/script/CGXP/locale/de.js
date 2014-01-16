@@ -59,11 +59,13 @@ GeoExt.Lang.add("de", {
         maxFeaturesText: "Maximale Anzahl Resultate erreicht",
         resultText: "Resultat",
         resultsText: "Resultate",
-        suggestionText: "Tipp"
+        suggestionText: "Tipp",
+        noLayerSelectedMessage: "Keine Ebene ausgewählt"
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
-        suggestionText: "Tipp"
+        suggestionText: "Tipp",
+        noLayerSelectedMessage: "Keine Ebene ausgewählt"
     },
 
     "cgxp.plugins.Print.prototype": {
@@ -271,8 +273,7 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: "Informationen in der Karte abfragen",
-        noLayerSelectedMessage: "Keine Ebene ausgewählt"
+        actionTooltip: "Informationen in der Karte abfragen"
     },
 
     "cgxp.plugins.GetFeature.prototype": {

@@ -187,7 +187,6 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /* i18n */
     tooltipText: "Query objects on the map",
     menuText: "Query the map",
-    noLayerSelectedMessage: "No layer selected",
     unqueriedLayerTitle: "Unable to query this layer",
     unqueriedLayerText: "This Layer only support single click query.",
     queryResultMessage: "Use the {key} key to perform a rectangular selection.",
@@ -351,8 +350,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 self.events.fireEvent('querystarts');
                 var layers = this.findLayers();
                 if (layers.length === 0) {
-                    Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
-                    this.events.triggerEvent("nogetfeatureinfo");
+                    self.events.fireEvent("nolayer");
                     // Reset the cursor.
                     OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
                     return;
