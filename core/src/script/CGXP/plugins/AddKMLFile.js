@@ -42,6 +42,56 @@ Ext.namespace("cgxp.plugins");
  *  present).  As most browsers do not permit Javascript to read local files,
  *  this requires an "echo" service to be running on the server that reflects a
  *  file back to the client.
+ *
+ *  Beware that the plugin may behave incorrectly (ie. not showing) if
+ *  nested in a panel not visible at application launch. For example, the
+ *  button may not show up if put in collapsed panel in a accordion.
+ *
+ *  The following configuration example is known to work well:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          portalConfig: {
+ *              ...
+ *              items: [
+ *                  ...
+ *                  {
+ *                      layout: "accordion",
+ *                      id: "left-panel",
+ *                      region: "west",
+ *                      width: 300,
+ *                      minWidth: 300,
+ *                      split: true,
+ *                      collapseMode: "mini",
+ *                      border: false,
+ *                      defaults: {width: 300},
+ *                      items: [{
+ *                          xtype: "panel",
+ *                          title: OpenLayers.i18n("layertree"),
+ *                          id: 'layerpanel',
+ *                          layout: "vbox",
+ *                          bbar: [],
+ *                          layoutConfig: {
+ *                              align: "stretch"
+ *                          }
+ *                      }]
+ *                  }
+ *                  ...
+ *              ]
+ *          },
+ *          tools: [
+ *              ...
+ *              {
+ *                   ptype: "cgxp_addkmlfile",
+ *                   echoUrl: "http://path/to/echo/service",
+ *                   actionTarget: "layerpanel.bbar"
+ *              }
+ *              ...
+ *          ]
+ *      });
+ *
  */
 
 /*
