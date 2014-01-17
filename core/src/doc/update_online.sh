@@ -35,7 +35,7 @@ if [[ ! -d ${BUILDBASEDIR}/html ]]; then
     mkdir -p ${BUILDBASEDIR}/html
 fi
 
-for VERSION in master 1.3
+for VERSION in master 1.3 1.4
 do
 
     # BUILDDIR is where the HTML files are generated
