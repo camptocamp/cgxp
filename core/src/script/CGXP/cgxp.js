@@ -19,3 +19,11 @@ Ext.namespace("cgxp");
 
 // WFS namespace, depends of the backend used, default is for Mapserver
 cgxp.WFS_FEATURE_NS = "http://mapserver.gis.umn.edu/mapserver";
+
+/** api: config[includeLayerName]
+ *  ``Boolean``
+ *  False to don't include legend name, useful for QGIS server who
+ *  already incude it in the legend.
+ *  Default is true.
+ */
+cgxp.LEGEND_INCLUDE_LAYER_NAME = true;
