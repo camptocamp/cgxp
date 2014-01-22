@@ -7,6 +7,10 @@ div.x-panel a:hover {
 .x-map .x-toolbar {
     padding: 2px;
 }
+/* Make sure the layertree icons are displayed over layer labels. */
+.gx-tree-layer-actions {
+    position: relative;
+}
 
 /* gxp_zoomtoextent */
 .x-toolbar .gxp-icon-zoomtoextent, .x-menu .gxp-icon-zoomtoextent {
