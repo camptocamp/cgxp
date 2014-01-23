@@ -15,6 +15,14 @@ for Camptocamp Geoportal (`c2cgeoportal
 
 See the :ref:`build_doc` section to know how to build this doc.
 
+.. include:: lib/cgxp.rst
+
+.. toctree::
+    :hidden:
+
+    lib/cgxp
+
+
 .. module:: cgxp
     :synopsis: High-level components for mapping applications.
 

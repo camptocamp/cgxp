@@ -35,8 +35,8 @@ cgxp.WMSLegend = Ext.extend(GeoExt.WMSLegend, {
 
     /** api: config[updateDelay]
      *  ``Number``
-     *  Set to a positive number to defer legend updates. Defaults
-     *  is 0.
+     *  Set to a positive number to defer legend updates.
+     *  Defaults to 0.
      */
     updateDelay: 0,
 
@@ -50,13 +50,16 @@ cgxp.WMSLegend = Ext.extend(GeoExt.WMSLegend, {
      *  Initialized the WMS legend.
      */
     initComponent: function() {
+        if (!cgxp.LEGEND_INCLUDE_LAYER_NAME) {
+            this.cls = 'no-layer-name';
+        }
         if (this.updateDelay > 0) {
             this.update = this.deferredUpdate();
         }
         cgxp.WMSLegend.superclass.initComponent.call(this);
     },
 
-    /** private: deferredUpdate
+    /** private: method[deferredUpdate]
      *  Decorate the prototype's update function to defer calls
      *  to this.update.
      *  :return: ``Function``
@@ -125,7 +128,8 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
                 }
                 url = split[0] + "?" + Ext.urlEncode(params);
                 enc[0].classes.push({
-                    name: OpenLayers.i18n(params.LAYER),
+                    name: cgxp.LEGEND_INCLUDE_LAYER_NAME ?
+                        OpenLayers.i18n(params.LAYER) : '',
                     icons: [this.getAbsoluteUrl(url)]
                 });
             }

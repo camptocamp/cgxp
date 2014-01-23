@@ -603,3 +603,6 @@ div.x-panel .olControlZoom a:hover {
 .printpanel textarea {
     min-height: 50px;
 }
+.legend .no-layer-name label.x-tree-node {
+    display: none
+}
