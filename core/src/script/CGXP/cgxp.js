@@ -15,12 +15,20 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Not relay true, but works well for the docs.
+/** api: (define)
+ *  module = CGXP
+ *  class = Global
+ */
 Ext.namespace("cgxp");
 
-// WFS namespace, depends of the backend used, default is for Mapserver
+/** api: config[cgxp.WFS_FEATURE_NS]
+ *  ``String``
+ *  WFS namespace, depends of the backend used, default is for Mapserver.
+ */
 cgxp.WFS_FEATURE_NS = "http://mapserver.gis.umn.edu/mapserver";
 
-/** api: config[includeLayerName]
+/** api: config[cgxp.LEGEND_INCLUDE_LAYER_NAME]
  *  ``Boolean``
  *  False to don't include legend name, useful for QGIS server who
  *  already incude it in the legend.
