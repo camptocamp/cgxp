@@ -633,7 +633,15 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                         viewConfig: {
                             // we add an horizontal scroll bar in case
                             // there are too many attributes to display:
-                            forceFit: (columns.length < 9)
+                            forceFit: (columns.length < 9),
+                            templates: {
+                                // The cell template is overridden to enable selecting cell's content.
+                                cell: new Ext.Template(
+                                    '<td class="x-grid3-col x-grid3-cell x-grid3-td-{id} x-selectable {css}" style="{style}" tabIndex="0" {cellAttr}>',
+                                    '<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
+                                    '</td>'
+                                )
+                            }
                         },
                         colModel: new Ext.grid.ColumnModel({
                             defaults: {
