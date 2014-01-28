@@ -434,6 +434,14 @@ div.legend .x-form-item {
     font-size: 12px;
 }
 
+.x-selectable, .x-selectable * {
+    user-select: text;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+}
+
 /* cgxp featureswindow */
 .x-grid3-row-body table.detail th {
     font-weight: bold;
