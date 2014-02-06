@@ -50,6 +50,12 @@ Ext.namespace("cgxp.plugins");
  *              permalinkId: "permalink",
  *              enablePasswordChange: true,
  *              forcePasswordChange: true,
+ *              loginFormTopCell: {
+ *                  html: 'some content here',
+ *                  xtype: 'panel',
+ *                  unstyled: true,
+ *                  height: 50
+ *              }
  *          }]
  *          ...
  *      });
@@ -150,6 +156,18 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      *  Default: false
      */
     forcePasswordChange: false,
+
+    /** api: config[loginFormTopCell]
+     *  ``Ext.Component`` containing some HTML code to place above the form
+     *  of the login panel. Default is null.
+     */
+    loginFormTopCell: null,
+
+    /** api: config[loginFormBottomCell]
+     *  ``Ext.Component`` containing some HTML code to place below the form
+     *  of the login panel. Default is null.
+     */
+    loginFormBottomCell: null,
 
     /* i18n */
     authenticationFailureText: "Impossible to connect.",
@@ -362,24 +380,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        return new Ext.FormPanel({
-            labelWidth: 100,
-            width: 230,
-            unstyled: true,
-            url: this.loginURL,
-            defaultType: 'textfield',
-            defaults: {
-                enableKeyEvents: true,
-                listeners: {
-                    specialkey: function(field, el) {
-                        if (el.getKey() == Ext.EventObject.ENTER) {
-                            this.submitForm();
-                        }
-                    },
-                    scope: this
-                }
-            },
-            items:[{
+        var formItems = [
+            {
                 fieldLabel: this.usernameText,
                 name: 'login',
                 applyTo: 'login',
@@ -401,7 +403,33 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 ref: 'failureMsg',
                 html: this.authenticationFailureText,
                 hidden: true
-            }],
+            }
+        ];
+        if (this.loginFormTopCell) {
+            formItems.unshift(this.loginFormTopCell);
+        }
+        if (this.loginFormBottomCell) {
+            formItems.push(this.loginFormBottomCell);
+        }
+
+        return new Ext.FormPanel({
+            labelWidth: 100,
+            width: 230,
+            unstyled: true,
+            url: this.loginURL,
+            defaultType: 'textfield',
+            defaults: {
+                enableKeyEvents: true,
+                listeners: {
+                    specialkey: function(field, el) {
+                        if (el.getKey() == Ext.EventObject.ENTER) {
+                            this.submitForm();
+                        }
+                    },
+                    scope: this
+                }
+            },
+            items: formItems,
             buttons:[this.submitButton]
         });
     },
