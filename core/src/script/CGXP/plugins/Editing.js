@@ -665,8 +665,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             border: false,
             hideHeaders: true,
             viewConfig: {
-                forceFit: true,
-                scrollOffset: 2 // the grid will never have scrollbars
+                forceFit: true
             },
             modifyControlOptions: {
                 vertexRenderIntent: 'vertices',
