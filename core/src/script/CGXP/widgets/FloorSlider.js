@@ -169,7 +169,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
                 if (this.maxIsSky && floor === null) {
                     floor = this.maxValue;
                 }
-                this.slider.setValue(floor);
+                this.slider.setValue(parseInt(floor, 10));
             }
         }, this);
         if (this.mapPanel.params.floor === undefined) {
