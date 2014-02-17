@@ -155,6 +155,27 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
      */
     pointRecenterZoom: null,
 
+    /** api: config[paramsLink]
+     *  ``Map``
+     *  In the following example on all the layers we get the returned "floor"
+     *  to set as a "floor", and only for the "another_layer" layer we get the
+     *  WFS param "wfs_attribute" to set as a "map_param":
+     *
+     *  .. code-block:: javascript
+     *
+     *      {
+     *          "*": {
+     *              "floor": "floor"
+     *          },
+     *          "another_layer": {
+     *              "wfs_attribute": "map_param"
+     *          }
+     *      }
+     *
+     *  Optional.
+     */
+    paramsLink: {},
+
     /** private: property[filters]
      *  ``Object``
      *  List of search criteria.
@@ -320,7 +341,18 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             }
 
             var geometry = null, maxExtent = null;
-            for(var i=0, len=features.length; i<len; i++) {
+            var newParams = {};
+            function addParams(attributes, paramsLink) {
+                if (paramsLink) {
+                    for (wfsAttribute in paramsLink) {
+                        if (attributes[wfsAttribute]) {
+                            var mapParam = paramsLink[wfsAttribute];
+                            newParams[mapParam] = attributes[wfsAttribute];
+                        }
+                    }
+                }
+            }
+            for (var i = 0, len = features.length; i < len; i++) {
                 geometry = features[i].geometry;
                 if (geometry) {
                     if (maxExtent === null) {
@@ -334,7 +366,12 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 if (!features[i].type) {
                     features[i].type = layerName;
                 }
+
+                var attributes = features[i].attributes;
+                addParams(attributes, this.paramsLink['*']);
+                addParams(attributes, this.paramsLink[features[i].type]);
             }
+            this.target.mapPanel.setParams(newParams);
             if (maxExtent) {
                 this.target.mapPanel.map.zoomToExtent(maxExtent);
             }
