@@ -227,6 +227,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
         this.events.fireEvent('querystarts');
         protocol.read({
+            params: this.target.mapPanel.params,
             filter: this.createFilter(state),
             maxFeatures: this.maxFeatures,
             callback: function(response) {
