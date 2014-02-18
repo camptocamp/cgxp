@@ -97,7 +97,8 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[stateId]
      *  ``String``
-     * Prefix of the permalink parameters. Default is "wfs". (Optional)
+     * Prefix of the permalink parameters. Default is "wfs".
+     * Optional.
      */
     stateId: 'wfs',
 
@@ -105,7 +106,8 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
      *  ``Array``
      *  The queryable type on the internal server. Can be obtained
      *  from any ``cgxp.plugins.WFSGetFeature`` tool configured in
-     *  the viewer. See the ``WFSGetFeatureId`` option. (Optional)
+     *  the viewer. See the ``WFSGetFeatureId`` option.
+     *  Optional.
      */
     WFSTypes: null,
 
@@ -119,34 +121,60 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[WFSURL]
      *  ``String``
-     *  The mapserver proxy URL. (Required)
+     *  The mapserver proxy URL.
+     *  Required.
      */
     WFSURL: null,
 
     /** api: config[maxFeatures]
      *  ``Number``
-     *  Maximum number of features returned. Default is 100. (Optional)
+     *  Maximum number of features returned.
+     *  Default is 100.
      */
     maxFeatures: 100,
 
     /** api: config[events]
      *  ``Object``
-     *  An Observer used to send events. (Required)
+     *  An Observer used to send events.
+     *  Required.
      */
     events: null,
 
     /** api: config[srsName]
      *  ``String``
-     *  Projection code. (Required)
+     *  Projection code.
+     *  Required.
      */
     srsName: null,
 
     /** api: config[pointRecenterZoom]
      *  ``Number``
      *  Zoom level to use when result is a single point feature. If
-     *  not set the map is not zoomed to a specific zoom level. (Optional)
+     *  not set the map is not zoomed to a specific zoom level.
+     *  Optional.
      */
     pointRecenterZoom: null,
+
+    /** api: config[paramsLink]
+     *  ``Map``
+     *  In the following example on all the layers we get the returned "floor"
+     *  to set as a "floor", and only for the "another_layer" layer we get the
+     *  WFS param "wfs_attribute" to set as a "map_param":
+     *
+     *  .. code-block:: javascript
+     *
+     *      {
+     *          "*": {
+     *              "floor": "floor"
+     *          },
+     *          "another_layer": {
+     *              "wfs_attribute": "map_param"
+     *          }
+     *      }
+     *
+     *  Optional.
+     */
+    paramsLink: {},
 
     /** private: property[filters]
      *  ``Object``
@@ -199,6 +227,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
         this.events.fireEvent('querystarts');
         protocol.read({
+            params: this.target.mapPanel.params,
             filter: this.createFilter(state),
             maxFeatures: this.maxFeatures,
             callback: function(response) {
@@ -313,7 +342,18 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             }
 
             var geometry = null, maxExtent = null;
-            for(var i=0, len=features.length; i<len; i++) {
+            var newParams = {};
+            function addParams(attributes, paramsLink) {
+                if (paramsLink) {
+                    for (wfsAttribute in paramsLink) {
+                        if (attributes[wfsAttribute]) {
+                            var mapParam = paramsLink[wfsAttribute];
+                            newParams[mapParam] = attributes[wfsAttribute];
+                        }
+                    }
+                }
+            }
+            for (var i = 0, len = features.length; i < len; i++) {
                 geometry = features[i].geometry;
                 if (geometry) {
                     if (maxExtent === null) {
@@ -327,7 +367,12 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 if (!features[i].type) {
                     features[i].type = layerName;
                 }
+
+                var attributes = features[i].attributes;
+                addParams(attributes, this.paramsLink['*']);
+                addParams(attributes, this.paramsLink[features[i].type]);
             }
+            this.target.mapPanel.setParams(newParams);
             if (maxExtent) {
                 this.target.mapPanel.map.zoomToExtent(maxExtent);
             }
