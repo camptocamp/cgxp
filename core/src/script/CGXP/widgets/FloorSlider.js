@@ -69,6 +69,12 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      */
     anchorOffsets: [45, 10],
 
+    /** api: config[initialFloor]
+     *  ``Number``
+     *  The initial floor, default to 0.
+     */
+    initialFloor: 0,
+
     /** api: config[skyText]
      *  ``String``
      *  L10n text for the sky, only used if ``maxIsSky`` is ``true``.
@@ -158,19 +164,16 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             this.mapPanel.setParams({ 'floor': floor })
         }, this);
         this.mapPanel.on('paramschange', function(params) {
-            if (params.floor) {
-                floor = params['floor'];
+            if (params.floor !== undefined) {
+                floor = params.floor;
                 if (this.maxIsSky && floor === null) {
                     floor = this.maxValue;
                 }
                 this.slider.setValue(floor);
             }
         }, this);
-        if (this.mapPanel.params.floor) {
-            this.slider.setValue(parseInt(this.mapPanel.params['floor']));
-        }
-        else {
-            this.mapPanel.setParams({ 'floor': null })
+        if (this.mapPanel.params.floor === undefined) {
+            this.mapPanel.setParams({ 'floor': this.initialFloor })
         }
     }
 });
