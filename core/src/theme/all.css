@@ -7,6 +7,10 @@ div.x-panel a:hover {
 .x-map .x-toolbar {
     padding: 2px;
 }
+/* Make sure the layertree icons are displayed over layer labels. */
+.gx-tree-layer-actions {
+    position: relative;
+}
 
 /* gxp_zoomtoextent */
 .x-toolbar .gxp-icon-zoomtoextent, .x-menu .gxp-icon-zoomtoextent {
@@ -428,6 +432,14 @@ div.legend .x-form-item {
 /* cgxp featuregrid */
 #featuregrid-container .x-panel-body {
     font-size: 12px;
+}
+
+.x-selectable, .x-selectable * {
+    user-select: text;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
 }
 
 /* cgxp featureswindow */
