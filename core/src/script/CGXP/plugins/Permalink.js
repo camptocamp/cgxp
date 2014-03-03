@@ -48,7 +48,95 @@ Ext.namespace("cgxp.plugins");
  *
  *    Provides an action that opens a window containing a permalink
  *    for the application.
+ *
+ *
+ *    Summary of the possible GET parameters of the link (See the corresponding
+ *    plugins/widgets to learn more).     
+ *
+ *
+ *    **Basics** 
+ *
+ *    ``map_x``: 
+ *     - Horizontal coordinate (depending on used SRID) as center of the map. 
+ *     - Example: &map_x=654321 
+ * 
+ *    ``map_y``: 
+ *     - Vertical coordinate (depending on used SRID) as center of the map. 
+ *     - Example: &map_y=123456 
+ * 
+ *    ``map_zoom``: 
+ *     - Zoom level of the map. 
+ *     - Example: &mapzoom=5 
+ *
+ *
+ *    **Based on widget cgxp.MapPanel**
+ * 
+ *    ``map_crosshair``: 
+ *     - Boolean used to display a crosshair that indicate the center of the map. 
+ *     - Example: &crosshair=true or &crosshair=1 
+ * 
+ *    ``map_tooltip``: 
+ *     - String displayed at the center of the map. 
+ *     - Example: &tooltip=sometext 
+ *
+ *
+ *    **Based on widget cgxp.MapOpacitySlider**
+ * 
+ *    ``baselayer_opacity``: 
+ *     - Opacity of the base layer on the ortho layer. Number between 0 and 100, 
+ *       where a 0 value is a totally transparent base layer. 
+ *     - Example: &baselayer_opacity=25 
+ * 
+ *    ``baselayer_ref``: 
+ *     - Name (reference) of the layer used as baselayer. 
+ *     - Example: &baselayer_ref=my_color_base_layer 
+ *
+ *
+ *    **Based on widget cgxp.RedLiningPanel** 
+ *    
+ *    ``rl_features``: 
+ *     - Predefined point, line or polygon drawn on the map. 
+ *     - Example 1: rl_features=Fp(...)p(...)
+ *     - Example 2: rl_feature=Fp(9hs9F9w8t!~name*no%2520title'
+ *       showMeasure*true~fillColor*%2523FF00FF'strokeColor*%2523FF00FF'pointRadius*6
+ *       'fontColor*%2523000000'fontSize*12px)  
+ *     - First example display two (undefined) features, the second display a 6px radius pinky
+ *       point, use an existing geoportal to generate your own example.
+ *
+ *
+ *    **Based on plugin cgxp.WFSPermalink** 
+ *
+ *    ``wfs_[param]``: 
+ *     - Perform a WFS request. 
+ *       Resulting features are highlighted and map is zoomed at the nearest map extent. 
+ *     - Example: &wfs_layer=myLayer&wfs_somefeature=1234... 
+ *
+ *
+ *    **Based on widget cgxp.LayerTree**
+ *
+ *    ``tree_groups``: 
+ *     - List of names of opened themes, separated by comma (%2c). 
+ *       The first theme will be on the top, the second will be at the second position, and so on. 
+ *     - Example: (%20 is space char.): &MyTopTheme%2cMy%20second%20theme) 
+ * 
+ *    ``tree_group_opacity_[my_group]``:
+ *     - Opacity of the given group (number between 0 an 1). 
+ *     - Example: &tree_group_opacity_myAlmostInvisibleGroup=0.1 
+ * 
+ *    ``tree_group_layers_[my_group]``: 
+ *     - Displayed layers in the given group, separated by comma (%2c). 
+ *     - Example: &tree_group_opacity_myGroup=a_Layer%2Can_another_layer 
+ *
+ *
+ *    **Notice**
+ * 
+ *    Some widget accept StateId as parameter. 
+ *    This will change the name of the GET attribute. For instance, 
+ *    if your MapOpacitySlider widget is initiated with a stateId "example", 
+ *    the name of the GET attribute will not longer be "baselayer_opacity" 
+ *    but will be "example_opacity". 
  */
+
 cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_permalink */
