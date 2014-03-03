@@ -97,8 +97,8 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[stateId]
      *  ``String``
-     * Prefix of the permalink parameters. Default is "wfs".
-     * Optional.
+     *  Prefix of the permalink parameters. Default is "wfs".
+     *  Optional.
      */
     stateId: 'wfs',
 
