@@ -44,7 +44,6 @@ Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: MapOpacitySlider(config)
- *
  */
 cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
 
