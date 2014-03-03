@@ -48,7 +48,34 @@ Ext.namespace("cgxp.plugins");
  *
  *    Provides an action that opens a window containing a permalink
  *    for the application.
+ *
+ *
+ *    Summary of the possible GET parameters:
+ *
+ *    ``map_x``: 
+ *     - Horizontal coordinate (depending on used SRID) as center of the map. 
+ *     - Example: &map_x=654321 
+ * 
+ *    ``map_y``: 
+ *     - Vertical coordinate (depending on used SRID) as center of the map. 
+ *     - Example: &map_y=123456 
+ * 
+ *    ``map_zoom``: 
+ *     - Zoom level of the map. 
+ *     - Example: &mapzoom=5 
+ *
+ *
+ *    List of the others components that use GET parameters (See the corresponding
+ *    component to learn more):
+ *     - `cgxp.plugins.LayerTree <../plugins/LayerTree.html>`_
+ *     - `cgxp.tree.LayerTree <../widgets/tree/LayerTree.html>`_
+ *     - `cgxp.MapOpacitySlider <../widgets/MapOpacitySlider.html>`_
+ *     - `cgxp.plugins.MapOpacitySlider <../plugins/MapOpacitySlider.html>`_
+ *     - `cgxp.MapPanel <../widgets/MapPanel.html>`_
+ *     - `cgxp.RedLiningPanel <../widgets/RedLiningPanel.html>`_
+ *     - `cgxp.plugins.WFSPermalink <../plugins/WFSPermalink.html>`_
  */
+
 cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_permalink */

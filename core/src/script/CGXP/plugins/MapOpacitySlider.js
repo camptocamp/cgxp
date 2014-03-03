@@ -44,7 +44,19 @@ Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: MapOpacitySlider(config)
+ *  
+ *  Control of the opacity of an ortho layer on some baselayers (in a drop-down list)
  *
+ *  Used state:
+ *
+ *  ``baselayer_opacity``: 
+ *   - Opacity of the base layer on the ortho layer. Number between 0 and 100, 
+ *     where a 0 value is a totally transparent base layer. 
+ *   - Example: &baselayer_opacity=25 
+ * 
+ *  ``baselayer_ref``: 
+ *   - Name (reference) of the layer used as baselayer. 
+ *   - Example: &baselayer_ref=my_color_base_layer
  */
 cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
 
