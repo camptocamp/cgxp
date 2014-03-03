@@ -72,7 +72,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_editing',
  *              layerTreeId: 'layertree',
  *              layersURL: "${request.route_url('layers_root')}",
- *              mapServerUrl: "${request.route_url('mapserverproxy', path='')}",
+ *              mapserverUrl: "${request.route_url('mapserverproxy', path='')}",
  *              snapLayers: {
  *                  "layer_A": {
  *                      tolerance: 15,
@@ -211,7 +211,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     pendingRequests: null,
 
-    /** api: config[mapserverURL]
+    /** api: config[mapserverUrl]
      *  ``String``
      *  The mapserver proxy URL, required when snapping is used. Typically set to
      *  ``"${request.route_url('mapserverproxy', path='')}"``
