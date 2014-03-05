@@ -26,21 +26,40 @@
 /** api: (define)
  *  module = cgxp
  *  class = MapPanel
+ */
+Ext.namespace("cgxp");
+
+/** api: constructor
+ *  .. class:: MapPanel(config)
  *
  *  A specific ``GeoExt.MapPanel`` that overrides the ``getState`` method
  *  to remove visibility- and opacity-related states from the global
  *  state.
  *
- *  Used state (prefixed with 'map_' in the Permalink):
- *   * x, y, zoom: map context.
- *   * param_<>: the parameter value.
- *   * crosshair: if true defined a point at the center of the screen with
- *                the style: crosshairStyle (read only).
- *   * tooltip: text that will be open in a popup at the center of the screen
- *              (readonly).
+ *  Used state:
+ *
+ *  ``map_x``: 
+ *   - Horizontal coordinate (depending on used SRID) as center of the map. 
+ *   - Example: ``&map_x=654321`` 
+ *
+ *  ``map_y``: 
+ *   - Vertical coordinate (depending on used SRID) as center of the map. 
+ *   - Example: ``&map_y=123456`` 
+ * 
+ *  ``map_zoom``: 
+ *   - Zoom level of the map. 
+ *   - Example: ``&map_zoom=5``
+ *
+ *  ``map_crosshair``: 
+ *   - if true defined a point at the center of the screen with
+ *     the style crosshairStyle (read only). 
+ *   - Example: ``&map_crosshair=true`` or ``&map_crosshair=1`` 
+ * 
+ *  ``map_tooltip``: 
+ *   - text that will be open in a popup at the center of the screen (readonly).
+ *   - Example: ``&map_tooltip=sometext``
+ *
  */
-Ext.namespace("cgxp");
-
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
     /** api: property[vectorLayer]

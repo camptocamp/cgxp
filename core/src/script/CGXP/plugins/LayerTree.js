@@ -130,7 +130,6 @@ Ext.namespace("cgxp.plugins");
 
 /** api: constructor
  *  .. class:: LayerTree(config)
- *
  */
 cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
