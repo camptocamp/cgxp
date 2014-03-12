@@ -63,6 +63,12 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
      */
     maxHeight: null,
 
+    /** api: config[width]
+     *  ``Number``
+     *  Width in pixels of the themeSelector panel (default to 560).
+     */
+    width: 560,
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -124,7 +130,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             }, tabconfig));
 
             themepanel = new Ext.TabPanel({
-                width: 560,
+                width: this.width,
                 activeTab: 0,
                 plain: true,
                 border: false,
@@ -139,7 +145,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
             });
         } else {
             themepanel = new Ext.DataView(Ext.apply({
-                width: 560,
+                width: this.width,
                 store: localStore
             }, tabconfig));
         }
