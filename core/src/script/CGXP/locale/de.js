@@ -268,14 +268,6 @@ GeoExt.Lang.add("de", {
         menuText: "Informationen abfragen"
     },
 
-    "cgxp.plugins.WFSGetFeature.prototype": {
-        actionTooltip: "Informationen in der Karte abfragen"
-    },
-
-    "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: "Informationen in der Karte abfragen"
-    },
-
     "cgxp.plugins.GetFeature.prototype": {
         tooltipText: "Informationen in der Karte abfragen",
         menuText: "Abfragen der Karte",

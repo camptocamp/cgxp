@@ -101,10 +101,8 @@
         "../../../../openlayers.addins/SwitchableWMTS/lib/OpenLayers/Layer/SwitchableWMTS.js",
         "plugins/ThemeSelector.js",
         "plugins/ThemeFinder.js",
-        "plugins/WFSGetFeature.js",
         "plugins/WFSPermalink.js",
         "plugins/WMSBrowser.js",
-        "plugins/WMSGetFeatureInfo.js",
         "plugins/Zoom.js",
         "plugins/ToolActivateMgr.js",
 

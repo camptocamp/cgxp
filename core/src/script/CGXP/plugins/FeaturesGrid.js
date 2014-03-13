@@ -75,8 +75,7 @@ Ext.namespace("cgxp.plugins");
  *      feature per row).
  *
  *      This plugin is used to display results from query plugins such as
- *      :class:`cgxp.plugins.WMSGetFeatureInfo`, and
- *      :class:`cgxp.plugins.QueryBuilder`.
+ *      :class:`cgxp.plugins.GetFeature` and :class:`cgxp.plugins.QueryBuilder`.
  *
  *      For the queryable Base layer the ``identifierAttribute`` can be
  *      provide by the ``queryLayers`` option in a layer config:
