@@ -272,14 +272,6 @@ GeoExt.Lang.add("fr", {
         menuText: "Interroger la carte"
     },
 
-    "cgxp.plugins.WFSGetFeature.prototype": {
-        actionTooltip: "Interroger des objets sur la carte"
-    },
-
-    "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: "Interroger des objets sur la carte"
-    },
-
     "cgxp.plugins.GetFeature.prototype": {
         tooltipText: "Interroger des objets sur la carte",
         menuText: "Interroger la carte",

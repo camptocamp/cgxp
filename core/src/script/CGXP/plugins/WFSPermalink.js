@@ -49,7 +49,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: "cgxp_wfspermalink",
  *              WFSURL: "${request.route_url('mapserverproxy', path='')}",
- *              WFSGetFeatureId: "wfsgetfeature",
+ *              WFSGetFeatureId: "getfeature",
  *              maxFeatures: 10,
  *              pointRecenterZoom: 13,
  *              srsName: 'EPSG:21781',
@@ -105,7 +105,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
     /** api: config[WFSTypes]
      *  ``Array``
      *  The queryable type on the internal server. Can be obtained
-     *  from any ``cgxp.plugins.WFSGetFeature`` tool configured in
+     *  from any ``cgxp.plugins.GetFeature`` tool configured in
      *  the viewer. See the ``WFSGetFeatureId`` option.
      *  Optional.
      */
@@ -113,7 +113,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[WFSGetFeatureId]
      *  ``String``
-     *  The id of a ``cgxp.plugins.WFSGetFeature`` tool used in
+     *  The id of a ``cgxp.plugins.GetFeature`` tool used in
      *  the viewer. (Optional) One of ``WFSTypes`` and
      *  ``WFSGetFeatureId`` should be provided.
      */
