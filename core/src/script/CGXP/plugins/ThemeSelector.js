@@ -129,7 +129,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 store: externalStore
             }, tabconfig));
 
-            themepanel = new Ext.TabPanel({
+            themepanel = new Ext.TabPanel(Ext.apply({
                 width: 560,
                 activeTab: 0,
                 plain: true,
@@ -142,15 +142,14 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                         cmp.ownerCt.doLayout();
                     }
                 }
-            });
+            }, this.panelOptions));
         } else {
+            Ext.apply(tabconfig,  this.panelOptions);
             themepanel = new Ext.DataView(Ext.apply({
                 width: 560,
                 store: localStore
             }, tabconfig));
         }
-
-        Ext.apply(themepanel, this.panelOptions);
 
         config = Ext.apply({
             xtype: "button",
