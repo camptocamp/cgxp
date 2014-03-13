@@ -63,6 +63,12 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
      */
     maxHeight: null,
 
+    /** api: config[panelOptions]
+    * ``Object``
+    * Additional options given to the theme selector panel constructor.
+    */
+    panelOptions: {},
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -123,7 +129,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 store: externalStore
             }, tabconfig));
 
-            themepanel = new Ext.TabPanel({
+            themepanel = new Ext.TabPanel(Ext.apply({
                 width: 560,
                 activeTab: 0,
                 plain: true,
@@ -136,8 +142,9 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                         cmp.ownerCt.doLayout();
                     }
                 }
-            });
+            }, this.panelOptions));
         } else {
+            Ext.apply(tabconfig,  this.panelOptions);
             themepanel = new Ext.DataView(Ext.apply({
                 width: 560,
                 store: localStore
