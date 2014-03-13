@@ -63,6 +63,12 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
      */
     maxHeight: null,
 
+    /** api: config[panelOptions]
+    * ``Object``
+    * Additional options given to the theme selector panel constructor.
+    */
+    panelOptions: {},
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -143,6 +149,8 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
                 store: localStore
             }, tabconfig));
         }
+
+        Ext.apply(themepanel, this.panelOptions);
 
         config = Ext.apply({
             xtype: "button",
