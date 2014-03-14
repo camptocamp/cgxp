@@ -60,7 +60,9 @@ GeoExt.Lang.add("de", {
         resultText: "Resultat",
         resultsText: "Resultate",
         suggestionText: "Tipp",
-        noLayerSelectedMessage: "Keine Ebene ausgewählt"
+        noLayerSelectedMessage: "Keine Ebene ausgewählt",
+        totalNbOfFeaturesText: "Total Anzahl Resultate: ",
+        countingText: "(lädt...)"
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {

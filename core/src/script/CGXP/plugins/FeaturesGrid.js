@@ -54,15 +54,19 @@ Ext.namespace("cgxp.plugins");
  *              ptype: "cgxp_featuresgrid",
  *              id: "featuresGrid",
  *              csvURL: "${request.route_url('csvecho')}",
- *              maxFeatures: 200,
  *              outputTarget: "featuresgrid-container",
  *              themes: THEMES,
  *              events: EVENTS
  *          }, {
- *              ptype: "cgxp_wmsgetfeatureinfo",
+ *              ptype: "cgxp_getfeature",
  *              actionTarget: "center.tbar",
  *              toggleGroup: "maptools",
- *              events: EVENTS
+ *              events: EVENTS,
+ *              themes: THEMES,
+ *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              WFSTypes: ${WFSTypes | n},
+ *              externalWFSTypes: ${externalWFSTypes | n},
+ *              enableWMTSLayers: true
  *          }]
  *          ...
  *      });
@@ -154,6 +158,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  * ``querystarts``: sent when the query button is pressed.
      *  * ``nolayer``: sent when no layer to query.
      *  * ``queryresults(features)``: sent when the result is received.
+     *  * ``queryinfos``: sent when additional infos about the query are available.
      */
     events: null,
 
@@ -178,15 +183,24 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     autoSelectFirst: true,
 
-    /** private: private[dummyForm]
+    /** private: attribute[dummyForm]
      *  ``Object`` Fake form used for csv export.
      */
     dummyForm: null,
 
     /** api: config[pointRecenterZoom]
-     * ``Number`` Zoom level to use when recentering on point items (optional).
+     *  ``Integer`` Zoom level to use when recentering on point items (optional).
      */
     pointRecenterZoom: null,
+
+    /** api: config[maxFeatures]
+     *  ``Integer`` Maximum total number of features listed in all grids.
+     *  Default is 200. If this plugin is combined to plugins that provide a
+     *  ``maxFeatures`` parameter, such as ``cgxp.plugins.QueryBuilder`` or
+     *  ``cgxp.plugins.GetFeature``, this value will be superseded by the
+     *  value of the provided ``maxFeatures`` parameter.
+     */
+    maxFeatures: 200,
 
     /** api: config[clearAllText]
      *  ``String`` Text for the "clear all results" button (i18n).
@@ -240,6 +254,16 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``String`` No layer selected message (i18n).
      */
     noLayerSelectedMessage: "No layer selected",
+    /** api: config[totalNbOfFeaturesText]
+     *  ``String`` Text indicating the total number of features matching the
+     *  query (i18n).
+     */ 
+    totalNbOfFeaturesText: "Total number of features: ",
+    /** api: config[countingText]
+     *  ``String`` Text displayed until the total number of features is
+     *  computed (i18n).
+     */
+    countingText: "(counting...)",
 
     /** api: config[messageStyle]
      *  ``String`` CSS style used for the queryResult message.
@@ -269,8 +293,13 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     csvEncoding: 'UTF-8',
 
-    /** private: property[selectAll]
+    /** private: attribute[selectAll]
      */
+
+    /** private: attribute[numberOfFeatures]
+     *  ``Integer`` Counter of features.
+     */
+    numberOfFeatures: 0,
 
     /** private: method[init]
      */
@@ -501,7 +530,8 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             'queryclose': true,
             'querystarts': true,
             'nolayer': true,
-            'queryresults': true
+            'queryresults': true,
+            'queryinfos': true
         });
 
         // a ResultsPanel object has its own vector layer, which
@@ -519,6 +549,9 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             }
             this.currentGrid = null;
             this.vectorLayer.destroyFeatures();
+
+            // reset counter when new query is triggered
+            this.numberOfFeatures = 0;
 
             /* this is important, if the grid are not cleared and created a new,
                the event viewready is not triggered and we fall on an ext bug
@@ -553,9 +586,21 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 this.control.deactivate();
             }
         }, this);
+        
+        this.events.on('queryinfos', function(infos) {
+            if ('numberOfFeatures' in infos) {
+                this.numberOfFeatures += infos.numberOfFeatures;
+                this.setMessage(
+                    this.totalNbOfFeaturesText + this.numberOfFeatures
+                );
+            }
+        }, this);
 
         this.events.on('queryresults', function(queryResult, selectAll) {
             features = queryResult.features;
+            if ('maxFeatures' in queryResult) {
+                this.maxFeatures = queryResult.maxFeatures;
+            }
             this.selectAll = selectAll;
 
             var previouslyNoFeature = this.vectorLayer.features.length === 0;
@@ -716,7 +761,10 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
             if (queryResult.message && this.vectorLayer.features.length > 0) {
                 this.setMessage(queryResult.message);
+            } else if (queryResult.features.length == this.maxFeatures) {
+                this.setMessage(this.totalNbOfFeaturesText + this.countingText);
             }
+
             // add extra tab for special empty layers, if set
             if (queryResult.unqueriedLayers && this.showUnqueriedLayers) {
                 for (var k=0, lenk=queryResult.unqueriedLayers.length; k<lenk; k++) {
