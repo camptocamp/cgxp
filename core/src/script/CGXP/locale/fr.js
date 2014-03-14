@@ -64,7 +64,9 @@ GeoExt.Lang.add("fr", {
         resultText: "Résultat",
         resultsText: "Résultats",
         suggestionText: "Suggestion",
-        noLayerSelectedMessage: "Pas de couche sélectionnée"
+        noLayerSelectedMessage: "Pas de couche sélectionnée",
+        totalNbOfFeaturesText: "Nombre total de résultats&nbsp;: ",
+        countingText: "(en cours de calcul...)"
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {

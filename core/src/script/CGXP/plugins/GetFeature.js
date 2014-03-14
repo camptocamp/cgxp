@@ -19,7 +19,7 @@
  * @requires plugins/Tool.js
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Control/WMSGetFeatureInfo.js
- * @include OpenLayers/Protocol/WFS/v1_0_0.js
+ * @include OpenLayers/Protocol/WFS/v1_1_0.js
  * @include OpenLayers/Format/GML.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
  * @include GeoExt/widgets/Action.js
@@ -184,12 +184,23 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     activateToggleGroup: "clickgroup",
 
+    /** api: config[maxFeatures]
+     *  ``Integer``
+     *  Limit of features returned by mapserver. Default is 200.
+     */
+    maxFeatures: 200,
+
     /* i18n */
     tooltipText: "Query objects on the map",
     menuText: "Query the map",
     unqueriedLayerTitle: "Unable to query this layer",
     unqueriedLayerText: "This Layer only support single click query.",
     queryResultMessage: "Use the {key} key to perform a rectangular selection.",
+
+    /** private: attribute[filter]
+     *  ``OpenLayers.Filter``
+     */
+    filter: null,
 
     /** private: method[activate]
      */
@@ -306,7 +317,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         // when we have no sub-layers selected
         this.clickWMSControl = new OpenLayers.Control.WMSGetFeatureInfo({
             infoFormat: "application/vnd.ogc.gml",
-            maxFeatures: this.maxFeatures || 100,
+            maxFeatures: this.maxFeatures,
             queryVisible: true,
             drillDown: true,
             autoActivate: false,
@@ -456,6 +467,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 getfeatureinfo: function(e) {
                     this.events.fireEvent('queryresults', {
                         features: e.features,
+                        maxFeatures: self.maxFeatures,
                         message: self.getMessage()
                     });
                 },
@@ -492,13 +504,16 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var self = this;
         var protocol = new OpenLayers.Protocol.WFS({
             url: this.mapserverURL,
+            maxFeatures: this.maxFeatures,
             geometryName: this.geometryName,
             srsName: map.getProjection(),
+            version: "1.1.0",
             formatOptions: {
                 featureNS: cgxp.WFS_FEATURE_NS,
                 autoconfig: false
             },
             read: function(options) {
+                self.filter = 'filter' in options ? options.filter : null;
                 options.params = options.params || {};
                 Ext.apply(options.params, self.target.mapPanel.params);
                 OpenLayers.Protocol.WFS.v1.prototype.read.apply(this, arguments);
@@ -506,8 +521,10 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         });
         var externalProtocol = new OpenLayers.Protocol.WFS({
             url: this.mapserverURL,
+            maxFeatures: this.maxFeatures,
             geometryName: this.geometryName,
             srsName: map.getProjection(),
+            version: "1.1.0",
             formatOptions: {
                 featureNS: cgxp.WFS_FEATURE_NS,
                 autoconfig: false
@@ -523,8 +540,24 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var listeners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
-                    features: e.features
+                    features: e.features,
+                    maxFeatures: this.maxFeatures
                 });
+                if (e.features.length == this.maxFeatures) {
+                    e.object.protocol.read({
+                        filter: this.filter,
+                        readOptions: {output: "object"},
+                        resultType: "hits",
+                        maxFeatures: null,
+                        callback: function(response) {
+                            var infos = {
+                                numberOfFeatures: response.numberOfFeatures,
+                            };
+                            this.events.fireEvent("queryinfos", infos);
+                        },
+                        scope: this
+                    });
+                }
             },
             activate: function() {
                 this.events.fireEvent('queryopen');
