@@ -129,9 +129,9 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
     /** api: config[maxFeatures]
      *  ``Number``
      *  Maximum number of features returned.
-     *  Default is 100.
+     *  Default is 200.
      */
-    maxFeatures: 100,
+    maxFeatures: 200,
 
     /** api: config[events]
      *  ``Object``
@@ -176,13 +176,24 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
      */
     paramsLink: {},
 
-    /** private: property[filters]
+    /** private: attribute[filters]
      *  ``Object``
      *  List of search criteria.
      */
     filters: null,
 
-    /** private: property[layername]
+    /** private: attribute[filter]
+     *  ``OpenLayers.Filter``
+     *  Filter of WFS request sent to Mapserver.
+     */
+    filter: null,
+
+    /** private: attribute[protocol]
+     *  ``OpenLayers.Protocol.WFS``
+     */
+    protocol: null,
+
+    /** private: attribute[layername]
      *  ``String``
      *  Name of layer requested (type).
      */
@@ -217,7 +228,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
         var layerName = state.layer;
         delete state.layer;
 
-        var protocol = new OpenLayers.Protocol.WFS({
+        this.protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
             featureType: layerName,
             srsName: this.srsName,
@@ -226,9 +237,10 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
         });
 
         this.events.fireEvent('querystarts');
-        protocol.read({
+        this.filter = this.createFilter(state);
+        this.protocol.read({
             params: this.target.mapPanel.params,
-            filter: this.createFilter(state),
+            filter: this.filter,
             maxFeatures: this.maxFeatures,
             callback: function(response) {
                 this.handleResponse(response, layerName);
@@ -382,7 +394,29 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 this.target.mapPanel.map.zoomTo(this.pointRecenterZoom);
             }
 
-            this.events.fireEvent('queryresults', {'features': features}, true);
+            this.events.fireEvent('queryresults', {
+                features: features,
+                maxFeatures: this.maxFeatures
+            }, true);
+
+            if (features.length == this.maxFeatures) {
+                // if the max number of allowed features is hit,
+                // send an additional request to get the total number
+                // of features matching the filter.
+                this.protocol.read({
+                    filter: this.filter,
+                    readOptions: {output: "object"},
+                    resultType: "hits",
+                    maxFeatures: null,
+                    callback: function(response) {
+                        var infos = { 
+                            numberOfFeatures: response.numberOfFeatures,
+                        };  
+                        this.events.fireEvent("queryinfos", infos);
+                    },  
+                    scope: this
+                });
+            }
         }
     }
 });
