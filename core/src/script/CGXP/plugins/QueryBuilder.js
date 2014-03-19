@@ -312,7 +312,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                             maxFeatures: null,
                             callback: function(response) {
                                 var infos = {
-                                    numberOfFeatures: response.numberOfFeatures,
+                                    numberOfFeatures: response.numberOfFeatures
                                 };
                                 this.events.fireEvent("queryinfos", infos);
                             },
