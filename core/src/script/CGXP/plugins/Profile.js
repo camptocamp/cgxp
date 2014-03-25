@@ -196,7 +196,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     marker: null,
 
     /** private: property[firstShow]
-     *  ``Booolean``
+     *  ``Boolean``
      *  Tells whether the window has already been displayed.
      *  Useful to get it positionned top left.
      */
