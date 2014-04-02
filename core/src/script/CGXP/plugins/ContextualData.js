@@ -369,7 +369,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         };
 
         if (this.rasterLayers) {
-            params['layers'] = this.rasterLayers.join(',');
+            params.layers = this.rasterLayers.join(',');
         }
 
         Ext.Ajax.request({
