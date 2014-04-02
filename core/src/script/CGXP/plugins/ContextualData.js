@@ -167,6 +167,13 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      */
     actionTooltipText: "Show contextual information",
 
+    /** api: config[rasterLayers]
+     *  ``Array(String)``
+     *  Array of raster layers to query. If not set (default), all raster
+     *  layers defined in the c2cgeoportal ``config.yaml.in`` will be queried.
+     */
+    rasterLayers: null,
+
     /** api: config[mouseoverWindowConfig]
      *  ``Object``
      *  Allow to override the default values of the mouseover window
@@ -213,7 +220,8 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
                 tpl: this.tpls.rightclickTpl,
                 handleServerData: this.handleServerData,
                 streetViewLink: this.streetViewLink,
-                rightclickWindowConfig: this.rightclickWindowConfig
+                rightclickWindowConfig: this.rightclickWindowConfig,
+                rasterLayers: this.rasterLayers
             });
             this.target.mapPanel.map.addControl(control);
         }
@@ -355,15 +363,21 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
      */
     request: function(ev) {
 
+        var params = {
+            lon: this.lonLat.lon,
+            lat: this.lonLat.lat
+        };
+
+        if (this.rasterLayers) {
+            params.layers = this.rasterLayers.join(',');
+        }
+
         Ext.Ajax.request({
             url: this.serviceUrl,
             success: this.success.createDelegate(this, [ev.clientX, ev.clientY], true),
             failure: this.failure.createDelegate(this, [ev.clientX, ev.clientY], true),
             method: 'GET',
-            params: {
-                lon: this.lonLat.lon,
-                lat: this.lonLat.lat
-            },
+            params: params,
             scope: this
         });
     },
