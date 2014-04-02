@@ -466,7 +466,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             eventListeners: {
                 getfeatureinfo: function(e) {
                     this.events.fireEvent('queryresults', {
-                        features: e.features,
+                        features: this.filterFeatures(e.features),
                         maxFeatures: self.maxFeatures,
                         message: self.getMessage()
                     });
@@ -540,7 +540,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var listeners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
-                    features: e.features,
+                    features: this.filterFeatures(e.features)
                     maxFeatures: this.maxFeatures
                 });
                 if (e.features.length == this.maxFeatures) {
@@ -742,6 +742,57 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             externalLayers: externalLayers,
             unqueriedLayers: unqueriedLayers
         };
+    },
+
+    /** private: method[filterFeatures]
+     *
+     *  Filter features from layers with a featureFilter property
+     *
+     *  :returns: ``Array`` of features without filtered ones
+     */
+    filterFeatures: function(features) {
+        var i, ii, j, jj;
+        var layer, featureFilter, feature;
+
+        var map = this.target.mapPanel.map;
+
+        // Index featureFilters on query layer names
+        var featureFilters;
+        for (i=0, ii=map.layers.length; i<ii; i++) {
+            layer = map.layers[i];
+            featureFilter = layer.featureFilter;
+            if (featureFilter && featureFilter.evaluate) {
+                var queryLayers = layer.params.LAYERS;
+                if (!Ext.isArray(queryLayers)) {
+                    queryLayers = queryLayers.split(',');
+                }
+                for (j=0, jj=queryLayers.length; j<jj; j++) {
+                    if (!featureFilters) {
+                        featureFilters = {};
+                    }
+                    featureFilters[queryLayers[j]] = featureFilter;
+                }
+            }
+        }
+        if (!featureFilters) {
+            return features;
+        }
+
+        // Filter features
+        var filteredFeatures = [];
+        for (i=0, ii=features.length; i<ii; i++) {
+            feature = features[i];
+            featureFilter = featureFilters[feature.type];
+            if (featureFilter) {
+                if (featureFilter.evaluate(feature)) {
+                    filteredFeatures.push(feature);
+                }
+            }
+            else {
+                filteredFeatures.push(feature);
+            }
+        }
+        return filteredFeatures;
     },
 
     getMessage: function() {
