@@ -187,7 +187,7 @@ GeoExt.Lang.add("de", {
         directionsLabel: "Routenbeschreibung",
         loadingRouteLabel: "Ihre Route wird berechnet",
         noRouteFoundLabel: "Kein Routing möglich",
-        routeErrorTitle: "Fehler"
+        routeErrorTitle: "Ein Fehler ist aufgetreten bei der Berechnung der Route."
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
@@ -211,7 +211,7 @@ GeoExt.Lang.add("de", {
         streetviewLabelText: "StreetView Link",
         userValueErrorText: "Der Rückgabewert der handleServerData Methode " +
             "muss ein Objekt sein. Siehe Beispiel im API.",
-        userValueErrorTitleText: "Fehler"
+        userValueErrorTitleText: "Ein Fehler ist aufgetreten mit dem Kontextdaten-Tool."
     },
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
@@ -239,7 +239,7 @@ GeoExt.Lang.add("de", {
         waitMsgText: "Höhenprofil wird geladen...",
         xLabelText: "Abstand (m)",
         yLabelText: "Höhe (m)",
-        errorMsg: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        errorMsg: "Ein Fehler ist aufgetreten mit dem Profil-Tool. Bitte versuchen Sie es erneut.",
         exportCsvText: "Export als CSV",
         menuText: "Höhenprofil"
     },
@@ -261,7 +261,7 @@ GeoExt.Lang.add("de", {
         incompleteFormText: "Bitte alle erforderlichen Felder ausfüllen.",
         noResultText: "Es wurde kein Resultat gefunden.",
         queryButtonText: "Abfrage",
-        errorText: "Bitte alle erforderlichen Felder ausfüllen.",
+        errorText: "Ein Fehler ist aufgetreten mit dem Abfrage-Tool.",
         noGeomFieldError: "Es wurde kein Geometriefeld in dieser Ebene gefunden."
     },
 
