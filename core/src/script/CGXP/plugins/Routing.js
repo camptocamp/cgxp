@@ -172,7 +172,7 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
     directionsLabel: 'Directions',
     loadingRouteLabel: "Your route is being computed",
     noRouteFoundLabel: "No route possible",
-    routeErrorTitle: 'Error',
+    routeErrorTitle: "An error occurred with the routing tool.",
 
     // see also OpenLayers.Lang['en'] below this class
 

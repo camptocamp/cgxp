@@ -190,7 +190,7 @@ GeoExt.Lang.add("fr", {
         directionsLabel: "Directions",
         loadingRouteLabel: "Votre itinéraire est en cours de calcul",
         noRouteFoundLabel: "Pas d'itinéraire possible",
-        routeErrorTitle: 'Erreur'
+        routeErrorTitle: "Une erreur s'est produite avec l'outil de calcul d'itinéraire."
     },
 
     "cgxp.plugins.WMSBrowser.prototype": {
@@ -214,7 +214,7 @@ GeoExt.Lang.add("fr", {
         streetviewLabelText: "Lien StreetView",
         userValueErrorText: "La valeur retournée par la méthode handleServerData" +
             "methode doit être un objet. Voir l'exemple dans la documentation de l'API",
-        userValueErrorTitleText: "Erreur"
+        userValueErrorTitleText: "Une erreur est survenue avec l'outil de données contextuelles."
     },
 
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
@@ -242,7 +242,7 @@ GeoExt.Lang.add("fr", {
         waitMsgText: "Chargement du profil altimétrique...",
         xLabelText: "Distance (m)",
         yLabelText: "Altitude (m)",
-        errorMsg: "Une erreur s'est produite. Veuillez recommencer.",
+        errorMsg: "Une erreur s'est produite avec l'outil de profil. Veuillez recommencer.",
         exportCsvText: "Exporter en CSV",
         tooltipText: "Afficher le profil altimétrique",
         menuText: "Profil altimétrique"
@@ -265,7 +265,7 @@ GeoExt.Lang.add("fr", {
         incompleteFormText: "Formulaire incomplet.",
         noResultText: "Pas de résultat trouvé.",
         queryButtonText: "Effectuer la requête",
-        errorText: "Une erreur est survenue.",
+        errorText: "Une erreur est survenue avec le constructeur de requêtes.",
         noGeomFieldError: "Pas de champs géometrique trouvé."
     },
 

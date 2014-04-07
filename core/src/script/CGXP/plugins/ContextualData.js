@@ -287,7 +287,7 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
      *  ``String``
      *  Text for the error title for userValueErrorText (i18n).
      */
-    userValueErrorTitleText: 'Error',
+    userValueErrorTitleText: "An error occurred with the contextual data tool.",
 
     /** private: method[getContent]
      *  Process server response and generate the popup html content
