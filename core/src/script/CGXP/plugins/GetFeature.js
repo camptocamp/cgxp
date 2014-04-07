@@ -108,6 +108,10 @@ Ext.namespace("cgxp.plugins");
  *          maxScaleDenominator: 10000
  *      }]
  *      ...
+ * 
+ *  For layers that have a ``featureFilter`` property containing an
+ *  ``OpenLayers.Filter`` instance, it is applied on each feature
+ *  from server response, before triggering the ``queryresults`` event.
  */
 cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
