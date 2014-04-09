@@ -35,6 +35,10 @@
  * @include CGXP/widgets/slider/WMSTimeSliderTip.js
  */
 
+/** api: (define)
+ *  module = cgxp.tree
+ *  class = LayerTree
+ */
 Ext.namespace("cgxp.tree");
 
 // Delay `setVisibility(true)` to save unneeded getMap request
@@ -59,15 +63,26 @@ function delayedSetVisibilityTrue(visible) {
     }
 }
 
-/** api: (define)
- *  module = cgxp.tree
- *  class = LayerTree
+/** api: constructor
  *
- *  Used state (prefixed with 'tree_' in the Permalink):
- *   * groups: The first level layer groups.
- *   * group_layers_<group>: The visible layers of the first level layer group.
- *   * group_opacity_<group>: The opacity of the first level layer group.
- *   * layers: The layers to add (read only).
+ *  Used state :
+ *
+ *  ``tree_group_opacity_[my_group]``:
+ *   - Opacity of the given group (number between 0 an 1). 
+ *   - Example: ``&tree_group_opacity_myAlmostInvisibleGroup=0.1`` 
+ *
+ *  ``tree_groups``: 
+ *   - Open and display the given theme. Use commas (%2c) to specify more than one theme.
+ *     The first theme will be on the top, the second will be at the second position, and so on. 
+ *   - Example: (%20 is space char.): ``&tree_groups=MyTopTheme%2cMy%20second%20theme`` 
+ * 
+ *  ``tree_group_layers_[my_group]``: 
+ *   - Open and display the given group. Use commas (%2c) to specify more than one group.
+ *   - Example: ``&tree_group_opacity_myGroup=a_Layer%2can_another_layer``
+ *
+ *  ``tree_Layers``:
+ *   - Display the given layers. Use commas (%2c) to specify more than one layer.
+ *   - Example: ``&layers=a_layer%2can_another_layer``
  */
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 

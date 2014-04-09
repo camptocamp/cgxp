@@ -84,10 +84,10 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
     options: null,
 
     /** api: config[maxFeatures]
-     *  ``Int``
-     *  Limit of features returned by mapserver
+     *  ``Integer``
+     *  Limit of features returned by mapserver. Default is 200.
      */
-    maxFeatures: null,
+    maxFeatures: 200,
 
     /** api: config[mapserverproxyURL]
      *  ``String``
@@ -135,7 +135,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
 
     /* i18n */
     incompleteFormText: 'Incomplete form.',
-    errorText: 'Unexpected error.',
+    errorText: "An error occurred with the query builder.",
     noResultText: 'No result found',
     queryButtonText: 'Query',
     noGeomFieldError: 'No geometry field found.',
@@ -286,10 +286,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         this.panel.get(1).deactivateControls();
 
         this.protocol.read({
-            // don't work with actual version of mapserver, the proxy will limit to 200
-            // it is intended to be reactivated this once mapserver is fixed
-            // features to protect the browser.
-            // maxFeatures: this.maxFeatures || 100,
+            maxFeatures: this.maxFeatures,
             filter: filter,
             callback: function(response) {
                 btn.setIconClass(btn.initialConfig.iconCls);
@@ -299,9 +296,28 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 }
                 if (response.features && response.features.length) {
                     var fs = response, l = fs.features.length;
+                    fs.maxFeatures = this.maxFeatures;
                     // required by ResultsPanel:
                     while(l--) {
                         fs.features[l].type = this.protocol.featureType;
+                    }
+                    if (fs.features.length == this.maxFeatures) {
+                        // if the max number of allowed features is hit,
+                        // send an additional request to get the total number
+                        // of features matching the filter.
+                        this.protocol.read({
+                            filter: filter,
+                            readOptions: {output: "object"},
+                            resultType: "hits",
+                            maxFeatures: null,
+                            callback: function(response) {
+                                var infos = {
+                                    numberOfFeatures: response.numberOfFeatures
+                                };
+                                this.events.fireEvent("queryinfos", infos);
+                            },
+                            scope: this
+                        });
                     }
                     this.events.fireEvent("queryresults", fs);
                 } else {
@@ -453,7 +469,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 "TYPENAME": featureType,
                 "REQUEST": "DescribeFeatureType",
                 "SERVICE": "WFS",
-                "VERSION": "1.0.0"
+                "VERSION": "1.1.0"
             },
             listeners: {
                 "load": function() {

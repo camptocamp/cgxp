@@ -169,6 +169,21 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     loginFormBottomCell: null,
 
+    /** api: config[isIntranetAnonymous]
+     *  ``Boolean`` True when an anonymous user is detected as coming from the
+     *  intranet.
+     *
+     *  Default: false.
+     */
+    isIntranetAnonymous: false,
+
+    /** api: config[toolbarItems]
+     *  ``Array`` List of items shown in the toolbar for the login tool.
+     *  
+     *  Default: empty array.
+     */
+    toolbarItems: [],
+
     /* i18n */
     authenticationFailureText: "Impossible to connect.",
     loggedAsText: "Logged in as ${user}",
@@ -223,8 +238,21 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         this.loginWindow.render(Ext.getBody());
 
         if (this.username) {
+            // If available, add the username to the toolbar.
+            this.toolbarItems.push(
+                new Ext.Toolbar.TextItem({
+                    text: OpenLayers.String.format(this.loggedAsText,
+                        {user : this.username})
+                })
+            );
+        }
 
-            var simpleButtonConfig = Ext.apply({
+        if (this.username && !this.isIntranetAnonymous) {
+            // Add logout + account management buttons if user is actually
+            // logged in (not for anonymous users with a default intranet
+            // role).
+
+            var logoutButtonConfig = Ext.apply({
                 text: this.logoutText,
                 tooltip: this.actionButtonTooltip,
                 handler: function() {
@@ -252,7 +280,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                             },
                             menu : {
                                 items: [
-                                    simpleButtonConfig,
+                                    logoutButtonConfig,
                                     Ext.apply({
                                         text: this.changePasswordText,
                                         enableToggle: true,
@@ -272,27 +300,21 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                     }
                 } else {
                     if (!this.actionButton) {
-                        this.actionButton = new Ext.Button(simpleButtonConfig);
+                        this.actionButton = new Ext.Button(logoutButtonConfig);
                     }
                 }
                 return this.actionButton;
             }.createDelegate(this);
 
-            this.toolbarItems = [
-                new Ext.Toolbar.TextItem({
-                    text: OpenLayers.String.format(this.loggedAsText, 
-                        {user : this.username})
-                }),
-                getActionButton()
-            ];
+            this.toolbarItems.push(getActionButton());
         } else {
-            this.toolbarItems = new cgxp.tool.Button(Ext.apply({
+            this.toolbarItems.push(new cgxp.tool.Button(Ext.apply({
                 text: this.loginText,
                 tooltip: this.actionButtonTooltip,
                 enableToggle: true,
                 toggleGroup: this.toggleGroup,
                 window: this.loginWindow
-            }, this.actionConfig));
+            }, this.actionConfig)));
         }
 
         if (this.username && this.forcePasswordChange && !this.isPasswordChanged) {

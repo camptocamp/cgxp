@@ -46,9 +46,19 @@ Ext.namespace("cgxp.plugins");
 /** api: constructor
  *  .. class:: Permalink(config)
  *
- *    Provides an action that opens a window containing a permalink
- *    for the application.
+ *  Provides an action that opens a window containing a permalink
+ *  for the application.
+ *
+ *  List of components that use GET parameters (See the corresponding
+ *  component to learn more):
+ *
+ *   - `cgxp.tree.LayerTree <../widgets/tree/LayerTree.html>`_
+ *   - `cgxp.MapOpacitySlider <../widgets/MapOpacitySlider.html>`_
+ *   - `cgxp.MapPanel <../widgets/MapPanel.html>`_
+ *   - `cgxp.RedLiningPanel <../widgets/RedLiningPanel.html>`_
+ *   - `cgxp.plugins.WFSPermalink <../plugins/WFSPermalink.html>`_
  */
+
 cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_permalink */

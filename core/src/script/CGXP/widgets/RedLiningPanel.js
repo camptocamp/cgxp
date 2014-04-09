@@ -31,6 +31,14 @@ Ext.namespace("cgxp");
  *  .. class:: RedLiningPanel(config)
  *
  *  Add a state to store the geometry in URL
+ *
+ *  Used state :
+ * 
+ *  ``rl_features``: 
+ *   - Predefined point, line or polygon drawn on the map. 
+ *   - Example 1: ``&rl_features=Fp(...)p(...)``
+ *   - This example display two (undefined) features. Use an existing geoportal 
+ *     to generate your own example.
  */
 cgxp.RedLiningPanel = Ext.extend(
         GeoExt.ux.form.RedLiningPanel, {

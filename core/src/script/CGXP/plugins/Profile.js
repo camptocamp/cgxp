@@ -121,7 +121,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  The translated error message (i18n).
      */
-    errorMsg: "An error occured. Please try again.",
+    errorMsg: "An error occurred with the profile tool. Please try again.",
 
     /** api: config[style]
      *  ``Object``
@@ -196,7 +196,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     marker: null,
 
     /** private: property[firstShow]
-     *  ``Booolean``
+     *  ``Boolean``
      *  Tells whether the window has already been displayed.
      *  Useful to get it positionned top left.
      */
