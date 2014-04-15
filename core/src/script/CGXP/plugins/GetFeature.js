@@ -110,7 +110,13 @@ Ext.namespace("cgxp.plugins");
  *      ...
  * 
  *  For layers that have a ``featureFilter`` property containing an
- *  ``OpenLayers.Filter`` instance, it is applied on each feature
+ *  ``OpenLayers.Filter`` instance, exemple :
+ *  
+ *  .. code-block:: javascript
+ *  
+ *  layer.featureFilter = OpenLayers.Filter(...);
+ *  
+ *  That filter is applied on each feature
  *  from server response, before triggering the ``queryresults`` event.
  */
 cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
