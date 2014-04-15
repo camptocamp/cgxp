@@ -288,6 +288,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         this.protocol.read({
             maxFeatures: this.maxFeatures,
             filter: filter,
+            params: this.target.mapPanel.params,
             callback: function(response) {
                 btn.setIconClass(btn.initialConfig.iconCls);
                 if (!response.success()) {
@@ -298,7 +299,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     var fs = response, l = fs.features.length;
                     fs.maxFeatures = this.maxFeatures;
                     // required by ResultsPanel:
-                    while(l--) {
+                    while (l--) {
                         fs.features[l].type = this.protocol.featureType;
                     }
                     if (fs.features.length == this.maxFeatures) {
