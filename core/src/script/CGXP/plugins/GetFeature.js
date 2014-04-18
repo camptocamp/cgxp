@@ -108,6 +108,22 @@ Ext.namespace("cgxp.plugins");
  *          maxScaleDenominator: 10000
  *      }]
  *      ...
+ * 
+ *  If there are OpenLayers WMS layers including feature filters
+ *  (``featureFilter`` property on the layer), then these filters are evaluated
+ *  for each feature received in the WMS GetFeatureInfo
+ *  and WFS GetFeature responses.
+ *  Features that do not pass the filter are excluded from the features array
+ *  passed in the queryresults event.
+ *  
+ *  .. code-block:: javascript
+ *
+ *    var layer = ...; // an OpenLayers layer
+ *    var filter = ...; // an OpenLayers filter
+ *    layer.featureFilter = filter
+ *    
+ *    // This can be used in conjonction with the GetMap request SLD parameter
+ *    layer.mergeNewParams({ SLD: url }); // where the SLD file corresponds to the OpenLayers filter
  */
 cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
 
@@ -466,7 +482,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             eventListeners: {
                 getfeatureinfo: function(e) {
                     this.events.fireEvent('queryresults', {
-                        features: e.features,
+                        features: this.filterFeatures(e.features),
                         maxFeatures: self.maxFeatures,
                         message: self.getMessage()
                     });
@@ -540,7 +556,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var listeners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
-                    features: e.features,
+                    features: this.filterFeatures(e.features)
                     maxFeatures: this.maxFeatures
                 });
                 if (e.features.length == this.maxFeatures) {
@@ -742,6 +758,57 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             externalLayers: externalLayers,
             unqueriedLayers: unqueriedLayers
         };
+    },
+
+    /** private: method[filterFeatures]
+     *
+     *  Filter features from layers with a featureFilter property
+     *
+     *  :returns: ``Array`` of features without filtered ones
+     */
+    filterFeatures: function(features) {
+        var i, ii, j, jj;
+        var layer, featureFilter, feature;
+
+        var map = this.target.mapPanel.map;
+
+        // Index featureFilters on query layer names
+        var featureFilters;
+        for (i=0, ii=map.layers.length; i<ii; i++) {
+            layer = map.layers[i];
+            featureFilter = layer.featureFilter;
+            if (featureFilter && featureFilter.evaluate) {
+                var queryLayers = layer.params.LAYERS;
+                if (!Ext.isArray(queryLayers)) {
+                    queryLayers = queryLayers.split(',');
+                }
+                for (j=0, jj=queryLayers.length; j<jj; j++) {
+                    if (!featureFilters) {
+                        featureFilters = {};
+                    }
+                    featureFilters[queryLayers[j]] = featureFilter;
+                }
+            }
+        }
+        if (!featureFilters) {
+            return features;
+        }
+
+        // Filter features
+        var filteredFeatures = [];
+        for (i=0, ii=features.length; i<ii; i++) {
+            feature = features[i];
+            featureFilter = featureFilters[feature.type];
+            if (featureFilter) {
+                if (featureFilter.evaluate(feature)) {
+                    filteredFeatures.push(feature);
+                }
+            }
+            else {
+                filteredFeatures.push(feature);
+            }
+        }
+        return filteredFeatures;
     },
 
     getMessage: function() {
