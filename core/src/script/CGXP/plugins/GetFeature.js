@@ -556,7 +556,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         var listeners = {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
-                    features: this.filterFeatures(e.features)
+                    features: this.filterFeatures(e.features),
                     maxFeatures: this.maxFeatures
                 });
                 if (e.features.length == this.maxFeatures) {
