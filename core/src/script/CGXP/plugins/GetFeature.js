@@ -205,7 +205,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /** private: method[activate]
      */
     activate: function() {
-        if (!this.active) {
+        // Click control is automatically activated
+        // only if the tool has no action.
+        if (this.active === false && !this.actionTarget) {
             this.clickWMSControl.activate();
         }
         return cgxp.plugins.GetFeature.superclass.activate.call(this);
@@ -214,7 +216,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /** private: method[deactivate]
      */
     deactivate: function() {
-        if (this.active) {
+        if (this.active === true) {
             this.clickWMSControl.deactivate();
         }
         return cgxp.plugins.GetFeature.superclass.deactivate.call(this);
@@ -615,29 +617,37 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                 box: true,
                 click: false,
                 single: false,
-                eventListeners: listeners,
+                eventListeners: Ext.apply(listeners, {
+                    activate: function() {
+                        this.clickWMSControl.activate();
+                    },
+                    deactivate: function() {
+                        this.clickWMSControl.deactivate();
+                    }
+                }),
                 request: request
             });
             // don't convert pixel to box, let the WFS GetFeature to query
             this.toolWFSControl.click = true;
             map.addControl(this.toolWFSControl);
+        } else {
+            this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
+                target: this.target,
+                box: true,
+                click: false,
+                single: false,
+                handlerOptions: {
+                    box: {
+                        keyMask: Ext.isMac ? OpenLayers.Handler.MOD_META :
+                            OpenLayers.Handler.MOD_CTRL
+                    }
+                },
+                autoActivate: true,
+                eventListeners: listeners,
+                request: request
+            });
+            map.addControl(this.ctrlWFSControl);
         }
-        this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
-            target: this.target,
-            box: true,
-            click: false,
-            single: false,
-            handlerOptions: {
-                box: {
-                    keyMask: Ext.isMac ? OpenLayers.Handler.MOD_META :
-                        OpenLayers.Handler.MOD_CTRL
-                }
-            },
-            autoActivate: true,
-            eventListeners: listeners,
-            request: request
-        });
-        map.addControl(this.ctrlWFSControl);
     },
 
     /** private: method[getLayers]
