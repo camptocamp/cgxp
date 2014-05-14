@@ -267,7 +267,13 @@ div.baseLayersOpacitySlider .opacityToolbar {
     vertical-align: middle !important;
 }
 .gx-tree-node-loading {
-    background: transparent url(img/loading.gif) no-repeat 75% 2px;
+    background: transparent url(img/loading.gif) no-repeat;
+    float: right;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    margin-right: 6px;
 }
 .x-tree-node .x-slider-horz {
     margin-left: 18px;
