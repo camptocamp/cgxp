@@ -128,7 +128,7 @@ cgxp.plugins.FeaturesResult = Ext.extend(gxp.plugins.Tool, {
             var style = OpenLayers.StyleMap.prototype.
                 createSymbolizer.apply(this, arguments);
             var layerMD = self.layers[feature.type];
-            if (layerMD && layerMD.identifierAttribute) {
+            if (style.label === undefined && layerMD && layerMD.identifierAttribute) {
                 style.label = feature.attributes[layerMD.identifierAttribute];
             }
             return style;
