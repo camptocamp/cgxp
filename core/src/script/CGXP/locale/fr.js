@@ -95,7 +95,7 @@ GeoExt.Lang.add("fr", {
         exportpngbuttonText: "Exporter en PNG",
         waitingText: "Impression...",
         downloadText: "Télécharger",
-        readyText: "Votre PDF est prêt.",
+        readyText: "Votre document est prêt.",
         failureTitle: "Echec de l'impression",
         failureText: "L'impression a échoué. Merci de vérifier les paramètres."
     },
