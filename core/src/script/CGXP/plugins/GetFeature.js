@@ -402,7 +402,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             }, layer.mapserverParams)
                         };
                     }
-                    else {
+                    else if (layer.url.startsWith(self.mapserverURL)) {
                         // Create a fake WMS layer
                         layer = {
                             url: layer.url,
