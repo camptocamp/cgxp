@@ -33,13 +33,11 @@ Ext.extend(cgxp.tree.TreeNodeTriStateUI,
     renderElements : function(n, a, targetNode, bulkRender){
         Ext.tree.TreeNodeUI.prototype.renderElements.apply(this, arguments);
         //updating partial nodes
-        if (a.checked) {
-            n.bubble(function(n){
-                if (n.parentNode) {
-                    n.getUI().updateCheck(true);
-                }
-            });//pass in true -> inform, that this is loaded node!
-        }
+        n.bubble(function(n){
+            if (n.parentNode) {
+                n.getUI().updateCheck(true);
+            }
+        });//pass in true -> inform, that this is loaded node!
     },
 
     toggleCheck: function(value, partial, loaded){
