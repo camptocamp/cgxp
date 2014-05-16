@@ -50,6 +50,10 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
             "insert": this.onAppendNode,
             scope: this
         });
+        tree.on({
+            "rendernode": this.onRenderNode,
+            scope: this
+        });
     },
 
     /** private: method[onAppendNode]
@@ -93,8 +97,8 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
      */
     onLayerLoadstart: function(node) {
         if (++this.numLoadingLayers[node.id] > 0) {
-            if (node && node.ui && node.ui.elNode) {
-                Ext.get(node.ui.elNode).addClass('gx-tree-node-loading');
+            if (node.element) {
+                node.element.style.display = "block";
             }
         }
     },
@@ -106,9 +110,22 @@ cgxp.tree.TreeNodeLoading = Ext.extend(Ext.util.Observable, {
      */
     onLayerLoadend: function(node) {
         if (--this.numLoadingLayers[node.id] === 0) {
-            if (node && node.ui && node.ui.elNode) {
-                Ext.get(node.ui.elNode).removeClass('gx-tree-node-loading');
+            if (node.element) {
+                node.element.style.display = "none";
             }
+        }
+    },
+
+    /** private: method[onRenderNode]
+     * :param node: ``Ext.tree.TreeNode``
+     */
+    onRenderNode: function(node) {
+        var rendered = node.rendered;
+        if (!rendered) {
+            node.element = Ext.DomHelper.insertFirst(node.ui.elNode,
+                {"tag": "div", "class": 'gx-tree-node-loading'}
+            );
+            node.element.style.display = "none";
         }
     }
 });
