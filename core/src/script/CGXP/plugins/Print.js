@@ -226,7 +226,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     exportpngbuttonText: "Export in PNG",
     waitingText: "Printing...",
     downloadText: 'Download',
-    readyText: 'Your PDF is ready.',
+    readyText: 'Your document is ready.',
     failureTitle: "Printing Failure",
     failureText: "An error occured while printing. Please check the parameters.",
     layoutText: "Layout",

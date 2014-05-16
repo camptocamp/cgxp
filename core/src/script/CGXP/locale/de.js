@@ -84,9 +84,9 @@ GeoExt.Lang.add("de", {
         printbuttonText: "Drucken",
         printbuttonTooltip: "Drucken",
         exportpngbuttonText: "Export in PNG",
-        waitingText: "PDF Generierung...",
+        waitingText: "Dokument Generierung...",
         downloadText: 'Download',
-        readyText: "PDF ist bereit.",
+        readyText: "Dokument ist bereit.",
         failureTitle: "Fehler beim Drucken",
         failureText: "Es ist ein Fehler aufgetreten beim Drucken. Bitte prüfen Sie die Parameter."
     },
