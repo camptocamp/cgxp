@@ -4,6 +4,8 @@ var streetViewPanel;
 
 var viewport;
 
+var osm;
+
 var layer;
 
 Ext.onReady(function() {
@@ -20,10 +22,14 @@ Ext.onReady(function() {
                 20037508, 20037508.34)
     };
 
+    osm = new OpenLayers.Layer.OSM();
+
     layer = new OpenLayers.Layer.Google(
             "Google Street", {sphericalMercator: true});
 
     var map = new OpenLayers.Map(options);
+
+    map.addLayer(osm);
 
     var mouse = new OpenLayers.Control.MousePosition();
 
@@ -121,7 +127,6 @@ Ext.onReady(function() {
 
     mapPanel = Ext.getCmp("mappanel");
     streetViewPanel = Ext.getCmp("streetviewpanel");
-    layer.mapObject.addOverlay(new GStreetviewOverlay());
     streetViewPanel.add(streetViewPanelItem);
     streetViewPanel.doLayout();
     viewport.doLayout();

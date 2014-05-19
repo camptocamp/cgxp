@@ -21,6 +21,11 @@ Ext.namespace('GeoExt.ux');
  */
 GeoExt.ux.StreetViewClick = OpenLayers.Class(OpenLayers.Control, {
 
+    /** private: property[radius]
+     *  ``Number``  The radius to search for panorama around.
+     */
+    radius: 100,
+
     /** api: property[defaultHandlerOptions]
      *  Default options.
      */
@@ -50,9 +55,13 @@ GeoExt.ux.StreetViewClick = OpenLayers.Class(OpenLayers.Control, {
      */
     onClick: function(evt) {
         var lonlat = this.map.getLonLatFromViewPortPx(evt.xy);
-        lonlat.transform(this.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-        var clickedPosition = new GLatLng(lonlat.lat, lonlat.lon);
-        this.streetviewclient.getNearestPanorama(clickedPosition, this.panorama.callback.createDelegate(this));
+        lonlat.transform(
+            this.map.getProjectionObject(),
+            new OpenLayers.Projection("EPSG:4326"));
+        var clickedPosition = new google.maps.LatLng(lonlat.lat, lonlat.lon);
+        this.streetviewservice.getPanoramaByLocation(
+            clickedPosition, this.radius,
+            this.panorama.callback.createDelegate(this));
     },
 
     /** private: method[onDblclick]
