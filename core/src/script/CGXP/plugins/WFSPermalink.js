@@ -17,9 +17,9 @@
 
 /*
  * @requires plugins/Tool.js
+ * @include patches/gml.js
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Protocol/WFS/v1_1_0.js
- * @include OpenLayers/Format/GML.js
  * @include OpenLayers/Filter/Comparison.js
  * @include OpenLayers/Filter/Logical.js
  */

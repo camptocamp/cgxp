@@ -266,6 +266,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         });
         this.nodeLoadingPlugin = new cgxp.tree.TreeNodeLoading();
         this.plugins = [
+            this.nodeLoadingPlugin,
             this.actionsPlugin,
             new GeoExt.plugins.TreeNodeComponent(),
             new cgxp.tree.TreeNodeComponent({
@@ -274,8 +275,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             new cgxp.tree.TreeNodeComponent({
                 divCls: "legend-component",
                 configKey: "legend"
-            }),
-            this.nodeLoadingPlugin
+            })
         ];
         var layerNodeUI = Ext.extend(cgxp.tree.TreeNodeTriStateUI, new GeoExt.tree.TreeNodeUIEventMixin());
         this.loader = new Ext.tree.TreeLoader({

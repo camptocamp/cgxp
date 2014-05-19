@@ -127,6 +127,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
      *  on the map when hovering the row in the grid (optional).
+     *
+     *  Set `label` to `null` to hide labels.
+     *
+     *  Default to ``{ fillColor: 'red', strokeColor: 'red' }``.
      */
     highlightStyle: null,
 
@@ -203,6 +207,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
     openFeatures: 1,
 
     init: function(target) {
+        // Set default
         this.highlightStyle = OpenLayers.Util.applyDefaults(
             this.highlightStyle || {
                 fillColor: 'red',

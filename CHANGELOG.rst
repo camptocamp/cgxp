@@ -1,5 +1,12 @@
 This file includes migration steps for each release of CGXP.
 
+Version 1.4.4
+=============
+
+1. In the ``CGXP/plugins/ContextualData.js`` fix the typo from `wsg` to `wgs`,
+   used in the `tpls` attribute.
+
+
 Version 1.4
 ===========
 

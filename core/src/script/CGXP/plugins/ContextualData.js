@@ -86,7 +86,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *
      *      tpls: {
      *          allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +
-     *              "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
+     *              "WGS Coord. Label : {wgs_x} {wgs_y}<br />" +
      *              "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
      *              "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
      *              "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
@@ -132,7 +132,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *         actionTarget: "center.tbar",
      *         tpls: {
      *             allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +
-     *                     "Wsg Coord. Label : {wsg_x} {wsg_y}<br />" +
+     *                     "WGS Coord. Label : {wgs_x} {wgs_y}<br />" +
      *                     "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
      *                     "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
      *                     "Height (Surface-Terrain) : {elevation_dhm} [m]<br />" +
@@ -305,8 +305,8 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         var values = {
             'coord_x': coord_x,
             'coord_y': coord_y,
-            'wsg_x': Math.round(this.lonLat.lon * 100000) / 100000,
-            'wsg_y': Math.round(this.lonLat.lat * 100000) / 100000
+            'wgs_x': Math.round(this.lonLat.lon * 100000) / 100000,
+            'wgs_y': Math.round(this.lonLat.lat * 100000) / 100000
         };
 
         // Set streetView popup content
@@ -421,7 +421,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
      *  ``String`` Used to generate the Ext.Template for popup content
      */
     defaultTpl: "Swiss coordinates: {coord_x} {coord_y}<br />" +
-        "WGS 84 : {wsg_x} {wsg_y}<br />",
+        "WGS 84 : {wgs_x} {wgs_y}<br />",
 
     /** private: config[defaultTplElevation]
      *  ``String`` Used to generate the Ext.Template for popup content with
@@ -643,7 +643,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      */
     coordTpl: "<tr><td width=\"150\">Swiss coordinate</td>" +
         "<td>{coord_x} {coord_y}</td></tr>" +
-        "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+        "<tr><td>WGS 84</td><td>{wgx} {wgs_y}</td></tr>",
 
     /** private: config[elevationTpl]
      *  ``String`` Used to generate the base Ext.Template used for elevation in

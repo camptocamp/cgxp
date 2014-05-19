@@ -84,9 +84,9 @@ GeoExt.Lang.add("de", {
         printbuttonText: "Drucken",
         printbuttonTooltip: "Drucken",
         exportpngbuttonText: "Export in PNG",
-        waitingText: "PDF Generierung...",
+        waitingText: "Dokument Generierung...",
         downloadText: 'Download',
-        readyText: "PDF ist bereit.",
+        readyText: "Dokument ist bereit.",
         failureTitle: "Fehler beim Drucken",
         failureText: "Es ist ein Fehler aufgetreten beim Drucken. Bitte prüfen Sie die Parameter."
     },
@@ -217,7 +217,7 @@ GeoExt.Lang.add("de", {
     "cgxp.plugins.ContextualData.Tooltip.prototype": {
         popupTitleText: "Location",
         defaultTpl: "Schweizer Koordinaten: {coord_x} {coord_y}<br />" +
-            "WGS 84: {wsg_x} {wsg_y}<br />",
+            "WGS 84: {wgs_x} {wgs_y}<br />",
         defaultTplElevation: "Elevation (Terrain): {elevation_dtm} [m]<br />" +
             "Elevation (Surface): {elevation_dsm} [m]<br />" +
             "Height (Surface-Terrain): {elevation_dhm} [m]<br />"
@@ -227,7 +227,7 @@ GeoExt.Lang.add("de", {
         popupTitleText: "Location",
         coordTpl: "<tr><td width=\"150\">Schweizer Koordinaten</td>" +
             "<td>{coord_x} {coord_y}</td></tr>" +
-            "<tr><td>WGS 84</td><td>{wsg_x} {wsg_y}</td></tr>",
+            "<tr><td>WGS 84</td><td>{wgs_x} {wgs_y}</td></tr>",
         elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
             "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
             "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +

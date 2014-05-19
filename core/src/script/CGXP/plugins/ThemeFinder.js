@@ -141,6 +141,12 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
              * and add 0.5 if it's not case sensitive.
              */
             filter: function(queryText, iQueryText, nodes, level, theme) {
+                var cmp = function(node) {
+                    return node.data.name == this.name &&
+                        node.data.groupName == this.groupName &&
+                        Math.floor(node.data.level) == this.level;
+                };
+
                 level = level || 0;
                 Ext.each(nodes, function(node) {
                     if (level === 0 && plugin.ignoreThemes.indexOf(node.name) >= 0) {
@@ -165,8 +171,12 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                             isTheme && plugin.findTheme ||
                             isGroup && plugin.findGroup ||
                             isFolder && plugin.findFolder)) {
-                        if (node.name.search(queryText) >= 0 ||
-                                node.displayName.search(queryText) >= 0) {
+                        if ((node.name.search(queryText) >= 0 ||
+                                node.displayName.search(queryText) >= 0) &&
+                                store.findBy(cmp, {
+                                    'name': node.name,
+                                    'level': level,
+                                    'groupName': mainGroup ? mainGroup.displayName : ''}) == -1) {
                             store.add([new ThemeRecord({
                                 'name': node.name,
                                 'displayName': node.displayName,
@@ -179,8 +189,12 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
                         }
                         else {
                             // case insensitive search
-                            if (node.name.toLowerCase().search(iQueryText) >= 0 ||
-                                    node.displayName.toLowerCase().search(iQueryText) >= 0) {
+                            if ((node.name.toLowerCase().search(iQueryText) >= 0 ||
+                                    node.displayName.toLowerCase().search(iQueryText) >= 0) &&
+                                    store.findBy(cmp, {
+                                        'name': node.name,
+                                        'level': level,
+                                        'groupName': mainGroup ? mainGroup.displayName : ''}) == -1) {
                                 store.add([new ThemeRecord({
                                     'name': node.name,
                                     'displayName': node.displayName,

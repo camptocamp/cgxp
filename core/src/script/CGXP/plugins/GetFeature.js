@@ -17,10 +17,10 @@
 
 /*
  * @requires plugins/Tool.js
+ * @include patches/GML.js
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Control/WMSGetFeatureInfo.js
  * @include OpenLayers/Protocol/WFS/v1_1_0.js
- * @include OpenLayers/Format/GML.js
  * @include OpenLayers/Format/WMSGetFeatureInfo.js
  * @include GeoExt/widgets/Action.js
  * @include CGXP/plugins/ToolActivateMgr.js
@@ -418,7 +418,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                             }, layer.mapserverParams)
                         };
                     }
-                    else {
+                    else if (layer.url.startsWith(self.mapserverURL)) {
                         // Create a fake WMS layer
                         layer = {
                             url: layer.url,
