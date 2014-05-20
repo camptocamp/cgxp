@@ -17,7 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
- * @include patches/GML.js
+ * @include CGXP/patches/GML.js
  * @include Styler/widgets/FilterBuilder.js
  * @include GeoExt/data/AttributeStore.js
  * @include OpenLayers/Protocol/WFS/v1_1_0.js
