@@ -27,6 +27,7 @@
  * @include OpenLayers/Renderer/SVG.js
  * @include OpenLayers/Renderer/VML.js
  * @include OpenLayers/Control/TransformFeature.js
+ * @include CGXP/plugins/ToolActivateMgr.js
  */
 
 /** api: (define)
@@ -98,6 +99,19 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: ptype = cgxp_print */
     ptype: "cgxp_print",
+
+    /** api: config[activateToggleGroup]
+     *  ``String``
+     *  The name of the activate toggle group this tool is in.
+     *  Default is "clickgroup".
+     */
+    activateToggleGroup: "clickgroup",
+
+    /** private: config[autoActivate]
+     *  ``Boolean`` Set to false if the tool should be initialized without
+     *  activating it. Should be false.
+     */
+    autoActivate: false,
 
     /** api: config[legendPanelId]
      *  ``String``
@@ -237,6 +251,15 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     paramRenderer: {},
 
+    /** private: method[init]
+     */
+    init: function(target) {
+        cgxp.plugins.Print.superclass.init.call(this, target);
+        if (this.activateToggleGroup) {
+            cgxp.plugins.ToolActivateMgr.register(this);
+        }
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -319,6 +342,14 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 toggleGroup: this.toggleGroup,
                 window: printWin
             }, this.actionConfig));
+            button.addListener('toggle', function(btn, pressed) {
+                if (pressed) {
+                    this.activate();
+                }
+                else {
+                    this.deactivate();
+                }
+            }, this);
         }
 
         return cgxp.plugins.Print.superclass.addActions.apply(this, [button]);
