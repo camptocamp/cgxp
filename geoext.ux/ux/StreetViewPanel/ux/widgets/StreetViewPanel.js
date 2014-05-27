@@ -330,11 +330,11 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
         google.maps.event.addListener(this.panorama, "zoom_changed", function() {
             this.zoom = this.getZoom();
         });
-        google.maps.event.addListener(this.panorama, "initialized", function(gstreetviewlocation) {
-            if (!this.videoPlay) {
-                //console.log('listener initialized');
-                this.streetviewservice.getPanoramaById(gstreetviewlocation.panoId, this.callbackDrawTools.createDelegate(this));
-            }
+        google.maps.event.addListener(this.panorama, "position_changed", function() {
+            this.drawNavigationTool(this, this.getPosition());
+        });
+        google.maps.event.addListener(this.panorama, "links_changed", function() {
+            this.drawLinkTool(this, this.getPosition(), this.getLinks());
         });
 
         // Callback to manage panorama when used with getNearestPanorama
