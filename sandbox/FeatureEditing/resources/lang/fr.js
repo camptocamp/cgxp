@@ -1,7 +1,6 @@
 OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     'Attributes': 'Attributs',
     'Delete feature': 'Supprimer l’objet',
-    'Delete Feature': 'Supprimer l’objet',
     'Do you really want to delete this feature?': 'Voulez-vous vraiment supprimer cet objet&nbsp;?',
     'Delete': 'Supprimer',
     'Export KML': 'Exporter KML',
@@ -27,7 +26,6 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     'Create label': 'Créer étiquette',
     'Delete all features': 'Supprimer tous les objets',
     'DeleteAll': 'Tous supprimer',
-    'Delete All Features': 'Supprimer tous les objets',
     'Do you really want to delete all features?': 'Voulez-vous vraiment supprimer tous les objets&nbsp;?',
     'RedLining Panel': 'Outil de dessin',
     'Close': 'Fermer',
