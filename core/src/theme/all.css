@@ -75,16 +75,16 @@ div.x-panel a:hover {
 }
 
 /* cgxp_measure */
-.x-btn .cgxp-icon-measure-point, .x-menu-item .cgxp-icon-measure-point, .x-tree-node .cgxp-icon-measure-point {
+.x-btn .cgxp-icon-measure-point, .x-menu-list-item .x-menu-item .cgxp-icon-measure-point, .x-tree-node .cgxp-icon-measure-point {
     background-image: url('img/bullet_orange.png');
 }
-.x-btn .cgxp-icon-measure-length, .x-menu-item .cgxp-icon-measure-length, .x-tree-node .cgxp-icon-measure-length {
+.x-btn .cgxp-icon-measure-length, .x-menu-list-item .x-menu-item .cgxp-icon-measure-length, .x-tree-node .cgxp-icon-measure-length {
     background-image: url(img/ruler.png);
 }
-.x-btn .cgxp-icon-measure-area, .x-menu-item .cgxp-icon-measure-area, .x-tree-node .cgxp-icon-measure-area {
+.x-btn .cgxp-icon-measure-area, .x-menu-list-item .x-menu-item .cgxp-icon-measure-area, .x-tree-node .cgxp-icon-measure-area {
    background-image: url(img/ruler_square.png);
 }
-.x-btn .cgxp-icon-measure-azimuth, .x-menu-item .cgxp-icon-measure-azimuth, .x-tree-node .cgxp-icon-measure-azimuth {
+.x-btn .cgxp-icon-measure-azimuth, .x-menu-list-item .x-menu-item .cgxp-icon-measure-azimuth, .x-tree-node .cgxp-icon-measure-azimuth {
    background-image: url(img/ruler_triangle.png);
 }
 
