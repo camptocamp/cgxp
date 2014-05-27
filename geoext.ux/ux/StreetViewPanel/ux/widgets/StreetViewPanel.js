@@ -353,7 +353,6 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
             };
             if (status != google.maps.StreetViewStatus.OK) {
                 this.deleteFeatures();
-                //this.panorama.setVisible(false);
                 if (this.panorama.videoMode && this.panorama.videoPlay) {
                     this.panorama.videoReady = true;
                     this.panorama.videoPlay = false;
@@ -366,7 +365,6 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                 ));
             } else {
                 if (this.panorama.transitionYaw) {
-                    //this.panorama.followLink(this.panorama.transitionYaw);
                     this.panorama.transitionYaw = null;
                 } else {
                     var POV = {

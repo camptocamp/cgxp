@@ -6,8 +6,6 @@ var viewport;
 
 var osm;
 
-var layer;
-
 Ext.onReady(function() {
 
     var options;
@@ -23,9 +21,6 @@ Ext.onReady(function() {
     };
 
     osm = new OpenLayers.Layer.OSM();
-
-    layer = new OpenLayers.Layer.Google(
-            "Google Street", {sphericalMercator: true});
 
     var map = new OpenLayers.Map(options);
 
@@ -47,14 +42,12 @@ Ext.onReady(function() {
                 pressed: true,
                 handler: function() {
                     if (this.pressed) {
-                        layer.mapObject.addOverlay(new GStreetviewOverlay());
                         streetViewPanel.add(streetViewPanelItem);
                         streetViewPanel.setSize('50%', 0);
                         streetViewPanel.setVisible(true);
                         streetViewPanel.doLayout();
                         viewport.doLayout();
                     } else {
-                        layer.mapObject.clearOverlays();
                         streetViewPanel.remove('streetViewPanelItem');
                         streetViewPanel.setWidth(0);
                         streetViewPanel.setVisible(false);
@@ -78,7 +71,7 @@ Ext.onReady(function() {
 
     var positionPano = new OpenLayers.LonLat(739019.93169167, 5861792.5629019);
     positionPano.transform(map.projection, new OpenLayers.Projection("EPSG:4326"));
-    var featurePosition = new GLatLng(positionPano.lat, positionPano.lon);
+    var featurePosition = new google.maps.LatLng(positionPano.lat, positionPano.lon);
 
     var streetViewPanelItem = {
         xtype: 'gxux_streetviewpanel',
@@ -100,7 +93,6 @@ Ext.onReady(function() {
                 title: "Google Map",
                 xtype: "gx_mappanel",
                 map: map,
-                layers: [layer],
                 extent: extent,
                 split: true,
                 tbar: toolbar
