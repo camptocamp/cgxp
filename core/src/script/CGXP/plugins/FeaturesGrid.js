@@ -274,9 +274,20 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     showUnqueriedLayers: true,
 
+    /** api: config[defaultStyle]
+     *  ``Object``  A style properties object to be used to show all features
+     *  on the map (optional).
+     *
+     *  Defaults to ``{ fillColor: 'red', strokeColor: 'red' }``.
+     */
+    defaultStyle: null,
+
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
      *  on the map when clicking on the rows in the grid (optional).
+     *
+     *  Defaults to ``{ fillColor: 'red', strokeColor: 'red', fillOpacity: 0.6,
+     *  strokeOpacity: 1, strokeWidth: 2 }``.
      */
     highlightStyle: null,
 
@@ -303,9 +314,19 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** private: method[init]
      */
     init: function() {
+        this.defaultStyle = OpenLayers.Util.applyDefaults(
+            this.defaultStyle || {
+                fillColor: 'red',
+                strokeColor: 'red'
+            }, OpenLayers.Feature.Vector.style['default']
+        );
         this.highlightStyle = OpenLayers.Util.applyDefaults(
             this.highlightStyle || {
-                'strokeWidth': 4
+                fillColor: 'red',
+                strokeColor: 'red',
+                fillOpacity: 0.6,
+                strokeOpacity: 1,
+                strokeWidth: 2
             }, OpenLayers.Feature.Vector.style['default']
         );
         this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
@@ -490,8 +511,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``Ext.data.Record``
      */
     showFeature: function(record) {
-        record.getFeature().style = null;
-        this.vectorLayer.drawFeature(record.getFeature());
+        this.vectorLayer.drawFeature(record.getFeature(), 'select');
     },
 
     /** private: method[showFeatures]
@@ -505,8 +525,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``Ext.data.Record``
      */
     hideFeature: function(record) {
-        record.getFeature().style = {display: 'none'};
-        this.vectorLayer.eraseFeatures(record.getFeature());
+        this.vectorLayer.drawFeature(record.getFeature(), 'default');
     },
 
     /** private: method[hideFeatures]
@@ -537,6 +556,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         // is added to the map once for good
         this.createVectorLayer({
             styleMap: new OpenLayers.StyleMap({
+                'default': this.defaultStyle,
                 'select': this.highlightStyle
             })
         });
@@ -637,7 +657,6 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     feature.geometry = feature.bounds.toGeometry();
                 }
 
-                feature.style = {display: 'none'};
                 currentType[feature.type] = true;
 
                 if (!this.control) {

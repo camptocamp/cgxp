@@ -68,14 +68,20 @@ describe('plugins.FeaturesWindow', function() {
         });
     });
     describe('when closing the window', function() {
+        var events = new Ext.util.Observable();
         beforeEach(function() {
-            fw = new cgxp.plugins.FeaturesWindow({});
+            fw = new cgxp.plugins.FeaturesWindow({
+                events: events
+            });
             fw.layers = {};
+            mapPanel = new Ext.Panel({
+                map: new OpenLayers.Map()
+            });
+            mapPanel.render(document.body);
             fw.target = {
-                mapPanel: {
-                    body: document.body
-                }
+                mapPanel: mapPanel
             };
+            fw.viewerReady();
             fw.showWindow({
                 features: [
                     new OpenLayers.Feature.Vector(null, {

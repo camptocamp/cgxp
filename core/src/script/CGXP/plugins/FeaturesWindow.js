@@ -124,13 +124,24 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  the notification timeout ID
      */
 
+    /** api: config[defaultStyle]
+     *  ``Object``  A style properties object to be used to show all features
+     *  on the map (optional).
+     *
+     *  Set `label` to `null` to hide labels.
+     *
+     *  Defaults to ``{ fillColor: 'red', strokeColor: 'red' }``.
+     */
+    defaultStyle: null,
+
     /** api: config[highlightStyle]
      *  ``Object``  A style properties object to be used to show features
      *  on the map when hovering the row in the grid (optional).
      *
      *  Set `label` to `null` to hide labels.
      *
-     *  Default to ``{ fillColor: 'red', strokeColor: 'red' }``.
+     *  Defaults to ``{ fillColor: 'red', strokeColor: 'red', fillOpacity: 0.6,
+     *  strokeOpacity: 1, strokeWidth: 2 }``.
      */
     highlightStyle: null,
 
@@ -208,10 +219,19 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
     init: function(target) {
         // Set default
+        this.defaultStyle = OpenLayers.Util.applyDefaults(
+            this.defaultStyle || {
+                fillColor: 'red',
+                strokeColor: 'red'
+            }, OpenLayers.Feature.Vector.style['default']
+        );
         this.highlightStyle = OpenLayers.Util.applyDefaults(
             this.highlightStyle || {
                 fillColor: 'red',
-                strokeColor: 'red'
+                strokeColor: 'red',
+                fillOpacity: 0.6,
+                strokeOpacity: 1,
+                strokeWidth: 2
             }, OpenLayers.Feature.Vector.style['default']
         );
         cgxp.plugins.FeaturesWindow.superclass.init.apply(this, arguments);
@@ -225,7 +245,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         // is added to the map once for good
         this.createVectorLayer({
             styleMap: new OpenLayers.StyleMap({
-                'default': this.highlightStyle
+                'default': this.defaultStyle,
+                'highlight': this.highlightStyle
             })
         });
 
@@ -395,6 +416,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             return;
         }
 
+        this.vectorLayer.addFeatures(features);
+
         if (this.notificationTimeout) {
             window.clearTimeout(this.notificationTimeout);
             this.notificationTimeout = undefined;
@@ -442,6 +465,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
                 listeners: {
                     hide: function() {
                         this.store.removeAll();
+                        this.vectorLayer.removeAllFeatures();
                     },
                     scope: this
                 },
@@ -538,11 +562,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             listeners: {
                 rowmouseenter: function(grid, row) {
                     var feature = grid.getStore().getAt(row).getFeature();
-                    this.vectorLayer.addFeatures(feature);
+                    this.vectorLayer.drawFeature(feature, 'highlight');
                 },
                 rowmouseleave: function(grid, row) {
                     var feature = grid.getStore().getAt(row).getFeature();
-                    this.vectorLayer.removeFeatures(feature);
+                    this.vectorLayer.drawFeature(feature, 'default');
                 },
                 scope: this
             },
