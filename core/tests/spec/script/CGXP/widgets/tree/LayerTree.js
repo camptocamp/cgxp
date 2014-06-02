@@ -97,11 +97,11 @@ describe('cgxp.tree.LayerTree', function() {
 // click() don't works with phantomjs
 /*        it('defers legends creation', function() {
             var requestUpdateLegendsSpy = spyOn(
-                layerTree, 'requestUpdateLegends').andCallThrough();
+                layerTree, 'requestUpdateLegends').and.callThrough();
             var updateLegendsSpy = spyOn(
-                layerTree, 'updateLegends').andCallThrough();
+                layerTree, 'updateLegends').and.callThrough();
             var updateNodeLegendsSpy = spyOn(
-                layerTree, 'updateNodeLegends').andCallThrough();
+                layerTree, 'updateNodeLegends').and.callThrough();
             var countLegendGraphics = function() {
                 var images = Ext.select('img', layerTree.getRootNode());
                 var count = 0;
@@ -149,15 +149,15 @@ describe('cgxp.tree.LayerTree', function() {
 
         it('defers legends update', function() {
             var requestUpdateLegendsSpy = spyOn(
-                layerTree, 'requestUpdateLegends').andCallThrough();
+                layerTree, 'requestUpdateLegends').and.callThrough();
             var updateLegendsSpy = spyOn(layerTree, 'updateLegends');
 
             mapPanel.map.zoomIn();
-            expect(requestUpdateLegendsSpy.calls.length).toEqual(1);
+            expect(requestUpdateLegendsSpy.calls.count()).toEqual(1);
             expect(updateLegendsSpy).not.toHaveBeenCalled();
 
             clock.tick(1000);
-            expect(updateLegendsSpy.calls.length).toEqual(1);
+            expect(updateLegendsSpy.calls.count()).toEqual(1);
         });
     });
 });
