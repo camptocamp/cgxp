@@ -1,8 +1,13 @@
 beforeEach(function() {
-    var parent = this.getMatchersClass_();
-    this.addMatchers({
-        toBeInstanceOf: function(type) {
-            return this.actual instanceof type;
+    jasmine.addMatchers({
+        toBeInstanceOf: function(util, customEqualityTesters) {
+            return {
+                compare: function(actual, expected) {
+                    return {
+                        pass: actual instanceof expected
+                    };
+                }
+            };
         }
     });
 });

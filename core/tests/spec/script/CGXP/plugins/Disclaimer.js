@@ -84,7 +84,7 @@ describe('plugins.Disclaimer', function() {
                         return {'discl 1': true};
                     }
                 }];
-                spyOn(d, 'addDisclaimer').andCallThrough();
+                spyOn(d, 'addDisclaimer').and.callThrough();
             });
             it('stores the disclaimer internally', function() {
                 d.onAdd(null, records);
@@ -94,7 +94,7 @@ describe('plugins.Disclaimer', function() {
             it('calls addDisclaimer method', function() {
                 d.onAdd(null, records);
                 expect(d.addDisclaimer).toHaveBeenCalled();
-                expect(d.addDisclaimer.callCount).toEqual(1);
+                expect(d.addDisclaimer.calls.count()).toEqual(1);
             });
             describe('when a disclaimer number already exist', function() {
                 beforeEach(function() {
@@ -114,7 +114,7 @@ describe('plugins.Disclaimer', function() {
                 it('calls addDisclaimer method', function() {
                     d.onAdd(null, records);
                     expect(d.addDisclaimer).toHaveBeenCalled();
-                    expect(d.addDisclaimer.callCount).toEqual(1);
+                    expect(d.addDisclaimer.calls.count()).toEqual(1);
                 });
             });
             describe('when a disclaimer element already exist', function() {
@@ -156,7 +156,7 @@ describe('plugins.Disclaimer', function() {
                 it('calls addDisclaimer method twice', function() {
                     d.onAdd(null, records);
                     expect(d.addDisclaimer).toHaveBeenCalled();
-                    expect(d.addDisclaimer.callCount).toEqual(2);
+                    expect(d.addDisclaimer.calls.count()).toEqual(2);
                 });
             });
         });
@@ -184,7 +184,7 @@ describe('plugins.Disclaimer', function() {
                 it('calls removeDisclaimer', function() {
                     d.onRemove(null, record);
                     expect(d.removeDisclaimer).toHaveBeenCalled();
-                    expect(d.removeDisclaimer.callCount).toEqual(1);
+                    expect(d.removeDisclaimer.calls.count()).toEqual(1);
                 });
             });
             describe('when nb is > 1', function() {
@@ -227,7 +227,7 @@ describe('plugins.Disclaimer', function() {
                 it('calls removeDisclaimer only when nb==0', function() {
                     d.onRemove(null, record);
                     expect(d.removeDisclaimer).toHaveBeenCalled();
-                    expect(d.removeDisclaimer.callCount).toEqual(1);
+                    expect(d.removeDisclaimer.calls.count()).toEqual(1);
                 });
             });
         });

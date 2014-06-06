@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd core/src/doc
+source env/bin/activate
 mkdir _build/html
 jst jst.cfg
 exec 3>&1
@@ -14,5 +15,3 @@ then
   exit 1
 fi
 echo Documentation Success
-
-core/tests/phantom-jasmine/run_jasmine_test.coffee core/tests/SpecRunner.html
