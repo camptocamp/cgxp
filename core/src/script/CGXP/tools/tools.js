@@ -46,6 +46,7 @@ cgxp.tools.openWindow = function(content, title, width, height) {
         title: title,
         resizable: true,
         layout:'fit',
+        constrainHeader: true,
         modal: false,
         width: width+15,
         height: height,
