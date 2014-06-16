@@ -215,7 +215,6 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                     success: function(response) {
                         var obj = Ext.util.JSON.decode(response.responseText);
                         permalinkTextField.setValue(obj.short_url);
-                        permalinkTextField.focus();
                     }
                 });
             }, this);
