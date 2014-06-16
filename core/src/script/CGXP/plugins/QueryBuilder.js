@@ -287,7 +287,6 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         this.panel.get(1).deactivateControls();
 
         this.protocol.read({
-            maxFeatures: this.maxFeatures,
             filter: filter,
             params: this.target.mapPanel.params,
             callback: function(response) {

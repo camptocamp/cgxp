@@ -66,6 +66,11 @@ GeoExt.Lang.add("de", {
     },
 
     "cgxp.plugins.FeaturesWindow.prototype": {
+        windowTitleText: 'Resultate',
+        itemsText: "Objekte",
+        itemText: "Objekt",
+        noFeatureFound: "Kein Resultat",
+        loadingResults: "Laden der Resultate...",
         suggestionText: "Tipp",
         noLayerSelectedMessage: "Keine Ebene ausgewählt"
     },
@@ -158,12 +163,6 @@ GeoExt.Lang.add("de", {
         showhidelegendText: "Legende anzeigen/verstecken",
         themealreadyloadedText: "Dieses Thema ist schon geladen.",
         showIn3dText: "Ansicht in 3D"
-    },
-
-    "cgxp.plugins.FeaturesWindow.prototype": {
-        windowTitleText: 'Resultate',
-        itemsText: "elemente",
-        itemText: "element"
     },
 
     "cgxp.plugins.Routing.prototype": {

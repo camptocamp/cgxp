@@ -652,7 +652,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      *  Destroy all features from all layers.
      */
     deleteAllFeatures: function() {
-        Ext.MessageBox.confirm(OpenLayers.i18n('Delete All Features'), OpenLayers.i18n('Do you really want to delete all features ?'), function(btn) {
+        Ext.MessageBox.confirm(OpenLayers.i18n('Delete all features'), OpenLayers.i18n('Do you really want to delete all features?'), function(btn) {
             if (btn == 'yes') {
                 if (this.popup) {
                     this.popup.close();
