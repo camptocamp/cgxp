@@ -47,10 +47,8 @@ GeoExt.Lang.add("fr", {
         closeText: "Fermer",
         incompatibleWithIeText: "Attention&nbsp;: cette URL est trop longue pour Microsoft Internet Explorer%nbsp;!",
         menuText: 'Permalien',
-        shortText: "Envoyer",
-        fieldsetText: "Partager",
-        emailText: "E-mail",
-        emailSentTxt: "Le lien a été envoyé"
+        shortText: "URL courte",
+        emailText: "Courriel (optionnel)"
     },
 
     "cgxp.plugins.FeaturesGrid.prototype": {

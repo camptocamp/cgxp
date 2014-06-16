@@ -37,7 +37,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_permalink',
  *              actionTarget: 'center.tbar',
- *              shortenerCreateURL: "${request.route_url('shortener_create', path='')}"
+ *              shortenerCreateURL: "${request.route_url('shortener_create', path='')}" 
  *          }]
  *          ...
  *      });
@@ -86,6 +86,12 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
      *  The URL used to create the short URL.
      */
 
+    /** private: property[viewShort]
+     *  ``Boolean``
+     *  A short url is displayed
+     */
+    viewShort: false,
+
     /** private: property[emailField]
      *  ``Ext.form.TextField``
      *  The email text field
@@ -98,10 +104,8 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     closeText: "Close",
     incompatibleWithIeText: "Warning: this URL is too long for Microsoft Internet Explorer!",
     menuText: "Permalink",
-    shortText: "Send",
-    fieldsetText: "Share",
-    emailText: "E-mail",
-    emailSentTxt: "The link has been sent",
+    shortText: "Short URL",
+    emailText: "E-mail (optional)",
 
     /** private: method[getLink]
      */
@@ -147,7 +151,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             layout: 'form',
             renderTo: Ext.getBody(),
             width: 400,
-            labelWidth: 120,
+            labelWidth: 120, 
             closeAction: 'hide',
             plain: true,
             title: this.windowTitle,
@@ -161,64 +165,51 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             items: [
                 permalinkTextField,
                 warningLabel
-            ]
+            ],
+            buttons: [{
+                text: this.openlinkText,
+                handler: function() {
+                    window.open(permalinkTextField.getValue());
+                    permalinkWindow.hide();
+                }
+            }, {
+                text: this.closeText,
+                handler: function() {
+                    permalinkWindow.hide();
+                }
+            }]
         };
-        if (this.shortenerCreateURL && this.email) {
-            var successMessage = new Ext.Panel({
-                html: this.emailSentTxt,
-                collapsed: true,
-                layout: 'fit',
-                unstyled: true,
-                style: 'color:red'
-            });
-            this.emailField = new Ext.form.TextField({
-                fieldLabel: this.emailText
-            });
-            var button = new Ext.Button({
+        if (this.shortenerCreateURL) {
+            var shortButton = new Ext.Button({
                 text: this.shortText,
                 scope: this,
                 handler: function() {
+                    this.view_short = true;
+                    var params = {
+                        'url': this.getLink()
+                    };
+                    if (this.email && this.emailField.getValue() !== '') {
+                        params.email = this.emailField.getValue();
+                    }
                     Ext.Ajax.request({
                         url: this.shortenerCreateURL,
-                        params: {
-                            'url': permalinkTextField.getValue(),
-                            'email': this.emailField.getValue()
-                        },
-                        success: function() {
-                            successMessage.expand();
-                            successMessage.collapse.defer(2000, successMessage);
+                        params: params,
+                        success: function(response) {
+                            var obj = Ext.util.JSON.decode(response.responseText);
+                            permalinkTextField.setValue(obj.short_url);
                         }
                     });
                 }
             });
-            permalinkWindowConfig.items.push({
-                xtype: 'fieldset',
-                title: this.fieldsetText,
-                items: [ this.emailField, button ]
-            });
-            permalinkWindowConfig.items.push(successMessage);
+            permalinkWindowConfig.buttons.push(shortButton);
+            if (this.email) {
+                this.emailField = new Ext.form.TextField({
+                    fieldLabel: this.emailText
+                });
+                permalinkWindowConfig.items.push(this.emailField);
+            }
         }
         var permalinkWindow = new Ext.Window(permalinkWindowConfig);
-        if (this.shortenerCreateURL) {
-            permalinkWindow.on('show', function() {
-                this.view_short = true;
-                var params = {
-                    'url': this.getLink()
-                };
-
-                if (this.email && this.emailField.getValue() !== '') {
-                    params.email = this.emailField.getValue();
-                }
-                Ext.Ajax.request({
-                    url: this.shortenerCreateURL,
-                    params: params,
-                    success: function(response) {
-                        var obj = Ext.util.JSON.decode(response.responseText);
-                        permalinkTextField.setValue(obj.short_url);
-                    }
-                });
-            }, this);
-        }
 
         // Registers a statechange listener to update the value
         // of the permalink text field.
