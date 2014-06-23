@@ -236,7 +236,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             iconCls: "cgxp-icon-googleearthview",
-            toottip: this.tooltipText,
+            tooltip: this.tooltipText,
             menuText: this.menuText,
             listeners: {
                 "toggle": function(button) {
