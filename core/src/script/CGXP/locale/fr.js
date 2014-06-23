@@ -248,7 +248,7 @@ GeoExt.Lang.add("fr", {
         menuText: "Profil altimétrique"
     },
 
-    "cgxp.plugins.GoogleEarth.prototype": {
+    "cgxp.plugins.GoogleEarthView.prototype": {
         tooltipText: "Visualiser dans GoogleEarth",
         menuText: "GoogleEarth"
     },

@@ -243,7 +243,7 @@ GeoExt.Lang.add("de", {
         menuText: "Höhenprofil"
     },
 
-    "cgxp.plugins.GoogleEarth.prototype": {
+    "cgxp.plugins.GoogleEarthView.prototype": {
         tooltipText: "In Google Earth zeigen",
         menuText: "Google Earth"
     },
