@@ -349,7 +349,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             value: radius,
             decimalPrecision: 0,
             width: 130,
-            incrementValue: Math.round(radius) / 100,
+            incrementValue: Math.max(1, Math.round(radius) / 100),
             listeners: {
                 spin: cb,
                 valid: cb,
