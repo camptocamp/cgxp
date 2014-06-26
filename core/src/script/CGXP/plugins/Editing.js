@@ -577,6 +577,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                             } else {
                                 // we need to reset the cursor manually
                                 OpenLayers.Element.removeClass(self.map.viewPortDiv, "olCursorWait");
+                                self.editorGrid.modifyControl.activate();
+                                self.editorGrid.modifyControl.selectFeature(self.editorGrid.store.feature);
                             }
                         },
                         scope: this
