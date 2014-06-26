@@ -604,9 +604,10 @@ cgxp.api.Map.prototype = {
      *      (either "text" or "gpx")
      *  :arg layerName: ``String`` A text description for the layer
      *  :arg layerUrl: ``String`` The url the file to load
-     *  :arg options: ``Object`` Options object with optional style properties,
-     *      ``strokeColor``, ``strokeWidth``, ``strokeOpacity``
-     *      only apply for GPX layers (i.e. ``layerType`` set to ``"gxp"``),
+     *  :arg options: ``Object`` Options object with optional style properties
+     *      for GPX layers: ``strokeColor``, ``strokeWidth``, ``strokeOpacity``
+     *      or optional parsing configuration for Text layers: ``attr`` (array 
+     *      of fields identifiant)
      *      and optional callback functions for the HTTP request,
      *      ``success`` and ``error``.
      */
@@ -688,13 +689,29 @@ cgxp.api.Map.prototype = {
             };
             var onFeatureSelect = function(evt) {
                 var feature = evt.feature;
-                if (feature.attributes.title && feature.attributes.description) {
+
+                var attrList = options.attr || ['title', 'description'];
+                
+                var content = [];
+                for (var i = 0, l = attrList.length; i < l; i++) {
+                    if (typeof feature.attributes[attrList[i]] != 'undefined') {
+                        var val = feature.attributes[attrList[i]]
+                        switch(attrList[i]) {
+                            case 'title':
+                                content.push("<b>" + val + "</b>");
+                            break;
+                            default:
+                                content.push(val);
+                        }
+                    }
+                }
+                if (content.length > 0) {
+                    content = content.join("<br />");
                     popup = new OpenLayers.Popup.FramedCloud(
                         "featurePopup",
                         feature.geometry.getBounds().getCenterLonLat(),
                         new OpenLayers.Size(200,120),
-                        "<b>" + feature.attributes.title + "</b><br />" +
-                            feature.attributes.description,
+                        content,
                         null,
                         true,
                         onPopupClose
