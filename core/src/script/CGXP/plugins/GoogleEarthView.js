@@ -241,7 +241,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 "toggle": function(button) {
                     if (button.pressed) {
-                        this.loadGoogleEarth();
+                        this.loadingChecker();
                     } else {
                         this.unloadGoogleEarth();
                     }
@@ -250,6 +250,21 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             }
         }, this.actionConfig);
         return cgxp.plugins.GoogleEarthView.superclass.addActions.apply(this, [button]);
+    },
+
+    /** private: method[loadingChecker]
+     *  Check if the east panel, which is shared between GoogleEarth and Streetview, 
+     *  is correctly cleaned up (ie. give time to the other tool to uninitialize 
+     *  the panel content before creating the new content)
+     */
+    loadingChecker: function() {
+        if (typeof this.outputTarget.layout.east != 'undefined' &&
+            typeof this.outputTarget.layout.east.splitEl != 'undefined' &&
+            this.outputTarget.layout.east.splitEl != null) {
+            this.loadingChecker.defer(1000, this);
+        } else {
+            this.loadGoogleEarth();
+        }
     },
 
     /** api: method[loadGoogleEarth]
@@ -264,7 +279,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
 
         if (this.intermediateContainer === null) {
             this.intermediateContainer = this.outputTarget.add({
-                autoDestroy: false,
+                autoDestroy: true,
                 layout: "fit",
                 region: "east",
                 split: true,
@@ -369,13 +384,6 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      *  Uninitialize GoogleEarth and unload and close the GoogleEarth panel
      */
     unloadGoogleEarth: function() {
-        /* solve problem with Ext duplicating the splitbar when doLayout is called
-           because of the rendered = false above */
-        if (this.outputTarget.layout.east && this.outputTarget.layout.east.splitEl) {
-            this.outputTarget.layout.east.splitEl.remove();
-            this.outputTarget.layout.east.splitEl = null;
-        }
-        
         this.googleEarthPanel.un("pluginready", this.pluginReadyCallback);
         this.pluginReadyCallback = null;
 
@@ -394,13 +402,25 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         this.googleEarthPanel = null;
 
         this.intermediateContainer.setVisible(false);
-        this.outputTarget.doLayout();
+
+        this.intermediateContainer.destroy();
+        this.intermediateContainer = null;
 
         Ext.each(
             this.target.mapPanel.map.getControlsByClass("OpenLayers.Control.KeyboardDefaults"),
             function(control) {
                 control.activate();
             });
+
+        /* solve problem with Ext duplicating the splitbar when doLayout is called
+           because of the rendered = false above */
+        if (this.outputTarget.layout.east && this.outputTarget.layout.east.splitEl) {
+            this.outputTarget.layout.east.splitEl.remove();
+            this.outputTarget.layout.east.splitEl = null;
+            this.outputTarget.layout.east.split.destroy();
+        }
+
+        this.outputTarget.doLayout();
     }
 });
 
