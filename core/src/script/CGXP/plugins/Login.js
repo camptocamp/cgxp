@@ -159,13 +159,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[loginFormTopCell]
      *  ``Ext.Component`` containing some HTML code to place above the form
-     *  of the login panel. Default is null.
+     *  of the login panel. Default is null. Not displayed in the password 
+     *  change form.
      */
     loginFormTopCell: null,
 
     /** api: config[loginFormBottomCell]
      *  ``Ext.Component`` containing some HTML code to place below the form
-     *  of the login panel. Default is null.
+     *  of the login panel. Default is null. Not displayed in the password 
+     *  change form.
      */
     loginFormBottomCell: null,
 
@@ -359,14 +361,26 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         }
 
         if (show) {
-            hideFields(l1)
+            hideFields(l1);
+            if (this.loginFormTopCell) {
+                this.loginFormTopCellPanel.setVisible(false);
+            }
+            if (this.loginFormBottomCell) {
+                this.loginFormBottomCellPanel.setVisible(false);
+            }
             showFields(l2);
             this.actionChangePassword = true;
             this.submitButton.setText(this.changePasswordButtonText);
             f.url = this.loginChangeURL;
         } else {
-            hideFields(l2)
+            hideFields(l2);
             showFields(l1);
+            if (this.loginFormTopCell) {
+                this.loginFormTopCellPanel.setVisible(true);
+            }
+            if (this.loginFormBottomCell) {
+                this.loginFormBottomCellPanel.setVisible(true);
+            }
             this.actionChangePassword = false;
             this.submitButton.setText(this.loginText);
             f.url = this.loginURL;
@@ -428,10 +442,12 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             }
         ];
         if (this.loginFormTopCell) {
-            formItems.unshift(this.loginFormTopCell);
+            this.loginFormTopCellPanel = new Ext.Panel(this.loginFormTopCell);
+            formItems.unshift(this.loginFormTopCellPanel);
         }
         if (this.loginFormBottomCell) {
-            formItems.push(this.loginFormBottomCell);
+            this.loginFormBottomCellPanel = new Ext.Panel(this.loginFormBottomCell);
+            formItems.push(this.loginFormBottomCellPanel);
         }
 
         return new Ext.FormPanel({
