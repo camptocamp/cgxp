@@ -107,6 +107,11 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
     tooltipText: "Show in StreetView",
     menuText: "StreetView",
 
+    /** private: property[intermediateContainer]
+     *  Required intermediate container
+     */
+    intermediateContainer: null,
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -120,61 +125,97 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 "toggle": function(item) {
                     if (item.pressed || item.checked) {
-                        if (!this.panel) {
-                            this.panel = new GeoExt.ux.StreetViewPanel({
-                                map: this.target.mapPanel.map,
-                                videoMode: true,
-                                showLinks: true,
-                                showTool: true,
-                                readPermalink: false,
-                                baseUrl: this.baseURL,
-                                autoDestroy: false,
-                                region: "east",
-                                split: true,
-                                collapseMode: "mini"
-                            });
-                        }
-                        else {
-                            this.panel.panorama.navigationToolLayer.setVisibility(true);
-                            this.panel.panorama.navigationLinkLayer.setVisibility(true);
-                            this.panel.clickControl.activate();
-                        }
-                        this.outputTarget.add(this.panel);
-
-                        this.panel.setSize(this.size, 0);
-                        this.panel.setVisible(true);
-
-                        /* Marked as not rendered in order to force the rendering of the component.
-                           Otherwise the panel is not rendered correctly when switching between 
-                           GoogleEarth and StreetView. */
-                        this.outputTarget.layout.rendered = false;
-
-                        this.panel.doLayout();
-
-                        (function() {
-                            this.outputTarget.doLayout();
-                        }).defer(100, this);
-                    }
-                    else {
-                        /* solve problem with Ext duplicating the splitbar when doLayout is called
-                           because of the rendered = false above */
-                        if (this.outputTarget.layout.east && this.outputTarget.layout.east.splitEl) {
-                            this.outputTarget.layout.east.splitEl.remove();
-                            this.outputTarget.layout.east.splitEl = null;
-                        }
-
-                        this.panel.panorama.navigationToolLayer.setVisibility(false);
-                        this.panel.panorama.navigationLinkLayer.setVisibility(false);
-                        this.panel.clickControl.deactivate();
-                        this.panel.setVisible(false);
-                        this.outputTarget.doLayout();
+                        this.loadingChecker();
+                    } else {
+                        this.unloadStreetView();
                     }
                 },
                 scope: this
             }
         }, this.actionConfig);
         return cgxp.plugins.StreetView.superclass.addActions.apply(this, [button]);
+    },
+
+    /** private: method[loadingChecker]
+     *  Check if the east panel, which is shared between GoogleEarth and Streetview, 
+     *  is correctly cleaned up (ie. give time to the other tool to uninitialize 
+     *  the panel content before creating the new content)
+     */
+    loadingChecker: function() {
+        if (typeof this.outputTarget.layout.east != 'undefined' &&
+            typeof this.outputTarget.layout.east.splitEl != 'undefined' &&
+            this.outputTarget.layout.east.splitEl != null) {
+            this.loadingChecker.defer(1000, this);
+        } else {
+            this.loadStreetView();
+        }
+    },
+
+    /** api: method[loadGoogleEarth]
+     *  Load and open the GoogleEarth panel and initialize GoogleEarth
+     */
+    loadStreetView: function() {
+
+        if (this.intermediateContainer === null) {
+            this.intermediateContainer = this.outputTarget.add({
+                autoDestroy: true,
+                layout: "fit",
+                region: "east",
+                split: true,
+                collapseMode: "mini"
+            });
+        }
+
+        this.streetViewPanel = new GeoExt.ux.StreetViewPanel({
+            map: this.target.mapPanel.map,
+            videoMode: true,
+            showLinks: true,
+            showTool: true,
+            readPermalink: false,
+            baseUrl: this.baseURL
+        });
+
+        this.outputTarget.add(this.intermediateContainer);
+
+        this.intermediateContainer.add(this.streetViewPanel);
+        this.intermediateContainer.setSize(this.size, 0);
+        this.intermediateContainer.setVisible(true);
+
+        /* Marked as not rendered in order to force the rendering of the component.
+           Otherwise the panel is not rendered correctly when switching between 
+           GoogleEarth and StreetView. */
+        this.outputTarget.layout.rendered = false;
+
+        this.outputTarget.doLayout();
+
+    },
+
+    /** api: method[unloadGoogleEarth]
+     *  Uninitialize GoogleEarth and unload and close the GoogleEarth panel
+     */
+    unloadStreetView: function() {
+
+        this.streetViewPanel.panorama.navigationToolLayer.setVisibility(false);
+        this.streetViewPanel.panorama.navigationLinkLayer.setVisibility(false);
+
+        this.streetViewPanel.clickControl.deactivate();
+
+        this.intermediateContainer.setVisible(false);
+
+        this.intermediateContainer.destroy();
+        this.intermediateContainer = null;
+
+        /* solve problem with Ext duplicating the splitbar when doLayout is called
+           because of the rendered = false above */
+        if (this.outputTarget.layout.east && this.outputTarget.layout.east.splitEl) {
+            this.outputTarget.layout.east.splitEl.remove();
+            this.outputTarget.layout.east.splitEl = null;
+            this.outputTarget.layout.east.split.destroy();
+        }
+
+        this.outputTarget.doLayout();
     }
+
 });
 
 Ext.preg(cgxp.plugins.StreetView.prototype.ptype, cgxp.plugins.StreetView);
