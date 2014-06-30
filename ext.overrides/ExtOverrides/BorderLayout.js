@@ -1,6 +1,6 @@
 /*
     Solves a problem with plugins GoogleEarth and StreetView causing a 
-    duplicated splitbar, dued to the forced "rendered = false". The latter 
+    duplicated splitbar, due to the forced "rendered = false". The latter 
     configuration is required otherwise the panels contents are not rendered 
     correctly when the panels are re-opened.
 */

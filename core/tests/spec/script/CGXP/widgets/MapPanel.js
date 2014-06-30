@@ -111,31 +111,25 @@ describe('MapPanel', function() {
             expect(mp.vectorLayer.features[0].geometry.y).toEqual(42);
         });
         it('displays a popup', function() {
-            runs(function() {
-                mp = new cgxp.MapPanel({
-                    renderTo: document.body,
-                    width: 1,
-                    height: 1,
-                    map: map,
-                    stateId: "map",
-                    listeners: {
-                        "render": function() {
-                            popupOK = (mp.body.child("div.gx-popup") !== undefined)
-                        }
-                    }
-                });
-                mp.applyState({
-                    tooltip: 'truite fumée',
-                    crosshair: 1,
-                    x: 13,
-                    y: 42,
-                    zoom: 4
-                });
+            mp = new cgxp.MapPanel({
+                renderTo: document.body,
+                width: 1,
+                height: 1,
+                map: map,
+                stateId: "map",
             });
+            mp.applyState({
+                tooltip: 'truite fumée',
+                crosshair: 1,
+                x: 13,
+                y: 42,
+                zoom: 4
+            });
+            popupOK = mp.body.child("div.gx-popup") !== undefined;
 
-            waitsFor(function() {
-                return popupOK;
-            }, "The popup is displayed in the page", 500);
+            it("The popup is displayed in the page", function() {
+                expect(popupOK).toBeTruthy();
+            });
 
         });
     });

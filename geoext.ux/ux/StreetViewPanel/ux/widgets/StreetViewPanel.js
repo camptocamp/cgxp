@@ -42,14 +42,14 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
     map: null,
 
     /** private: property[panorama]
-     *  ``GStreetviewPanorama``  The panorama object. A GStreetviewPanorama object holds an instance of the Flash® Street View Panorama viewer.
+     *  ``google.maps.StreetViewPanorama``  The panorama object. A StreetviewPanorama object.
      */
     panorama: null,
 
-    /** private: property[streetviewclient]
-     *  ``GStreetviewClient``  The Street View Client object. A GStreetviewClient object performs searches for Street View data based on parameters that are passed to its methods.
+    /** private: property[streetviewservice]
+     *  ``google.maps.StreetViewService``  The Street View Client object. A google.maps.StreetViewService object performs searches for Street View data based on parameters that are passed to its methods.
      */
-    streetviewclient: null,
+    streetviewservice: null,
 
     /** api: config[clickMode]
      *  ``Boolean``  Defines if the panorama is selected through a click in the map
@@ -97,7 +97,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
     /** private: property[yaw]
      *  ``Number``  Camery yaw
      */
-    yaw: 180,
+    yaw: 0,
 
     /** api: config[pitch]
      *  ``Number``  The camera pitch in degrees, relative to the street view vehicle. Ranges from 90 degrees (directly upwards) to -90 degrees (directly downwards).
@@ -116,10 +116,10 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
     zoom: 0,
 
     /** api: config[panoramaLocation]
-     *  ``GLatLng``  The panorama location
+     *  ``google.maps.LatLng``  The panorama location
      */
     /** private: property[panoramaLocation]
-     *  ``GLatLng``  Panorama location
+     *  ``google.maps.LatLng``  Panorama location
      */
     panoramaLocation: null,
 
@@ -130,6 +130,11 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
      *  ``Boolean``  Read the permalink in the url if presents
      */
     readPermalink: true,
+
+    /** private: property[radius]
+     *  ``Number``  The radius to search for panorama around.
+     */
+    radius: 100,
 
     /** api: config[baseUrl]
      *  ``Boolean``  base url of this directory resources necessary to get the images (directory containing resources). Has to be set if this file is integrated in a JS build.
@@ -166,11 +171,11 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
         }
         GeoExt.ux.StreetViewPanel.superclass.afterRender.call(this);
 
-        // Create StreetViewClient for querying information about panorama
-        this.streetviewclient = new GStreetviewClient();
+        // Create StreetViewService for querying information about panorama
+        this.streetviewservice = new google.maps.StreetViewService();
 
         // Configure panorama and associate methods and parameters to it
-        this.panorama = new GStreetviewPanorama(this.body.dom);
+        this.panorama = new google.maps.StreetViewPanorama(this.body.dom);
         this.panorama.map = this.map;
         this.panorama.yaw = this.yaw;
         this.panorama.pitch = this.pitch;
@@ -179,7 +184,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
         this.panorama.showLinks = this.showLinks;
         this.panorama.clickMode = this.clickMode;
         this.panorama.videoMode = this.videoMode;
-        this.panorama.streetviewclient = this.streetviewclient;
+        this.panorama.streetviewservice = this.streetviewservice;
         this.panorama.videoPlay = false;
         this.panorama.videoReady = true;
         this.panorama.videoTimeInterval = this.videoTimeInterval;
@@ -274,9 +279,14 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
             if (parameters.panoEasting && parameters.panoNorthing) {
                 var positionPano = new OpenLayers.LonLat(parseFloat(parameters.panoEasting), parseFloat(parameters.panoNorthing));
                 positionPano.transform(this.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-                var featurePosition = new GLatLng(positionPano.lat, positionPano.lon);
+                var featurePosition = new google.maps.LatLng(positionPano.lat, positionPano.lon);
                 this.panoramaLocation = featurePosition;
             }
+            this.setPov({
+                heading: this.yaw,
+                pitch: this.pitch,
+                zoom: this.zoom
+            });
         };
 
         // Set the permalink
@@ -296,7 +306,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                 var centerPosition = new OpenLayers.Geometry.Point(position.lng(), position.lat());
                 centerPosition.transform(new OpenLayers.Projection("EPSG:4326"), panorama.map.getProjectionObject());
                 // Add a vector feature as navigation link
-                panorama.navigationLinks.push(new OpenLayers.Feature.Vector(centerPosition, {angle: link.yaw, panoId: link.panoId}));
+                panorama.navigationLinks.push(new OpenLayers.Feature.Vector(centerPosition, {angle: link.heading, panoId: link.pano}));
             }
             if (panorama.navigationLinks.length > 0) {
                 panorama.navigationLinkLayer.addFeatures(panorama.navigationLinks);
@@ -304,26 +314,31 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
         };
 
         // Add panorama event listeners
-        GEvent.addListener(this.panorama, "yawchanged", function(yaw) {
+        google.maps.event.addListener(this.panorama, "pov_changed", function() {
             // This is the panorama
             if (this.showTool) {
-                this.navigationTool.attributes.yaw = yaw;
-                this.navigationTool.layer.drawFeature(this.navigationTool);
+                if (this.navigationTool) {
+                    this.navigationTool.attributes.yaw = this.getPov().heading;
+                    if (this.navigationTool.layer) {
+                        this.navigationTool.layer.drawFeature(this.navigationTool);
+                    }
+                }
             }
-            this.yaw = yaw;
+            this.yaw = this.getPov().heading;
+            this.pitch = this.getPov().pitch;
         });
-        GEvent.addListener(this.panorama, "zoomchanged", function(zoom) {
-            this.zoom = zoom;
+        google.maps.event.addListener(this.panorama, "zoom_changed", function() {
+            this.zoom = this.getZoom();
         });
-        GEvent.addListener(this.panorama, "initialized", function(gstreetviewlocation) {
-            if (!this.videoPlay) {
-                //console.log('listener initialized');
-                this.streetviewclient.getPanoramaById(gstreetviewlocation.panoId, this.callbackDrawTools.createDelegate(this));
-            }
+        google.maps.event.addListener(this.panorama, "position_changed", function() {
+            this.drawNavigationTool(this, this.getPosition());
+        });
+        google.maps.event.addListener(this.panorama, "links_changed", function() {
+            this.drawLinkTool(this, this.getPosition(), this.getLinks());
         });
 
         // Callback to manage panorama when used with getNearestPanorama
-        this.panorama.callback = function (data) {
+        this.panorama.callback = function (data, status) {
             this.deleteFeatures = function() {
                 if (this.panorama.showTool) {
                     if (this.panorama.map) {
@@ -336,78 +351,65 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     }
                 }
             };
-            if (data) {
-                if (data.code == 600) {
-                    this.deleteFeatures();
-                    this.panorama.hide();
-                    if (this.panorama.videoMode && this.panorama.videoPlay) {
-                        this.panorama.videoReady = true;
-                        this.panorama.videoPlay = false;
-                        clearInterval(this.panorama.videoInterval);
-                    }
-                    alert(OpenLayers.i18n('Google Street View: No panorama found near this position. You have to click elsewhere ;-)'));
-                } else if (data.code == 500) {
-                    this.deleteFeatures();
-                    this.panorama.hide();
-                    if (this.panorama.videoMode && this.panorama.videoPlay) {
-                        this.panorama.videoReady = true;
-                        this.panorama.videoPlay = false;
-                        clearInterval(this.panorama.videoInterval);
-                    }
-                    alert(OpenLayers.i18n('Google Street View: Server error'));
-                } else if (data.code == 200) {
-                    if (this.panorama.transitionYaw) {
-                        this.panorama.followLink(this.panorama.transitionYaw);
-                        this.panorama.transitionYaw = null;
-                    } else {
-                        var POV = {yaw: this.panorama.yaw,  pitch: this.panorama.pitch, zoom: this.panorama.zoom};
-                        this.panorama.setLocationAndPOV(data.location.latlng, POV);
-                    }
-                    // Add the navigation tool
-                    if (this.panorama.showTool) {
-                        if (this.panorama.map) {
-                            this.panorama.drawNavigationTool(this.panorama, data.location.latlng);
-                        }
-                    }
-                    // Add the links
-                    if (this.panorama.showLinks) {
-                        if (this.panorama.map) {
-                            this.panorama.drawLinkTool(this.panorama, data.location.latlng, data.links);
-                        }
-                        if (this.panorama.videoMode) {
-                            this.panorama.previousDifferenceVideo = 361;
-                            if (this.panorama.navigationLinks.length > 0 && this.panorama.previousYawVideo) {
-                                for (var i = 0; i < this.panorama.navigationLinks.length; i++) {
-                                    var difference = this.panorama.navigationLinks[i].attributes.angle - this.panorama.previousYawVideo;
-                                    if (difference < -180) {
-                                        difference = difference + 360;
-                                    }
-                                    if (difference > 180) {
-                                        difference = difference - 360;
-                                    }
-                                    if (Math.abs(difference) < this.panorama.previousDifferenceVideo) {
-                                        this.panorama.previousDifferenceVideo = Math.abs(difference);
-                                        this.panorama.nextFeature = this.panorama.navigationLinks[i];
-                                    }
-                                }
-                                this.panorama.videoReady = true;
-                                //console.log("callback: previousDifferenceVideo" + this.panorama.previousDifferenceVideo)
-                                //console.log("callback: nextYaw: "+ this.panorama.nextFeature.attributes.angle);
-                            } else {
-                                this.panorama.videoReady = true;
-                                clearInterval(this.panorama.videoInterval);
-                            }
-                        }
-                    }
+            if (status != google.maps.StreetViewStatus.OK) {
+                this.deleteFeatures();
+                if (this.panorama.videoMode && this.panorama.videoPlay) {
+                    this.panorama.videoReady = true;
+                    this.panorama.videoPlay = false;
+                    clearInterval(this.panorama.videoInterval);
+                }
+                alert(OpenLayers.i18n(
+                    (status == google.maps.StreetViewStatus.ZERO_RESULTS) ?
+                    'Google Street View: No panorama found near this position. You have to click elsewhere ;-)' :
+                    'Google Street View: Server error'
+                ));
+            } else {
+                if (this.panorama.transitionYaw) {
+                    this.panorama.transitionYaw = null;
                 } else {
-                    this.deleteFeatures();
-                    this.panorama.hide();
-                    if (this.panorama.videoMode && this.panorama.videoPlay) {
-                        this.panorama.videoReady = true;
-                        this.panorama.videoPlay = false;
-                        clearInterval(this.panorama.videoInterval);
+                    var POV = {
+                        heading: this.panorama.yaw || 0,
+                        pitch: this.panorama.pitch || 0,
+                        zoom: this.panorama.zoom || 0
+                    };
+                    this.panorama.setPano(data.location.pano);
+                    this.panorama.setPov(POV);
+                }
+                // Add the navigation tool
+                if (this.panorama.showTool) {
+                    if (this.panorama.map) {
+                        this.panorama.drawNavigationTool(this.panorama, data.location.latLng);
                     }
-                    alert(OpenLayers.i18n('Google Street View: Unexpected problem'));
+                }
+                // Add the links
+                if (this.panorama.showLinks) {
+                    if (this.panorama.map) {
+                        this.panorama.drawLinkTool(this.panorama, data.location.latLng, data.links);
+                    }
+                    if (this.panorama.videoMode) {
+                        this.panorama.previousDifferenceVideo = 361;
+                        if (this.panorama.navigationLinks.length > 0 && this.panorama.previousYawVideo) {
+                            for (var i = 0; i < this.panorama.navigationLinks.length; i++) {
+                                var difference = this.panorama.navigationLinks[i].attributes.angle - this.panorama.previousYawVideo;
+                                if (difference < -180) {
+                                    difference = difference + 360;
+                                }
+                                if (difference > 180) {
+                                    difference = difference - 360;
+                                }
+                                if (Math.abs(difference) < this.panorama.previousDifferenceVideo) {
+                                    this.panorama.previousDifferenceVideo = Math.abs(difference);
+                                    this.panorama.nextFeature = this.panorama.navigationLinks[i];
+                                }
+                            }
+                            this.panorama.videoReady = true;
+                            //console.log("callback: previousDifferenceVideo" + this.panorama.previousDifferenceVideo)
+                            //console.log("callback: nextYaw: "+ this.panorama.nextFeature.attributes.angle);
+                        } else {
+                            this.panorama.videoReady = true;
+                            clearInterval(this.panorama.videoInterval);
+                        }
+                    }
                 }
             }
         };
@@ -437,13 +439,13 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     // Add the navigation tool
                     if (this.showTool) {
                         if (this.map) {
-                            this.drawNavigationTool(this, data.location.latlng);
+                            this.drawNavigationTool(this, data.location.latLng);
                         }
                     }
                     // Add the links
                     if (this.showLinks) {
                         if (this.map) {
-                            this.drawLinkTool(this, data.location.latlng, data.links);
+                            this.drawLinkTool(this, data.location.latLng, data.links);
                         }
                     }
                 } else {
@@ -456,7 +458,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
         // Set initial position of panorama
         if (this.panorama.panoramaLocation) {
             //console.log('panorama location init');
-            this.streetviewclient.getNearestPanorama(this.panorama.panoramaLocation, this.panorama.callback.createDelegate(this));
+            this.streetviewservice.getPanoramaByLocation(this.panorama.panoramaLocation, this.radius, this.panorama.callback.createDelegate(this));
         }
 
         // Add features associated to map
@@ -466,8 +468,9 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     handlerOptions: {
                         "single": true
                     },
+                    radius: this.radius,
                     panorama: this.panorama,
-                    streetviewclient: this.streetviewclient
+                    streetviewservice: this.streetviewservice
                 });
                 this.map.addControl(this.clickControl);
                 this.clickControl.activate();
@@ -494,16 +497,16 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     doneDragging: function(pixel) {
                         var position = this.panorama.map.getLonLatFromPixel(pixel);
                         position.transform(this.panorama.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-                        var featurePosition = new GLatLng(position.lat, position.lon);
+                        var featurePosition = new google.maps.LatLng(position.lat, position.lon);
 
                         //console.log('dragging feature');
-                        this.streetviewclient.getNearestPanorama(featurePosition, this.panorama.callback.createDelegate(this));
+                        this.streetviewservice.getPanoramaByLocation(featurePosition, this.radius, this.panorama.callback.createDelegate(this));
                     },
                     moveFeature: function(pixel) {
                         //alert(pixel);
                     },
                     panorama: this.panorama,
-                    streetviewclient: this.streetviewclient
+                    streetviewservice: this.streetviewservice
                 });
                 this.map.addControl(this.dragControl);
                 this.dragControl.activate();
@@ -544,7 +547,8 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                                 //console.log("PlayVideo: previousYawVideo: "+ this.panorama.previousYawVideo);
                                 if (this.panorama.videoReady) {
                                     //console.log('play video: mode auto');
-                                    this.streetviewclient.getPanoramaById(feature.attributes.panoId, this.panorama.callback.createDelegate(this));
+                                    this.streetviewservice.getPanoramaById(feature.attributes.panoId, this.panorama.callback.createDelegate(this));
+                                    this.panorama.setPano(feature.attributes.panoId);
                                     this.panorama.videoReady = false;
                                 }
                             };
@@ -564,12 +568,12 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                         } else {
                             //console.log('play video: mode manuel');
                             this.panorama.transitionYaw = feature.attributes.angle;
-                            this.streetviewclient.getPanoramaById(feature.attributes.panoId, this.panorama.callback.createDelegate(this));
+                            this.streetviewservice.getPanoramaById(feature.attributes.panoId, this.panorama.callback.createDelegate(this));
                         }
                     },
                     allowSelection: true,
                     panorama: this.panorama,
-                    streetviewclient: this.streetviewclient
+                    streetviewservice: this.streetviewservice
                 });
                 this.map.addControl(this.selectControl);
                 this.selectControl.activate();
@@ -604,37 +608,10 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                 this.panorama.navigationLinkLayer.destroy();
             }
         }
-        this.panorama.remove();
         delete this.panorama;
         GeoExt.ux.StreetViewPanel.superclass.beforeDestroy.apply(this, arguments);
-    },
-
-    /** private: method[onResize]
-     *  Resize Street View Panorama
-     *  :param w: ``Number`` Width
-     *  :param h: ``Number`` Height
-     */
-    onResize : function(w, h) {
-        GeoExt.ux.StreetViewPanel.superclass.onResize.call(this, w, h);
-        if (this.panorama) {
-            if (typeof this.panorama == 'object') {
-                this.panorama.checkResize();
-            }
-        }
-    },
-
-    /** private: method[setSize]
-     *  Set size of Street View Panorama
-     *
-     */
-    setSize : function(width, height, animate) {
-        GeoExt.ux.StreetViewPanel.superclass.setSize.call(this, width, height, animate);
-        if (this.panorama) {
-            if (typeof this.panorama == 'object') {
-                this.panorama.checkResize();
-            }
-        }
     }
+
 });
 
 /** api: xtype = gxux_streetviewpanel */

@@ -330,8 +330,11 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      *  Return a GridEditor object for a given row in the grid.
      */
     getEditor: function(rowIndex) {
-        var record = this.store.getAt(rowIndex), config;
-        var field = (config = GeoExt.form.recordToField(record)) ?
+        var record = this.store.getAt(rowIndex),
+            config = GeoExt.form.recordToField(record, {
+                minTextAreaMaxLength: 45
+            });
+        var field = (config) ?
             Ext.ComponentMgr.create(config) : new Ext.form.TextField();
         return new Ext.grid.GridEditor(field);
     },

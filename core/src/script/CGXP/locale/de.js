@@ -43,8 +43,10 @@ GeoExt.Lang.add("de", {
         closeText: "Schliessen",
         incompatibleWithIeText: "Achtung: diese URL ist zu lang für Microsoft Internet Explorer!",
         menuText: 'Permalink',
-        shortText: "Gekürzte URL",
-        emailText: "E-Mail (optional)"
+        shortText: "Senden",
+        fieldsetText: "Teilen",
+        emailText: "E-mail",
+        emailSentTxt: "Der Link wurde versendet"
     },
 
     "cgxp.plugins.FeaturesGrid.prototype": {
@@ -267,14 +269,6 @@ GeoExt.Lang.add("de", {
     "cgxp.plugins.MapQuery.prototype": {
         actionTooltip: "Informationen in der Karte abfragen",
         menuText: "Informationen abfragen"
-    },
-
-    "cgxp.plugins.WFSGetFeature.prototype": {
-        actionTooltip: "Informationen in der Karte abfragen"
-    },
-
-    "cgxp.plugins.WMSGetFeatureInfo.prototype": {
-        actionTooltip: "Informationen in der Karte abfragen"
     },
 
     "cgxp.plugins.GetFeature.prototype": {

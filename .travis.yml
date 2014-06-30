@@ -3,13 +3,21 @@ python:
 - 2.7
 
 before_script:
+- sudo apt-get install python-virtualenv nodejs
 - cd core/src/doc
 - virtualenv --distribute --no-site-packages env
-- source env/bin/activate
-- pip install -r requirements
+- env/bin/pip install -r requirements
+- cd -
+- cd core/tests
+- virtualenv --distribute --no-site-packages env
+- env/bin/pip install jasmine
 - cd -
 
-script: ./travis.sh
+script:
+- cd core/tests
+- env/bin/jasmine-ci --browser phantomjs
+- cd -
+- ./travis.sh
 
 notifications:
   email:
