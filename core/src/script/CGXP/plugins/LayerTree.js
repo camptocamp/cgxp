@@ -136,6 +136,11 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_layertree */
     ptype: "cgxp_layertree",
 
+    /** api: config[outputConfig]
+     *  ``Object`` Optional configuration for the output container.
+     *  See `CGXP.tree.Layertree <../widgets/tree/LayerTree.html>`_.
+     */
+
     /** api: config[showKMLIn2D]
      *  ``Boolean`
      *  Indicate if KML layers should be shown in the 2D map.

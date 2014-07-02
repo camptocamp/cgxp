@@ -62,6 +62,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     /** api: config[widgetOptions]
      *  ``Object``
      *  Additional FullTextSearch widget options.
+     *  See `CGXP.FullTextSearch <../widgets/FullTextSearch.html>`_.
      */
     widgetOptions: {},
 
