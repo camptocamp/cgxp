@@ -61,20 +61,32 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     orthoText: 'Orthophoto',
 
     /** api: config[stateId]
-     * ``String``
-     * Used for the permalink.
+     *  ``String``
+     *  Used for the permalink.
      */
     stateId: 'baselayer',
 
     /** api: config[map]
-     * ``OpenLayers.Map``
-     * The map.
+     *  ``OpenLayers.Map``
+     *  The map.
      */
     map: null,
+    
+    /** api: config[layertree]
+     *  ``cgxp.tree.LayerTree``
+     *  The layertree widget.
+     */
+    layertree: null,
+    
+    /** api: config[initialTheme]
+     *  ``Object``
+     *  Theme that is loaded at startup.
+     */
+    initialTheme: null,
 
     /** private: property[stateEvents]
-     * ``Array(String)``
-     * Array of state events
+     *  ``Array(String)``
+     *  Array of state events
      */
     stateEvents: ['opacitychange', 'changebaselayer'],
 
@@ -89,6 +101,12 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      *  Reference of the base layer provided by the state.
      */
     stateBaseLayerRef: null,
+
+    /** private: property[initialBaseLayer]
+     *  ``OpenLayers.Layer``
+     *  Baselayer loaded at startup.
+     */
+    initialBaseLayer: null,
 
     /**
      * private: method[initComponent]
@@ -152,9 +170,24 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             }
         });
 
+        if (this.layertree) {
+            this.layertree.on('loadtheme', function(theme) {
+                var baseLayer = this.getBaseLayerFromTheme(theme);
+                if (baseLayer) {
+                    this.updateBaseLayer(baseLayer);
+                }
+            }, this);
+        }
+
+        if (this.initialTheme) {
+            this.initialBaseLayer = this.getBaseLayerFromTheme(this.initialTheme);
+        }
+
         this.on('beforerender', this.setInitialBaseLayer, this);
     },
 
+    /** private: method[linkLinkedLayers]
+     */
     linkLinkedLayers: function(layer) {
         if (layer.linkedLayers) {
             // replace ref with layer
@@ -179,8 +212,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         }
     },
 
+    /** private: method[setInitialBaseLayer]
+     */
     setInitialBaseLayer: function() {
-        var baseLayer = null;
+        var baseLayer = this.initialBaseLayer;
         if (this.stateBaseLayerRef) {
             baseLayer = this.map.getLayersBy('ref', this.stateBaseLayerRef)[0];
         }
@@ -337,6 +372,19 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             }
             this.orthoLayer.setOpacity(1 - parseInt(state.opacity, 10) / 100);
         }
+    },
+
+    /** private: method[getBaseLayerFromTheme]
+     */
+    getBaseLayerFromTheme: function(theme) {
+        var baseLayer = null;
+        if ('functionalities' in theme &&
+            'default_basemap' in theme['functionalities'] &&
+            theme['functionalities']['default_basemap'].length > 0) {
+            var ref = theme['functionalities']['default_basemap'][0];
+            baseLayer = this.map.getLayersBy('ref', ref)[0];
+        }
+        return baseLayer;
     }
 });
 

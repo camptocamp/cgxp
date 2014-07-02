@@ -1,5 +1,11 @@
 This file includes migration steps for each release of CGXP.
 
+Version 1.5
+===========
+
+1. In the configuration of ``CGXP/widgets/tree/LayerTree.js`` rename `frienlyUrl`
+   to `friendlyUrl`.
+
 Version 1.4.4
 =============
 
