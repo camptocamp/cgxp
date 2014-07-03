@@ -144,6 +144,12 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
      */
     baseUrl: scriptSourceStreetView.replace('/ux/widgets/StreetViewPanel.js', ''),
 
+    /** i18n */
+    title: 'Google Street View',
+    noPanorama: 'No panorama found near this position. You have to click elsewhere.',
+    iserverError: 'Server error',
+    unexpectedProblem: 'Unexpected problem',
+
     /** private: method[initComponent]
      *  Private initComponent override.
      */
@@ -337,6 +343,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
             this.drawLinkTool(this, this.getPosition(), this.getLinks());
         });
 
+        var self = this;
         // Callback to manage panorama when used with getNearestPanorama
         this.panorama.callback = function (data, status) {
             this.deleteFeatures = function() {
@@ -358,11 +365,10 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     this.panorama.videoPlay = false;
                     clearInterval(this.panorama.videoInterval);
                 }
-                alert(OpenLayers.i18n(
-                    (status == google.maps.StreetViewStatus.ZERO_RESULTS) ?
-                    'Google Street View: No panorama found near this position. You have to click elsewhere ;-)' :
-                    'Google Street View: Server error'
-                ));
+                Ext.MessageBox.alert(self.title,
+                    status == google.maps.StreetViewStatus.ZERO_RESULTS ?
+                    self.noPanorama: self.unexpectedProblem
+                );
             } else {
                 if (this.panorama.transitionYaw) {
                     this.panorama.transitionYaw = null;
@@ -431,10 +437,10 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
             if (data) {
                 if (data.code == 600) {
                     this.deleteFeatures();
-                    alert(OpenLayers.i18n('Google Street View: No panorama found near this position. You have to click elsewhere ;-)'));
+                    Ext.MessageBox.alert(self.title, self.noPanorama)
                 } else if (data.code == 500) {
                     this.deleteFeatures();
-                    alert(OpenLayers.i18n('Google Street View: Server error'));
+                    Ext.MessageBox.alert(self.title, self.serverError)
                 } else if (data.code == 200) {
                     // Add the navigation tool
                     if (this.showTool) {
@@ -450,7 +456,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     }
                 } else {
                     this.deleteFeatures();
-                    alert(OpenLayers.i18n('Google Street View: Unexpected problem'));
+                    Ext.MessageBox.alert(self.title, self.unexpectedProblem)
                 }
             }
         };
