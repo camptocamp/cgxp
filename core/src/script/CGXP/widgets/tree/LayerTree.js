@@ -103,11 +103,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     autoExpand: true,
 
-    /** api: config[frienlyUrl]
+    /** api: config[friendlyUrl]
      *  ``Boolean``
      *  True to enable friendly URL support (HTML5 browsers only), default to true.
      */
-    frienlyUrl: true,
+    friendlyUrl: true,
 
     /** api: config[mapPanel]
      *  ``GeoExt.MapPanel``
@@ -1225,7 +1225,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         node.getUI().getEl().scrollIntoView();
 
         // change them in url
-        if (this.uniqueTheme && this.frienlyUrl && history.replaceState) {
+        if (this.uniqueTheme && this.friendlyUrl && history.replaceState) {
             var url = location.href;
             var tpos = url.indexOf('/theme/');
             var qpos = url.indexOf('?');

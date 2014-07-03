@@ -84,7 +84,7 @@ cgxp.plugins.ThemeSelector = Ext.extend(gxp.plugins.Tool, {
         );
 
         var tabconfig = {
-            fields: ['name', 'icon', 'children']
+            fields: ['name', 'icon', 'children', 'functionalities']
         };
         var localStore = new Ext.data.JsonStore(Ext.apply(tabconfig, {
             data: this.themes.local

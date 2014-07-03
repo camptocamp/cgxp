@@ -36,7 +36,9 @@ Ext.namespace("cgxp.plugins");
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
- *              ptype: 'cgxp_mapopacityslider'
+ *              ptype: "cgxp_mapopacityslider",
+ *              layerTreeId: "layertree",
+ *              defaultBaseLayerRef: "plan"
  *          }]
  *          ...
  *      });
@@ -78,6 +80,51 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      */
     stateId: 'baselayer',
 
+    /** api: config[layerTreeId]
+     *  ``String``
+     *  Reference to the layertree plugin, used for instance to change
+     *  the basemap depending on the loaded theme.
+     */
+    layerTreeId: null,
+
+    /** private: property[toolbar]
+     *  ``Ext.Toolbar``
+     *  The MapOpacitySlider widget.
+     */
+    toolbar: null,
+
+    /** private: property[initialTheme]
+     *  ``Object``
+     *  Used to save the loaded theme when the MapOpacitySlider widget is not
+     *  available yet.
+     */
+    initialTheme: null,
+
+    /** private: method[init]
+     */
+    init: function() {
+        cgxp.plugins.MapOpacitySlider.superclass.init.apply(this, arguments);
+        this.target.on('ready', this.viewerReady, this);
+    },  
+
+    /** private: method[viewerReady]
+     */
+    viewerReady: function() {
+        if (this.layerTreeId) {
+            var layertree = this.target.tools[this.layerTreeId].tree;
+            layertree.on('loadtheme', this.detectInitialTheme, this);
+        }
+    },
+
+    /** private: method[detectInitialTheme]
+     */
+    detectInitialTheme: function(theme) {
+        // save loaded theme if the MapOpacitySlider is not created yet
+        if (!this.toolbar) {
+            this.initialTheme = theme;
+        }
+    },
+
     /** private: method[createToolbar]
      *  Create the toolbar containing the opacity slider and
      *  the base layer combo.
@@ -87,13 +134,17 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      *  {Ext.Toolbar}
      */
     createToolbar: function(config) {
-        return new cgxp.MapOpacitySlider(Ext.apply({
+        this.toolbar = new cgxp.MapOpacitySlider(Ext.apply({
             cls: 'opacityToolbar',
             orthoRef: this.orthoRef,
             defaultBaseLayerRef: this.defaultBaseLayerRef,
             stateId: this.stateId,
+            initialTheme: this.initialTheme,
+            layertree: this.layerTreeId ?
+                       this.target.tools[this.layerTreeId].tree : null,
             map: this.target.mapPanel.map
         }, config || {}));
+        return this.toolbar;
     },
 
     /** public: method[addActions]
