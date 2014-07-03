@@ -6,6 +6,13 @@ Version 1.5
 1. In the configuration of ``CGXP/widgets/tree/LayerTree.js`` rename `frienlyUrl`
    to `friendlyUrl`.
 
+2. In ``CGXP/plugins/LayerTree.js`` (``ptype: "cgxp_layertree"``),
+   parameters ``themes``, ``uniqueTheme``, ``permalinkThemes``,
+   ``defaultThemes``, ``wmsURL`` have been moved to the output
+   widget. As a result they must be encapsulated into an ``outputConfig``
+   object in the plugin configuration.
+
+
 Version 1.4.4
 =============
 

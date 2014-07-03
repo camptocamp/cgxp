@@ -2,9 +2,11 @@ describe('plugins.LayerTree', function() {
     var p;
     beforeEach(function() {
         p = new cgxp.plugins.LayerTree({
-            wmsURL: 'fakeUrl',
-            themes: {fake: 'object'},
-            defaultThemes: ['fake', 'array']
+            outputConfig: {
+                wmsURL: 'fakeUrl',
+                themes: {fake: 'object'},
+                defaultThemes: ['fake', 'array']
+            }
         });
     });
     describe('when calling constructor', function() {
@@ -13,11 +15,6 @@ describe('plugins.LayerTree', function() {
         });
         it('creates a layertree plugin', function() {
             expect(p).toBeInstanceOf(cgxp.plugins.LayerTree);
-        });
-        it('creates a plugin with expected properties', function() {
-            expect(p.wmsURL).toEqual('fakeUrl');
-            expect(p.themes).toEqual({fake: 'object'});
-            expect(p.defaultThemes).toEqual(['fake', 'array']);
         });
     });
     describe('when adding output', function() {
@@ -31,7 +28,7 @@ describe('plugins.LayerTree', function() {
                     }
                 }
             };
-            var tree = p.addOutput();
+            var tree = p.addOutput(p.outputConfig);
             expect(tree.wmsURL).toEqual('fakeUrl');
             expect(tree.themes).toEqual({fake: 'object'});
             expect(tree.defaultThemes).toEqual(['fake', 'array']);

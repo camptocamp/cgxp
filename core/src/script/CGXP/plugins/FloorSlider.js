@@ -103,6 +103,7 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
     /** api: config[widgetOptions]
      *  ``Object``
      *  Additional slider options.
+     *  See `CGXP.FloorSlider <../widgets/FloorSlider.html>`_.
      */
     widgetOptions: {},
 
