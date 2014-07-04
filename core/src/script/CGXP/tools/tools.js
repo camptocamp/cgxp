@@ -90,11 +90,18 @@ cgxp.tools.notification.show = function(message, timeout, mapPanel) {
     cgxp.tools.notification.element.dom.firstChild.innerHTML = message;
     cgxp.tools.notification.element.show();
     if (timeout) {
-        cgxp.tools.notification.timeout = setTimeout(Ext.createDelegate(function() {
-            if (cgxp.tools.notification.element) {
-                cgxp.tools.notification.element.fadeOut({ duration: 2, remove: false });
-            }
-            cgxp.tools.notification.timeout = undefined;
-        }), timeout);
+        cgxp.tools.notification.timeout = setTimeout(
+            cgxp.tools.notification.close, timeout
+        );
     }
+};
+
+/**
+ * Close the notification window
+ */
+cgxp.tools.notification.close = function(message, timeout, mapPanel) {
+    if (cgxp.tools.notification.element) {
+        cgxp.tools.notification.element.fadeOut({ duration: 2, remove: false });
+    }
+    cgxp.tools.notification.timeout = undefined;
 };

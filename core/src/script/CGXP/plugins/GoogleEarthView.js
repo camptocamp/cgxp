@@ -17,6 +17,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include CGXP/plugins/ToolActivateMgr.js
  * @requires ExtOverrides/BorderLayout.js
  * @include OpenLayers/Control/GoogleEarthView.js
  * @include plugins/GoogleEarth.js
@@ -124,6 +125,19 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_googleearthview */
     ptype: "cgxp_googleearthview",
 
+    /** api: config[activateToggleGroup]
+     *  ``String``
+     *  The name of the activate toggle group this tool is in.
+     *  Default is "clickgroup".
+     */
+    activateToggleGroup: "clickgroup",
+
+    /** private: config[autoActivate]
+     *  ``Boolean`` Set to false if the tool should be initialized without
+     *  activating it. Should be false.
+     */
+    autoActivate: false,
+
     /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
@@ -214,6 +228,9 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         this.googleEarthViewControl = null;
         this.pluginReadyCallback = null;
         this.target.on('ready', this.viewerReady, this);
+        if (this.activateToggleGroup) {
+            cgxp.plugins.ToolActivateMgr.register(this);
+        }
     },
 
     viewerReady: function() {
@@ -226,6 +243,24 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
                 }
             }, this);
         }, this);
+    },
+
+    /** private: method[activate]
+     */
+    activate: function() {
+        if (!this.active) {
+            this.loadingChecker();
+        }
+        return cgxp.plugins.StreetView.superclass.activate.call(this);
+    },
+
+    /** private: method[deactivate]
+     */
+    deactivate: function() {
+        if (this.active) {
+            this.unloadGoogleEarth();
+        }
+        return cgxp.plugins.StreetView.superclass.deactivate.call(this);
     },
 
     /** private: method[addActions]
@@ -241,9 +276,9 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 "toggle": function(button) {
                     if (button.pressed) {
-                        this.loadingChecker();
+                        this.activate();
                     } else {
-                        this.unloadGoogleEarth();
+                        this.deactivate();
                     }
                 },
                 scope: this

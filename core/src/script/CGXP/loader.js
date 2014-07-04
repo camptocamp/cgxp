@@ -20,6 +20,8 @@
     var jsfiles = [
         "cgxp.js",
 
+        "tools/tools.js",
+
         "widgets/FullTextSearch.js",
         "widgets/MapPanel.js",
         "widgets/WMSLegend.js",
