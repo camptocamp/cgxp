@@ -234,6 +234,10 @@ cgxp.plugins.ThemeFinder = Ext.extend(gxp.plugins.Tool, {
             margins: { left: 3, right: 3, top: 0, bottom: 0 }
         }, config || {}));
 
+        this.target.mapPanel.map.events.register('movestart', this, function(event) {
+            twinField.blur();
+        });
+
         twinField.on({
             'beforequery': function(e) {
                 twinField.themeQuery(e.query);

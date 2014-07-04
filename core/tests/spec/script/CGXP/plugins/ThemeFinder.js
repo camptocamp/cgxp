@@ -57,6 +57,15 @@ describe('plugins.ThemeFinder', function() {
             tf = new cgxp.plugins.ThemeFinder({
                 themes: themes
             });
+            tf.target = {
+                mapPanel: {
+                    map: {
+                        events: {
+                            register: jasmine.createSpy()
+                        }
+                    }
+                }
+            };
             output = tf.addOutput();
         });
         it('creates a ComboBox', function() {
