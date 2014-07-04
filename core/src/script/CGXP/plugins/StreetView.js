@@ -19,6 +19,7 @@
  * @requires plugins/Tool.js
  * @requires ExtOverrides/BorderLayout.js
  * @include CGXP/tools/tools.js
+ * @include CGXP/plugins/ToolActivateMgr.js
  * @include ux/widgets/StreetViewPanel.js
  */
 
@@ -81,6 +82,19 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_streetview */
     ptype: "cgxp_streetview",
 
+    /** api: config[activateToggleGroup]
+     *  ``String``
+     *  The name of the activate toggle group this tool is in.
+     *  Default is "clickgroup".
+     */
+    activateToggleGroup: "clickgroup",
+
+    /** private: config[autoActivate]
+     *  ``Boolean`` Set to false if the tool should be initialized without
+     *  activating it. Should be false.
+     */
+    autoActivate: false,
+
     /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
@@ -114,6 +128,33 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
      */
     intermediateContainer: null,
 
+    /** private: method[init]
+     */
+    init: function(target) {
+        cgxp.plugins.Print.superclass.init.call(this, target);
+        if (this.activateToggleGroup) {
+            cgxp.plugins.ToolActivateMgr.register(this);
+        }
+    },
+
+    /** private: method[activate]
+     */
+    activate: function() {
+        if (!this.active) {
+            this.loadingChecker();
+        }
+        return cgxp.plugins.StreetView.superclass.activate.call(this);
+    },
+
+    /** private: method[deactivate]
+     */
+    deactivate: function() {
+        if (this.active) {
+            this.unloadStreetView();
+        }
+        return cgxp.plugins.StreetView.superclass.deactivate.call(this);
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -127,9 +168,9 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 "toggle": function(item) {
                     if (item.pressed || item.checked) {
-                        this.loadingChecker();
+                        this.activate();
                     } else {
-                        this.unloadStreetView();
+                        this.deactivate();
                     }
                 },
                 scope: this

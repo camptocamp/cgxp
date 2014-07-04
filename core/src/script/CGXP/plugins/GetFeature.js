@@ -233,6 +233,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         if (this.active) {
             this.clickWMSControl.deactivate();
         }
+        this.events.fireEvent('queryclose');
         return cgxp.plugins.GetFeature.superclass.deactivate.call(this);
     },
 

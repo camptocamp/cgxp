@@ -260,6 +260,13 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             this.showWindow(queryResult);
         }, this);
 
+        this.events.on('queryclose', function(queryResult) {
+            cgxp.tools.notification.close();
+            if (this.featuresWindow) {
+                this.featuresWindow.hide();
+            }
+        }, this);
+
         map.addLayer(this.vectorLayer);
     },
 
@@ -456,6 +463,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         }
 
         this.featuresWindow.show();
+        cgxp.tools.notification.close();
 
         // append new features to existing features in the store
         this.store.loadData(features, true);
