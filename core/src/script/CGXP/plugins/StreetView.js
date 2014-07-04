@@ -18,6 +18,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires ExtOverrides/BorderLayout.js
+ * @include CGXP/tools/tools.js
  * @include ux/widgets/StreetViewPanel.js
  */
 
@@ -106,6 +107,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
     /** i18n */
     tooltipText: "Show in StreetView",
     menuText: "StreetView",
+    helpMessage: "Click on a road on the map to start StreetView.",
 
     /** private: property[intermediateContainer]
      *  Required intermediate container
@@ -188,6 +190,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
 
         this.outputTarget.doLayout();
 
+        cgxp.tools.notification.show(this.helpMessage, 5000);
     },
 
     /** api: method[unloadGoogleEarth]

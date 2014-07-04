@@ -17,6 +17,7 @@
 
 /*
  * @requires CGXP/plugins/FeaturesResult.js
+ * @include CGXP/tools/tools.js
  * @include GeoExt/data/FeatureStore.js
  * @include GeoExt.ux/Ext.ux.grid.GridMouseEvents.js
  * @include Ext/examples/ux/RowExpander.js
@@ -81,7 +82,7 @@ Ext.namespace("cgxp.plugins");
  */
 cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
-    /** api: ptype = cgxp_featureswindow*/
+    /** api: ptype = cgxp_featureswindow */
     ptype: "cgxp_featureswindow",
 
     /** api: config[events]
@@ -112,17 +113,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  The window (popup) in which the results are shown.
      */
     featuresWindow: null,
-
-    /** private: attribute[notificationElement]
-     *  ``Ext.Element``
-     *  The notification element.
-     */
-    notificationElement: null,
-
-    /** private: attribute[notificationTimeout]
-     *  ``Number``
-     *  the notification timeout ID
-     */
 
     /** api: config[defaultStyle]
      *  ``Object``  A style properties object to be used to show all features
@@ -360,30 +350,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  Shows the notification window
      */
     showNotification: function(message, timeout) {
-        if (this.notificationTimeout) {
-            window.clearTimeout(this.notificationTimeout);
-            this.notificationTimeout = undefined;
-        }
         if (this.featuresWindow) {
             this.featuresWindow.hide();
         }
-        if (!this.notificationElement) {
-            this.notificationElement = Ext.DomHelper.append(
-                this.target.mapPanel.getEl(),
-                {html: '<div class="featureswindow-notif"></div>'},
-                true
-            );
-        }
-        this.notificationElement.dom.firstChild.innerHTML = message;
-        this.notificationElement.show();
-        if (timeout) {
-            this.notificationTimeout = setTimeout(Ext.createDelegate(function() {
-                if (this.notificationElement) {
-                    this.notificationElement.fadeOut({ duration: 2, remove: false });
-                }
-                this.notificationTimeout = undefined;
-            }, this), timeout);
-        }
+        cgxp.tools.notification.show(message, timeout)
     },
 
     /** private: method[showWindow]
