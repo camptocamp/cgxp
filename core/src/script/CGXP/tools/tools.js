@@ -15,6 +15,10 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @include GeoExt/widgets/MapPanel.js
+ */
+
 Ext.namespace("cgxp.tools");
 
 /**
@@ -54,4 +58,43 @@ cgxp.tools.openWindow = function(content, title, width, height) {
     });
 
     cgxp.tools.popupWindow.show();
+};
+
+Ext.namespace("cgxp.tools.notification");
+
+/**
+ * The notification element.
+ */
+cgxp.tools.notification.element = null;
+
+/**
+ * The notification timeout ID.
+ */
+cgxp.tools.notification.timeout = undefined;
+
+/**
+ * Shows the notification window
+ */
+cgxp.tools.notification.show = function(message, timeout, mapPanel) {
+    if (cgxp.tools.notification.timeout) {
+        window.clearTimeout(cgxp.tools.notification.timeout);
+        cgxp.tools.notification.timeout = undefined;
+    }
+    if (!cgxp.tools.notification.element) {
+        cgxp.tools.notification.element = Ext.DomHelper.append(
+            mapPanel || GeoExt.MapPanel.guess().getEl(),
+            { html: '<div class="featureswindow-notif"></div>' },
+            true
+        );
+    }
+    cgxp.tools.notification.element.dom.firstChild.innerHTML = message;
+    cgxp.tools.notification.element.show();
+    if (timeout) {
+        cgxp.tools.notification.timeout = setTimeout(Ext.createDelegate(function() {
+            if (cgxp.tools.notification.element) {
+                cgxp.tools.notification.element.fadeOut({ duration: 2, remove: false });
+            }
+            cgxp.tools.notification.timeout = undefined;
+        }), timeout);
+    }
 };

@@ -257,7 +257,8 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.StreetView.prototype": {
         tooltipText: "Visualiser dans StreetView",
-        menuText: "StreetView"
+        menuText: "StreetView",
+        helpMessage: "Cliquer sur une route de la carte pour démarrer StreetView."
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {

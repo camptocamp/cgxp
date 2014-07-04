@@ -252,7 +252,8 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.StreetView.prototype": {
         tooltipText: "In Google StreetView zeigen",
-        menuText: "StreetView"
+        menuText: "StreetView",
+        helpMessage: "Klicken Sie auf eine Straße in der Karte um StreetView zu starten.",
     },
 
     "cgxp.plugins.QueryBuilder.prototype": {
