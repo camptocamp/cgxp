@@ -249,7 +249,9 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
               this.fireEvent('clear', combo);
             },
             'specialkey': function(combo, event) {
-              this.fireEvent('specialkey', combo, event);
+              if (this.position && event.getKey() == event.ENTER) {
+                this.fireEvent('specialkey', combo, event);
+              };
             },
             'render': function(component) {
                 if (this.tooltip) {
