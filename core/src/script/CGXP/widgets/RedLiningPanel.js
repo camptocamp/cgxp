@@ -128,7 +128,7 @@ cgxp.RedLiningPanel = Ext.extend(
         });
     },
 
-    /** private: method[saveState]
+    /** private: method[getState]
      */
     getState: function() {
         Ext.each(this.controler.activeLayer.features, function(feature) {
@@ -155,6 +155,11 @@ cgxp.RedLiningPanel = Ext.extend(
                     style['labelSelect'] = true;
                     style.label = feature.attributes.name;
                     feature.isLabel = true;
+                    /* because OL URLCompressed ignore strokeOpacity(?), it is
+                       not set in the compressed URL and we have to reset it
+                       by hand */
+                    feature.style.fillOpacity = 0;
+                    feature.style.strokeOpacity = 0;
                 }
                 this.controler.activeLayer.addFeatures([feature]);
                 Ext.apply(feature.style, style);
