@@ -1482,7 +1482,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var groups = [];
         var i, l
         // get groups from permalinkThemes
-        if (this.permalinkThemes) {
+        if (this.permalinkThemes && !this.initialState.groups) {
             // recovering all the first level groups from the selected themes
             for (i=0, l=this.permalinkThemes.length; i<l; i++) {
                 var theme = this.findThemeByName(this.permalinkThemes[i]);
