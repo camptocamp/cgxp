@@ -41,28 +41,6 @@
  */
 Ext.namespace("cgxp.tree");
 
-// Delay `setVisibility(true)` to save unneeded getMap request
-function delayedSetVisibilityTrue(visible) {
-    if (this.visibilityTimeout) {
-        clearTimeout(this.visibilityTimeout);
-        this.visibilityTimeout = null;
-    }
-    if (visible) {
-        var layer = this;
-        this.visibilityTimeout = setTimeout(function() {
-            return OpenLayers.Layer.WMS.prototype.
-                setVisibility.call(layer, true);
-        }, 0);
-    }
-    else {
-        // force to set the visibility, because we
-        // set it to false before we merge the params
-        this.visibility = true;
-        return OpenLayers.Layer.WMS.prototype.
-            setVisibility.call(this, false);
-    }
-}
-
 /** api: constructor
  *
  *  Used state :
@@ -984,6 +962,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 child.layer = layer;
             } else {
                 if (child.type == "external WMS") {
+                    var tree = this;
                     child.layer = new OpenLayers.Layer.WMS(
                         child.name, child.url, {
                             STYLE: child.style,
@@ -996,7 +975,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                             singleTile: true,
                             isBaseLayer: false,
                             visibilityTimeout: null,
-                            setVisibility: delayedSetVisibilityTrue
+                            setVisibility: this.delayedSetVisibilityTrue,
+                            tree: tree
                         }
                     );
                     result.allOlLayers.push(child.layer);
@@ -1291,7 +1271,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     isExternalgroup(group.name, this.themes)) {
                     params.external = true;
                 }
-
+                var tree = this;
                 layer = new OpenLayers.Layer.WMS(
                     group.displayName,
                     this.wmsURL, params, Ext.apply({
@@ -1300,7 +1280,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         singleTile: true,
                         isBaseLayer: false,
                         visibilityTimeout: null,
-                        setVisibility: delayedSetVisibilityTrue
+                        setVisibility: this.delayedSetVisibilityTrue,
+                        tree: tree
                     }, this.wmsOptions || {})
                 );
 
@@ -1838,6 +1819,30 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             img.dom.src = src;
         }
         return img;
+    },
+
+    // Delay `setVisibility(true)` to save unneeded getMap request
+    delayedSetVisibilityTrue: function(visible) {
+        if (this.visibilityTimeout) {
+            clearTimeout(this.visibilityTimeout);
+            this.visibilityTimeout = null;
+        }
+        if (visible) {
+            var layer = this;
+            this.visibilityTimeout = setTimeout(function() {
+                OpenLayers.Layer.WMS.prototype.
+                    setVisibility.call(layer, true);
+                layer.tree.fireEvent("layervisibilitychange");
+                return;
+            }, 0);
+        }
+        else {
+            // force to set the visibility, because we
+            // set it to false before we merge the params
+            this.visibility = true;
+            return OpenLayers.Layer.WMS.prototype.
+                setVisibility.call(this, false);
+        }
     }
 });
 
