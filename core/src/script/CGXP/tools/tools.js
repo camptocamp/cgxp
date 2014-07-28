@@ -16,6 +16,7 @@
  */
 
 /**
+ * @requires ExtOverrides/WindowDD.js
  * @include GeoExt/widgets/MapPanel.js
  */
 
