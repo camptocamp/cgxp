@@ -145,7 +145,9 @@ GeoExt.Lang.add("de", {
         layerMenuText: "Wählen Sie eine Ebene",
         createBtnText: "Erstellen Sie ein neues Element",
         forbiddenText: "Diese Aktion ist nicht erlaubt!",
-        serverErrorText: "Unmöglich zu speichern wegen eines Serverfehlers."
+        titleText: "Editieren",
+        saveServerErrorText: "Speichern nicht möglich wegen eines Serverfehlers.",
+        queryServerErrorText: "Abfrage nicht möglich wegen eines Serverfehlers."
     },
 
     "cgxp.tree.LayerTree.prototype": {
