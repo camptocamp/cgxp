@@ -206,6 +206,14 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     maxFeatures: 200,
 
+    /** api: config[enableTotalHits]
+     *  ``Boolean``
+     *  Set to true to run an additional WFS request to get the total number of
+     *  hits when the maxFeatures limit as been reached by a WFS GetFeature
+     *  request. Default is false.
+     */
+    enableTotalHits: false,
+
     /* i18n */
     tooltipText: "Query objects on the map",
     menuText: "Query the map",
@@ -558,9 +566,11 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
                     features: this.filterFeatures(e.features),
+                    enableTotalHits: this.enableTotalHits, 
                     maxFeatures: this.maxFeatures
                 });
-                if (e.features.length == this.maxFeatures) {
+                if (this.enableTotalHits &&
+                    e.features.length == this.maxFeatures) {
                     e.object.protocol.read({
                         filter: this.filter,
                         readOptions: {output: "object"},

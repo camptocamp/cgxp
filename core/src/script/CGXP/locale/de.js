@@ -147,7 +147,9 @@ GeoExt.Lang.add("de", {
         layerMenuText: "Wählen Sie eine Ebene",
         createBtnText: "Erstellen Sie ein neues Element",
         forbiddenText: "Diese Aktion ist nicht erlaubt!",
-        serverErrorText: "Unmöglich zu speichern wegen eines Serverfehlers."
+        titleText: "Editieren",
+        saveServerErrorText: "Speichern nicht möglich wegen eines Serverfehlers.",
+        queryServerErrorText: "Abfrage nicht möglich wegen eines Serverfehlers."
     },
 
     "cgxp.tree.LayerTree.prototype": {
@@ -155,9 +157,9 @@ GeoExt.Lang.add("de", {
         movedownText: "Nach unten",
         moreinfoText: "Mehr Information",
         deleteText: "Layer löschen",
-        opacityText: "Layertransparenz anpassen",
+        opacityText: "Layeropazität anpassen",
         zoomtoscaleText: "Der Layer ist nicht sichtbar in diesem Massstab.",
-        opacitylabelText: "Transparenz",
+        opacitylabelText: "Opazität",
         dateyearlabelText: "Y",
         datemonthlabelText: "m/Y",
         datelabelText: "d/m/Y",

@@ -236,7 +236,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** api: config[maxFeaturesText]
      *  ``String`` Text for the "reached max number of features" label (i18n).
      */
-    maxFeaturesText: "Maximum of results",
+    maxFeaturesText: "The maximum number of results is reached",
     /** api: config[resultText]
      *  ``String`` Text for the "number of result" label (singular) (i18n).
      */
@@ -310,6 +310,17 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``Integer`` Counter of features.
      */
     numberOfFeatures: 0,
+
+    /** private: attribute[numberOfReturnedFeatures]
+     *  ``Integer`` Counter of features actually returned by the query.
+     */
+    numberOfReturnedFeatures: 0,
+
+    /** private: attribute[enableTotalHits]
+     *  ``Boolean`` Tells if an additional WFS request is done to get the total
+     *  number of hits when maxFeatures limit is reached.
+     */
+    enableTotalHits: false,
 
     /** private: method[init]
      */
@@ -502,9 +513,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         }
         var count = this.currentGrid.getStore().getCount();
         var resultText = (count>1) ? this.resultsText : this.resultText;
-        return (count == this.maxFeatures) ?
-                this.maxFeaturesText + '(' + this.maxFeatures + ')' :
-                count + " " + resultText;
+        return count + " " + resultText;
     },
 
     /** private: method[showFeature]
@@ -571,6 +580,8 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
             // reset counter when new query is triggered
             this.numberOfFeatures = 0;
+            this.numberOfReturnedFeatures = 0;
+            this.enableTotalHits = false;
 
             /* this is important, if the grid are not cleared and created a new,
                the event viewready is not triggered and we fall on an ext bug
@@ -609,16 +620,23 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         this.events.on('queryinfos', function(infos) {
             if ('numberOfFeatures' in infos) {
                 this.numberOfFeatures += infos.numberOfFeatures;
-                this.setMessage(
-                    this.totalNbOfFeaturesText + this.numberOfFeatures
-                );
+                var msg = '';
+                if (this.numberOfReturnedFeatures == this.maxFeatures) {
+                    msg += this.maxFeaturesText + ' (' + this.maxFeatures + ') - '; 
+                }
+                msg += this.totalNbOfFeaturesText + this.numberOfFeatures;
+                this.setMessage(msg);
             }
         }, this);
 
         this.events.on('queryresults', function(queryResult, selectAll) {
             features = queryResult.features;
+            this.numberOfReturnedFeatures = features.length;
             if ('maxFeatures' in queryResult) {
                 this.maxFeatures = queryResult.maxFeatures;
+            }
+            if ('enableTotalHits' in queryResult) {
+                this.enableTotalHits = queryResult.enableTotalHits;
             }
             this.selectAll = selectAll;
 
@@ -779,8 +797,12 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
 
             if (queryResult.message && this.vectorLayer.features.length > 0) {
                 this.setMessage(queryResult.message);
-            } else if (queryResult.features.length == this.maxFeatures) {
-                this.setMessage(this.totalNbOfFeaturesText + this.countingText);
+            } else if (this.numberOfReturnedFeatures == this.maxFeatures) {
+                if (this.enableTotalHits) {
+                    this.setMessage(this.totalNbOfFeaturesText + this.countingText);
+                } else {
+                    this.setMessage(this.maxFeaturesText + ' (' + this.maxFeatures + ')');
+                }
             }
 
             // add extra tab for special empty layers, if set

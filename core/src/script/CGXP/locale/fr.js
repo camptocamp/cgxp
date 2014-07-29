@@ -151,7 +151,9 @@ GeoExt.Lang.add("fr", {
         layerMenuText: "Choisir une couche",
         createBtnText: "Créer un nouvel objet",
         forbiddenText: "Vous n'êtes pas autorisé à réaliser cette action&nbsp;!",
-        serverErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur."
+        titleText: "Edition",
+        saveServerErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur.",
+        queryServerErrorText: "L'interrogation a échoué en raison d'une erreur du serveur."
     },
 
     "cgxp.tree.LayerTree.prototype": {
