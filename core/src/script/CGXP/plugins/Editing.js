@@ -199,11 +199,23 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     forbiddenText: 'You are not allowed to do this action!',
 
-    /** api: config[serverErrorText]
+    /** api: config[title]
+     *  ``String``
+     *  Message display title
+     */
+    titleText: 'Editing',
+
+    /** api: config[saveServerErrorText]
      *  ``String``
      *  Message display when the save failed
      */
-    serverErrorText: 'Saving failed because of a server error.',
+    saveServerErrorText: 'Saving failed because of a server error.',
+
+    /** api: config[queryServerErrorText]
+     *  ``String``
+     *  Message display when the query failed
+     */
+    queryServerErrorText: 'Query failed because of a server error.',
 
     /** private: config[pendingRequests]
      *  ``GeoExt.data.AttributeStore``
@@ -590,7 +602,51 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
 
         var control = new OpenLayers.Control.GetFeature({
-            protocol: protocol
+            protocol: protocol,
+            // override the Openlayers method to catch the failure
+            request: function(bounds, options) {
+                options = options || {};
+                var filter = new OpenLayers.Filter.Spatial({
+                    type: this.filterType,
+                    value: bounds
+                });
+
+                // Set the cursor to "wait" to tell the user we're working.
+                OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+
+                var response = this.protocol.read({
+                    maxFeatures: options.single == true ? this.maxFeatures : undefined,
+                    filter: filter,
+                    callback: function(result) {
+                        if (result.success()) {
+                            if (result.features.length) {
+                                if (options.single == true) {
+                                    this.selectBestFeature(result.features,
+                                        bounds.getCenterLonLat(), options);
+                                } else {
+                                    this.select(result.features);
+                                }
+                            } else if(options.hover) {
+                                this.hoverSelect();
+                            } else {
+                                this.events.triggerEvent("clickout");
+                                if(this.clickout) {
+                                    this.unselectAll();
+                                }
+                            }
+                        }
+                        else {
+                             Ext.MessageBox.alert(self.titleText, self.queryServerErrorText);
+                        }
+                        // Reset the cursor.
+                        OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+                    },
+                    scope: this
+                });
+                if(options.hover == true) {
+                    this.hoverResponse = response;
+                }
+            }
         });
         this.map.addControl(control);
         control.activate();
@@ -759,7 +815,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     this.redrawWMSLayers(feature.attributes.__layer_id__);
                 }
                 else {
-                    window.alert(this.serverErrorText)
+                    Ext.MessageBox.alert(self.titleText, self.saveServerErrorText);
                 }
             },
             scope: this
