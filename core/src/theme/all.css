@@ -624,3 +624,7 @@ div.x-panel .olControlZoom a:hover {
 .legend .no-layer-name label.x-tree-node {
     display: none
 }
+/* Location chooser */
+.x-btn-text-icon .cgxp-icon-locationchooser {
+    background-image: url(img/location_chooser.png);
+}
