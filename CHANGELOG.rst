@@ -1,5 +1,16 @@
 This file includes migration steps for each release of CGXP.
 
+
+Version 1.6
+===========
+
+1. GeoMapFish 1.6 uses MapFishPrint version 3. In the configuration of the
+   `cgxp_print` plugin, `fields` is deprecated and should be replaced by
+   `additionalAttributes`. By the way the fields ('title' and 'comments')
+   are no longer provided by default and must be described (and translated)
+   in the ``additionalAttributes`` param.
+
+
 Version 1.5
 ===========
 

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2009 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -23,13 +23,13 @@ Ext.namespace("GeoExt.ux");
 
 /** api: constructor
  *  .. class:: SimplePrint
- * 
+ *
  *  An instance of this form creates a single print page. Layout, DPI, scale
  *  and rotation are configurable in the form. A Print button is also added to
  *  the form.
  */
 GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
-    
+
     /* begin i18n */
     /** api: config[layoutText] ``String`` i18n */
     layoutText: "Layout",
@@ -43,18 +43,26 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     printText: "Print",
     /** api: config[creatingPdfText] ``String`` i18n */
     creatingPdfText: "Creating PDF...",
+    /** api: config[printStatusText] ``String`` i18n */
+    printStatusText: '<tpl for=".">Queue position: {count}<br />Mean time per print: {timeS} [s]</tpl>',
+    /** api: config[downloadPdfText] ``String`` i18n */
+    downloadPdfText: "Download",
+    /** api: config[statusErrorText] ``String`` i18n */
+    statusErrorText: "Error",
+    /** api: config[includelegendText] ``String`` i18n */
+    includelegendText: "Include legend",
     /* end i18n */
-   
+
     /** api: config[printProvider]
      *  :class:`GeoExt.data.PrintProvider` The print provider this form
      *  is connected to.
      */
-    
+
     /** api: config[mapPanel]
      *  :class:`GeoExt.MapPanel` The map panel that this form should be
      *  connected to.
      */
-    
+
     /** api: config[layer]
      *  ``OpenLayers.Layer`` Layer to render page extents and handles
      *  to. Useful e.g. for setting a StyleMap. Optional, will be auto-created
@@ -69,28 +77,28 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *  ``Object`` Optional options for the printProvider's print command.
      */
     printOptions: null,
-    
+
     /** api: config[hideUnique]
      *  ``Boolean`` If set to false, combo boxes for stores with just one value
      *  will be rendered. Default is true.
      */
-    
+
     /** api: config[hideRotation]
      *  ``Boolean`` If set to true, the Rotation field will not be rendered.
      *  Default is false.
      */
-    
+
     /** api: config[busyMask]
      *  ``Ext.LoadMask`` A LoadMask to use while the print document is
      *  prepared. Optional, will be auto-created with ``creatingPdfText` if
      *  not provided.
      */
-    
+
     /** private: property[busyMask]
      *  ``Ext.LoadMask``
      */
     busyMask: null,
-   
+
     /** api: config[printExtentOptions]
      *  ``Object`` Optional options for the `GeoExt.plugins.Print` plugin.
      */
@@ -100,7 +108,21 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *  :class:`GeoExt.plugins.PrintExtent`
      */
     printExtent: null,
-    
+
+    /** api: config[includeLegend]
+     *  ``Boolean`` include the legend in the print.
+     */
+
+    /** api: property[includeLegend]
+     *  ``Boolean`` include the legend in the print.
+     */
+    includeLegend: true,
+
+    /** api: config[getLegendPanel]
+     *  ``Function`` get the legend panel
+     */
+    getLegendPanel: function() { null },
+
     /** api: property[printPage]
      *  :class:`GeoExt.data.PrintPage` The print page for this form. Useful
      *  e.g. for rotating handles when used in a style map context. Read-only.
@@ -119,7 +141,35 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *      }
      */
     comboOptions: null,
-    
+
+    /** api: config[fieldsExtraClientConfiguration]
+     *
+     *  ``Object`` required to configure the fields, e.-g.:
+     *
+     *  .. code-block:: javascript
+     *
+     *      fieldsClientConfiguration: {
+     *          "Template name": {
+     *              "Attribute name": {
+     *                  useTextArea: true, // For String type
+     *                  fieldAttributes: {
+     *                      label: "A value",
+     *                      empty: "En empty text",
+     *                      ...
+     *                  }
+     *              },
+     *              ...
+     *          },
+     *          ...
+     *      }
+     */
+    fieldsExtraClientConfiguration: {},
+
+    /** private: attribute[progressPanel]
+     *
+     *  The panel used to manage job in progress, used with the version 3.
+     */
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -131,16 +181,25 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         // XHR. The workaround involves forcing the creation of
         // the fbar as part of initComponent.
         this.fbar = this.fbar || [];
+        if (this.printProvider.supportProgress()) {
+            this.progressPanel = new Ext.Panel({
+                hideLabel: true,
+                unstyled: true,
+                layout: "vbox"
+            });
+        }
+        this.printStatusTemplate = new Ext.XTemplate(this.printStatusText);
+        this.printStatusTemplate.compile();
 
         GeoExt.ux.SimplePrint.superclass.initComponent.call(this);
 
         this.printPage = new GeoExt.data.PrintPage({
-            printProvider: this.initialConfig.printProvider
+            printProvider: this.printProvider
         });
-        
+
         this.printExtent = new GeoExt.plugins.PrintExtent(Ext.applyIf({
             pages: [this.printPage],
-            layer: this.initialConfig.layer
+            layer: this.layer
         }, this.printExtentOptions));
 
         if (!this.busyMask) {
@@ -149,21 +208,25 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             });
         }
 
-        this.printExtent.printProvider.on({
+        this.printProvider.on({
             "beforeprint": this.busyMask.show,
             "print": this.busyMask.hide,
             scope: this.busyMask
         });
 
-        if(this.printExtent.printProvider.capabilities) {
-            this.initForm();
-        } else {
-            this.printExtent.printProvider.on({
-                "loadcapabilities": this.initForm,
-                scope: this,
-                single: true
-            });
-        }        
+        this.printProvider.on({
+            "layoutchange": this.initForm,
+            scope: this,
+            single: true
+        });
+
+        this.printProvider.on({
+            "beforeprint": function() {
+                options.legend = this.includeLegend ? this.getLegendPanel() : null;
+            },
+            "layoutchange": this.initForm,
+            scope: this
+        });
 
         //for accordion
         this.on('expand', this.showExtent, this);
@@ -180,76 +243,172 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         //for use in an Ext.Window with closeAction close
         this.on('destroy', this.hideExtent, this);
     },
-    
+
+    /** private: method[addAttribute]
+     */
+    addAttribute: function(attribute, fieldAttributes) {
+        fieldAttributes = fieldAttributes || {};
+        var item = {
+            xtype: "textfield",
+            name: attribute.name,
+            fieldLabel: attribute.label || OpenLayers.i18n(attribute.name),
+            emptyText: attribute.emptyText,
+            plugins: new GeoExt.plugins.PrintProviderField({
+                printProvider: this.printProvider
+            }),
+            autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
+        };
+        switch (attribute.type) {
+            case "String":
+                if (attribute.useTextArea === true || extraAttributes.useTextArea === true) {
+                    Ext.apply(item, {
+                        xtype: "textarea",
+                        autoCreate: {tag: "textarea", maxLength: "100"}
+                    });
+                }
+                break;
+            case "Integer":
+                Exp.apply(item, {
+                    regex: /[1-9-]*/
+                });
+                break;
+            case "Float":
+                Exp.apply(item, {
+                    regex: /[1-9-.]*/
+                });
+                break;
+            case "Boolean":
+                delete item.autoCreate;
+                Exp.apply(item, {
+                    xtype: "checkbox",
+                    hideLabel: true,
+                    boxLabel: attribute.label || OpenLayers.i18n(attribute.name)
+                });
+                break;
+            case "LegendAttributeValue":
+                delete item.autoCreate;
+                delete item.plugins;
+                Ext.apply(item, {
+                    xtype: "checkbox",
+                    name: "legend",
+                    hideLabel: true,
+                    fieldLabel: this.includelegendText,
+                    boxLabel: this.includelegendText,
+                    checked: this.includeLegend,
+                    handler: function(cb, checked) {
+                        this.includeLegend = checked;
+                    },
+                    scope: this
+                });
+                break;
+            default:
+                if (this.addCustomItem) {
+                    this.addCustomItem(item, attribute, extraAttributes, fieldAttributes);
+                }
+                item = null;
+                break;
+        }
+        if (item) {
+            if (fieldAttributes.autoCreate) {
+                Ext.apply(item.autoCreate, fieldAttributes.autoCreate);
+                delete fieldAttributes.autoCreate;
+            }
+            Ext.apply(item, fieldAttributes);
+            this.add(this.updateItem(item, attribute));
+        }
+    },
+
     /** private: method[initForm]
      *  Creates and adds items to the form.
      */
-    initForm: function() {
+    initForm: function(printProvider, layout) {
+        this.removeAll();
+
         this.mapPanel.initPlugin(this.printExtent);
-        var p = this.printExtent.printProvider;
-        var hideUnique = this.initialConfig.hideUnique !== false;
+        var showUnique = this.hideUnique === false;
         var cbOptions = this.comboOptions || {
             typeAhead: true,
             selectOnFocus: true
         };
-        
-        !(hideUnique && p.layouts.getCount() <= 1) && this.add(Ext.apply({
-            xtype: "combo",
-            fieldLabel: this.layoutText,
-            store: p.layouts,
-            forceSelection: true,
-            displayField: "name",
-            mode: "local",
-            triggerAction: "all",
-            plugins: new GeoExt.plugins.PrintProviderField({
-                printProvider: p
-            })
-        }, cbOptions));
-        !(hideUnique && p.dpis.getCount() <= 1) && this.add(Ext.apply({
-            xtype: "combo",
-            fieldLabel: this.dpiText,
-            store: p.dpis,
-            forceSelection: true,
-            displayField: "name",
-            mode: "local",
-            triggerAction: "all",
-            plugins: new GeoExt.plugins.PrintProviderField({
-                printProvider: p
-            })
-        }, cbOptions));
-        !(hideUnique && p.scales.getCount() <= 1) && this.add(Ext.apply({
-            xtype: "combo",
-            fieldLabel: this.scaleText,
-            store: p.scales,
-            forceSelection: true,
-            displayField: "name",
-            mode: "local",
-            triggerAction: "all",
-            plugins: new GeoExt.plugins.PrintPageField({
-                printPage: this.printPage
-            })
-        }, cbOptions));
-        this.initialConfig.hideRotation !== true && this.add({
-            xtype: "numberfield",
-            fieldLabel: this.rotationText,
-            name: "rotation",
-            enableKeyEvents: true,
-            plugins: new GeoExt.plugins.PrintPageField({
-                printPage: this.printPage
-            })
-        });
+
+        if (showUnique || printProvider.layouts.getCount() > 1) {
+            this.add(Ext.apply({
+                xtype: "combo",
+                fieldLabel: this.layoutText,
+                store: printProvider.layouts,
+                forceSelection: true,
+                displayField: "name",
+                mode: "local",
+                triggerAction: "all",
+                plugins: new GeoExt.plugins.PrintProviderField({
+                    printProvider: printProvider
+                })
+            }, cbOptions));
+        }
+
+        Ext.each(printProvider.getAttributes(), function(attribute) {
+            templateExtraAttributes = this.fieldsExtraClientConfiguration[layout.data.name] || {};
+            extraAttributes = templateExtraAttributes[attribute.name] || {};
+            this.addAttribute(attribute, extraAttributes.fieldAttributes);
+        }, this);
+
+        if (this.initialConfig.items) {
+            Ext.each(this.initialConfig.items, this.add);
+        }
+
+        if (showUnique || printProvider.dpis.getCount() > 1) {
+            this.add(Ext.apply({
+                xtype: "combo",
+                fieldLabel: this.dpiText,
+                store: printProvider.dpis,
+                forceSelection: true,
+                displayField: "name",
+                mode: "local",
+                triggerAction: "all",
+                plugins: new GeoExt.plugins.PrintProviderField({
+                    printProvider: printProvider
+                })
+            }, cbOptions));
+        }
+        if (showUnique || printProvider.scales.getCount() > 1) {
+            this.add(Ext.apply({
+                xtype: "combo",
+                fieldLabel: this.scaleText,
+                store: printProvider.scales,
+                forceSelection: true,
+                displayField: "name",
+                mode: "local",
+                triggerAction: "all",
+                plugins: new GeoExt.plugins.PrintPageField({
+                    printPage: this.printPage
+                })
+            }, cbOptions));
+        }
+        if (this.hideRotation !== true) {
+            this.add(Ext.apply({
+                xtype: "numberfield",
+                fieldLabel: this.rotationText,
+                name: "rotation",
+                enableKeyEvents: true,
+                plugins: new GeoExt.plugins.PrintPageField({
+                    printPage: this.printPage
+                })
+            }));
+        }
 
         this.addButton({
             text: this.printText,
-            handler: function() {
-                this.printExtent.print(this.printOptions);
-            },
+            handler: this.print,
             scope: this
         });
 
+        if (printProvider.supportProgress()) {
+            this.add(this.progressPanel);
+        }
+
         this.doLayout();
 
-        if(this.autoFit === true) {
+        if (this.autoFit === true) {
             this.onMoveend();
             this.mapPanel.map.events.on({
                 "moveend": this.onMoveend,
@@ -257,20 +416,106 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             });
         }
     },
-    
+
+    /** private: method[print]
+     *
+     *  Do the print.
+     */
+    print: function() {
+        if (this.printProvider.supportProgress()) {
+            var self = this;
+            var interval = null;
+            var updateStatus;
+            var statusComponent = new Ext.BoxComponent({
+                cls: "x-form-item",
+                autoEl: {
+                    tag: "span",
+                    html: "Create new print job.<br/>&nbsp;"
+                },
+                style: {
+                    position: "relative"
+                }
+            });
+            this.progressPanel.add(statusComponent);
+            this.doLayout();
+            var statusCallback = function(ref, succes, currentStatus) {
+                if (!succes) {
+                    statusComponent.update(self.statusErrorText);
+                    clearInterval(interval);
+                    return;
+                }
+                if (currentStatus.done) {
+                    clearInterval(interval);
+                    if (currentStatus.error) {
+                        statusComponent.update(currentStatus.error.replace(/\n/g, "<br />"));
+                        return;
+                    }
+                    statusComponent.update('<a href="#">' + self.downloadPdfText + "</a>");
+                    statusComponent.el.dom.childNodes[0].onclick = function(event) {
+                        if (event.preventDefault) {
+                            event.preventDefault();
+                        }
+                        self.printProvider.download(
+                            self.printProvider.getDownloadURL(ref)
+                        );
+                        self.progressPanel.remove(statusComponent);
+                        statusComponent.destroy();
+                        statusComponent = null;
+                        return false;
+                    };
+                }
+                else {
+                    if (interval === null) {
+                        interval = setInterval(updateStatus, Math.max(500, currentStatus.time));
+                    }
+                    currentStatus.timeS = currentStatus.time / 1000.0;
+                    statusComponent.update(
+                        self.printStatusTemplate.apply(currentStatus)
+                    );
+                }
+            };
+            var printCallback = function(ref) {
+                self.busyMask.hide();
+                updateStatus = function() {
+                    self.printProvider.getStatus(ref, statusCallback);
+                };
+                updateStatus();
+            };
+            this.printExtent.print(this.printOptions, printCallback);
+        }
+        else {
+            this.printExtent.print(this.printOptions);
+        }
+    },
+
+    /** public: method[updateItem]
+     *
+     *  Override this method to customise the attributes form items.
+     */
+    updateItem: function(item, attribute) {
+        return item;
+    },
+
+    /** public: method[addCustomItem]
+     *
+     *  Define this method to be able to manage unsupported types.
+     *
+     *  Arguments: item, attribute, extraAttributes, fieldAttributes
+     */
+
     /** private: method[onMoveend]
      *  Handler for the map's moveend event
      */
     onMoveend: function() {
         this.printPage.fit(this.mapPanel.map, {mode: "screen"});
     },
-    
+
     /** private: method[beforeDestroy]
      */
     beforeDestroy: function() {
-        var p = this.printExtent.printProvider;
-        p.un("beforePrint", this.busyMask.show, this.busyMask);
-        p.un("print", this.busyMask.hide, this.busyMask);
+        var printProvider = this.printExtent.printProvider;
+        printProvider.un("beforePrint", this.busyMask.show, this.busyMask);
+        printProvider.un("print", this.busyMask.hide, this.busyMask);
         if(this.autoFit === true) {
             this.mapPanel.map.events.un({
                 "moveend": this.onMoveend,

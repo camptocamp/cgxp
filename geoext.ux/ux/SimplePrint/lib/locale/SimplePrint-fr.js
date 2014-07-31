@@ -15,7 +15,12 @@ GeoExt.Lang.add("fr", {
         layoutText: "Disposition",
         dpiText: "PPP",
         scaleText: "Échelle",
+        rotationText: "Rotation",
         printText: "Imprimer",
-        creatingPdfText: "Création du PDF ..."
+        creatingPdfText: "Création du PDF ...",
+        printStatusText: '<tpl for=".">Position dans la file: {count}<br />Temps moyen par impression: {timeS} [s]</tpl>',
+        downloadPdfText: "Téléchargement",
+        statusErrorText: "Erreur",
+        includelegendText: "Inclure la légende"
     }
 });
