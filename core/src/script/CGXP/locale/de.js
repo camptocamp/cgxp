@@ -142,6 +142,11 @@ GeoExt.Lang.add("de", {
         labelText: "Massstab: "
     },
 
+    "cgxp.plugins.PositionChooser.prototype": {
+        labelText: "Bewegen: ",
+        emptyText: "Bereich... "
+    },
+
     "cgxp.plugins.Editing.prototype": {
         helpText: "Klicken Sie auf die Karten um <b>ein bestehendes Element zu editieren</b>, oder",
         layerMenuText: "Wählen Sie eine Ebene",
