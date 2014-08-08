@@ -251,7 +251,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         if (!this.active) {
             this.loadingChecker();
         }
-        return cgxp.plugins.StreetView.superclass.activate.call(this);
+        return cgxp.plugins.GoogleEarthView.superclass.activate.call(this);
     },
 
     /** private: method[deactivate]
@@ -260,7 +260,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         if (this.active) {
             this.unloadGoogleEarth();
         }
-        return cgxp.plugins.StreetView.superclass.deactivate.call(this);
+        return cgxp.plugins.GoogleEarthView.superclass.deactivate.call(this);
     },
 
     /** private: method[addActions]
