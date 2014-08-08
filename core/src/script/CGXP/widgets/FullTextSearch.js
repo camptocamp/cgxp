@@ -38,8 +38,9 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
 
     /** api: config[tooltipEl]
      *  ``String`` Optional id of an element to place the tooltip in.
+     *  Default is ``search-tip``
      */
-    tooltipEl: null,
+    tooltipEl: "search-tip",
 
     /** api: config[emptyText]
      *  ``String`` Text to use when the field is empty (i18n).
