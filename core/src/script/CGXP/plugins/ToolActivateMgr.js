@@ -19,9 +19,12 @@ Ext.namespace("cgxp.plugins");
 
 cgxp.plugins.ToolActivateMgr = (function() {
     var groups = {};
+    var inMgr = false;
 
     function activateTool(tool) {
-        if (!tool.autoActivate) {
+        if (!tool.autoActivate && !inMgr) {
+            inMgr = true;
+
             // deactivate all but "tool"
             var i, g = groups[tool.activateToggleGroup];
             for (i = 0; i < g.length; ++i) {
@@ -29,11 +32,15 @@ cgxp.plugins.ToolActivateMgr = (function() {
                     g[i].deactivate();
                 }
             }
+
+            inMgr = false;
         }
     }
 
     function deactivateTool(tool) {
-        if (!tool.autoActivate) {
+        if (!tool.autoActivate && !inMgr) {
+             inMgr = true;
+
             // activate those that have "autoActivate" set
             var i, g = groups[tool.activateToggleGroup];
             for (i = 0; i < g.length; ++i) {
@@ -41,6 +48,8 @@ cgxp.plugins.ToolActivateMgr = (function() {
                     g[i].activate();
                 }
             }
+
+            inMgr = false;
         }
     }
 
