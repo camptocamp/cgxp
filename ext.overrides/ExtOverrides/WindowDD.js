@@ -5,11 +5,11 @@
     cf: http://www.sencha.com/forum/showthread.php?264999-Ext-JS-3.4.x-IE10-Move-cursor-remains-after-dragging-Window
     HACK by http://www.sencha.com/forum/member.php?18080-Rocco
 */
-Ext.override(Ext.Window.DD, {
-    endDrag : function(e){
-        if (Ext.isIE) {
+if (Ext.isIE) {
+    Ext.override(Ext.Window.DD, {
+        endDrag : function(e){
             Ext.defer(this.win.unghost, 1, this.win); // HACK
+            this.win.saveState();
         }
-        this.win.saveState();
-    }
-});
+    });
+}
