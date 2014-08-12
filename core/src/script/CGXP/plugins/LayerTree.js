@@ -107,7 +107,6 @@ Ext.namespace("cgxp.plugins");
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
  *              themes: THEMES,
- *              uniqueTheme: true,
  *              % if permalink_themes:
  *                  permalinkThemes: ${permalink_themes | n},
  *              % endif
@@ -116,6 +115,7 @@ Ext.namespace("cgxp.plugins");
  *              wmsURL: "${request.route_url('mapserverproxy', path='')}",
  *              outputTarget: "layerpanel"
  *              outputConfig: {
+ *                  uniqueTheme: true,
  *                  header: false,
  *                  flex: 1,
  *                  layout: "fit",
