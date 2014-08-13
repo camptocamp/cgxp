@@ -112,6 +112,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
     viewerReady: function() {
         if (this.layerTreeId) {
             var layertree = this.target.tools[this.layerTreeId].tree;
+            this.initialTheme = layertree.getLastLoadedTheme();
             layertree.on('loadtheme', this.detectInitialTheme, this);
         }
     },

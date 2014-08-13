@@ -209,6 +209,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     orderIndex: 0,
 
+    /** private: property[lastLoadedTheme]
+     *  ``Object``
+     *  Theme that was loaded last.
+     */
+    lastLoadedTheme: null,
+
     /**
      * Property: actionsPlugin
      */
@@ -1227,7 +1233,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             history.replaceState({}, OpenLayers.i18n(theme.name), newUrl);
         }
 
+        this.lastLoadedTheme = theme;
         this.fireEvent('loadtheme', theme);
+    },
+
+    /** api: method[getLastLoadedTheme]
+     */
+    getLastLoadedTheme: function() {
+        return this.lastLoadedTheme;
     },
 
     /** api: method[loadGroup]
