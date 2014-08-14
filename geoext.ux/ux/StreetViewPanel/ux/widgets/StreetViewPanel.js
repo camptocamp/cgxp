@@ -134,7 +134,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
     /** private: property[radius]
      *  ``Number``  The radius to search for panorama around.
      */
-    radius: 100,
+    radius: 50,
 
     /** api: config[baseUrl]
      *  ``Boolean``  base url of this directory resources necessary to get the images (directory containing resources). Has to be set if this file is integrated in a JS build.
