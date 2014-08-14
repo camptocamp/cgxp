@@ -24,7 +24,7 @@ GeoExt.ux.StreetViewClick = OpenLayers.Class(OpenLayers.Control, {
     /** private: property[radius]
      *  ``Number``  The radius to search for panorama around.
      */
-    radius: 100,
+    radius: 50,
 
     /** api: property[defaultHandlerOptions]
      *  Default options.
