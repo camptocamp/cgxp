@@ -107,6 +107,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
  *              outputConfig: {
+ *                  uniqueTheme: true,
  *                  header: false,
  *                  flex: 1,
  *                  layout: "fit",
