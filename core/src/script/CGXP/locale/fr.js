@@ -146,6 +146,11 @@ GeoExt.Lang.add("fr", {
         labelText: "Échelle&nbsp;: "
     },
 
+    "cgxp.plugins.LocationChooser.prototype": {
+        labelText: "Se déplacer vers",
+        tooltipText: "Centrer la carte sur un lieu prédéfini"
+    },
+
     "cgxp.plugins.Editing.prototype": {
         helpText: "Cliquer sur la carte pour <b>éditer des objets</b>, ou",
         layerMenuText: "Choisir une couche",

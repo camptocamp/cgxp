@@ -83,8 +83,10 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[shortenerCreateURL]
      *  ``String``
-     *  The URL used to create the short URL.
+     *  URL of the service used to create the short URL.
+     *  If not specified, the permalink will not be shortened.
      */
+    shortenerCreateURL: null,
 
     /** private: property[emailField]
      *  ``Ext.form.TextField``
