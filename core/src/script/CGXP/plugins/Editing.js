@@ -763,6 +763,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 border: false
             }, this.windowOptions));
         }
+        if (!this.windowOptions.title) {
+            var selectedLayerId = this.editorGrid.featureInfo.attributes.__layer_id__;
+            var selectedLayerName = this.getEditableLayers()[selectedLayerId].item;
+            this.attributePopup.setTitle(OpenLayers.i18n(selectedLayerName));
+        }
         this.attributePopup.add(this.editorGrid);
         this.attributePopup.show();
         if (first) {
