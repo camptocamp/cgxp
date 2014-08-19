@@ -56,6 +56,11 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_measure */
     ptype: "cgxp_measure",
 
+    /** api: config[minAzimuth]
+     *  ``Number`` the minimum azimuth value, e.g. -180, default is 0.
+     */
+    minAzimuth: 0,
+
     /** api: config[actionConfig]
      *  ``Object``
      *  Config object for the action created by this plugin.
@@ -947,7 +952,8 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         // negative or positive
         var factor = x > 0 ? 1 : -1;
 
-        return Math.round(factor * rad * 180 / Math.PI);
+        var azimuth = Math.round(factor * rad * 180 / Math.PI);
+        return cgxp.tools.modulo(azimuth - this.minAzimuth, 360) + this.minAzimuth;
     },
 
     CLASS_NAME: "cgxp.plugins.Measure.SegmentMeasureControl"

@@ -106,3 +106,10 @@ cgxp.tools.notification.close = function(message, timeout, mapPanel) {
     }
     cgxp.tools.notification.timeout = undefined;
 };
+
+/**
+ * A good modulo as in Python
+ */
+cgxp.tools.modulo = function(dividend, divisor) {
+    return (dividend % divisor + divisor) % divisor;
+};
