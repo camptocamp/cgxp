@@ -214,6 +214,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
      */
     enableTotalHits: false,
 
+    /** api: config[disableGetFeatureInfo]
+     *  ``Boolean``
+     *  Set to true to make point requests handled by WFS GetFeature instead of
+     *  WMS GetFeatureInfo. Default is false.
+     */
+    disableGetFeatureInfo: false,
+
     /* i18n */
     tooltipText: "Query objects on the map",
     menuText: "Query the map",
@@ -229,7 +236,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /** private: method[activate]
      */
     activate: function() {
-        if (!this.active) {
+        if (!this.disableGetFeatureInfo && !this.active) {
             this.clickWMSControl.activate();
         }
         return cgxp.plugins.GetFeature.superclass.activate.call(this);
@@ -238,7 +245,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
     /** private: method[deactivate]
      */
     deactivate: function() {
-        if (this.active) {
+        if (!this.disableGetFeatureInfo && this.active) {
             this.clickWMSControl.deactivate();
         }
         this.events.fireEvent('queryclose');
@@ -294,7 +301,9 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             this.externalLayersConfig = browse(this.themes.external);
         }
 
-        this.buildWMSControl(map);
+        if (!this.disableGetFeatureInfo) {
+            this.buildWMSControl(map);
+        }
         this.buildWFSControls(map);
     },
 
@@ -640,7 +649,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             this.toolWFSControl = new OpenLayers.Control.GetFeature({
                 target: this.target,
                 box: true,
-                click: false,
+                click: this.disableGetFeatureInfo,
                 single: false,
                 eventListeners: listeners,
                 request: request
@@ -652,7 +661,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
             target: this.target,
             box: true,
-            click: false,
+            click: this.disableGetFeatureInfo,
             single: false,
             handlerOptions: {
                 box: {
