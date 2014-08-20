@@ -202,6 +202,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     accountButtonTooltip: "Manage connection",
     pwdChangeOkTitle: "Password Changed",
     pwdChangeOkText: "The password change has been applied.",
+    pwdChangeKoTitle: "Password update has failed",
     pwdChangeForceTitle: "Change Password",
     pwdChangeForceText: "You must change your password.",
 
@@ -477,11 +478,17 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
         this.loginForm.getForm().submit({
             method: 'POST',
-            success: function() {
+            success: function(element, evt) {
                 if (this.actionChangePassword) {
                     this.submitButton.setIconClass('');
                     this.loginWindow.hide();
-                    Ext.Msg.alert(this.pwdChangeOkTitle, this.pwdChangeOkText);
+                    var response = new OpenLayers.format.json.read(evt.response.responseText);
+                    if (response.success) {
+                        Ext.Msg.alert(this.pwdChangeOkTitle, this.pwdChangeOkText);
+                    }
+                    else {
+                        Ext.Msg.alert(this.pwdChangeKoTitle, response.error);
+                    }
                 } else {
                     if (Ext.isIE) {
                         window.external.AutoCompleteSaveForm(

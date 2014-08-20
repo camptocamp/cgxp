@@ -118,6 +118,7 @@ GeoExt.Lang.add("fr", {
         accountButtonTooltip: "Gérer les accès",
         pwdChangeOkTitle: "Mot de passe modifié",
         pwdChangeOkText: "Le nouveau mot de passe a été enregistré.",
+        pwdChangeKoTitle: "La modification du mot de passe a échoué",
         pwdChangeForceTitle: "Changer le mot de passe",
         pwdChangeForceText: "Vous devez modifier votre mot de passe."
     },

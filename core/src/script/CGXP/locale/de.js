@@ -114,6 +114,7 @@ GeoExt.Lang.add("de", {
         accountButtonTooltip: "Zugänge verwalten",
         pwdChangeOkTitle: "Passwort geändert",
         pwdChangeOkText: "Das neue Passwort wurde geändert.",
+        pwdChangeKoTitle: "Die Passwortänderung ist fehlgeschlagen",
         pwdChangeForceTitle: "Passwort ändern",
         pwdChangeForceText: "Sie müssen Ihr Passwort ändern."
     },
