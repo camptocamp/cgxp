@@ -43,6 +43,7 @@ Ext.namespace("cgxp.plugins");
  *
  *  .. code-block:: javascript
  *
+ *      <% from json import dumps %>
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -52,6 +53,7 @@ Ext.namespace("cgxp.plugins");
  *              outputTarget: "left-panel",
  *              printURL: "${request.route_url('printproxy', path='')}",
  *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              printProviderConfig: ${dumps(url_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -69,6 +71,7 @@ Ext.namespace("cgxp.plugins");
  *
  *  .. code-block:: javascript
  *
+ *      <% from json import dumps %>
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -79,6 +82,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              printURL: "${request.route_url('printproxy', path='')}",
  *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              printProviderConfig: ${dumps(url_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
