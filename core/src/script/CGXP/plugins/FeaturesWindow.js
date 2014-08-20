@@ -43,6 +43,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_featureswindow",
+ *              id: "featuresProvider",
  *              themes: THEMES,
  *              events: EVENTS
  *          }, {
