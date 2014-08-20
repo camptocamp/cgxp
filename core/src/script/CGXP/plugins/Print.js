@@ -49,7 +49,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_print',
  *              legendPanelId: "legendPanel",
- *              featureProvider: "featureGrid",
+ *              featureProvider: "featuresProvider",
  *              outputTarget: "left-panel",
  *              printURL: "${request.route_url('printproxy', path='')}",
  *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
@@ -77,7 +77,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_print',
  *              legendPanelId: "legendPanel",
- *              featureProvider: "featureGrid",
+ *              featureProvider: "featuresProvider",
  *              actionTarget: "center.tbar",
  *              toggleGroup: "maptools",
  *              printURL: "${request.route_url('printproxy', path='')}",

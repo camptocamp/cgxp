@@ -52,7 +52,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_featuresgrid",
- *              id: "featuresGrid",
+ *              id: "featuresProvider",
  *              csvURL: "${request.route_url('csvecho')}",
  *              outputTarget: "featuresgrid-container",
  *              themes: THEMES,
