@@ -240,11 +240,29 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** api: config[resultText]
      *  ``String`` Text for the "number of result" label (singular) (i18n).
      */
-    resultText: "Result",
-    /** api: config[resultsText]
-     *  ``String`` Text for the "number of result" label (plural) (i18n).
-     */
-    resultsText: "Results",
+    resultText: "Total number of features: ",
+
+    /** api: config[totalSurfaceText]
+     *  ``String`` Text for the sum of polygons areas (i18n).
+     */   
+    totalSurfaceText: "Total surface: ",
+    /** api: config[totalLengthText]
+     *  ``String`` Text for the sum of lines length (i18n).
+     */ 
+    totalLengthText: "Total length: ",
+    /** api: config[TotalResultText]
+     *  ``String`` Text for the "number of result" label (i18n).
+     */ 
+    totalResultText: "result",
+    /** api: config[TotalResultText]
+     *  ``String`` Text for the "number of results" label (plural) (i18n).
+     */ 
+    totalResultsText: "results",
+    /** api: config[statusTemplateText]
+     *  ``String`` Template for the size and number of result label. Leave it empties ("") to
+     *  get only the number of results and not the "size" part.
+     */ 
+    statusTemplateText: '{totalSizeText} {[values.geomSize.toFixed(2)]}{geomUnit} - {totalResult} {totalResultText}',
     /** api: config[suggestionText]
      *  ``String`` Text for the shortened notice message (i18n).
      */
@@ -256,7 +274,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** api: config[totalNbOfFeaturesText]
      *  ``String`` Text indicating the total number of features matching the
      *  query (i18n).
-     */ 
+     */
     totalNbOfFeaturesText: "Total number of features: ",
     /** api: config[countingText]
      *  ``String`` Text displayed until the total number of features is
@@ -508,12 +526,48 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  Gets the result count.
      */
     getCount: function() {
-        if (!this.currentGrid || !this.currentGrid.getStore()) {
-            return "0 " + this.resultText;
+        if (!this.currentGrid || !this.currentGrid.getStore()||
+                !this.currentGrid.getStore().totalLength ||
+                !this.currentGrid.getStore().getAt(0)) {
+            return '';
         }
+
+        var feature = this.currentGrid.getStore().getAt(0).getFeature();
         var count = this.currentGrid.getStore().getCount();
-        var resultText = (count>1) ? this.resultsText : this.resultText;
-        return count + " " + resultText;
+        var resultText = (count>1) ? this.totalResultsText : this.totalResultText;
+
+        if (!this.statusTemplateText || !feature || !feature.geometry ||
+                feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point"){
+            return count + " " +  resultText;
+        }
+
+        var tpl = new Ext.XTemplate(this.statusTemplateText);
+        var geomSize = 0;
+        var isPolygon = false;
+        var i = 0;
+        if (feature && feature.geometry) {
+            if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Polygon") {
+                isPolygon = true;
+                for (i; i<count; i++ ) {
+                    feature = this.currentGrid.getStore().getAt(i).getFeature();
+                    geomSize += feature.geometry.getArea();
+                }
+            }
+            else if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.LineString") {
+                for (i; i<count; i++) {
+                    feature = this.currentGrid.getStore().getAt(i).getFeature();
+                    geomSize += feature.geometry.getLength();
+                }
+            }
+        }
+        
+        return tpl.apply({
+            totalSizeText: isPolygon ? this.totalSurfaceText : this.totalLengthText,
+            geomSize: geomSize,
+            geomUnit: this.target.mapPanel.map.getUnits() + (isPolygon ? '²' : ''),
+            totalResult: count,
+            totalResultText: resultText
+        });
     },
 
     /** private: method[showFeature]
