@@ -779,6 +779,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     onLabelAdded: function(event) {
         var feature = event.feature;
         feature.isLabel = true;
+        feature.style.label = feature.attributes[this.featurePanel.labelAttribute];
     },
 
     /** private: method[onCircleAdded]
@@ -1128,7 +1129,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             }
             f.style.label = measure.join(' ');
             f.style.fontSize = "12px";
-        } else {
+        }
+        else if (!f.isLabel) {
             delete f.style.label;
         }
         f.layer.drawFeature(f);
