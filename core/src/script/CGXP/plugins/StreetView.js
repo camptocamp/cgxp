@@ -155,7 +155,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
         return cgxp.plugins.StreetView.superclass.deactivate.call(this);
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         this.outputTarget = Ext.getCmp(this.outputTarget);
@@ -194,7 +194,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** api: method[loadGoogleEarth]
+    /** private: method[loadGoogleEarth]
      *  Load and open the GoogleEarth panel and initialize GoogleEarth
      */
     loadStreetView: function() {
@@ -234,7 +234,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
         cgxp.tools.notification.show(this.helpMessage, 5000);
     },
 
-    /** api: method[unloadGoogleEarth]
+    /** private: method[unloadGoogleEarth]
      *  Uninitialize GoogleEarth and unload and close the GoogleEarth panel
      */
     unloadStreetView: function() {

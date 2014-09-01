@@ -262,7 +262,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         cgxp.plugins.GetFeature.superclass.init.call(this, target);
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         if (this.actionTarget) {

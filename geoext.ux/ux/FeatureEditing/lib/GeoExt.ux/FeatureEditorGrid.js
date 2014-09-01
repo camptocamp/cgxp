@@ -142,7 +142,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     deleteButton: undefined,
 
-    /** public: property[dirty]
+    /** api: property[dirty]
      *  ``Boolean`` This property is used by this grid to track
      *  whether the feature is modified. Read-only.
      */
@@ -386,7 +386,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         }
     },
 
-    /** public: method[cancel]
+    /** private: method[cancel]
      *  Undo changes, gets the initial geometry, attributes and
      *  state back in the feature.
      */

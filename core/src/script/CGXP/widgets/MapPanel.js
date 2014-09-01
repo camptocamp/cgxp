@@ -62,18 +62,18 @@ Ext.namespace("cgxp");
  */
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
-    /** api: property[vectorLayer]
+    /** private: property[vectorLayer]
      *  ``OpenLayers.Layer.Vector``
      */
     vectorLayer: null,
 
-    /** api: property[crosshairStyle]
+    /** api: config[crosshairStyle]
      *  ``Object``
      *  The crosshair style
      */
     crosshairStyle: {},
 
-    /** api: property[params]
+    /** private: property[params]
      *  ``Object``
      *  The layers params, read only.
      */
@@ -207,7 +207,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         return this.vectorLayer;
     },
 
-    /** public: method[setParams]
+    /** private: method[setParams]
      *  :param params: ``Object`` The new parameters.
      *
      *  Set a parameter on all the layers and fire event with modified params.

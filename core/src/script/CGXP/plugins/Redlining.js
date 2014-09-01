@@ -163,7 +163,7 @@ cgxp.plugins.Redlining = Ext.extend(gxp.plugins.Tool, {
         this.redliningWindow.add(this.redliningPanel);
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         /**

@@ -299,7 +299,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         return this.printPanel;
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var button;

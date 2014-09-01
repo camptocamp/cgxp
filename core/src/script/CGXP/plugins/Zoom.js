@@ -59,7 +59,7 @@ cgxp.plugins.Zoom = Ext.extend(gxp.plugins.Zoom, {
      */
     toggleGroup: null,
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var actions = [new GeoExt.Action({

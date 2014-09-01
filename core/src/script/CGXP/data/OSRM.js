@@ -72,7 +72,7 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
         cgxp.data.OSRM.superclass.constructor.call(this, config);
     },
 
-    /** api: method[getNearest]
+    /** private: method[getNearest]
      *  Find the nearest location on the routing network
      *
      *  :return ``Object`` a handle that can be used to cancel the

@@ -120,7 +120,7 @@ cgxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         return Ext.state.Manager.getProvider().getLink(base);
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
 
