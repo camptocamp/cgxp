@@ -208,6 +208,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     openFeatures: 1,
 
+    /** private: method[init]
+     */
     init: function(target) {
         // Set default
         this.defaultStyle = OpenLayers.Util.applyDefaults(
@@ -229,6 +231,8 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         this.target.on('ready', this.viewerReady, this);
     },
 
+    /** private: method[viewerReady]
+     */
     viewerReady: function() {
         var map = this.target.mapPanel.map;
 
@@ -271,9 +275,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         map.addLayer(this.vectorLayer);
     },
 
-    /** public: method[getDetail]
+    /** api: method[getDetail]
      *  Create the details view of a feature,
      *  Override this to change the details view
+     *  ``Object`` feature
      */
     getDetail: function(feature) {
         var detail = ['<table class="detail">'],
@@ -300,6 +305,15 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         detail.push('</table>');
         return detail.join('');
     },
+
+    /** api: method[onRowExpand] 
+     *  Called when a row is expanded. Do nothing by default.
+     *  ``Object`` RowExpander object
+     *  ``Ext.data.Record`` Record for the selected row
+     *  ``Object`` Body element for the secondary row
+     *  ``Integer`` The current row index
+     */
+    onRowExpand: function(expander, record, body, rowIndex) {},    
 
     /** private: method[extendFeaturesAttributes]
      *
@@ -512,7 +526,11 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
             ]
         });
         var rowexpander = new Ext.ux.grid.RowExpander({
-            tpl: new Ext.Template('{' + this.formatedAttributesId + '}')
+            tpl: new Ext.Template('{' + this.formatedAttributesId + '}'),
+            listeners: {
+                expand: this.onRowExpand,
+                scope: this
+            }
         });
 
         var groupTextTpl = [
