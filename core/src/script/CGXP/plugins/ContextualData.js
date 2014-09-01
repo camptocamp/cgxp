@@ -201,7 +201,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
     /** i18n */
     menuText: 'Contextual data',
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
 

@@ -59,7 +59,7 @@ cgxp.plugins.OSMSource = Ext.extend(gxp.plugins.OSMSource, {
     /** api: ptype = cgxp_osmsource */
     ptype: "cgxp_osmsource",
 
-    /** api: method[createLayerRecord]
+    /** private: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``
      *

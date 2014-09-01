@@ -110,7 +110,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.addLayer(this.highlightLayer);
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
 

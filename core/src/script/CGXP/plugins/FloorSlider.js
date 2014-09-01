@@ -112,7 +112,7 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
      *  The FloorSlider widget
      */
 
-    /** public: method[init]
+    /** private: method[init]
      */
     init: function() {
         cgxp.plugins.FloorSlider.superclass.init.apply(this, arguments);
@@ -128,7 +128,7 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
         }, this);
     },
 
-    /** public: method[getFloor]
+    /** api: method[getFloor]
      *  Get the current floor, ``undefined`` for sky.
      */
     getFloor: function() {

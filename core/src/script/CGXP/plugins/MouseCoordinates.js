@@ -78,7 +78,7 @@ cgxp.plugins.MouseCoordinates = Ext.extend(gxp.plugins.Tool, {
      */
     controlConfig: null,
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var statustext = new Ext.Toolbar.TextItem({

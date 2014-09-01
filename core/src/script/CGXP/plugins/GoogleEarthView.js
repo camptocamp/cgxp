@@ -302,7 +302,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** api: method[loadGoogleEarth]
+    /** private: method[loadGoogleEarth]
      *  Load and open the GoogleEarth panel and initialize GoogleEarth
      */
     loadGoogleEarth: function() {
@@ -415,7 +415,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         this.outputTarget.doLayout();
     },
 
-    /** api: method[unloadGoogleEarth]
+    /** private: method[unloadGoogleEarth]
      *  Uninitialize GoogleEarth and unload and close the GoogleEarth panel
      */
     unloadGoogleEarth: function() {

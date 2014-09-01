@@ -58,7 +58,7 @@ cgxp.plugins.MenuShortcut = Ext.extend(gxp.plugins.Tool, {
      */
     type: '->',
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var classes = {

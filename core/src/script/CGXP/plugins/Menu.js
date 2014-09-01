@@ -119,7 +119,7 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: "center.tbar",
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var self = this;

@@ -206,7 +206,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     pwdChangeForceTitle: "Change Password",
     pwdChangeForceText: "You must change your password.",
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         this.submitButton = new Ext.Button({

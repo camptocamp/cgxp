@@ -64,7 +64,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
     /** i18n */
     actionTooltip: "Recenter to my location",
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         if (!('geolocation' in navigator)) return [];

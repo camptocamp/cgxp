@@ -1237,13 +1237,13 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         this.fireEvent('loadtheme', theme);
     },
 
-    /** api: method[getLastLoadedTheme]
+    /** private: method[getLastLoadedTheme]
      */
     getLastLoadedTheme: function() {
         return this.lastLoadedTheme;
     },
 
-    /** api: method[loadGroup]
+    /** private: method[loadGroup]
      *  Loads a layer group from the config.
      *
      *  :arg group: ``Object`` the group config
@@ -1451,7 +1451,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return isAllowed;
     },
 
-    /** api: method[applyState]
+    /** private: method[applyState]
      *  :arg state: ``Object``
      */
     applyState: function(state) {
@@ -1571,7 +1571,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }, this);
     },
 
-    /** api: method[getState]
+    /** private: method[getState]
      *  :returns: ``Object``
      */
     getState: function() {
@@ -1609,7 +1609,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return state;
     },
 
-    /** api: method[findGroupByLayerName]
+    /** private: method[findGroupByLayerName]
      *  Finds the group config for a specific layer using its name.
      *
      *  :arg name: ``String``
@@ -1642,7 +1642,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return all ? result : result[0];
     },
 
-    /** api: method[findGroupByName]
+    /** private: method[findGroupByName]
      *  Finds the group config using its name.
      *
      *  :arg name: ``String``
@@ -1668,7 +1668,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return group;
     },
 
-    /** api: method[findThemeByName]
+    /** private: method[findThemeByName]
      *  Finds the theme config using its name.
      *
      *  :arg name: ``String``
@@ -1689,7 +1689,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         return theme;
     },
 
-    /** api: method[checkInRange]
+    /** private: method[checkInRange]
      *  Checks if a layer is in range (correct scale) and modifies node.
      *  rendering consequently
      *  :arg node: ``Ext.tree.TreeNode``
@@ -1726,7 +1726,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /** api: method[loadDefaultThemes]
+    /** private: method[loadDefaultThemes]
      *  Load the default Theme.
      */
     loadDefaultThemes: function() {
@@ -1742,9 +1742,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    /** api: method[removeGroup]
-     * Removes a layer group.
-     * :arg node: ``Ext.tree.TreeNode``
+    /** private: method[removeGroup]
+     *  Removes a layer group.
+     *  :arg node: ``Ext.tree.TreeNode``
      */
     removeGroup: function(node) {
         node.remove();

@@ -62,7 +62,7 @@ cgxp.plugins.GoogleSource = Ext.extend(gxp.plugins.GoogleSource, {
     /** api: ptype = cgxp_googlesource */
     ptype: "cgxp_googlesource",
 
-    /** api: method[createLayerRecord]
+    /** private: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``
      *

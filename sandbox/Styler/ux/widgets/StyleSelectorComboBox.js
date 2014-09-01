@@ -55,7 +55,7 @@ GeoExt.ux.StyleSelectorComboBox = Ext.extend(Ext.Panel, {
     },
 
 
-    /** public: method[createLayout]
+    /** api: method[createLayout]
      *  This function returns a GeoExt object (Panel, Window, etc)
      *  If a generic Styler class is created, then this class would be an 
      *  Observable that create and return a Panel in this function.
@@ -70,7 +70,7 @@ GeoExt.ux.StyleSelectorComboBox = Ext.extend(Ext.Panel, {
     initComboBox: function() {
         var oItems= Array();
 
-        if(this.store == null){
+        if (this.store === null) {
             return;
         }
 

@@ -79,7 +79,7 @@ cgxp.plugins.Help = Ext.extend(gxp.plugins.Tool, {
      *  Configuration object for the action created by this plugin.
      */
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var action = new GeoExt.Action(Ext.apply({

@@ -278,7 +278,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** api: method[getDetail]
      *  Create the details view of a feature,
      *  Override this to change the details view
-     *  ``Object`` feature
+     *  :arg feature: ``Object`` feature
      */
     getDetail: function(feature) {
         var detail = ['<table class="detail">'],
@@ -308,10 +308,10 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
     /** api: method[onRowExpand] 
      *  Called when a row is expanded. Do nothing by default.
-     *  ``Object`` RowExpander object
-     *  ``Ext.data.Record`` Record for the selected row
-     *  ``Object`` Body element for the secondary row
-     *  ``Integer`` The current row index
+     *  :arg expander: ``Object`` RowExpander object
+     *  :arg record: ``Ext.data.Record`` Record for the selected row
+     *  :arg body: ``Object`` Body element for the secondary row
+     *  :arg rowIndex: ``Integer`` The current row index
      */
     onRowExpand: function(expander, record, body, rowIndex) {},    
 

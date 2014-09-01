@@ -567,7 +567,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         return metric.toFixed(2) + " " + metricUnit + dim;
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         this.activeIndex = 1;

@@ -86,7 +86,7 @@ cgxp.api.Map.prototype = {
      */
     deferedCalls: null,
 
-    /** api: method[initMap]
+    /** private: method[initMap]
      *  :arg config:  ``Object``
      *
      *  Is intended to be overriden in inheriting classes.
@@ -180,7 +180,7 @@ cgxp.api.Map.prototype = {
         }
     },
 
-    /** api: method[adaptConfigForViewer]
+    /** private: method[adaptConfigForViewer]
      *  :arg config: ``Object`` the map config
      *  :returns: ``Object`` The new config to be used for the map option of the
      *      viewer
@@ -209,7 +209,7 @@ cgxp.api.Map.prototype = {
         return newConfig;
     },
 
-    /** api: method[onViewerReady]
+    /** private: method[onViewerReady]
      *  :arg viewer: ``GXP.widgets.Viewer`` the viewer
      *
      *  Method to be called as GXP.widgets.Viewer ready event callback.
@@ -233,7 +233,7 @@ cgxp.api.Map.prototype = {
         }
     },
 
-    /** api: method[initMapFromConfig]
+    /** private: method[initMapFromConfig]
      *  :arg config: ``Object``
      *
      *  Convenience method to create a map from a config.

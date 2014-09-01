@@ -77,7 +77,7 @@ cgxp.plugins.LocationChooser = Ext.extend(gxp.plugins.Tool, {
      */
     locations: {},
 
-    /** public: method[addActions]
+    /** private: method[addActions]
      *  :arg config: ``Object``
      */
     addActions: function(config) {

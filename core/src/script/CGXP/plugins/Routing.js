@@ -279,7 +279,7 @@ cgxp.plugins.Routing = Ext.extend(gxp.plugins.Tool, {
         return this.routingPanel;
     },
 
-    /** api: method[addActions]
+    /** private: method[addActions]
      */
     addActions: function() {
         var button;

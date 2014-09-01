@@ -148,7 +148,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
         return this.toolbar;
     },
 
-    /** public: method[addActions]
+    /** private: method[addActions]
      *  :arg config: ``Object``
      */
     addActions: function(config) {

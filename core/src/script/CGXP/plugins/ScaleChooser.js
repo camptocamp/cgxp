@@ -142,7 +142,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
         return "1 : " + parseInt(scale.data.scale);
     },
 
-    /** public: method[addActions]
+    /** private: method[addActions]
      *  :arg config: ``Object``
      */
     addActions: function(config) {
@@ -189,7 +189,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
         return cgxp.plugins.ScaleChooser.superclass.addActions.apply(this, [args]);
     },
 
-    /** api: method[roundStore]
+    /** private: method[roundStore]
      *  :arg store: ``Ext.data.Store``
      *  :arg records: ``Array(Ext.data.Record)``
      *  :arg options: ``Object``
