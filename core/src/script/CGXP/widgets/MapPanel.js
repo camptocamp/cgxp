@@ -130,7 +130,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
             zoom: this.map.getZoom()
         } : {};
 
-        for (param in this.params) {
+        for (var param in this.params) {
             state['param_' + param] = this.params[param];
         }
 
@@ -165,10 +165,9 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
             ]);
         }
         params = {};
-        for (key in state) {
-
-            if (state.hasOwnProperty(key) && key.indexOf('param_') == 0) {
-                params[key.substring(6)] = state[key]
+        for (var key in state) {
+            if (state.hasOwnProperty(key) && key.indexOf('param_') === 0) {
+                params[key.substring(6)] = state[key];
             }
         }
         this.setParams(params);

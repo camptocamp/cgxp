@@ -70,7 +70,7 @@ GeoExt.ux.StyleSelectorComboBox = Ext.extend(Ext.Panel, {
     initComboBox: function() {
         var oItems= Array();
 
-        if(this.store == null){
+        if (this.store === null) {
             return;
         }
 
