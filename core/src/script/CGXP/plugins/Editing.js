@@ -132,10 +132,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     floorSliderId: null,
 
-    /** api: config[windowOptions]
-     * ``Object`` Additional options given to the window constructor.
+    /** api: config[layersWindowOptions]
+     * ``Object`` Additional options given to the layer selector window constructor.
      */
-    windowOptions: {},
+    layersWindowOptions: {},
+
+    /** api: config[attributesWindowOptions]
+     * ``Object`` Additional options given to the attributes form window constructor.
+     */
+    attributesWindowOptions: {},
 
     /** api: config[readParams]
      *  ``Object``
@@ -286,7 +291,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.createGetFeatureControl();
 
         this.newFeatureBtn = this.createNewFeatureBtn();
-        var win = this.win = new Ext.Window({
+        var win = this.win = new Ext.Window(Ext.apply({
             width: 300,
             border: false,
             closable: false,
@@ -297,7 +302,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 xtype: 'box',
                 html: this.helpText + '<hr />'
             }, this.newFeatureBtn]
-        });
+        }, this.layersWindowOptions));
         this.target.mapPanel.on({
             'render': function() {
                 win.show();
@@ -761,7 +766,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 unpinnable: false,
                 draggable: true,
                 border: false
-            }, this.windowOptions));
+            }, this.attributesWindowOptions));
         }
         this.attributePopup.add(this.editorGrid);
         this.attributePopup.show();
