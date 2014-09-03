@@ -602,8 +602,7 @@ cgxp.plugins.Profile.Control = OpenLayers.Class(OpenLayers.Control.DrawFeature, 
     /**
      * Constructor: App.Profile
      *
-     * Parameters:
-     * options - {Object}
+     * :arg options: ``Object``
      */
     initialize: function(options) {
         var layer = new OpenLayers.Layer.Vector("Profile", {

@@ -64,10 +64,9 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
 
     },
 
-    /**
-     * Method: createLayout
-     * Create the layout of this object.
-     * Redefine this function when extending the class
+    /** private: method[createLayout]
+     *  Create the layout of this object.
+     *  Redefine this function when extending the class
      */
     createLayout: function(config) {
         var layout = null;
@@ -90,8 +89,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
         return layout;
     },
     
-    /**
-     * Method: setCurrentLayer
+    /** private: method[setCurrentLayer]
      */
     setCurrentLayer: function(layer) {
         if(layer && layer != this.currentLayer)
@@ -103,8 +101,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
         return this.currentLayer;
     },
 
-    /**
-     * Method: setCurrentFeature
+    /** private: method[setCurrentFeature]
      */
     setCurrentFeature: function(feature) {
         if(feature && feature != this.currentFeature)
@@ -119,8 +116,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
         return this.currentFeature;
     },
 
-    /**
-     * Method: resetStyle
+    /** private: method[resetStyle]
      */
     resetStyle: function() {
         if(this.currentFeature)
@@ -132,8 +128,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
         return;
     },
 
-    /**
-     * Method: setOriginalStyle
+    /** private: method[setOriginalStyle]
      */
     setOriginalStyle: function(style, useCurrentStyle) {
         if(useCurrentStyle) {
@@ -145,6 +140,4 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
 
         return;
     }
-
-    
 });

@@ -21,13 +21,11 @@ OpenLayers.Spherical.DEFAULT_RADIUS = 6378137;
  * APIFunction: computeDistanceBetween
  * Computes the distance between two LonLats.
  *
- * Parameters:
- * from   - {<OpenLayers.LonLat>}
- * to     - {<OpenLayers.LonLat>}
- * radius - {Float}
+ * :arg from: ``<OpenLayers.LonLat>``
+ * :arg to: ``<OpenLayers.LonLat>``
+ * :arg radius: ``Float``
  *
- * Returns:
- * {Float} The distance in meters.
+ * :returns: ``Float`` The distance in meters.
  */
 OpenLayers.Spherical.computeDistanceBetween = function(from, to, radius) {
   var R = radius || OpenLayers.Spherical.DEFAULT_RADIUS;
@@ -43,12 +41,10 @@ OpenLayers.Spherical.computeDistanceBetween = function(from, to, radius) {
  * APIFunction: computeHeading
  * Computes the heading from one LonLat to another LonLat.
  *
- * Parameters:
- * from - {<OpenLayers.LonLat>}
- * to   - {<OpenLayers.LonLat>}
+ * :arg from: ``<OpenLayers.LonLat>``
+ * :arg to: ``<OpenLayers.LonLat>``
  *
- * Returns:
- * {Float} The heading in degrees.
+ * :returns: ``Float`` The heading in degrees.
  */
 OpenLayers.Spherical.computeHeading = function(from, to) {
     var y = Math.sin(Math.PI * (from.lon - to.lon) / 180) * Math.cos(Math.PI * to.lat / 180);

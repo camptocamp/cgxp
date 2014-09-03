@@ -246,11 +246,9 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
     /** private: method[checkFilter]
      *  Checks that a filter is not missing items.
      *
-     *  Parameters:
-     *  filter - ``OpenLayers.Filter`` the filter
+     *  :arg filter: ``OpenLayers.Filter`` the filter
      *
-     *  Returns:
-     *  ``Boolean`` Filter is correct ?
+     *  :returns: ``Boolean`` Filter is correct ?
      */
     checkFilter: function(filter) {
         var filters = filter.filters || [filter];
@@ -334,8 +332,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *
      *  Remove any existing filter builder and create a new one.
      *
-     *  Parameters:
-     *  store - ``GeoExt.data.AttributeStore`` the attribute store
+     *  :arg store: ``GeoExt.data.AttributeStore`` the attribute store
      */
     createFilterBuilder: function(store) {
         var owner = this.filterBuilder && this.filterBuilder.ownerCt;
@@ -419,9 +416,8 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
 
     /** private: method[createProtocol]
      *
-     *  Parameters:
-     *  store - ``GeoExt.data.AttributeStore`` the attribute store
-     *  featureType - ``String`` the featureType
+     *  :arg store: ``GeoExt.data.AttributeStore`` the attribute store
+     *  :arg featureType: ``String`` the featureType
      */
     createProtocol: function(store, featureType) {
         var idx = store.find('type',

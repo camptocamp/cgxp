@@ -34,13 +34,13 @@ Ext.namespace("cgxp");
  *
  *  Used state:
  *
- *  ``baselayer_opacity``: 
- *   - Opacity of the base layer on the ortho layer. Number between 0 and 100, 
- *     where a 0 value is a totally transparent base layer. 
- *   - Example: ``&baselayer_opacity=25`` 
- * 
- *  ``baselayer_ref``: 
- *   - Name (reference) of the layer used as baselayer. 
+ *  ``baselayer_opacity``:
+ *   - Opacity of the base layer on the ortho layer. Number between 0 and 100,
+ *     where a 0 value is a totally transparent base layer.
+ *   - Example: ``&baselayer_opacity=25``
+ *
+ *  ``baselayer_ref``:
+ *   - Name (reference) of the layer used as baselayer.
  *   - Example: ``&baselayer_ref=my_color_base_layer``
  */
 cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
@@ -71,13 +71,13 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      *  The map.
      */
     map: null,
-    
+
     /** api: config[layertree]
      *  ``cgxp.tree.LayerTree``
      *  The layertree widget.
      */
     layertree: null,
-    
+
     /** api: config[initialTheme]
      *  ``Object``
      *  Theme that is loaded at startup.
@@ -112,8 +112,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
      * private: method[initComponent]
      * Creates the map toolbar.
      *
-     * Returns:
-     * {Ext.Toolbar} The toolbar.
+     * :returns: ``Ext.Toolbar`` The toolbar.
      */
     initComponent: function() {
         cgxp.MapOpacitySlider.superclass.initComponent.call(this);
@@ -241,12 +240,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         }
     },
 
-    /**
-     * Method: createOpacitySlider
-     * Create the slider for the Orthophoto
+    /** private: method[createOpacitySlider]
+     *  Create the slider for the Orthophoto
      *
-     * Returns:
-     * {Ext.BoxComponent} The opacity slider
+     *  :returns: ``Ext.BoxComponent`` The opacity slider
      */
     createOpacitySlider: function() {
         var maxvalue = 100;
@@ -270,12 +267,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         return slider;
     },
 
-    /**
-     * Method: createOrthoLabel
-     * Create the label for the ortho opacity clider.
+    /** private: method[createOrthoLabel]
+     *  Create the label for the ortho opacity clider.
      *
-     * Returns:
-     * {Ext.BoxComponent} The box containing the label.
+     *  :returns: ``Ext.BoxComponent`` The box containing the label.
      */
     createOrthoLabel: function() {
         return new Ext.BoxComponent({
@@ -283,12 +278,10 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
         });
     },
 
-    /**
-     * Method: createBaselayerCombo
-     * Create a combobox for the baselayer selection.
+    /** private: method[createBaselayerCombo]
+     *  Create a combobox for the baselayer selection.
      *
-     * Returns:
-     * {Ext.form.ComboBox} The combobox.
+     *  :returns: ``Ext.form.ComboBox`` The combobox.
      */
     createBaselayerCombo: function() {
         if (this.layers.length == 1) {
