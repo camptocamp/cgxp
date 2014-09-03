@@ -787,7 +787,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     onLabelAdded: function(event) {
         var feature = event.feature;
         feature.isLabel = true;
-        feature.style.label = feature.attributes[this.featurePanel.labelAttribute];
+        var panelClass = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
+        feature.style.label = feature.attributes[panelClass.prototype.labelAttribute];
     },
 
     /** private: method[onCircleAdded]
@@ -874,8 +875,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             options['plugins'] = [new GeoExt.ux.ExportFeature(), new GeoExt.ux.CloseFeatureDialog()];
         }
 
-        clazz = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
-        this.featurePanel = new clazz(options);
+        var panelClass = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
+        this.featurePanel = new panelClass(options);
 
         // display the popup
         popupOptions = {
