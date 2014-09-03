@@ -126,11 +126,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     layerTreeId: null,
 
-    /** api: config[floorSliderId]
-     *  ``String``
-     *  Id of the floorSlider tool.
+    /** api: config[usedMapParams]
+     *  ``Array[String]``
+     *  The map params used in the query.
      */
-    floorSliderId: null,
+    usedMapParams: [],
 
     /** api: config[layersWindowOptions]
      * ``Object`` Additional options given to the layer selector window constructor.
@@ -566,15 +566,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 }
                 options.url = baseURL + layerIds.join(',');
                 options.params = Ext.apply(options.params || {}, self.readParams);
-                if (self.floorSliderId) {
-                    var floorSlider = self.target.tools[this.floorSliderId];
-                    if (floorSlider) {
-                        var floor = floorSlider.getFloor();
-                        if (floor !== undefined) {
-                            options.params.floor__eq = floorSlider.getFloor();
-                        }
+                var queryable = [];
+                Ext.each(self.usedMapParams, function(paramName) {
+                    var param = self.target.mapPanel.params[paramName];
+                    if (param !== undefined) {
+                        options.params[paramName + "__eq"] = param;
+                        queryable.push(paramName);
                     }
-                }
+                });
+                options.params['queryable'] = queryable;
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
