@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 OpenLayers.Util.extend(OpenLayers.Lang.de, {
     'RedLining Panel': 'Zeichnen',
     'Export KML': 'KML Export',
@@ -55,4 +58,10 @@ OpenLayers.Util.extend(OpenLayers.Lang.de, {
     "silver": "silber",
     "white": "weiss",
     "yellow": "gelb"
+});
+
+GeoExt.Lang.add("fr", {
+    "GeoExt.ux.FeatureEditingControler.prototype": {
+        defaultAttributeName: "Ein Titel"
+    }
 });

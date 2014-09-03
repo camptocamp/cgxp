@@ -147,7 +147,12 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      *  to the map if useDefaultAttributes is set to true. This should match
      *  the defaultAttributes order.
      */
-    defaultAttributesValues: [OpenLayers.i18n('no title'),''],
+    defaultAttributesValues: undefined,
+
+    /** api: config[defaultAttributeName]
+     *  ``String`` Text for the original label name.
+     */
+    defaultAttributeName: "A title",
 
     /** private: property[autoSave]
      *  ``Boolean``
@@ -256,6 +261,9 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      */
     constructor: function(config) {
         Ext.apply(this, config);
+
+        this.defaultAttributesValues = this.defaultAttributesValues ||
+            [this.defaultAttributeName, ''];
 
         this.addEvents([
             /** api: events[activelayerchanged]

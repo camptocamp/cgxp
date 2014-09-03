@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     'Attributes': 'Attributs',
     'Delete feature': 'Supprimer l’objet',
@@ -55,4 +58,10 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     'salmon': 'saumon',
     'gold': 'or',
     'silver': 'argent'
+});
+
+GeoExt.Lang.add("fr", {
+    "GeoExt.ux.FeatureEditingControler.prototype": {
+        defaultAttributeName: "Un titre"
+    }
 });
