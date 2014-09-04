@@ -198,7 +198,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      *              '</tr></table>', {compiled: true});
      */
     pointMeterTemplate: null,
-    
+
     /** api: config[pointTemplate]
      *  ``Ext.Template``
      *  The template object used to display coordinates.
@@ -218,9 +218,9 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      *  ``Object``
      *  Allow to customise the handler behavior.
      *
-     *  To enable on-the-fly measurement (ie. not only after mouse click), set 
+     *  To enable on-the-fly measurement (ie. not only after mouse click), set
      *  the attribute 'immediate' to true.
-     *  On-the-fly measurement is compatible with both 'follow' and 'fixed' popup 
+     *  On-the-fly measurement is compatible with both 'follow' and 'fixed' popup
      *  positionning.
      *
      *  Example:
@@ -241,10 +241,10 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      *  By default the popup follow the mouse click (GeoExt.Popup), but it can
      *  also be fixed to a specific position in the viewport (Ext.Window) with
      *  predefined positionning which can be adjusted in x and/or y
-     *  
+     *
      *  position: 'follow' or 'fixed'
      *  Default: 'follow'
-     * 
+     *
      *  if position is 'fixed', the additionals parameters are supported:
      *
      *  anchor: one of 'tl','t','tr','l','c','r','bl','b','br'
@@ -398,12 +398,12 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 this.popup = new Ext.Window({
                     border: false,
                     fixed: true,
-                    map: this.target.mapPanel.map,                    
+                    map: this.target.mapPanel.map,
                     closeAction: 'hide',
                     listeners: {
                         render: function() {
                             // popup must be rendered to by aligned
-                            this.popup.alignTo(this.target.mapPanel.getEl(), 
+                            this.popup.alignTo(this.target.mapPanel.getEl(),
                                     this.popupPosition.anchor || 't',
                                     [this.popupPosition.offsetx || 0,
                                      this.popupPosition.offsety || 0]
@@ -448,7 +448,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 this.popup.position();
             }
             if (this.popup.hidden) {
-                this.popup.show();           
+                this.popup.show();
             }
             this.popup.update({
                 html: this.makeString(event)
@@ -456,8 +456,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /**
-     * Method: createSegmentMeasureControl
+    /** private: method[createSegmentMeasureControl]
      */
     createSegmentMeasureControl: function() {
         // style the sketch fancy
@@ -490,6 +489,7 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         var styleMap = new OpenLayers.StyleMap({"default": style});
         var control = new cgxp.plugins.Measure.SegmentMeasureControl({
             geodesic: true,
+            minAzimuth: this.minAzimuth,
             rasterServiceUrl: this.rasterServiceUrl,
             handlerOptions: {
                 layerOptions: {styleMap: styleMap}
@@ -686,42 +686,37 @@ cgxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
 Ext.preg(cgxp.plugins.Measure.prototype.ptype, cgxp.plugins.Measure);
 
 
-/**
- * Class: cgxp.plugins.Measure.LocatorControl
- * Allows for drawing of point features for position measurements.
+/** private: constructor
+ *  .. class:: cgxp.plugins.Measure.LocatorControl(config)
  *
- * Inherits from:
- *  - <OpenLayers.Control>
+ *  Allows for drawing of point features for position measurements.
+ *
+ *  Inherits from: ``<OpenLayers.Control>``
  */
 cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
 
-    /**
-     * APIProperty: displayProjection
-     * {<OpenLayers.Projection>} The projection in which the
-     * position is displayed
+    /** private: property[displayProjection]
+     *  ``<OpenLayers.Projection>`` The projection in which the
+     *  position is displayed
      */
     displayProjection: null,
 
-    /**
-     * APIProperty: handlerOptions
-     * {Object} ReadOnly options for point handler
+    /** private: property[handlerOptions]
+     *  ``Object`` ReadOnly options for point handler
      */
     handlerOptions: null,
 
-    /**
-     * Constant: EVENT_TYPES
+    /** private: constant[EVENT_TYPES]
      *
-     * Supported event types:
-     * measure - Triggered when a point is drawn
+     *  Supported event types:
+     *  measure - Triggered when a point is drawn
      */
     EVENT_TYPES: ['measure'],
 
-    /**
-     * Constructor: cgxp.plugins.Measure.LocatorControl
-     * Create a new locator control to get point position
+    /** private: method[initialize]
+     *  Create a new locator control to get point position
      *
-     * Parameters:
-     * options - {Object} An optional object whose properties will be used
+     *  :arg options: ``Object`` An optional object whose properties will be used
      *     to extend the control.
      */
     initialize: function(options) {
@@ -737,9 +732,8 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
         }, this.handlerOptions));
     },
 
-    /**
-     * Method: onPoint
-     * Callback executed on sketch done.
+    /** private: method[onPoint]
+     *  Callback executed on sketch done.
      */
     onPoint: function(geometry) {
         var units, displayProjection = this.displayProjection;
@@ -757,18 +751,16 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
         });
     },
 
-    /**
-     * APIMethod: cancel
-     * Stop the control from measuring. The temporary sketch will be erased.
+    /** private: method[cancel]
+     *  Stop the control from measuring. The temporary sketch will be erased.
      */
     cancel: function() {
         this.handler.cancel();
     },
 
-    /**
-     * Method: destroy
-     * The destroy method is used to perform any clean up before the control
-     * is dereferenced.
+    /** private: method[destroy]
+     *  The destroy method is used to perform any clean up before the control
+     *  is dereferenced.
      */
     destroy: function() {
         this.handler = null;
@@ -782,14 +774,18 @@ cgxp.plugins.Measure.LocatorControl = OpenLayers.Class(OpenLayers.Control, {
  * @requires OpenLayers/Control/Measure.js
  */
 
-/**
- * Class: cgxp.plugins.Measure.SegmentMeasureControl
- * Control to measure segment length (ie. for azimuth)
+/** private: constructor
+ *  .. class:: cgxp.plugins.Measure.SegmentMeasureControl(config)
  *
- * Inherits from:
- *  - <OpenLayers.Control>
+ *  Control to measure segment length (ie. for azimuth)
+ *
+ *  Inherits from: ``<OpenLayers.Control>``
  */
 cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control.Measure, {
+
+    /** private: config[minAzimuth]
+     *  ``Number`` the minimum azimuth value, e.g. -180, default is 0.
+     */
 
     // we want to have partial measures each time the mouse is moved
     partialDelay: 0,
@@ -797,37 +793,33 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
     persist: true,
 
     /**
-     * APIProperty: rasterServiceUrl
+     * private: config[rasterServiceUrl]
      * {String} The url to the elevation service
      */
     rasterServiceUrl: null,
 
     /**
-     * Property: raster
+     * private: property[raster]
      * {Array} Raster service responses
      */
     raster: null,
 
-    /**
-     * Property: measuring
-     * {Boolean} Indicate if currently measuring. Measuring
+    /** private: property[measuring]
+     *  ``Boolean`` Indicate if currently measuring. Measuring
      *     starts when the first point of the segment is added.
      */
     measuring: false,
 
-    /**
-     * Property: pendingRequests
-     * {Array} the raster service pending requests
+    /** private: property[pendingRequests]
+     *  {Array} the raster service pending requests
      */
     pendingRequests: null,
 
-    /**
-     * Constructor: cgxp.plugins.Measure.SegmentMeasureControl
-     * Create a new segment measure control to get azimuth
+    /** private: method[initialize]
+     *  Create a new segment measure control to get azimuth
      *
-     * Parameters:
-     * options - {Object} An optional object whose properties will be used
-     *     to extend the control.
+     *  :arg options: ``Object`` An optional object whose properties will be used
+     *     to extend the controln.
      */
     initialize: function(options) {
         var handler = cgxp.plugins.Measure.Segment;
@@ -842,15 +834,13 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
                 this, handler, options);
     },
 
-    /**
-     * Method: startMeasuring
+    /** private: method[startMeasuring]
      */
     startMeasuring: function() {
         this.measuring = true;
     },
 
-    /**
-     * Method: measureDrawing
+    /** private: method[measureDrawing]
      */
     measureDrawing: function(point, feature) {
         if (this.measuring) {
@@ -860,26 +850,22 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         }
     },
 
-    /**
-     * Method: measureDone
+    /** private: method[measureDone]
      */
     measureDone: function(geometry) {
         this.measuring = false;
         this.measure(geometry);
     },
 
-    /**
-     * Method: measureCancel
+    /** private: method[measureCancel]
      */
     measureCancel: function() {
         this.measuring = false;
     },
 
-    /**
-     * Method: measure
+    /** private: method[measure]
      *
-     * Parameters:
-     * geometry - {<OpenLayers.Geometry>}
+     *  :arg geometry: ``<OpenLayers.Geometry>``
      */
     measure: function(geometry) {
         function onRasterResponse(index, response) {
@@ -927,15 +913,12 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
         }
     },
 
-    /**
-     * Method: getAzimuth
-     * Gets the azimuth
+    /** private: method[getAzimuth]
+     *  Gets the azimuth
      *
-     * Parameters:
-     * geometry - {<OpenLayers.Geometry>}
+     *  :arg geometry: ``<OpenLayers.Geometry>``
      *
-     * Returns:
-     * {Float} Returns the azimuth
+     *  :returns: ``Float`` Returns the azimuth
      */
     getAzimuth: function(geometry) {
         // prevent errors with 1 length strings
@@ -963,39 +946,35 @@ cgxp.plugins.Measure.SegmentMeasureControl = OpenLayers.Class(OpenLayers.Control
  * @requires OpenLayers/Handler/Path.js
  */
 
-/**
- * Class: cgxp.plugins.Measure.Segment
- * Handler to draw a segment on the map.
+/** private: constructor
+ *  .. class:: cgxp.plugins.Measure.Segment(config)
  *
- * Inherits from:
- *  - <OpenLayers.Handler.Path>
+ *  Handler to draw a segment on the map.
+ *
+ *  Inherits from: ``<OpenLayers.Handler.Path>``
  */
 cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
 
-    /**
-     * Property: origin
-     * {<OpenLayers.Feature.Vector>} The origin of the segment, first clicked
-     * point
+    /** private: property[origin]
+     *  ``<OpenLayers.Feature.Vector>`` The origin of the segment, first clicked
+     *  point
      */
     origin: null,
 
-    /**
-     * Property: target
-     * {<OpenLayers.Feature.Vector>} The target of the segment, second clicked
-     * point
+    /** private: property[target]
+     *  ``<OpenLayers.Feature.Vector>`` The target of the segment, second clicked
+     *  point
      */
     target: null,
 
-    /**
-     * Property: circle
-     * {<OpenLayers.Feature.Vector>} The circle which radius is the drawn
+    /** private: property[circle]
+     *  ``<OpenLayers.Feature.Vector>`` The circle which radius is the drawn
      *     segment
      */
     circle: null,
 
-    /**
-     * Property: _drawing
-     * {Boolean} Indicate if in the process of drawing a segment.
+    /** private: property[_drawing]
+     *  ``Boolean`` Indicate if in the process of drawing a segment.
      *    (We prefix the variable name with an underscore not to
      *     collide with a "drawing" property of the parent.)
      */
@@ -1013,8 +992,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
             this, [control, callbacks, options]);
     },
 
-    /**
-     * Method: addPoint
+    /** private: method[addPoint]
      */
     addPoint: function() {
         OpenLayers.Handler.Path.prototype.addPoint.apply(this, arguments);
@@ -1027,8 +1005,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
         }
     },
 
-    /**
-     * Method: finishGeometry
+    /** private: method[finishGeometry]
      */
     finishGeometry: function() {
         var components = this.line.geometry.components;
@@ -1040,8 +1017,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
                 this, arguments);
     },
 
-    /**
-     * Method: destroyPersistedFeature
+    /** private: method[destroyPersistedFeature]
      */
     destroyPersistedFeature: function() {
         OpenLayers.Handler.Path.prototype.destroyPersistedFeature.apply(
@@ -1062,8 +1038,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
         }
     },
 
-    /**
-     * Method: modifyFeature
+    /** private: method[modifyFeature]
      */
     modifyFeature: function() {
         OpenLayers.Handler.Path.prototype.modifyFeature.apply(
@@ -1080,8 +1055,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
         }
     },
 
-    /**
-     * APIMethod: deactivate
+    /** private: method[deactivate]
      */
     deactivate: function() {
         if (OpenLayers.Handler.Path.prototype.deactivate.call(this)) {
@@ -1091,8 +1065,7 @@ cgxp.plugins.Measure.Segment = OpenLayers.Class(OpenLayers.Handler.Path, {
         return false;
     },
 
-    /**
-     * Method: dblclick
+    /** private: method[dblclick]
      */
     dblclick: function() {
         // we don't want double click

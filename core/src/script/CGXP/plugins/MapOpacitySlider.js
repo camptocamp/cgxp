@@ -131,8 +131,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
      *  the base layer combo.
      *
      *  :arg config: ``Object`` Some optional toolbar config.
-     *  Returns:
-     *  {Ext.Toolbar}
+     *  :returns: ``Ext.Toolbar``
      */
     createToolbar: function(config) {
         this.toolbar = new cgxp.MapOpacitySlider(Ext.apply({
@@ -149,6 +148,7 @@ cgxp.plugins.MapOpacitySlider = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[addActions]
+     *
      *  :arg config: ``Object``
      */
     addActions: function(config) {
