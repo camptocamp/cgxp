@@ -298,6 +298,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             plain: true,
             resizable: false,
             disabled: true,
+            constrainHeader: true,
             items: [{
                 xtype: 'box',
                 html: this.helpText + '<hr />'
@@ -765,7 +766,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 closable: false,
                 unpinnable: false,
                 draggable: true,
-                border: false
+                border: false,
+                constrainHeader: true
             }, this.attributesWindowOptions));
         }
         if (!this.attributesWindowOptions.title) {
