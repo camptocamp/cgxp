@@ -215,6 +215,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     lastLoadedTheme: null,
 
+    /** private: property[layerGroupChanged]
+     */
+    layerGroupChanged: false,
+
+    /** private: property[layerChanged]
+     */
+    layerChanged: false,
+
     /**
      * Property: actionsPlugin
      */
@@ -312,6 +320,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             "togglekml"
         );
         this.on('checkchange', function(node, checked) {
+            this.layerChanged = true;
             this.fireEvent("layervisibilitychange");
             if (!this.changing) {
                 if (checked && this.autoExpand) {
@@ -484,6 +493,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var groupNode = this.root.insertBefore(groupNodeConfig,
                                                this.root.firstChild);
         addNodes.call(this, group.children, groupNode, 1);
+        this.layerGroupChanged = true;
         this.fireEvent('addgroup');
         groupNode.expand(true, false);
         groupNode.collapse(true, false);
@@ -829,9 +839,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     n.ownerTree.actionsPlugin.updateActions(n);
                 });
                 node.ui.removeClass('x-tree-node-over');
-                if (Ext.enableFx){
+                if (Ext.enableFx) {
                     node.ui.highlight();
                 }
+                this.layerGroupChanged = true;
                 node.getOwnerTree().fireEvent('ordergroup');
                 break;
             case 'up':
@@ -855,9 +866,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     n.ownerTree.actionsPlugin.updateActions(n);
                 });
                 node.ui.removeClass('x-tree-node-over');
-                if(Ext.enableFx){
+                if (Ext.enableFx) {
                     node.ui.highlight();
                 }
+                this.layerGroupChanged = true;
                 node.getOwnerTree().fireEvent('ordergroup');
                 break;
             case 'legend':
@@ -1234,6 +1246,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         this.lastLoadedTheme = theme;
+        this.layerGroupChanged = false;
+        this.layerChanged = false;
         this.fireEvent('loadtheme', theme);
     },
 
@@ -1312,6 +1326,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     layer.params.LAYERS = result.allLayers;
                 }
                 else {
+                    if (layers) {
+                        this.layerChanged = true;
+                    }
                     layer.params.LAYERS = layers || result.checkedLayers;
                 }
                 var styles = [];
@@ -1463,41 +1480,37 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     /** private: method[delayedApplyState]
      */
     delayedApplyState: function() {
-        if (this.permalinkThemes) {
-            this.defaultThemes = this.permalinkThemes;
-        }
         if (!this.initialState) {
             return;
-        }
-        if (this.initialState.groups !== undefined) {
-            this.defaultThemes = null;
         }
         // handle layer groups from permalinkThemes and initialState
         var groups = [];
         var i, l
         // get groups from permalinkThemes
-        if (this.permalinkThemes && !this.initialState.groups) {
+        var themes = this.permalinkThemes || this.defaultThemes;
+        if (themes && !this.initialState.groups) {
             // recovering all the first level groups from the selected themes
-            for (i=0, l=this.permalinkThemes.length; i<l; i++) {
-                var theme = this.findThemeByName(this.permalinkThemes[i]);
+            for (i = 0, l = themes.length; i < l; i++) {
+                var theme = this.findThemeByName(themes[i]);
                 Ext.each(theme.children, function(child) {
                     this.push(child.name);
                 }, groups);
             }
         }
-        if (this.initialState.groups || !this.initialState.layers) {
+        if (this.initialState.groups) {
             // get groups from initialState
             var initialStateGroups = Ext.isArray(this.initialState.groups) ?
                 this.initialState.groups : [this.initialState.groups];
             // merge permalinkThemes's groups and initialState groups
             var groupsAsString = groups.join(',');
-            for (i=0, l=initialStateGroups.length; i<l; i++) {
+            for (i = 0, l = initialStateGroups.length; i < l; i++) {
                 if (groupsAsString.indexOf(initialStateGroups[i]) < 0) {
                     groups.push(initialStateGroups[i]);
                 }
             }
         }
-        else {
+        // this.initialState.layers is used from the mobile app
+        else if (this.initialState.layers) {
             // Gets the more pertinent groups for the layers set.
             var asked_groups = {};
             var layers = this.initialState.layers;
@@ -1550,15 +1563,22 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
             var opacity = this.initialState['group_opacity_' + t] ?
                 this.initialState['group_opacity_' + t] : 1;
-            var layers = this.initialState['group_layers_' + t] ?
-                this.initialState['group_layers_' + t] : [];
-            if (!OpenLayers.Util.isArray(layers)) {
-                layers = [layers];
+            var layers = undefined;
+            var visibility = true;
+            if ('group_layers_' + t in this.initialState) {
+                layers = this.initialState['group_layers_' + t];
+                if (layers === '') {
+                    layers = [];
+                }
+                else if (!OpenLayers.Util.isArray(layers)) {
+                    layers = [layers];
+                }
+                visibility = layers.length !== 0
             }
-            var visibility = layers.length !== 0 ? true : false;
             var group = this.findGroupByName(t);
             this.loadGroup(group, layers, opacity, visibility);
         }, this);
+        this.layerGroupChanged = this.initialState.groups || this.initialState.layers;
         this.root.cascade(function(node) {
             var layer = node.attributes.layer;
             var name = node.attributes.name;
@@ -1578,6 +1598,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         var state = {};
 
         var groups = [];
+        var useFriendlyUrl = this.uniqueTheme && this.friendlyUrl && history.replaceState;
         Ext.each(this.root.childNodes, function(group) {
             var id = group.attributes.groupId;
             groups.push(id);
@@ -1588,7 +1609,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }
             if (group.attributes.internalWMS) {
-                if (layer.params.LAYERS.length > 0 && layer.visibility) {
+                if ((!useFriendlyUrl || this.layerChanged)) {
                     state['group_layers_' + id] = [layer.params.LAYERS].join(',');
                 }
             }
@@ -1598,13 +1619,15 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     if (layer && layer.opacity !== null && layer.opacity != 1) {
                         state['opacity_' + node.attributes.name] = layer.opacity;
                     }
-                    if (layer) {
+                    if ((!useFriendlyUrl || this.layerChanged) && layer) {
                         state['enable_' + node.attributes.name] = layer.visibility;
                     }
                 });
             }
         }, this);
-        state.groups = groups.join(',');
+        if (!useFriendlyUrl || this.layerGroupChanged) {
+            state.groups = groups.join(',');
+        }
 
         return state;
     },
@@ -1730,6 +1753,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      *  Load the default Theme.
      */
     loadDefaultThemes: function() {
+        if (this.permalinkThemes) {
+            this.defaultThemes = this.permalinkThemes;
+        }
+        if (this.initialState) {
+            this.defaultThemes = null;
+        }
         if (this.defaultThemes) {
             // reverse to have the first theme in the list at the top
             Ext.each(this.defaultThemes.concat().reverse(), function(themeName) {
@@ -1760,6 +1789,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             });
         }
+        this.layerGroupChanged = true;
         this.fireEvent('removegroup');
     },
 
