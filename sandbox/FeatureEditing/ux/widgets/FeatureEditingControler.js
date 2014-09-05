@@ -147,7 +147,12 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      *  to the map if useDefaultAttributes is set to true. This should match
      *  the defaultAttributes order.
      */
-    defaultAttributesValues: [OpenLayers.i18n('no title'),''],
+    defaultAttributesValues: undefined,
+
+    /** api: config[defaultAttributeName]
+     *  ``String`` Text for the original label name.
+     */
+    defaultAttributeName: "A title",
 
     /** private: property[autoSave]
      *  ``Boolean``
@@ -256,6 +261,9 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
      */
     constructor: function(config) {
         Ext.apply(this, config);
+
+        this.defaultAttributesValues = this.defaultAttributesValues ||
+            [this.defaultAttributeName, ''];
 
         this.addEvents([
             /** api: events[activelayerchanged]
@@ -779,7 +787,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
     onLabelAdded: function(event) {
         var feature = event.feature;
         feature.isLabel = true;
-        feature.style.label = feature.attributes[this.featurePanel.labelAttribute];
+        var panelClass = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
+        feature.style.label = feature.attributes[panelClass.prototype.labelAttribute];
     },
 
     /** private: method[onCircleAdded]
@@ -866,8 +875,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             options['plugins'] = [new GeoExt.ux.ExportFeature(), new GeoExt.ux.CloseFeatureDialog()];
         }
 
-        clazz = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
-        this.featurePanel = new clazz(options);
+        var panelClass = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
+        this.featurePanel = new panelClass(options);
 
         // display the popup
         popupOptions = {
