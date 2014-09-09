@@ -12,6 +12,11 @@ Version 1.5
    widget. As a result they must be encapsulated into an ``outputConfig``
    object in the plugin configuration.
 
+3. Editing plugin variable name change:
+
+    The variable `windowOptions` of the plugin Editing is now named `attributesWindowOptions`,
+    modify your Editing plugin config in the edit.js accordingly.
+
 
 Version 1.4.4
 =============
