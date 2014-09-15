@@ -1564,7 +1564,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             var opacity = this.initialState['group_opacity_' + t] ?
                 this.initialState['group_opacity_' + t] : 1;
             var layers = undefined;
-            var visibility = true;
             if ('group_layers_' + t in this.initialState) {
                 layers = this.initialState['group_layers_' + t];
                 if (layers === '') {
@@ -1573,10 +1572,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 else if (!OpenLayers.Util.isArray(layers)) {
                     layers = [layers];
                 }
-                visibility = layers.length !== 0
             }
             var group = this.findGroupByName(t);
-            this.loadGroup(group, layers, opacity, visibility);
+            this.loadGroup(group, layers, opacity);
         }, this);
         this.layerGroupChanged = this.initialState.groups || this.initialState.layers;
         this.root.cascade(function(node) {
