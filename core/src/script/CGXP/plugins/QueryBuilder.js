@@ -17,11 +17,11 @@
 
 /**
  * @requires plugins/Tool.js
- * @include CGXP/patches/GML.js
  * @include Styler/widgets/FilterBuilder.js
  * @include GeoExt/data/AttributeStore.js
  * @include OpenLayers/Protocol/WFS/v1_1_0.js
  * @include OpenLayers/Format/WFSDescribeFeatureType.js
+ * @include OpenLayers/Format/GML/v3.js
  * @include OpenLayers/Feature/Vector.js
  * @include OpenLayers/Layer/Vector.js
  * @include OpenLayers/Util.js
