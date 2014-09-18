@@ -10,7 +10,7 @@ before_script:
 - cd -
 - cd core/tests
 - virtualenv --distribute --no-site-packages env
-- env/bin/pip install CherryPy==3.3.0 jasmine-core==2.0.0 jasmine==2.0.0
+- env/bin/pip install CherryPy==3.6.0 jasmine-core==2.0.0 jasmine==2.0.0
 - cd -
 
 script:
