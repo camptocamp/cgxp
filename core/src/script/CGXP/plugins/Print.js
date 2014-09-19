@@ -218,10 +218,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *
      *  .. code:: javascript
      *
-     *    fields: [{
+     *    fields: ['title', 'comment', 'legend', {
      *        xtype: 'textfield',
-     *        name: 'remarque,
-     *        fieldLabel: 'Remarques',
+     *        name: 'notes',
+     *        fieldLabel: 'Notes',
      *        autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
      *    }]
      *
