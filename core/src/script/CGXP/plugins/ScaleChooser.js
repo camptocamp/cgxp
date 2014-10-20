@@ -164,6 +164,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
         // update zoom level when new scale is selected
         zoomSelector.on('select',
             function(combo, record, index) {
+                zoomSelector.setValue(this.formatValue(record));
                 map.zoomTo(record.data.level);
             },
             this
