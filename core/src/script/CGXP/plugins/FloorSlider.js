@@ -126,13 +126,6 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
                 mapPanel: mapPanel
             }, this.widgetOptions));
         }, this);
-    },
-
-    /** api: method[getFloor]
-     *  Get the current floor, ``undefined`` for sky.
-     */
-    getFloor: function() {
-        return this.floorSlider.getFloor();
     }
 });
 
