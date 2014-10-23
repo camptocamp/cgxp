@@ -212,6 +212,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     /** i18n */
     tooltipText: "Show in GoogleEarth",
     menuText: "GoogleEarth",
+    IE10warning: "GoogleEarth is not compatible with IE10 and newer",
 
     /** private: method[init]
      */
@@ -248,8 +249,24 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     /** private: method[activate]
      */
     activate: function() {
-        if (!this.active) {
-            this.loadingChecker();
+        if (Ext.isIE10) {
+            var win = new Ext.Window({
+                width: 400,
+                layout: 'fit',
+                cls: 'GoogleEarthIEwarning',
+                html: this.IE10warning,
+                listeners: {
+                    'close': function(p) {
+                        this.actions[0].items[0].toggle(false);
+                    },
+                    scope: this
+                }
+            });
+            win.show();
+        } else {
+            if (!this.active) {
+                this.loadingChecker();
+            }
         }
         return cgxp.plugins.GoogleEarthView.superclass.activate.call(this);
     },
@@ -257,7 +274,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     /** private: method[deactivate]
      */
     deactivate: function() {
-        if (this.active) {
+        if (this.active && this.googleEarthPanel) {
             this.unloadGoogleEarth();
         }
         return cgxp.plugins.GoogleEarthView.superclass.deactivate.call(this);
