@@ -506,6 +506,26 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             geometryTypes.push(OpenLayers.i18n("Label"));
         }
 
+
+        /** use OpenLayers.Control.DrawFeature instead of 
+         *  OpenLayers.Control.DynamicMeasure when drawing box or circle to 
+         *  work around document.onselectstart mixup in IE
+         */
+        var getControl = function(idControl, type, layer, options) {
+            switch (type) {
+                case OpenLayers.i18n("Box"):
+                case OpenLayers.i18n("Circle"):
+                    var control = new OpenLayers.Control.DrawFeature(layer,
+                        OpenLayers.Handler.RegularPolygon, options);
+                break;
+                default:
+                    var control = new OpenLayers.Control.DynamicMeasure(
+                        handler, options);
+            }
+            control.idControl = idControl;
+            return control;
+        }
+
         for (var i = 0; i < geometryTypes.length; i++) {
             options = {
                 drawingLayer: layer,
@@ -525,7 +545,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     handler = OpenLayers.Handler.Path;
                     iconCls = "gx-featureediting-draw-line";
                     tooltip = OpenLayers.i18n("Create line");
-                    idControl = 'linestring';
+                    control = getControl('linestring', geometryType, layer, options);
                     options.layerLengthOptions = undefined;
                     break;
                 case OpenLayers.i18n("Point"):
@@ -533,7 +553,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     handler = OpenLayers.Handler.Point;
                     iconCls = "gx-featureediting-draw-point";
                     tooltip = OpenLayers.i18n("Create point");
-                    idControl = 'point';
+                    control = getControl('point', geometryType, layer, options);
                     break;
                 case OpenLayers.i18n("Circle"):
                     handler = OpenLayers.Handler.RegularPolygon;
@@ -541,14 +561,18 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     options.handlerOptions.irregular = false;
                     iconCls = "gx-featureediting-draw-circle";
                     tooltip = OpenLayers.i18n("Create circle");
-                    idControl = 'circle';
+                    control = getControl('circle', geometryType, layer, options);
+                    control.events.on({
+                        "featureadded": this.onCircleAdded,
+                        scope: this
+                    });
                     break;
                 case OpenLayers.i18n("Polygon"):
                 case OpenLayers.i18n("MultiPolygon"):
                     handler = OpenLayers.Handler.Polygon;
                     iconCls = "gx-featureediting-draw-polygon";
                     tooltip = OpenLayers.i18n("Create polygon");
-                    idControl = 'polygon';
+                    control = getControl('polygon', geometryType, layer, options);
                     break;
                 case OpenLayers.i18n("Box"):
                     handler = OpenLayers.Handler.RegularPolygon;
@@ -556,43 +580,25 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     options.handlerOptions.irregular = true;
                     iconCls = "gx-featureediting-draw-box";
                     tooltip = OpenLayers.i18n("Create box");
-                    idControl = 'polygon';
+                    control = getControl('box', geometryType, layer, options);
+                    control.events.on({
+                        "featureadded": this.onBoxAdded,
+                        scope: this
+                    });
                     break;
                 case OpenLayers.i18n("Label"):
                     handler = OpenLayers.Handler.Point;
                     iconCls = "gx-featureediting-draw-label";
                     tooltip = OpenLayers.i18n("Create label");
-                    idControl = 'label';
+                    control = getControl('label', geometryType, layer, options);
+                    control.events.on({
+                        "featureadded": this.onLabelAdded,
+                        scope: this
+                    });
                     break;
             }
-
-            control = new OpenLayers.Control.DynamicMeasure(
-                    handler, options);
-            control.idControl = idControl;
-
+            
             this.drawControls.push(control);
-
-            if (geometryType == OpenLayers.i18n("Label")) {
-                control.events.on({
-                    "featureadded": this.onLabelAdded,
-                    scope: this
-                });
-            }
-
-            if (geometryType == OpenLayers.i18n("Circle")) {
-                control.events.on({
-                    "featureadded": this.onCircleAdded,
-                    scope: this
-                });
-            }
-
-            if (geometryType == OpenLayers.i18n("Box")) {
-                control.events.on({
-                    "featureadded": this.onBoxAdded,
-                    scope: this
-                });
-            }
-
             control.events.on({
                 "featureadded": this.onFeatureAdded,
                 scope: this
