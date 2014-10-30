@@ -179,6 +179,11 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     isIntranetAnonymous: false,
 
+    /** private: property[mapMoved]
+     *  The user moved the map.
+     */
+    mapMoved: false,
+
     /** api: config[toolbarItems]
      *  ``Array`` List of items shown in the toolbar for the login tool.
      *  
@@ -325,6 +330,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             this.toggleLoginWindow();
         }
 
+        self = this;
+        setTimeout(function() {
+            self.target.mapPanel.map.events.on({
+                move: function() {
+                    self.mapMoved = true;
+                }
+            });
+        }, 1000);
+
         return cgxp.plugins.Login.superclass.addActions.apply(this, [this.toolbarItems]);
     },
 
@@ -409,7 +423,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             allowBlank: true,
             hidden: true,
             validator: function(value){
-                if(newPassword.getValue() != value) {
+                if (newPassword.getValue() != value) {
                     return 'Error! Value not identical';
                 } else {
                     return true;
@@ -498,7 +512,12 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                        browser, which only take into account normal form submit and
                        not ajax form submit, so we submit the form a 2nd time just 
                        to save the password */
-                    this.loginForm.getForm().el.dom.action = this.getUrl();
+                    if (this.mapMoved) {
+                        this.loginForm.getForm().el.dom.action = this.getUrl();
+                    }
+                    else {
+                        this.loginForm.getForm().el.dom.action = window.location.href;
+                    }
                     this.loginForm.getForm().standardSubmit = true;
                     this.loginForm.getForm().submit();
                 }
