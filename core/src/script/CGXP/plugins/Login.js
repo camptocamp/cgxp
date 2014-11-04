@@ -330,7 +330,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             this.toggleLoginWindow();
         }
 
-        self = this;
+        var self = this;
         setTimeout(function() {
             self.target.mapPanel.map.events.on({
                 move: function() {
@@ -422,7 +422,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             width: 120,
             allowBlank: true,
             hidden: true,
-            validator: function(value){
+            validator: function(value) {
                 if (newPassword.getValue() != value) {
                     return 'Error! Value not identical';
                 } else {
