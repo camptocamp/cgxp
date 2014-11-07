@@ -262,7 +262,8 @@ GeoExt.Lang.add("fr", {
 
     "cgxp.plugins.GoogleEarthView.prototype": {
         tooltipText: "Visualiser dans GoogleEarth",
-        menuText: "GoogleEarth"
+        menuText: "GoogleEarth",
+        IE10warning: "GoogleEarth n'est pas compatible avec IE10 et plus récent"
     },
 
     "cgxp.plugins.StreetView.prototype": {
