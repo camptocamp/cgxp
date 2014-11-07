@@ -1620,7 +1620,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     if ((!useFriendlyUrl || this.layerChanged) && layer) {
                         state['enable_' + node.attributes.name] = layer.visibility;
                     }
-                });
+                }, this);
             }
         }, this);
         if (!useFriendlyUrl || this.layerGroupChanged) {
