@@ -156,7 +156,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             var feature = new OpenLayers.Feature.Vector(
                 new OpenLayers.Geometry.Point(this.position.lon,
                                               this.position.lat),
-                this.coordsRecenteringStyle || {}
+                {}, this.coordsRecenteringStyle || {}
             );
             this.vectorLayer.removeAllFeatures();
             this.vectorLayer.addFeatures([feature]);
