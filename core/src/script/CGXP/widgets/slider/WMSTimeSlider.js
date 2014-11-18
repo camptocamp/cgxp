@@ -118,14 +118,13 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         var minDate = OpenLayers.Date.parse(wmsTime.minValue);
         var maxDate = OpenLayers.Date.parse(wmsTime.maxValue);
 
-        var defaultValues;
+        var minDefDate = (wmsTime.minDefValue) ?
+            OpenLayers.Date.parse(wmsTime.minDefValue) : minDate;
+        var maxDefDate = (wmsTime.maxDefValue) ?
+            OpenLayers.Date.parse(wmsTime.maxDefValue) : maxDate;
 
-        if (this.timeMode == "range") {
-            defaultValues = [minDate.getTime(), maxDate.getTime()];
-        } else {
-            var value = wmsTime.defaultValue ? wmsTime.defaultValue : wmsTime.maxValue;
-            defaultValues = [OpenLayers.Date.parse(value).getTime()];
-        }
+        var defaultValues = (this.timeMode == "range") ?
+            [minDefDate.getTime(), maxDefDate.getTime()] : [minDefDate.getTime()];
 
         if (wmsTime.values) {
             this.timeValues = [];
