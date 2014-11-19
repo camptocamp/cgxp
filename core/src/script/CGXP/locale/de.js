@@ -159,6 +159,10 @@ GeoExt.Lang.add("de", {
         saveServerErrorText: "Speichern nicht möglich wegen eines Serverfehlers.",
         queryServerErrorText: "Abfrage nicht möglich wegen eines Serverfehlers."
     },
+    
+    "cgxp.plugins.LayerTree.prototype": {
+        restrictedContentWarning: "Ein Teil der Daten, auf welche Sie zugreifen möchten, ist nur für gewisse eingeloggte Nutzer freigegeben."
+    },    
 
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Nach oben",

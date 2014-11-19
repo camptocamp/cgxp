@@ -40,6 +40,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_login',
  *              actionTarget: 'center.tbar',
  *              toggleGroup: 'maptools',
+ *              events: EVENTS,
  *      % if user:
  *              username: "${user.username}",
  *              isPasswordChanged: ${"true" if user.is_password_changed else "false"},
@@ -179,6 +180,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     isIntranetAnonymous: false,
 
+    /** api: config[events]
+     *  ``Ext.util.Observable`` An ``Ext.util.Observable`` instance used
+     *  to receive events from other plugins.
+     *
+     *  * ``restrictedcontentnotdisplayed``: sent on restricted content enabled
+     *    from permalink.
+     */
+    events: null,
+
     /** private: property[mapMoved]
      *  The user moved the map.
      */
@@ -245,6 +255,14 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         });
         this.loginWindow.render(Ext.getBody());
 
+        this.loginAction = new cgxp.tool.Button(Ext.apply({
+            text: this.loginText,
+            tooltip: this.actionButtonTooltip,
+            enableToggle: true,
+            toggleGroup: this.toggleGroup,
+            window: this.loginWindow
+        }, this.actionConfig));        
+        
         if (this.username) {
             // If available, add the username to the toolbar.
             this.toolbarItems.push(
@@ -316,13 +334,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
             this.toolbarItems.push(getActionButton());
         } else {
-            this.toolbarItems.push(new cgxp.tool.Button(Ext.apply({
-                text: this.loginText,
-                tooltip: this.actionButtonTooltip,
-                enableToggle: true,
-                toggleGroup: this.toggleGroup,
-                window: this.loginWindow
-            }, this.actionConfig)));
+            this.toolbarItems.push(this.loginAction);
         }
 
         if (this.username && this.forcePasswordChange && !this.isPasswordChanged) {
@@ -338,6 +350,12 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 }
             });
         }, 1000);
+
+        this.events.on('restrictedcontentnotdisplayed', function() {
+            if (!this.username) {
+                this.loginAction.toggle();
+            }
+        }, this);
 
         return cgxp.plugins.Login.superclass.addActions.apply(this, [this.toolbarItems]);
     },
@@ -403,7 +421,6 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     },
 
     createLoginForm: function() {
-
         var newPassword = new Ext.form.TextField({
             fieldLabel: this.newPasswordText,
             name: 'newPassword',
@@ -508,7 +525,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                         window.external.AutoCompleteSaveForm(
                             this.loginForm.getForm().el.dom);
                     }
-                    /* this is needed to trigger the save password behavior in the 
+                    /* this is needed to trigger the save password behaviour in the 
                        browser, which only take into account normal form submit and
                        not ajax form submit, so we submit the form a 2nd time just 
                        to save the password */
@@ -561,7 +578,6 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         }
         return targetUrl;
     }
-
 });
 
 Ext.preg(cgxp.plugins.Login.prototype.ptype, cgxp.plugins.Login);

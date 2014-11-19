@@ -164,6 +164,10 @@ GeoExt.Lang.add("fr", {
         queryServerErrorText: "L'interrogation a échoué en raison d'une erreur du serveur."
     },
 
+    "cgxp.plugins.LayerTree.prototype": {
+        restrictedContentWarning: "Une partie des données auxquelles vous souhaitez accéder n'est disponible qu'aux utilissateurs identifiés."
+    },
+
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Monter",
         movedownText: "Descendre",
