@@ -223,6 +223,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      */
     layerChanged: false,
 
+    /** private: property[restrictedContent]
+     */
+    restrictedContent: false,
+
     /**
      * Property: actionsPlugin
      */
@@ -1328,6 +1332,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 else {
                     if (layers) {
                         this.layerChanged = true;
+                        for (var i=0, l=layers.length; i<l; i++) {
+                            if (result.allLayers.indexOf(layers[i]) < 0) {
+                                // this layer is not in the list of allowed layers,
+                                // trigger private content warning
+                                this.restrictedContent = true;
+                                break;
+                            }
+                        }
                     }
                     layer.params.LAYERS = layers || result.checkedLayers;
                 }
@@ -1556,9 +1568,11 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     layers;
             }
         }
-
         Ext.each(groups.reverse(), function(t) {
             if (!this.checkGroupIsAllowed(t)) {
+                // this group is not in the list of allowed groups,
+                // trigger private content warning
+                this.restrictedContent = true;
                 return;
             }
             var opacity = this.initialState['group_opacity_' + t] ?
@@ -1764,6 +1778,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 // if found
                 if (theme) {
                     this.loadTheme(theme);
+                } else {
+                    // this theme is not in the list of allowed themes,
+                    // trigger private content warning
+                    this.restrictedContent = true;
                 }
             }, this);
         }
