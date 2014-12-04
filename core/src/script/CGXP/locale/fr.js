@@ -165,7 +165,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "cgxp.plugins.LayerTree.prototype": {
-        restrictedContentWarning: "Une partie des données auxquelles vous souhaitez accéder n'est disponible qu'aux utilissateurs identifiés."
+        restrictedContentWarning: "Une partie des données auxquelles vous souhaitez accéder n'est disponible qu'aux utilisateurs identifiés."
     },
 
     "cgxp.tree.LayerTree.prototype": {
