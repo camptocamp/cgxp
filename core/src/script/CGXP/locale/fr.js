@@ -45,7 +45,7 @@ GeoExt.Lang.add("fr", {
         windowTitle: "Permalien",
         openlinkText: "Ouvrir le lien",
         closeText: "Fermer",
-        incompatibleWithIeText: "Attention&nbsp;: cette URL est trop longue pour Microsoft Internet Explorer%nbsp;!",
+        incompatibleWithIeText: "Attention&nbsp;: cette URL est trop longue pour Microsoft Internet Explorer&nbsp;!",
         menuText: 'Permalien',
         shortText: "Envoyer",
         fieldsetText: "Partager",
@@ -162,6 +162,10 @@ GeoExt.Lang.add("fr", {
         titleText: "Edition",
         saveServerErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur.",
         queryServerErrorText: "L'interrogation a échoué en raison d'une erreur du serveur."
+    },
+
+    "cgxp.plugins.LayerTree.prototype": {
+        restrictedContentWarning: "Une partie des données auxquelles vous souhaitez accéder n'est disponible qu'aux utilisateurs identifiés."
     },
 
     "cgxp.tree.LayerTree.prototype": {

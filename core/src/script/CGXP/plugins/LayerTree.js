@@ -106,6 +106,7 @@ Ext.namespace("cgxp.plugins");
  *          {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
+ *              events: EVENTS,
  *              outputConfig: {
  *                  header: false,
  *                  flex: 1,
@@ -141,12 +142,30 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      *  See `CGXP.tree.Layertree <../widgets/tree/LayerTree.html>`_.
      */
 
+    /** api: config[events]
+     *  ``Object``
+     *  An Observer used to send events.
+     */
+    events: null,
+
     /** api: config[showKMLIn2D]
      *  ``Boolean`
      *  Indicate if KML layers should be shown in the 2D map.
      *  Default is ``true``.
      */
     showKMLIn2D: true,
+
+    /** api: config[showRestrictedContentWarning]
+     *  ``Boolean`
+     *  Display a warning to the user if he is trying to load content that is only
+     *  available when logged in.
+     *  Default is ``false``.
+     */
+    showRestrictedContentWarning: false,
+
+    /* i18n */
+    restrictedContentWarning: "Some content you want to see is restricted to identified users only", 
+    restrictedContentWarningTitle: "Info",
 
     /** private: property[tree]
      */
@@ -176,6 +195,14 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     viewerReady: function() {
         this.tree.delayedApplyState();
         this.tree.loadDefaultThemes();
+
+        if (this.tree.restrictedContent) {
+            if (this.showRestrictedContentWarning) {
+                Ext.MessageBox.alert(this.restrictedContentWarningTitle, 
+                                     this.restrictedContentWarning);
+                this.events.fireEvent('restrictedcontentnotdisplayed');
+            }
+        }
     },
 
     /** private: method[addOutput]

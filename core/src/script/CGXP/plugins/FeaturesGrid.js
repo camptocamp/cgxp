@@ -201,87 +201,33 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     maxFeatures: 200,
 
-    /** api: config[clearAllText]
-     *  ``String`` Text for the "clear all results" button (i18n).
-     */
+    /* i18n */
     clearAllText: "Clear all",
-    /** api: config[selectText]
-     *  ``String`` Text for the "select results" button (i18n).
-     */
     selectText: "Select",
-    /** api: config[selectAllText]
-     *  ``String`` Text for the "select all results" menu item (i18n).
-     */
     selectAllText: "All",
-    /** api: config[selectNoneText]
-     *  ``String`` Text for the "select none" menu item (i18n).
-     */
     selectNoneText: "None",
-    /** api: config[selectToggleText]
-     *  ``String`` Text for the "toggle selection" menu item (i18n).
-     */
     selectToggleText: "Toggle",
-    /** api: config[actionsText]
-     *  ``String`` Text for the "actions on selected results" button (i18n).
-     */
     actionsText: "Actions on selected results",
-    /** api: config[zoomToSelectionText]
-     *  ``String`` Text for the "zoom to selection" menu item (i18n).
-     */
     zoomToSelectionText: "Zoom on selection",
-    /** api: config[csvSelectionExportText]
-     *  ``String`` Text for the "export as csv" menu item (i18n).
-     */
     csvSelectionExportText: "Export as CSV",
-    /** api: config[maxFeaturesText]
-     *  ``String`` Text for the "reached max number of features" label (i18n).
-     */
     maxFeaturesText: "The maximum number of results is reached",
-    /** api: config[resultText]
-     *  ``String`` Text for the "number of result" label (singular) (i18n).
-     */
     resultText: "Total number of features: ",
-
-    /** api: config[totalSurfaceText]
-     *  ``String`` Text for the sum of polygons areas (i18n).
-     */   
     totalSurfaceText: "Total surface: ",
-    /** api: config[totalLengthText]
-     *  ``String`` Text for the sum of lines length (i18n).
-     */ 
     totalLengthText: "Total length: ",
-    /** api: config[TotalResultText]
-     *  ``String`` Text for the "number of result" label (i18n).
-     */ 
     totalResultText: "result",
-    /** api: config[TotalResultText]
-     *  ``String`` Text for the "number of results" label (plural) (i18n).
-     */ 
     totalResultsText: "results",
+    suggestionText: "Suggestion",
+    noLayerSelectedMessage: "No layer selected",
+    noLayerSelectedMessageTitle: "Info",    
+    totalNbOfFeaturesText: "Total number of features: ",
+    countingText: "(counting...)",
+    
     /** api: config[statusTemplateText]
      *  ``String`` Template for the size and number of result label. Leave it empties ("") to
      *  get only the number of results and not the "size" part.
      */ 
     statusTemplateText: '{totalSizeText} {[values.geomSize.toFixed(2)]}{geomUnit} - {totalResult} {totalResultText}',
-    /** api: config[suggestionText]
-     *  ``String`` Text for the shortened notice message (i18n).
-     */
-    suggestionText: "Suggestion",
-    /** api: config[noLayerSelectedMessage]
-     *  ``String`` No layer selected message (i18n).
-     */
-    noLayerSelectedMessage: "No layer selected",
-    /** api: config[totalNbOfFeaturesText]
-     *  ``String`` Text indicating the total number of features matching the
-     *  query (i18n).
-     */
-    totalNbOfFeaturesText: "Total number of features: ",
-    /** api: config[countingText]
-     *  ``String`` Text displayed until the total number of features is
-     *  computed (i18n).
-     */
-    countingText: "(counting...)",
-
+    
     /** api: config[messageStyle]
      *  ``String`` CSS style used for the queryResult message.
      */
@@ -662,7 +608,8 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         }, this);
 
         this.events.on('nolayer', function() {
-            Ext.MessageBox.alert("Info", this.noLayerSelectedMessage);
+            Ext.MessageBox.alert(this.noLayerSelectedMessageTitle, 
+                                 this.noLayerSelectedMessage);
         }, this);
 
         this.events.on('queryclose', function() {
