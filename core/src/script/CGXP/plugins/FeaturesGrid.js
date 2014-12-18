@@ -238,6 +238,15 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     showUnqueriedLayers: true,
 
+    /** api: config[concatenateTabs]
+     *  ``Object`` Merge each layer in one tab for each given array.
+     *  All layers from one array must have only identical attributes.
+     *
+     *  Exemple:
+     *  concatenateTabs: {'tab_title': [layer1, ..., layerN]}
+     */
+    concatenateTabs: {},
+
     /** api: config[defaultStyle]
      *  ``Object``  A style properties object to be used to show all features
      *  on the map (optional).
@@ -546,6 +555,22 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         }, this);
     },
 
+    /** private: method[getTabName]
+     * Returns the name of the tab that contains the given featureType
+     * or the featureType.
+     */
+    getTabName: function(featureType) {
+        var typeKey;
+        for (typeKey in this.concatenateTabs) {
+            if (this.concatenateTabs[typeKey] instanceof Array) {
+                if (this.concatenateTabs[typeKey].indexOf(featureType) > 0) {
+                    return typeKey;
+                }
+            }
+        }
+        return featureType; 
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -661,6 +686,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 var hasAttributes = false;
                 var grid;
                 var attribute;
+                var tabName;
                 for (attribute in feature.attributes) {
                     if (feature.attributes.hasOwnProperty(attribute)) {
                         hasAttributes = true;
@@ -676,7 +702,10 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     feature.geometry = feature.bounds.toGeometry();
                 }
 
-                currentType[feature.type] = true;
+                this.vectorLayer.addFeatures(feature);
+
+                tabName = this.getTabName(feature.type);
+                currentType[tabName] = true;
 
                 if (!this.control) {
                     this.control = new OpenLayers.Control.SelectFeature(this.vectorLayer, {
@@ -690,7 +719,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     this.control.activate();
                 }
 
-                if (this.gridByType[feature.type] === undefined) {
+                if (this.gridByType[tabName] === undefined) {
                     var fields = [];
                     var columns = [];
                     for (attribute in feature.attributes) {
@@ -735,7 +764,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                             selectControl: this.control,
                             singleSelect: false
                         }),
-                        title: OpenLayers.i18n(feature.type),
+                        title: OpenLayers.i18n(tabName),
                         ready: false
                     });
                     grid.getSelectionModel().on({
@@ -749,7 +778,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                         'viewready': this.onViewReady,
                         scope: this
                     });
-                    this.gridByType[feature.type] = grid;
+                    this.gridByType[tabName] = grid;
                     // add the grid tab before the unqueried layer tabs, if any
                     var nbitems = this.tabpan.items.getCount();
                     if (nbitems > 0) {
@@ -765,19 +794,20 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                         this.tabpan.add(grid);
                     }
                 } else {
-                    grid = this.gridByType[feature.type];
+                    grid = this.gridByType[tabName];
                     // reset grid selection
                     grid.selection = null;
                     this.tabpan.unhideTabStripItem(grid);
                 }
-                this.vectorLayer.addFeatures(feature);
             }
             var type;
             for (type in currentType) {
                 if (currentType.hasOwnProperty(type)) {
                     this.gridByType[type].getStore().filterBy(function(record) {
-                        return record.getFeature().type === type && record.getFeature().layer;
-                    });
+                        var recordFeature = record.getFeature();
+                        var tabName = this.getTabName(recordFeature.type);
+                        return tabName === type && recordFeature.layer;
+                    }, this);
                 }
             }
 
