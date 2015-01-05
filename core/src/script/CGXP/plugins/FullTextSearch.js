@@ -131,6 +131,10 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             alwaysInRange: true
         }, this.vectorLayerConfig));
 
+        if (!this.vectorLayer.style) {
+            this.vectorLayer.style = this.vectorLayer.styleMap.styles.default.defaultStyle;
+        }
+
         this.target.on('ready', this.viewerReady, this);
     },
 
@@ -173,6 +177,10 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             url: this.url,
             map: map
         }, this.widgetOptions));
+
+        colorpickerWidth = 35
+        combo.items.insert(0, this.createColorpicker(colorpickerWidth));
+        combo.width = combo.width + colorpickerWidth
 
         // used to apply the position
         this.applyPositionTask = new Ext.util.DelayedTask(function () {
@@ -229,6 +237,30 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
         return combo;
+    },
+
+     /** private: method[createColorpicker]
+     * Returns ``Ext-ux.ColorFields``
+     */
+    createColorpicker: function(width) {
+        var layer = this.vectorLayer;
+        var colorpicker = new Ext.ux.ColorField({
+            editable: false,
+            value: layer.style.fillColor || '#ff0000',
+            width: width
+        });
+        colorpicker.on('select', function(cm, color) {
+            var i = 0;
+            var features = layer.features;
+            layer.style.fillColor = color
+            layer.style.strokeColor = color
+            for (i; i < features.length ; i++){
+                features[i].style.fillColor = color;
+                features[i].style.strokeColor = color;
+            }
+            layer.redraw();
+        }, this);
+        return colorpicker;
     }
 });
 

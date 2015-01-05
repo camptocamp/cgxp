@@ -132,6 +132,8 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      */
     initComponent: function() {
         Ext.apply(this, {
+          layout: 'hbox',
+          width: this.comboWidth,
           items: [this.createCombo()],
           unstyled: true
         });
