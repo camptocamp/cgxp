@@ -201,6 +201,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     map.zoomToExtent(feature.bounds);
                 }
+                combo.blur();
 
                 // load related group or layer
                 if (this.layerTreeId) {
