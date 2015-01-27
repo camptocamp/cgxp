@@ -201,6 +201,16 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     toolbarItems: [],
 
+    /** api: config[loginToolbarText]
+     *  ``String`` Text of the login button in the toolbar. Defaults to the
+     *  value of the ``loginText`` parameter. Set to '' to display no text.
+     */
+
+    /** api: config[loginFormText]
+     *  ``String`` Text of the submit button in the login form. Defaults to the
+     *  value of the ``loginText`` parameter. Set to '' to display no text.
+     */
+
     /* i18n */
     authenticationFailureText: "Impossible to connect.",
     loggedAsText: "Logged in as ${user}",
@@ -225,7 +235,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.submitButton = new Ext.Button({
-            text: this.loginText,
+            text: this.loginFormText !== undefined
+                ? this.loginFormText : this.loginText,
             formBind: true,
             handler: this.submitForm,
             scope: this
@@ -256,7 +267,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         this.loginWindow.render(Ext.getBody());
 
         this.loginAction = new cgxp.tool.Button(Ext.apply({
-            text: this.loginText,
+            text: this.loginToolbarText !== undefined
+                ? this.loginToolbarText : this.loginText,
             tooltip: this.actionButtonTooltip,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
@@ -415,7 +427,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 this.loginFormBottomCellPanel.setVisible(true);
             }
             this.actionChangePassword = false;
-            this.submitButton.setText(this.loginText);
+            this.submitButton.setText(this.loginFormText !== undefined
+                ? this.loginFormText : this.loginText);
             f.url = this.loginURL;
         }
     },
