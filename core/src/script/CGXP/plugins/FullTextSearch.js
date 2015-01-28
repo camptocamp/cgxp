@@ -101,6 +101,14 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      */
     actionConfig: null,
 
+    /** api: config[useColorPicker]
+     *  ``boolean``
+     *  If true, append a color picker next to the text search widget
+     *  allowing to choose the color of the highlighted feature.
+     *  Default is false.
+     */
+    useColorPicker: false,
+     
     /** api: config[layerTreeId]
      *  ``String``
      *  Id of the layertree tool.
@@ -178,9 +186,11 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
             map: map
         }, this.widgetOptions));
 
-        colorpickerWidth = 35
-        combo.items.insert(0, this.createColorpicker(colorpickerWidth));
-        combo.width = combo.width + colorpickerWidth
+        if (this.useColorPicker) {
+            colorpickerWidth = 85;
+            combo.items.add(this.createColorpicker(colorpickerWidth));
+            combo.width = combo.width + colorpickerWidth;
+        }
 
         // used to apply the position
         this.applyPositionTask = new Ext.util.DelayedTask(function () {
