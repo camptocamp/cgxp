@@ -161,7 +161,9 @@ GeoExt.Lang.add("fr", {
         forbiddenText: "Vous n'êtes pas autorisé à réaliser cette action&nbsp;!",
         titleText: "Edition",
         saveServerErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur.",
-        queryServerErrorText: "L'interrogation a échoué en raison d'une erreur du serveur."
+        queryServerErrorText: "L'interrogation a échoué en raison d'une erreur du serveur.",
+        titleValidationErrorText: "Erreur de validation",
+        saveValidationErrorText: "Les géométries ne sont pas valides. Raison&nbsp;:&nbsp;"
     },
 
     "cgxp.plugins.LayerTree.prototype": {
