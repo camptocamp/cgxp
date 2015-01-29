@@ -157,12 +157,14 @@ GeoExt.Lang.add("de", {
         forbiddenText: "Diese Aktion ist nicht erlaubt!",
         titleText: "Editieren",
         saveServerErrorText: "Speichern nicht möglich wegen eines Serverfehlers.",
-        queryServerErrorText: "Abfrage nicht möglich wegen eines Serverfehlers."
+        queryServerErrorText: "Abfrage nicht möglich wegen eines Serverfehlers.",
+        titleValidationErrorText: "Validierungsfehler",
+        saveValidationErrorText: "Die Validierung der Geometrie ist fehlgeschlagen. Grund:&nbsp;"
     },
-    
+
     "cgxp.plugins.LayerTree.prototype": {
         restrictedContentWarning: "Ein Teil der Daten, auf welche Sie zugreifen möchten, ist nur für gewisse eingeloggte Nutzer freigegeben."
-    },    
+    },
 
     "cgxp.tree.LayerTree.prototype": {
         moveupText: "Nach oben",

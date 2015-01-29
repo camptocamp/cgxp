@@ -18,6 +18,7 @@
 /**
  * @requires plugins/Tool.js
  * @include OpenLayers/Protocol/HTTP.js
+ * @include OpenLayers/Format/JSON.js
  * @include OpenLayers/Format/GeoJSON.js
  * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Control/ModifyFeature.js
@@ -209,6 +210,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  Message display title
      */
     titleText: 'Editing',
+
+    /** api: config[titleValidationError]
+     *  ``String``
+     *  Message display title for validation error
+     */
+    titleValidationErrorText: 'Validation Error',
+
+    /** api: config[saveValidationErrorText]
+     *  ``String``
+     *  Message display when the validation failed
+     */
+    saveValidationErrorText: 'The validation failed for the geometry. Reason: ',
 
     /** api: config[saveServerErrorText]
      *  ``String``
@@ -802,6 +815,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             format: new OpenLayers.Format.GeoJSON()
         });
         var self = this;
+        var validationError = null;
         function callback(response) {
             if (response.priv.status == 403) {
                 Ext.MessageBox.show({
@@ -809,6 +823,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     buttons: Ext.Msg.OK,
                     icon: Ext.MessageBox.ERROR
                 });
+            } else if (response.priv.status == 400) {
+                var json = new OpenLayers.Format.JSON().read(
+                    response.priv.responseText);
+                if (json.validation_error) {
+                    validationError = json.validation_error;
+                }
             }
         }
         protocol.commit([feature], {
@@ -827,7 +847,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     this.redrawWMSLayers(feature.attributes.__layer_id__);
                 }
                 else {
-                    Ext.MessageBox.alert(self.titleText, self.saveServerErrorText);
+                    if (validationError !== null) {
+                        Ext.MessageBox.alert(
+                            self.titleValidationErrorText,
+                            self.saveValidationErrorText + validationError);
+                    } else {
+                        Ext.MessageBox.alert(self.titleText, self.saveServerErrorText);
+                    }
                 }
             },
             scope: this
