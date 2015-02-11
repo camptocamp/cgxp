@@ -156,7 +156,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     showKMLIn2D: true,
 
     /** api: config[showRestrictedContentWarning]
-     *  ``Boolean`
+     *  ``Boolean``
      *  Display a warning to the user if he is trying to load content that is only
      *  available when logged in.
      *  Default is ``false``.
