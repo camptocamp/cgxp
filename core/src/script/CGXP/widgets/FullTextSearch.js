@@ -234,10 +234,6 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             selectOnFocus: true
         }, this.actionConfig));
 
-        this.map.events.register('movestart', this, function(event) {
-            combo.blur();
-        });
-
         // used to close the loading panel
         this.closeLoading = new Ext.util.DelayedTask(function () {
             combo.list.hide();
