@@ -368,8 +368,8 @@ cgxp.api.Map.prototype = {
      *  :arg maxy: ``Number`` maxy coordinate
      */
     recenterOnBoundingBox: function(minx, miny, maxx, maxy) {
-        var OpenLayersBB = new OpenLayers.Bounds(minx, miny, maxx, maxy);
-        this.map.zoomToExtent(OpenLayersBB);
+        var bbox = new OpenLayers.Bounds(minx, miny, maxx, maxy);
+        this.map.zoomToExtent(bbox);
     }
  
     /** api: method[recenterOnObjects]
