@@ -359,7 +359,19 @@ cgxp.api.Map.prototype = {
         }
         this.map.setCenter(new OpenLayers.LonLat(center[0], center[1]), zoom);
     },
-
+    
+    /** api: method[recenterOnBoundingBox]
+     *  allow to recenter on a bounding box 
+     *  :arg minx: ``Number`` minx coordinate
+     *  :arg miny: ``Number`` miny coordinate
+     *  :arg maxx: ``Number`` maxx coordinate
+     *  :arg maxy: ``Number`` maxy coordinate
+     */
+    recenterOnBoundingBox: function(minx, miny, maxx, maxy) {
+        var bbox = new OpenLayers.Bounds(minx, miny, maxx, maxy);
+        this.map.zoomToExtent(bbox);
+    }
+ 
     /** api: method[recenterOnObjects]
      *  :arg layer: ``String`` The layer name
      *  :arg ids: ``Array(String)`` The ids of the feature to recenter on.
