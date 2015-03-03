@@ -296,7 +296,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                   styleMap: styleMap,
                   displayInLayerSwitcher: false
             });
-            layer = new OpenLayers.Layer.Vector("Cosmetic", layerOptions);
+            var layer = new OpenLayers.Layer.Vector("Cosmetic", layerOptions);
             this.addLayers([layer]);
         }
 
