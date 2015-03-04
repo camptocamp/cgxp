@@ -370,7 +370,7 @@ cgxp.api.Map.prototype = {
     recenterOnBoundingBox: function(minx, miny, maxx, maxy) {
         var bbox = new OpenLayers.Bounds(minx, miny, maxx, maxy);
         this.map.zoomToExtent(bbox);
-    }
+    },
  
     /** api: method[recenterOnObjects]
      *  :arg layer: ``String`` The layer name
