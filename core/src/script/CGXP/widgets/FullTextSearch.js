@@ -15,6 +15,10 @@
  * along with CGXP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @include OpenLayers/Util/AutoProjection.js
+ */
+
 /** api: (define)
  *  module = cgxp
  *  class = FullTextSearch
@@ -116,18 +120,6 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
      */
     limits: {},
 
-    /** api: config[projectionCodes]
-     *  ``Array``
-     *  List of EPSG codes of projections that should be used when trying to
-     *  recenter on coordinates. Leftmost projections are used preferably.
-     *  Default is current map projection.
-     */
-    projectionCodes: null,
-
-    /** private: property[projections]
-     */
-    projections: null,
-
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -138,17 +130,7 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
         cgxp.FullTextSearch.superclass.initComponent.call(this);
 
         // define projections that may be used for coordinates recentering
-        this.projections = {};
-        if (!this.projectionCodes) {
-            this.projectionCodes = [this.map.getProjection()];
-        }
-        for (var i = 0, len = this.projectionCodes.length, code; i < len; i++) {
-            code = String(this.projectionCodes[i]).toUpperCase();
-            if (code.substr(0, 5) != "EPSG:") {
-                code = "EPSG:" + code;
-            }
-            this.projections[code] = new OpenLayers.Projection(code);
-        }
+        this.autoProjection = new OpenLayers.AutoProjection(this);
     },
 
     createStore: function() {
@@ -177,23 +159,10 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
 
-                var tryProjection = function(lon, lat, projection) {
-                    var position = new OpenLayers.LonLat(lon, lat);
-                    position.transform(projection, map.getProjectionObject());
-                    if (map.maxExtent.containsLonLat(position)) {
-                        this.position = position;
-                        return true;
-                    }
-                    return false;
-                }.createDelegate(this);
-
-                for (var projection in this.projections) {
-                    if (tryProjection(left, right, projection) ||
-                        tryProjection(right, left, projection)) {
-                        break;
-                    }
+                this.position = this.autoProjection.tryProjection([left, right]); 
+                if (this.position === null) {
+                    this.position = this.autoProjection.tryProjection([right, left]);
                 }
-
                 if (this.position) {
                     this.closeLoading.cancel();
                     // close the loading twin box.

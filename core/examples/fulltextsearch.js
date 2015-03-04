@@ -20,7 +20,6 @@ Ext.onReady(function() {
             coordsRecenterZoom: 11,
             widgetOptions: {
               tooltipEl: 'search-tip',
-              projectionCodes: [21781, 4326],
               comboWidth: 300,
               emptyText: 'Search a place or a coordinate',
               limits: {
@@ -55,7 +54,9 @@ Ext.onReady(function() {
             projection: "EPSG:900913",
             units: "m",
             maxResolution: 156543.0339,
+            projectionCodes: [4326, 21781],
             maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            restrictedExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             center: [0, 0],
             zoom: 2,
             tbar: [],

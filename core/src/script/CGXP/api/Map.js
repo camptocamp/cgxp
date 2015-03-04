@@ -33,11 +33,37 @@
  * @include OpenLayers/Format/Text.js
  * @include OpenLayers/Popup/FramedCloud.js
  * @include OpenLayers/Control/SelectFeature.js
+ * @include OpenLayers/Util/AutoProjection.js
  */
 
 /** api: (define)
  *  module = cgxp.api
  *  class = Map
+ */
+
+/** api: autoprojection - example
+ *
+ *  If a restriction area is given to the map, along with a set of SRS,
+ *  it is possible the SRS of an entered coordinates. This ability is called
+ *  here "autoprojection". the restriction area must be defined such as
+ *  any SRS in the list will be differiate without ambiguite.
+ *  
+ *  Sample code showing how to configure the mappanel for autoprojection.
+ *  Here, the application is in 21781, the restricted extent corresponds to 
+ *  Swiss boundaries, and supported projection are 21781 and 2056.
+ *
+ *  The autoprojection will be enabled for API and XAPI.
+ *
+ *  .. code-block:: javascript
+ *
+ *      ...
+ *      var mapConfig = {
+ *          xtype: 'cgxp_mappanel',
+ *          restrictedExtent: RESTRICTED_EXTENT,
+ *          projectionCodes: [3857, 21781, 2056],
+ *          projection: new OpenLayers.Projection("EPSG:3857"),
+ *          ...
+ *      }
  */
 
 if (!window.cgxp) {
@@ -217,6 +243,13 @@ cgxp.api.Map.prototype = {
     onViewerReady: function(viewer) {
         var i;
         this.map = viewer.mapPanel.map;
+        this.autoProjection = new OpenLayers.AutoProjection(viewer.mapPanel); 
+
+        if (this.userConfig.center !== undefined) {
+            var zoom = (this.userConfig.zoom === undefined ? 10 :
+                        this.userConfig.zoom);
+            this.recenter(this.userConfig.center, zoom);
+        }
 
         var config = this.userConfig;
 
@@ -239,6 +272,7 @@ cgxp.api.Map.prototype = {
      *  Convenience method to create a map from a config.
      */
     initMapFromConfig: function(config) {
+
         this.adaptConfig(config);
 
         var i;
@@ -249,8 +283,12 @@ cgxp.api.Map.prototype = {
         }
 
         OpenLayers.Util.extend(config, this.userConfig);
-
         this.map = new OpenLayers.Map(config);
+        this.autoProjection = new OpenLayers.AutoProjection(this.map);
+ 
+        if (config.center !== undefined) {
+            this.recenter(config.center, config.zoom); 
+        }
 
         this.addOverlayLayers(this.userConfig.overlays);
         this.onMapCreated();
@@ -357,7 +395,11 @@ cgxp.api.Map.prototype = {
                 OpenLayers.Function.bind(this.recenter, this, center, zoom));
             return;
         }
-        this.map.setCenter(new OpenLayers.LonLat(center[0], center[1]), zoom);
+        center = this.autoProjection.tryProjection(center);
+        if (center == null){
+            center = new OpenLayers.LonLat(null, null);
+        }
+        this.map.setCenter(center, zoom);
     },
     
     /** api: method[recenterOnBoundingBox]
@@ -433,6 +475,10 @@ cgxp.api.Map.prototype = {
             return;
         }
         options = options || {};
+        if (options.position !== undefined){
+            options.position = this.autoProjection.tryProjection(options.position);
+        }
+       
         var lonlat = (options.position) ?
             new OpenLayers.LonLat(options.position[0], options.position[1]) :
             this.map.getCenter();
