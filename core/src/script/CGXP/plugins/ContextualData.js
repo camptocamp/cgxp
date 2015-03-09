@@ -152,12 +152,14 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      */
     handleServerData: function(data) {
         var result = {};
-        Ext.each(data, function(key) {
-            if (['mnt', 'mns'].indexOf(key) < 0) {
-                result[key + '_value'] = data[key];
-                result[key + '_label'] = OpenLayers.i18n(key);
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (['mnt', 'mns'].indexOf(key) < 0) {
+                    result[key + '_value'] = data[key];
+                    result[key + '_label'] = OpenLayers.i18n(key);
+                }
             }
-        });
+        };
         return result;
     },
 
