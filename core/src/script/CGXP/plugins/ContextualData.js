@@ -323,25 +323,22 @@ cgxp.plugins.ContextualData.Control = OpenLayers.Class(OpenLayers.Control, {
         if (response) {
             var data = Ext.decode(response.responseText);
 
-            // default server data handling
-            var serverValues = {};
             // specific elevation treatments
             if (data.mns && data.mnt) {
-                var Dh=Math.round((data.mns-data.mnt)*10)/10;
+                var Dh = Math.round((data.mns-data.mnt) * 10) / 10;
                 if (Dh<0) {
                     Dh=0;
                 }
-                Ext.apply(serverValues, {
+                Ext.apply(values, {
                     'elevation_dtm': data.mnt,
                     'elevation_dsm': data.mns,
                     'elevation_dhm': Dh
                 });
             }
-            // merge serverValues with values
-            Ext.apply(values, serverValues);
 
             // user specific server data handling
             userValues = this.handleServerData(data);
+
             // merge serverValues override with values
             if (userValues) {
                 if (typeof(userValues) != 'object') {
