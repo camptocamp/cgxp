@@ -81,12 +81,7 @@ GeoExt.Lang.add("de", {
 
     "cgxp.plugins.Print.prototype": {
         printTitle: "Drucken",
-        titlefieldText: "Titel",
-        titlefieldvalueText: "Kartentitel",
-        includelegendText: "Legende anzeigen",
         layoutText: "Layout",
-        commentfieldText: "Kommentar",
-        commentfieldvalueText: "Kommentar auf der Karte",
         dpifieldText: "Auflösung",
         scalefieldText: "Massstab",
         rotationfieldText: "Rotation",

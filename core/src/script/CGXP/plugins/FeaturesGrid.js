@@ -386,7 +386,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  The columns names will be 'col1', 'col2', ....
      */
     printExport: function() {
-        var groupedRecords = [];
+        var groupedRecords = {};
 
         var grids = [];
 
@@ -419,7 +419,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     }
                 }
                 if (records.length === 0) {
-                    return groupedRecords;
+                    return;
                 }
 
                 Ext.each(records, function(r) {

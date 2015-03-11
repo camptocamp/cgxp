@@ -19,6 +19,7 @@
  * @requires plugins/Tool.js
  * @include GeoExt/widgets/Action.js
  * @include GeoExt/data/PrintProvider.js
+ * @include GeoExt/data/MapFishPrintv3Provider.js
  * @include GeoExt/plugins/PrintProviderField.js
  * @include GeoExt.ux/SimplePrint.js
  * @include OpenLayers/Feature/Vector.js
@@ -93,6 +94,35 @@ Ext.namespace("cgxp.plugins");
  *          }]
  *          ...
  *      });
+ *
+ *  Sample code using the MapFishPrint version 3:
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          tools: [{
+ *              ptype: 'cgxp_print',
+ *              legendPanelId: "legendPanel",
+ *              featureProvider: "featureGrid",
+ *              actionTarget: "center.tbar",
+ *              toggleGroup: "maptools",
+ *              printURL: "${request.route_url("printproxy", path="")}",
+ *              mapserverURL: "${request.route_url("mapserverproxy", path="")}",
+ *              options: {
+ *                  labelAlign: 'top',
+ *                  defaults: {
+ *                      anchor: '100%'
+ *                  },
+ *                  autoFit: true
+ *              },
+ *              version: 3,
+ *              encodeLayer: {},
+ *              encodeExternalLayer: {},
+ *              additionalAttributes: []
+ *          }]
+ *          ...
+ *      });
  */
 
 /** api: constructor
@@ -148,12 +178,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  Optional parameters to send to the print proxy.
      */
     printProviderConfig: null,
-
-    /** api: config[options]
-     *  ``String``
-     *  panel config options.
-     */
-    options: null,
 
     /** api: config[timeout]
      * ``Number``
@@ -213,7 +237,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[fields]
      *  ``Array``
-     *  Fields added in the print form.
+     *  Fields added in the print form, DEPRECATED.
      *  E.g.:
      *
      *  .. code:: javascript
@@ -225,17 +249,91 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *        autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
      *    }]
      *
-     *  Default to: ``['title', 'comment', 'legend']``, that are predefined fields.
+     *  Default to: ``[]``.
      */
-    fields: ['title', 'comment', 'legend'],
+    fields: [],
+
+    /** api: config[options]
+     *  ``Object``
+     *  The options given to the print panel.
+     *  E.g.:
+     *
+     *  .. code:: javascript
+     *
+     *      options: {
+     *          labelAlign: "top",
+     *          defaults: {
+     *              anchor: "100%"
+     *          },
+     *          autoFit: true,
+     *          fieldsExtraClientConfiguration: {
+     *              "A4_portrait": {
+     *                  "title": {
+     *                      fieldAttributes: {
+     *                          fieldLabel: "${_("Name")}",
+     *                          emptyText: "${_("Name")}"
+     *                      }
+     *                  },
+     *                  "description": {
+     *                      useTextArea: true,
+     *                      fieldAttributes: {
+     *                          fieldLabel: "${_("Description")}",
+     *                          emptyText: "${_("Description")}",
+     *                          autoCreate: {maxLength: 200}
+     *                      }
+     *                  }
+     *              }
+     *          }
+     *      }
+     *
+     *  Default to: ``{}``.
+     */
+    options: {},
+
+    /** api: config[additionalAttributes]
+     *  ``Array``
+     *  Attributes added in the print form used especially with print V2.
+     *
+     *  Default to:
+     *
+     *  .. code:: javascript
+     *
+     *    [{
+     *        name: "title",
+     *        label: "Title",
+     *        type: "String"
+     *    }, {
+     *        name: "comments",
+     *        label: "Comments",
+     *        type: "String"
+     *    }, {
+     *        name: "legend",
+     *        type: "LegendAttributeValues"
+     *    }]
+     */
+    additionalAttributes: [{
+        name: "title",
+        label: "Title",
+        type: "String"
+    }, {
+        name: "comment",
+        label: "Comment",
+        type: "String",
+        useTextArea: true
+    }, {
+        name: "legend",
+        type: "LegendAttributeValues"
+    }],
+
+    /** api: config[version]
+     *  ``Number``
+     *  The print major version,
+     *  Default is 2.
+     */
+    version: 2,
 
     /* i18n */
     printTitle: "Printing",
-    titlefieldText: "Title",
-    titlefieldvalueText: "Map title",
-    commentfieldText: "Comment",
-    commentfieldvalueText: "Comment on the map",
-    includelegendText: "Include legend",
     dpifieldText: "Resolution",
     scalefieldText: "Scale",
     rotationfieldText: "Rotation",
@@ -368,12 +466,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         this.includeLegend = this.checkLegend && !!this.legendPanelId;
 
         // create a print provider
-        var printProvider = new GeoExt.data.PrintProvider({
+        var printProviderOptions = {
             url: this.printURL,
             timeout: this.timeout,
-            baseParams: Ext.apply({
-                url: this.printURL
-            }, this.printProviderConfig),
+            baseParams: this.printProviderConfig,
             listeners: {
                 beforedownload: function(pp, url) {
                     if (Ext.isIE) {
@@ -408,7 +504,16 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 },
                 scope: this
             }
-        });
+        };
+        if (this.version == 2) {
+            printProviderOptions.attributes = this.additionalAttributes;
+            printProviderOptions.baseParams = Ext.apply({
+                url: this.printURL
+            }, printProviderOptions.baseParams);
+        }
+        var printProviderClass = this.version == 2 ?
+            GeoExt.data.PrintProvider : GeoExt.data.MapFishPrintv3Provider;
+        var printProvider = new printProviderClass(printProviderOptions);
         printProvider.on('beforeencodelayer', function(printProvider, layer) {
             if (layer instanceof OpenLayers.Layer.Vector) {
                 var features = [];
@@ -482,8 +587,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
-            options.legend = this.includeLegend ?
-                             this.target.tools[this.legendPanelId].legendPanel : null;
             for (param in this.target.mapPanel.params) {
                 value = this.target.mapPanel.params[param];
                 if (this.paramRenderer[param]) {
@@ -492,48 +595,81 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 printProvider.customParams['param_' + param] = value;
             }
 
-            // need to define the table object even for page0 as java expects it
-            pages[0].customParams = {col0: '', table:{data:[{col0: ''}], columns:['col0']}};
-            pages[0].customParams.showMap = true;
-            pages[0].customParams.showScale = true;
-            pages[0].customParams.showAttr = false;
-            pages[0].customParams.showNorth = true;
-            pages[0].customParams.showScalevalue = true;
-            pages[0].customParams.showMapframe = true;
-            pages[0].customParams.showMapframeQueryresult = false;
-            // new blank page, if query results
-            if (this.featureProvider) {
+            if (this.version == 2) {
+                // need to define the table object even for page0 as java expects it
+                pages[0].customParams = {col0: "", table:{data:[{col0: ""}], columns:["col0"]}};
+                pages[0].customParams.showMap = true;
+                pages[0].customParams.showScale = true;
+                pages[0].customParams.showAttr = false;
+                pages[0].customParams.showNorth = true;
+                pages[0].customParams.showScalevalue = true;
+                pages[0].customParams.showMapframe = true;
+                pages[0].customParams.showMapframeQueryresult = false;
+                // new blank page, if query results
+                if (this.featureProvider) {
 
-                // clear existing result pages
-                while (pages.length > 1) {
-                    pages.pop();
-                }
+                    // clear existing result pages
+                    while (pages.length > 1) {
+                        pages.pop();
+                    }
 
-                var printExport = this.target.tools[this.featureProvider].printExport();
-                if (printExport instanceof Array) {
-                    var pageCount = 1;
-                    for (dataset in printExport) {
-                        if (printExport.hasOwnProperty(dataset)) {
-                            // TODO, implement paging in case of too many result to display on only one page
-                            if (printExport[dataset].table.data.length > 0 &&
-                                printExport[dataset].table.data[0].col0 !== '') {
-                                var page = new GeoExt.data.PrintPage({
-                                    printProvider: printProvider
-                                });
-                                page.center = pages[0].center.clone();
-                                page.customParams = printExport[dataset];
-                                page.customParams.showMap = false;
-                                page.customParams.showScale = false;
-                                page.customParams.showAttr = true;
-                                page.customParams.showNorth = false;
-                                page.customParams.showScalevalue = false;
-                                page.customParams.showMapframe = false;
-                                page.customParams.showMapframeQueryresult = true;
-                                pages[pageCount] = page;
+                    var printExport = this.target.tools[this.featureProvider].printExport();
+                    if (printExport instanceof Array) {
+                        var pageCount = 1;
+                        for (dataset in printExport) {
+                            if (printExport.hasOwnProperty(dataset)) {
+                                // TODO, implement paging in case of too many result to display on only one page
+                                if (printExport[dataset].table.data.length > 0 &&
+                                    printExport[dataset].table.data[0].col0 !== "") {
+                                    var page = new GeoExt.data.PrintPage({
+                                        printProvider: printProvider
+                                    });
+                                    page.center = pages[0].center.clone();
+                                    page.customParams = printExport[dataset];
+                                    page.customParams.showMap = false;
+                                    page.customParams.showScale = false;
+                                    page.customParams.showAttr = true;
+                                    page.customParams.showNorth = false;
+                                    page.customParams.showScalevalue = false;
+                                    page.customParams.showMapframe = false;
+                                    page.customParams.showMapframeQueryresult = true;
+                                    pages[pageCount] = page;
+                                }
+                                pageCount++;
                             }
-                            pageCount++;
                         }
                     }
+                }
+            }
+            else {
+                if (this.featureProvider) {
+                    var data = this.target.tools[this.featureProvider].printExport();
+                    var datasource = [];
+                    for (var prop in data) {
+                        if (data.hasOwnProperty(prop)) {
+                            var tableColumns = [];
+                            var tableData = [];
+                            Ext.each(data[prop].table.columns, function(column) {
+                                tableColumns.push(data[prop][column]);
+                            });
+                            Ext.each(data[prop].table.data, function(r) {
+                                var row = [];
+                                Ext.each(data[prop].table.columns, function(column) {
+                                    row.push(r[column]);
+                                });
+                                tableData.push(row);
+                            });
+
+                            datasource.push({
+                                title: prop,
+                                table: {
+                                    columns: tableColumns,
+                                    data: tableData
+                                }
+                            });
+                        }
+                    }
+                    printProvider.customParams.datasource = datasource;
                 }
             }
         }, this);
@@ -567,56 +703,17 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         var items = [];
         Ext.each(this.fields, function(field) {
-            if (field == 'title') {
-                items.push({
-                    xtype: 'textfield',
-                    name: 'title',
-                    fieldLabel: this.titlefieldText,
-                    emptyText: this.titlefieldvalueText,
-                    plugins: new GeoExt.plugins.PrintProviderField({
-                        printProvider: printProvider
-                    }),
-                    autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-                });
-            }
-            else if (field == 'comment') {
-                items.push({
-                    xtype: 'textarea',
-                    name: 'comment',
-                    fieldLabel: this.commentfieldText,
-                    emptyText: this.commentfieldvalueText,
-                    plugins: new GeoExt.plugins.PrintProviderField({
-                        printProvider: printProvider
-                    }),
-                    autoCreate: {tag: "textarea", maxLength: "100"}
-                });
-            }
-            else if (field == 'legend') {
-                items.push({
-                    xtype: 'checkbox',
-                    name: 'legend',
-                    fieldLabel: this.includelegendText,
-                    hideLabel: true,
-                    boxLabel: this.includelegendText,
-                    checked: this.includeLegend,
-                    // deactivate the checkbox if no legend panel is available
-                    hidden: !this.legendPanelId,
-                    handler: function(cb, checked) {
-                        this.includeLegend = checked;
-                    },
-                    scope: this
-                });
-            }
-            else {
-                items.push(Ext.apply({
-                    xtype: 'textfield',
-                    plugins: new GeoExt.plugins.PrintProviderField({
-                        printProvider: printProvider
-                    }),
-                    autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-                }, field));
-            }
+            items.push(Ext.apply({
+                xtype: "textfield",
+                plugins: new GeoExt.plugins.PrintProviderField({
+                    printProvider: printProvider
+                }),
+                autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
+            }, field));
         }, this);
+
+        var self = this;
+
         // create the print panel
         options = Ext.apply({
             mapPanel: this.target.mapPanel,
@@ -677,6 +774,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 editable: false,
                 displayField: 'label'
             },
+            getLegendPanel: function() {
+                return self.target.tools[self.legendPanelId].legendPanel
+            },
             dpiText: this.dpifieldText,
             scaleText: this.scalefieldText,
             rotationText: this.rotationfieldText,
@@ -684,7 +784,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             layoutText: this.layoutText,
             creatingPdfText: this.waitingText
         }, this.options);
-
 
         Ext.apply(options, panelOptions);
 
