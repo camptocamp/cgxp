@@ -21,6 +21,7 @@ GeoExt.Lang.add("fr", {
         printStatusText: '<tpl for=".">Position dans la file: {count}<br />Temps moyen par impression: {timeS} [s]</tpl>',
         downloadPdfText: "Téléchargement",
         statusErrorText: "Erreur",
-        includelegendText: "Inclure la légende"
+        includelegendText: "Inclure la légende",
+        createPrintJobText: "Crée un nouveau travail d'impression"
     }
 });
