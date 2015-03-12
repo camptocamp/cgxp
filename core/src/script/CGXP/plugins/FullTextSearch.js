@@ -102,12 +102,19 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     actionConfig: null,
 
     /** api: config[useColorPicker]
-     *  ``boolean``
+     *  ``Boolean``
      *  If true, append a color picker next to the text search widget
      *  allowing to choose the color of the highlighted feature.
      *  Default is false.
      */
     useColorPicker: false,
+
+    /** api: config[colorpickerWidth]
+     *  ``Number``
+     *  The width of the color picker.
+     *  Default is 20
+     */
+    colorpickerWidth: 20,
      
     /** api: config[layerTreeId]
      *  ``String``
@@ -121,6 +128,11 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      *  Optional configuration of the vector layer.
      */
     vectorLayerConfig: {},
+
+    /** api: config[colorpickerTooltipText]
+     *  ``String`` Text to display as a tooltip on the color picker (i18n).
+     */
+    colorpickerTooltipText: "Set the search result color",
 
     init: function() {
         cgxp.plugins.FullTextSearch.superclass.init.apply(this, arguments);
@@ -187,9 +199,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         }, this.widgetOptions));
 
         if (this.useColorPicker) {
-            colorpickerWidth = 70;
-            combo.items.add(this.createColorpicker(colorpickerWidth));
-            combo.width = combo.width + colorpickerWidth;
+            combo.items.add(this.createColorpicker(this.colorpickerWidth));
+            combo.width = combo.width + this.colorpickerWidth;
         }
 
         // used to apply the position
@@ -251,14 +262,33 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
     },
 
      /** private: method[createColorpicker]
-     * Returns ``Ext-ux.ColorFields``
-     */
+      *
+      *  :returns ``Ext.ux.ColorFields`` The colorpicker widget.
+      */
     createColorpicker: function(width) {
         var layer = this.vectorLayer;
         var colorpicker = new Ext.ux.ColorField({
             editable: false,
-            value: layer.style.fillColor || '#ff0000',
-            width: width
+            style: {
+                'background': layer.style.fillColor || '#ff0000'
+            },
+            width: width,
+            hideTrigger: true,
+            onSelect: function(m, d) {
+                this.setValue("");
+                this.fireEvent('select', this, d);
+                this.el.setStyle('background', d);
+            }
+        });
+        colorpicker.on({
+            "render": function() {
+                new Ext.ToolTip({
+                    target: colorpicker.getEl(),
+                    trackMouse: true,
+                    html: this.colorpickerTooltipText
+                });
+            },
+            "scope": this
         });
         colorpicker.on('select', function(cm, color) {
             var i = 0;

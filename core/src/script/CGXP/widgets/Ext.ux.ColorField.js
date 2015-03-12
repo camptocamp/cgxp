@@ -86,21 +86,22 @@ Ext.ux.ColorField = Ext.extend(Ext.form.TriggerField, {
     // Detects whether the font color should be white or black, according to the
     // current color of the background
     detectFontColor: function() {
+        var value;
         if (!this.menu || !this.menu.picker.rawValue) {
             if (!this.value) {
                 value = 'FFFFFF';
             } else {
                 var h2d = function(d) {
                     return parseInt(d, 16);
-                }
-                var value = [
+                };
+                value = [
                     h2d(this.value.slice(1, 3)),
                     h2d(this.value.slice(3, 5)),
                     h2d(this.value.slice(5))
                 ];
             }
         } else {
-            var value = this.menu.picker.rawValue;
+            value = this.menu.picker.rawValue;
         }
         var avg = (value[0] + value[1] + value[2]) / 3;
         this.el.setStyle('color', (avg > 128) ? '#000' : '#FFF');
