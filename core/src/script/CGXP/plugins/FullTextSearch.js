@@ -195,7 +195,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         var map = this.target.mapPanel.map;
         var combo = new cgxp.FullTextSearch(Ext.apply({
             url: this.url,
-            map: map
+            map: map,
+            projectionCodes: this.target.mapPanel.projectionCodes,
         }, this.widgetOptions));
 
         if (this.useColorPicker) {

@@ -24,6 +24,7 @@
 
         "widgets/FullTextSearch.js",
         "widgets/MapPanel.js",
+        "../../../../openlayers.addins/AutoProjection/lib/OpenLayers/Util/AutoProjection.js",
         "widgets/WMSLegend.js",
         "widgets/tree/LayerTree.js",
         "widgets/tree/TreeNodeComponent.js",

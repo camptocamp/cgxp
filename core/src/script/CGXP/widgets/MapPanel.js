@@ -21,6 +21,7 @@
  * @include OpenLayers/Layer/Vector.js
  * @include OpenLayers/Feature/Vector.js
  * @include OpenLayers/Geometry/Point.js
+ * @include OpenLayers/Util/AutoProjection.js
  */
 
 /** api: (define)
@@ -60,6 +61,34 @@ Ext.namespace("cgxp");
  *   - Example: ``&map_tooltip=sometext``
  *
  */
+
+/** api: autoprojection - example
+ *
+ *  AutoProjection allows to enter coordinates in different SRS in the same
+ *  application. Autoprojection is supported by:
+ *      coordinates in Url
+ *      full text search
+ *      centering map in api and xapi
+ *      adding marker in api
+ *  
+ *  Sample code showing how to configure the mappanel for autoprojection.
+ *  Here, the application is in 21781, the restricted extent corresponds to 
+ *  Swiss boundaries, and supported projection are 21781 and 2056.
+ *
+ *  .. code-block:: javascript
+ *
+ *      new gxp.Viewer({
+ *          ...
+ *          map: {
+ *              id: "app-map", // id needed to reference map in portalConfig above
+ *              xtype: 'cgxp_mappanel',
+ *              ...
+ *              projection: new OpenLayers.Projection("EPSG:21781"),
+ *              restrictedExtent: [480000, 60000, 840000, 300000],
+ *              projectionCodes: ["21781", "2056"],
+ *          ...
+ */
+
 cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
 
     /** private: property[vectorLayer]
@@ -72,6 +101,24 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      *  The crosshair style
      */
     crosshairStyle: {},
+
+    /** api: config[projectionCodes]
+     * ``Array``
+     *
+     * List of EPSG codes of projections that should be used when trying to
+     * recenter on coordinates. Leftmost projections are used preferably.
+     * Default is current map projection.
+     */
+    projectionCodes: null,
+
+    /** api: config[restrictedExtent]
+     * ``Array``
+     *
+     * List of EPSG codes of projections that should be used when trying to
+     * recenter on coordinates. Leftmost projections are used preferably.
+     * Default is current map projection.
+     */
+    restrictedExtent: null,
 
     /** private: property[params]
      *  ``Object``
@@ -101,6 +148,8 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
              */
             'paramschange'
         );
+        // define projections that may be used for coordinates recentering
+        this.autoProjection = new OpenLayers.AutoProjection(this);
     },
 
     /** private: method[getState]
@@ -148,6 +197,14 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      */
     applyState: function(state) {
         this.initialState = state;
+        var newCenter = this.autoProjection.tryProjection([state.x, state.y]);
+        if (newCenter === null) {
+            state.x = null;
+            state.y = null;
+        } else {
+            state.x = newCenter[0];
+            state.y = newCenter[1];
+        }
         cgxp.MapPanel.superclass.applyState.apply(this, arguments);
         if (state.crosshair && state.x && state.y) {
             this.getVectorLayer().addFeatures([

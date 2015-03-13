@@ -10,6 +10,12 @@ Version 1.6
    are no longer provided by default and must be described (and translated)
    in the ``additionalAttributes`` param.
 
+2. Autoprojection capabilities:
+
+    The property ``projectionCode`` of FullTextSearch plugin is shifted
+    in the MapPanel. For keeping the ability to enter inversed coordinates
+    in the FTS, the MapPanel must owns an appropriate property ``restrictedExtent``.
+
 
 Version 1.5
 ===========
