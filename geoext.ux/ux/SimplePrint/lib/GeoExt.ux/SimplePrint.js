@@ -51,6 +51,8 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     statusErrorText: "Error",
     /** api: config[includelegendText] ``String`` i18n */
     includelegendText: "Include legend",
+    /** api: config[createPrintJobText] ``String`` i18n */
+    createPrintJobText: "Create new print job.",
     /* end i18n */
 
     /** api: config[printProvider]
@@ -183,8 +185,8 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         this.fbar = this.fbar || [];
         if (this.printProvider.supportProgress()) {
             this.progressPanel = new Ext.Panel({
-                hideLabel: true,
                 unstyled: true,
+                width: "100%",
                 layout: "vbox"
             });
         }
@@ -426,17 +428,16 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             var self = this;
             var interval = null;
             var updateStatus;
-            var statusComponent = new Ext.BoxComponent({
+            var statusComponent = new Ext.Panel({
                 cls: "x-form-item",
-                autoEl: {
-                    tag: "span",
-                    html: "Create new print job.<br/>&nbsp;"
-                },
-                style: {
-                    position: "relative"
-                }
+                width: "100%",
+                height: 35,
+                html: this.createPrintJobText,
+                unstyled: true
             });
             this.progressPanel.add(statusComponent);
+            this.progressPanel.doLayout();
+            this.progressPanel.setHeight(35 * this.progressPanel.items.length)
             this.doLayout();
             var statusCallback = function(ref, succes, currentStatus) {
                 if (!succes) {
@@ -448,6 +449,14 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                     clearInterval(interval);
                     if (currentStatus.error) {
                         statusComponent.update(currentStatus.error.replace(/\n/g, "<br />"));
+                        statusComponent.el.dom.onclick = function(event) {
+                            self.progressPanel.remove(statusComponent);
+                            statusComponent.destroy();
+                            statusComponent = null;
+                            self.progressPanel.doLayout();
+                            self.progressPanel.setHeight(35 * self.progressPanel.items.length)
+                            self.doLayout();
+                        };
                         return;
                     }
                     statusComponent.update('<a href="#">' + self.downloadPdfText + "</a>");
@@ -461,6 +470,9 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                         self.progressPanel.remove(statusComponent);
                         statusComponent.destroy();
                         statusComponent = null;
+                        self.progressPanel.doLayout();
+                        self.progressPanel.setHeight(35 * self.progressPanel.items.length);
+                        self.doLayout();
                         return false;
                     };
                 }

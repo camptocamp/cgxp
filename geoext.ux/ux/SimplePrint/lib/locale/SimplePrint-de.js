@@ -10,7 +10,7 @@
  * @requires GeoExt/Lang.js
  */
 
-GeoExt.Lang.add("fr", {
+GeoExt.Lang.add("de", {
     "GeoExt.ux.SimplePrint.prototype": {
         includelegendText: "Legende anzeigen"
     }

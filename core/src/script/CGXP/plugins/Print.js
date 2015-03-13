@@ -765,6 +765,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             },
             border: false,
             width: '100%',
+            bodyStyle: {
+                "overflow-y": "auto"
+            },
             layoutConfig: {
                 labelSeparator: ''
             },
