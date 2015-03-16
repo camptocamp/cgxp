@@ -141,8 +141,8 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
                 this.linkLinkedLayers(this.orthoLayer);
             }
             else if (console) {
-                this.orthoRef = undefined;
                 console.log("No ortho layer found with ref '" + this.orthoRef + "'.");
+                this.orthoRef = undefined;
             }
         }
 
