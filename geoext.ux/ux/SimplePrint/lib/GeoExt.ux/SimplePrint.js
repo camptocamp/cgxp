@@ -223,7 +223,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         });
 
         this.printProvider.on({
-            "beforeprint": function() {
+            "beforeprint": function(provider, map, pages, options) {
                 options.legend = this.includeLegend ? this.getLegendPanel() : null;
             },
             "layoutchange": this.initForm,
