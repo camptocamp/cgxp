@@ -70,6 +70,9 @@ Ext.namespace("cgxp.plugins");
  *    changed using the ``stateId`` property):
  *
  *    - ``wfs_layer`` tells what layer will be queried
+ *    - ``wfs_showFeatures`` (boolean) tells if the features should be
+ *      highlighted and listed (when true) or if the map should only be
+ *      recentered on the features (when false). Default is true.
  *    - other parameters will be considered as WFS attribute/values filters and
  *      must be of the form:
  *      ``wfs_<layer attribute name>=<a comma-separated list of values>``
@@ -199,6 +202,12 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
      */
     layername: null,
 
+    /** private: attribute[showFeatures]
+     *  Defines if the found features have to be shown or
+     * if the map is only recentered on them.
+     */
+    showFeatures: true,
+
     /** private: method[init]
      *  Initialize the plugin.
      */
@@ -227,6 +236,10 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
 
         var layerName = state.layer;
         delete state.layer;
+        this.showFeatures = state.showFeatures !== "false";
+        if (state.showFeatures) {
+            delete state.showFeatures;
+        }
 
         this.protocol = new OpenLayers.Protocol.WFS({
             url: this.WFSURL,
@@ -394,28 +407,30 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 this.target.mapPanel.map.zoomTo(this.pointRecenterZoom);
             }
 
-            this.events.fireEvent('queryresults', {
-                features: features,
-                maxFeatures: this.maxFeatures
-            }, true);
+            if (this.showFeatures) {
+                this.events.fireEvent('queryresults', {
+                    features: features,
+                    maxFeatures: this.maxFeatures
+                }, true);
 
-            if (features.length == this.maxFeatures) {
-                // if the max number of allowed features is hit,
-                // send an additional request to get the total number
-                // of features matching the filter.
-                this.protocol.read({
-                    filter: this.filter,
-                    readOptions: {output: "object"},
-                    resultType: "hits",
-                    maxFeatures: null,
-                    callback: function(response) {
-                        var infos = { 
-                            numberOfFeatures: response.numberOfFeatures
-                        };  
-                        this.events.fireEvent("queryinfos", infos);
-                    },  
-                    scope: this
-                });
+                if (features.length == this.maxFeatures) {
+                    // if the max number of allowed features is hit,
+                    // send an additional request to get the total number
+                    // of features matching the filter.
+                    this.protocol.read({
+                        filter: this.filter,
+                        readOptions: {output: "object"},
+                        resultType: "hits",
+                        maxFeatures: null,
+                        callback: function(response) {
+                            var infos = {
+                                numberOfFeatures: response.numberOfFeatures
+                            };
+                            this.events.fireEvent("queryinfos", infos);
+                        },
+                        scope: this
+                    });
+                }
             }
         }
     }
