@@ -270,18 +270,18 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                 }
                 break;
             case "Integer":
-                Exp.apply(item, {
+                Ext.apply(item, {
                     regex: /[1-9-]*/
                 });
                 break;
             case "Float":
-                Exp.apply(item, {
+                Ext.apply(item, {
                     regex: /[1-9-.]*/
                 });
                 break;
             case "Boolean":
                 delete item.autoCreate;
-                Exp.apply(item, {
+                Ext.apply(item, {
                     xtype: "checkbox",
                     hideLabel: true,
                     boxLabel: attribute.label || OpenLayers.i18n(attribute.name)
