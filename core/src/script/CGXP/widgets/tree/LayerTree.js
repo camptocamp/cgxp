@@ -394,6 +394,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     maxResolutionHint: item.maxResolutionHint
                 };
                 this.addMetadata(item, nodeConfig);
+
+                var timeSlider;
+                if (item.time) {
+                    timeSlider = this.getTimeSlider(item);
+                }
+
                 if (!item.children) {
                     this.addShowIn3DAction(item, nodeConfig);
                     this.addLegend(item, nodeConfig, level);
@@ -410,6 +416,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         param: 'LAYERS',
                         layer_id: item.id, // layer_id is the id of the layer in database
                         editable: item.editable,
+                        timeSlider: timeSlider,
                         uiProvider: 'layer'
                     });
                     if (item.legendImage && styles) {
@@ -422,6 +429,21 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 }
                 item.node = parentNode.appendChild(nodeConfig);
+
+                // timeslider may need to be redrawn in case it's in a
+                // collapsed node
+                item.node.parentNode.on('expand', function() {
+                    var timeSlider = item.node.timeSlider;
+                    if (timeSlider) {
+                        timeSlider.doLayout();
+                        var slider = timeSlider.items.get(1);
+                        // compute thumb half size manually to prevent
+                        // rendering issues
+                        var thumb = slider.innerEl.child('.x-slider-thumb');
+                        slider.halfThumb = thumb.getWidth() / 2;
+                        slider.syncThumb();
+                    }
+                });
                 if (item.children) {
                     addNodes.call(this, item.children, item.node, level+1);
                 }
