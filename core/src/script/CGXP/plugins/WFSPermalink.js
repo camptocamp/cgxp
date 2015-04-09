@@ -283,7 +283,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 params = {};
                 // look for state properties starting with the current prefix
                 for (prop in state) {
-                    if (prop.indexOf(prefix) == 0) {
+                    if (prop.indexOf(prefix) === 0) {
                         params[prop.substring(prefix.length)] = state[prop];
                         delete state[prop];
                     }
@@ -293,7 +293,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                     filterGroups.push(filter);
                 }
             }
-            if (filterGroups.length == 0) {
+            if (filterGroups.length === 0) {
                 return null;
             }
             if (filterGroups.length == 1) {
@@ -338,7 +338,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             }
         }
 
-        if (filters.length == 0) {
+        if (filters.length === 0) {
             return null;
         }
 
@@ -370,7 +370,7 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
             var newParams = {};
             function addParams(attributes, paramsLink) {
                 if (paramsLink) {
-                    for (wfsAttribute in paramsLink) {
+                    for (var wfsAttribute in paramsLink) {
                         if (attributes[wfsAttribute]) {
                             var mapParam = paramsLink[wfsAttribute];
                             newParams[mapParam] = attributes[wfsAttribute];

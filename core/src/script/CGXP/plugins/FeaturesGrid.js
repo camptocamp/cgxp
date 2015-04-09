@@ -218,16 +218,16 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     totalResultsText: "results",
     suggestionText: "Suggestion",
     noLayerSelectedMessage: "No layer selected",
-    noLayerSelectedMessageTitle: "Info",    
+    noLayerSelectedMessageTitle: "Info",
     totalNbOfFeaturesText: "Total number of features: ",
     countingText: "(counting...)",
-    
+
     /** api: config[statusTemplateText]
      *  ``String`` Template for the size and number of result label. Leave it empties ("") to
      *  get only the number of results and not the "size" part.
-     */ 
+     */
     statusTemplateText: '{totalSizeText} {[values.geomSize.toFixed(2)]}{geomUnit} - {totalResult} {totalResultText}',
-    
+
     /** api: config[messageStyle]
      *  ``String`` CSS style used for the queryResult message.
      */
@@ -344,7 +344,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 var properties = [];
                 var q = this.quote;
                 // Include header row
-                if (this.csvIncludeHeader && index==0) {
+                if (this.csvIncludeHeader && index === 0) {
                     var header = [];
                     Ext.iterate(attributes, function iter(key, attr) {
                         header.push(q + OpenLayers.i18n(key).replace(q, q+q) + q);
@@ -409,7 +409,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             // get data from grids
             Ext.each(grids, function(grid) {
                 var records = [];
-                if (grids.length == 1) {
+                if (grids.length === 1) {
                     records = grid.getSelectionModel().getSelections();
                 } else {
                     if (!this.globalSelection) {
@@ -515,7 +515,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 }
             }
         }
-        
+
         return tpl.apply({
             totalSizeText: isPolygon ? this.totalSurfaceText : this.totalLengthText,
             geomSize: geomSize,
@@ -568,7 +568,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 }
             }
         }
-        return featureType; 
+        return featureType;
     },
 
     /** private: method[addOutput]
@@ -633,7 +633,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         }, this);
 
         this.events.on('nolayer', function() {
-            Ext.MessageBox.alert(this.noLayerSelectedMessageTitle, 
+            Ext.MessageBox.alert(this.noLayerSelectedMessageTitle,
                                  this.noLayerSelectedMessage);
         }, this);
 
@@ -642,13 +642,13 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 this.control.deactivate();
             }
         }, this);
-        
+
         this.events.on('queryinfos', function(infos) {
             if ('numberOfFeatures' in infos) {
                 this.numberOfFeatures += infos.numberOfFeatures;
                 var msg = '';
                 if (this.numberOfReturnedFeatures == this.maxFeatures) {
-                    msg += this.maxFeaturesText + ' (' + this.maxFeatures + ') - '; 
+                    msg += this.maxFeaturesText + ' (' + this.maxFeatures + ') - ';
                 }
                 msg += this.totalNbOfFeaturesText + this.numberOfFeatures;
                 this.setMessage(msg);
@@ -841,7 +841,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 for (var k=0, lenk=queryResult.unqueriedLayers.length; k<lenk; k++) {
                     // check if tab already exists
                     var tab = this.tabpan.find('title', queryResult.unqueriedLayers[k].unqueriedLayerId);
-                    if (tab.length == 1) {
+                    if (tab.length === 1) {
                         this.tabpan.unhideTabStripItem(tab[0]);
                     } else {
                         // create tab
@@ -919,7 +919,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                             var onEach = function(record) {
                                 var found = false;
                                 Ext.each(grid.selection, function(refrecord) {
-                                    if (refrecord.get('id') == record.get('id')) {
+                                    if (refrecord.get('id') === record.get('id')) {
                                         found = true;
                                     }
                                 });
@@ -968,7 +968,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                         // has selection
                         if (bbox.left !== null) {
                             // is a point
-                            if (bbox.getWidth() + bbox.getHeight() == 0) {
+                            if (bbox.getWidth() + bbox.getHeight() === 0) {
                                 map.setCenter(bbox.getCenterLonLat(),
                                     this.pointRecenterZoom);
                             }

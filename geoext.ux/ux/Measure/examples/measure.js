@@ -18,7 +18,7 @@ Ext.onReady(function() {
         decimals: 0,
         toggleGroup: 'tools'
     });
-        
+
     var mapPanel = new GeoExt.MapPanel({
         renderTo: "content",
         width: 800,

@@ -87,18 +87,18 @@ cgxp.plugins.LocationChooser = Ext.extend(gxp.plugins.Tool, {
             text: this.labelText,
             menu: new Ext.menu.Menu({
                 cls: 'cgxp-menu-locationchooser'
-            })  
-        }); 
+            })
+        });
         this.addMenuItems(button.menu);
 
         return cgxp.plugins.LocationChooser.superclass.addActions.apply(this, [button]);
-    },  
+    },
 
     /** private: method[onItemClick]
      */
     onItemClick: function(item, pressed) {
         this.target.mapPanel.map.zoomToExtent(item.cgxpLocation);
-    },  
+    },
 
     /** private: method[addMenuItems]
      * :arg menu ``Object``
@@ -110,9 +110,9 @@ cgxp.plugins.LocationChooser = Ext.extend(gxp.plugins.Tool, {
                 handler: this.onItemClick,
                 cgxpLocation: this.locations[loc],
                 scope: this
-            }); 
-        }   
-    }   
+            });
+        }
+    }
 });
 
 Ext.preg(cgxp.plugins.LocationChooser.prototype.ptype, cgxp.plugins.LocationChooser);

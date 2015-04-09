@@ -8,12 +8,12 @@
         <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.0/adapter/ext/ext-base.js"></script>
         <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.0/ext-all-debug.js"></script>
         <script type="text/javascript" src="http://www.openlayers.org/api/2.10/OpenLayers.js"></script>
-        <script type="text/javascript" src="http://dev.geoext.org/ux/geoext/lib/GeoExt.js"></script> 
-        
+        <script type="text/javascript" src="http://dev.geoext.org/ux/geoext/lib/GeoExt.js"></script>
+
         <script type="text/javascript" src="../lib/GeoExt.ux/Ext.ux.grid.GridMouseEvents.js"></script>
         <script type="text/javascript" src="../lib/GeoExt.ux/GeoExt.ux.FeatureSelectionModel.js"></script>
-        
-        
+
+
         <script type="text/javascript">
         /**
          * Copyright (c) 2010 terrestris GmbH & Co KG
@@ -21,8 +21,8 @@
          * Published under the BSD license.
          * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
          * of the license.
-         */    
-            
+         */
+
         /**
          * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
          *
@@ -30,21 +30,21 @@
          * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
          * of the license.
          */
-        
+
         /** api: example[feature-grid]
          *  Grid with Features
          *  ------------------
          *  Synchronize selection of features between a grid and a layer.
          */
         var mapPanel, store, gridPanel, mainPanel;
-        
+
         Ext.onReady(function(){
             // create map instance
             var map = new OpenLayers.Map();
             var wmsLayer = new OpenLayers.Layer.WMS("vmap0", "http://vmap0.tiles.osgeo.org/wms/vmap0", {
                 layers: 'basic'
             });
-            
+
             // create styles for points
             var pointStyles = new OpenLayers.StyleMap({
                 "default": OpenLayers.Util.applyDefaults({
@@ -66,11 +66,11 @@
                     strokeOpacity: 1.0
                 }, OpenLayers.Feature.Vector.style.select)
             });
-            
+
             // create vector layer
             var vecLayer = new OpenLayers.Layer.Vector("vector", {styleMap: pointStyles});
             map.addLayers([wmsLayer, vecLayer]);
-            
+
             // create map panel
             mapPanel = new GeoExt.MapPanel({
                 title: "Map",
@@ -81,7 +81,7 @@
                 center: new OpenLayers.LonLat(5, 45),
                 zoom: 6
             });
-            
+
             // create feature store, binding it to the vector layer
             store = new GeoExt.data.FeatureStore({
                 layer: vecLayer,
@@ -100,7 +100,7 @@
                 }),
                 autoLoad: true
             });
-            
+
             // control for hovering
             hoverControl = new OpenLayers.Control.SelectFeature(vecLayer, {
                 hover: true,
@@ -118,7 +118,7 @@
             });
             map.addControl(selectControl);
             selectControl.activate();
-            
+
             // create grid panel configured with feature store
             gridPanel = new Ext.grid.GridPanel({
                 title: "Feature Grid",
@@ -137,7 +137,7 @@
                 sm: new GeoExt.ux.FeatureSelectionModel({selectControl: selectControl, hoverControl: hoverControl, controlMode: 'both'}),
                 plugins: [Ext.ux.grid.GridMouseEvents]
             });
-            
+
             // create a panel and add the map panel and grid panel
             // inside it
             mainPanel = new Ext.Panel({
@@ -148,7 +148,7 @@
                 items: [mapPanel, gridPanel]
             });
         });
-        
+
 
         </script>
 
@@ -157,11 +157,11 @@
         <h1>Grid Panel configured with a hover and a select control with an extended FeatureSelectionModel</h1>
 
         <p>This example shows an Ext grid allowing hovering and selection functionality</p>
-        
+
         <p>
-            A an extended GeoExt feature selection model is used to select and hover rows in 
+            A an extended GeoExt feature selection model is used to select and hover rows in
             the grid by selecting and hovering features in the layer, and vice-versa.
-        </p> 
+        </p>
 
         <p>See <a href="../lib/GeoExt.ux/GeoExt.ux.FeatureSelectionModel.js">GeoExt.ux.FeatureSelectionModel.js</a>.</p>
 

@@ -108,20 +108,20 @@ Ext.namespace("cgxp.plugins");
  *          maxScaleDenominator: 10000
  *      }]
  *      ...
- * 
+ *
  *  If there are OpenLayers WMS layers including feature filters
  *  (``featureFilter`` property on the layer), then these filters are evaluated
  *  for each feature received in the WMS GetFeatureInfo
  *  and WFS GetFeature responses.
  *  Features that do not pass the filter are excluded from the features array
  *  passed in the queryresults event.
- *  
+ *
  *  .. code-block:: javascript
  *
  *    var layer = ...; // an OpenLayers layer
  *    var filter = ...; // an OpenLayers filter
  *    layer.featureFilter = filter
- *    
+ *
  *    // This can be used in conjonction with the GetMap request SLD parameter
  *    layer.mergeNewParams({ SLD: url }); // where the SLD file corresponds to the OpenLayers filter
  */
@@ -575,7 +575,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             featuresselected: function(e) {
                 this.events.fireEvent('queryresults', {
                     features: this.filterFeatures(e.features),
-                    enableTotalHits: this.enableTotalHits, 
+                    enableTotalHits: this.enableTotalHits,
                     maxFeatures: this.maxFeatures
                 });
                 if (this.enableTotalHits &&
@@ -632,8 +632,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     unqueriedLayers: l.unqueriedLayers
                 });
             }
-            if (l.internalLayers.length == 0 && l.externalLayers.length == 0 &&
-                    l.unqueriedLayers.length == 0) {
+            if (l.internalLayers.length === 0 && l.externalLayers.length === 0 &&
+                    l.unqueriedLayers.length === 0) {
                 self.events.fireEvent('queryresults', {
                     features: []
                 });

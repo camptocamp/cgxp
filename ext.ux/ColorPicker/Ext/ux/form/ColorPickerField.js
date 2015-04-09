@@ -21,9 +21,9 @@
 Ext.namespace('Ext.ux.form');
 
 Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
-    
+
     editMode: 'picker',
-    
+
     // private
     onResize: function(w, h) {
         Ext.ux.form.ColorPickerField.superclass.onResize.apply(this, arguments);
@@ -31,18 +31,18 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             this.colorMask.setBox(this.createColorMaskBox());
         }
     },
-    
+
     // private
     onRender: function(ct, position) {
         Ext.ux.form.ColorPickerField.superclass.onRender.apply(this, arguments);
-        
+
         if (this.hideHtmlCode) {
-            this.colorMask = this.el.createProxy('x-form-colorfield-colorMask',null,true);            
-            this.colorMask.setBox(this.createColorMaskBox());            
+            this.colorMask = this.el.createProxy('x-form-colorfield-colorMask',null,true);
+            this.colorMask.setBox(this.createColorMaskBox());
         }
         this.updateElColor();
     },
-    
+
     // private
     updateElColor: function() {
         if (this.el) {
@@ -60,7 +60,7 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             }
         }
     },
-    
+
     // private
     createColorMaskBox: function() {
         var b = this.el.getBox();
@@ -74,7 +74,7 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
         b.bottom -= 2;
         return b;
     },
-    
+
     initComponent: function() {
         this.editable = !this.hideHtmlCode;
         this.selectOnFocus = !(this.hideHtmlCode || !this.selectOnFocus);
@@ -84,24 +84,24 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             case 'picker':
                 this.trigger1Class='x-form-colorfield-picker';
                 this.triggerConfig = {
-                    tag: 'span', 
-                    cls: 'x-form-twin-triggers', 
+                    tag: 'span',
+                    cls: 'x-form-twin-triggers',
                     cn: [{
-                        tag: "img", 
-                        src: Ext.BLANK_IMAGE_URL, 
+                        tag: "img",
+                        src: Ext.BLANK_IMAGE_URL,
                         cls: "x-form-trigger " + this.trigger1Class
                     }]
-                };        
+                };
                 this.picker = 0;
                 break;
             case 'palette':
                 this.trigger1Class='x-form-colorfield-palette';
                 this.triggerConfig = {
-                    tag: 'span', 
-                    cls: 'x-form-twin-triggers', 
+                    tag: 'span',
+                    cls: 'x-form-twin-triggers',
                     cn: [{
-                        tag: "img", 
-                        src: Ext.BLANK_IMAGE_URL, 
+                        tag: "img",
+                        src: Ext.BLANK_IMAGE_URL,
                         cls: "x-form-trigger " + this.trigger1Class
                     }]
                 };
@@ -111,22 +111,22 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
                 this.trigger1Class='x-form-colorfield-palette';
                 this.trigger2Class='x-form-colorfield-picker';
                 this.triggerConfig = {
-                    tag:'span', 
-                    cls:'x-form-twin-triggers', 
+                    tag:'span',
+                    cls:'x-form-twin-triggers',
                     cn: [{
-                        tag: "img", 
-                        src: Ext.BLANK_IMAGE_URL, 
+                        tag: "img",
+                        src: Ext.BLANK_IMAGE_URL,
                         cls: "x-form-trigger " + this.trigger1Class
                     }, {
-                        tag: "img", 
-                        src: Ext.BLANK_IMAGE_URL, 
+                        tag: "img",
+                        src: Ext.BLANK_IMAGE_URL,
                         cls: "x-form-trigger " + this.trigger2Class
                     }]
                 };
                 this.palette=0;
-                this.picker=1;    
+                this.picker=1;
         }
-        
+
         this.menus = [];
         if (this.palette >= 0) {
             this.menus[this.palette] = new Ext.menu.ColorMenu({
@@ -136,8 +136,8 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
                 }
             });
         }
-        
-        if (this.picker >= 0) {            
+
+        if (this.picker >= 0) {
             this.menus[this.picker] = new Ext.ux.menu.ColorMenu({
                 opacity: this.opacity,
                 listeners: {
@@ -147,17 +147,17 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             });
         }
     },
-    
+
     // private
     onSelect: function(m, c) {
         this.setValue(c);
         this.focus.defer(10, this);
     },
-    
+
     focus: function(selectText, delay) {
         Ext.ux.form.ColorPickerField.superclass.focus.call(this, selectText && !this.hideHtmlCode, delay);
     },
-    
+
     setValue: function(v) {
         if (v) {
             v = v.replace('#', '').toUpperCase();
@@ -168,10 +168,10 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             v = '#' + v;
         }
         this.fireEvent('change', this, v);
-        Ext.ux.form.ColorPickerField.superclass.setValue.call(this, v);        
-        this.updateElColor();            
+        Ext.ux.form.ColorPickerField.superclass.setValue.call(this, v);
+        this.updateElColor();
     },
-    
+
     onDestroy: function() {
         Ext.destroy(this.menus,this.wrap,this.colorMask);
         Ext.ux.form.ColorPickerField.superclass.onDestroy.apply(this, arguments);
@@ -187,7 +187,7 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             return;
         }
         this.menus[0].show(this.el, "tl-bl?");
-        if (this.picker == 0) {
+        if (this.picker === 0) {
             this.menus[0].picker.setColor(this.getValue());
             this.menus[0].picker.updateColor();
         }

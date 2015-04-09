@@ -16,30 +16,30 @@
  */
 
 Ext.ux.form.GroupingView = Ext.extend(Ext.DataView, {
-    
+
     /** api: config[groupTextTpl]
      *  ``String`` The template used to render the group text. Not required if
      *  `groupTpl` is set. Optional.
      */
     groupTextTpl : '{[OpenLayers.i18n(values.text)]}',
-    
+
     /** api: config[groupTpl]
      *  ``String`` The template used to render the group text. Optional.
      */
     groupTpl: null,
-    
+
     /** api: config[itemTpl]
      *  ``String`` The template used to render each item. Optional.
      */
     itemTpl: null,
-    
+
     /** private: method[initTemplates]
      */
     initComponent: function() {
         this.initTemplates();
         Ext.ux.form.GroupingView.superclass.initComponent.apply(this, arguments);
     },
-    
+
     /** private: method[initTemplates]
      */
     initTemplates: function() {
@@ -50,19 +50,19 @@ Ext.ux.form.GroupingView = Ext.extend(Ext.DataView, {
                 '</div>'
             ]);
         }
-        
+
         if (typeof this.itemTpl == "string") {
             this.itemTpl = new Ext.XTemplate(this.itemTpl);
         }
     },
-    
+
     /** private: method[initTemplates]
      * Refreshes the view by reloading the data from the store and re-rendering the template.
      */
     refresh: function() {
         this.clearSelections(false, true);
         this.el.update("");
-        
+
         var records = this.store.getRange();
         if (records.length < 1) {
             this.el.update(this.emptyText);
@@ -72,9 +72,8 @@ Ext.ux.form.GroupingView = Ext.extend(Ext.DataView, {
         var groupField = this.store.getSortState().field;
         var curGroup;
         var buf = [];
-        for (var i=0; i < records.length; i++) {
+        for (var i = 0; i < records.length; i++) {
             var r = records[i];
-            var gvalue = r.data[groupField];
             // add list items for group names
             if (!curGroup || !curGroup.text ||
                 curGroup.text != r.data[groupField]) {

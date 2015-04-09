@@ -76,7 +76,7 @@ When working with different button images, you may find Flash has cached your im
 
 h3. Compiling Notes
 
-I develop locally using Xcode and the Flex 4 SDK Beta 2. Please do not submit request on how to setup a local testing environment. If you are interested in my Xcode project files, send me a message. 
+I develop locally using Xcode and the Flex 4 SDK Beta 2. Please do not submit request on how to setup a local testing environment. If you are interested in my Xcode project files, send me a message.
 
 h3. License: MIT
 

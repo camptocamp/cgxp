@@ -254,19 +254,19 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     formatLayerTimeValue: function(time) {
         var date = new Date(time);
         switch (this.resolution) {
-            case 'year':
+            case "year":
                 return date.getUTCFullYear();
 
-            case 'month':
-                return date.getUTCFullYear()
-                    + '-' + OpenLayers.Number.zeroPad(date.getUTCMonth() + 1, 2);
+            case "month":
+                return date.getUTCFullYear() +
+                    "-" + OpenLayers.Number.zeroPad(date.getUTCMonth() + 1, 2);
 
-            case 'day':
-                return date.getUTCFullYear()
-                    + '-' + OpenLayers.Number.zeroPad(date.getUTCMonth() + 1, 2)
-                    + '-' + OpenLayers.Number.zeroPad(date.getUTCDate(), 2);
+            case "day":
+                return date.getUTCFullYear() +
+                    "-" + OpenLayers.Number.zeroPad(date.getUTCMonth() + 1, 2) +
+                    "-" + OpenLayers.Number.zeroPad(date.getUTCDate(), 2);
 
-            case 'second':
+            //case "second":
             default:
                 return OpenLayers.Date.toISOString(date);
         }
@@ -334,9 +334,7 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             var lDist = Math.abs(this.timeValues[lIdx] - timestamp);
             var rDist = Math.abs(this.timeValues[rIdx] - timestamp);
 
-            return lDist < rDist
-                ? this.timeValues[lIdx]
-                : this.timeValues[rIdx];
+            return this.timeValues[lDist < rDist ? lIdx: rIdx];
         } else {
             // Time stops are defined by a start date plus an interval
             var targetDate = new Date(timestamp);

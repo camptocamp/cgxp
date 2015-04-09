@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# This script updates the CGXP HTML docs available at 
+# This script updates the CGXP HTML docs available at
 # http://docs.camptocamp.net/cgxp
 #
 # This script is to be run on the doc.camptocamp.net server,

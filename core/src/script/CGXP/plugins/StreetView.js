@@ -48,7 +48,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *      });
  *
- *  To use this plugin we need to create an API key,go to 
+ *  To use this plugin we need to create an API key,go to
  *  `The Google API console <https://code.google.com/apis/console>`_:
  *
  *  * Sign in
@@ -180,14 +180,14 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[loadingChecker]
-     *  Check if the east panel, which is shared between GoogleEarth and Streetview, 
-     *  is correctly cleaned up (ie. give time to the other tool to uninitialize 
+     *  Check if the east panel, which is shared between GoogleEarth and Streetview,
+     *  is correctly cleaned up (ie. give time to the other tool to uninitialize
      *  the panel content before creating the new content)
      */
     loadingChecker: function() {
-        if (typeof this.outputTarget.layout.east != 'undefined' &&
-            typeof this.outputTarget.layout.east.splitEl != 'undefined' &&
-            this.outputTarget.layout.east.splitEl != null) {
+        if (this.outputTarget.layout.east !== undefined &&
+            this.outputTarget.layout.east.splitEl !== undefined &&
+            this.outputTarget.layout.east.splitEl !== null) {
             this.loadingChecker.defer(1000, this);
         } else {
             this.loadStreetView();
@@ -225,7 +225,7 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
         this.intermediateContainer.setVisible(true);
 
         /* Marked as not rendered in order to force the rendering of the component.
-           Otherwise the panel is not rendered correctly when switching between 
+           Otherwise the panel is not rendered correctly when switching between
            GoogleEarth and StreetView. */
         this.outputTarget.layout.rendered = false;
 

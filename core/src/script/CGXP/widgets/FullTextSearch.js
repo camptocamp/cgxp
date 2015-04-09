@@ -157,11 +157,10 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             );
             this.position = null;
             if (coords) {
-                var map = this.map;
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
 
-                this.position = this.autoProjection.tryProjection([left, right]); 
+                this.position = this.autoProjection.tryProjection([left, right]);
                 if (this.position === null) {
                     this.position = this.autoProjection.tryProjection([right, left]);
                 }
@@ -219,7 +218,7 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
             'specialkey': function(combo, event) {
               if (this.position && event.getKey() == event.ENTER) {
                 this.fireEvent('specialkey', combo, event);
-              };
+              }
             },
             'render': function(component) {
                 if (this.tooltip) {

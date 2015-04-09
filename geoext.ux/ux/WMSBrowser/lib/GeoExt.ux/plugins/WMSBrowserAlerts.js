@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -67,7 +67,7 @@ GeoExt.ux.plugins.WMSBrowserAlerts = Ext.extend(Ext.util.Observable, {
      */
     showPopup: function(title, message, extIcon) {
         if(!extIcon){
-            extIcon = Ext.MessageBox.WARNING
+            extIcon = Ext.MessageBox.WARNING;
         }
 
         // this fix makes sure that the Ext.MessageBow window used to display
@@ -94,7 +94,7 @@ GeoExt.ux.plugins.WMSBrowserAlerts = Ext.extend(Ext.util.Observable, {
     },
 
     /** private: method[onGetCapabilitiesFail]
-     *  Called when a "getcapabilitiessuccess" event is fired by the 
+     *  Called when a "getcapabilitiessuccess" event is fired by the
      *  :class:`GeoExt.ux.WMSBrowser` widget.  Shows the according failure
      *  message.
      */
@@ -108,7 +108,7 @@ GeoExt.ux.plugins.WMSBrowserAlerts = Ext.extend(Ext.util.Observable, {
     /** private: method[onGenericError]
      *  :param message: ``String``  The error message sent by the event.
      *
-     *  Called when a "genericerror" event is fired by the 
+     *  Called when a "genericerror" event is fired by the
      *  :class:`GeoExt.ux.WMSBrowser` widget.  Shows the message sent by
      *  the event.
      */

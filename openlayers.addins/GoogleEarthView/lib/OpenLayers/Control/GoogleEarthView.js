@@ -210,7 +210,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
             graphicWidth: 31,
             graphicYOffset: -3,
             rotation: 0
-        })
+        });
         this.geProjection = new OpenLayers.Projection("EPSG:4326");
         if (this.gePlugin) {
             this.setGEPlugin(this.gePlugin);
@@ -443,7 +443,7 @@ OpenLayers.Control.GoogleEarthView = OpenLayers.Class(OpenLayers.Control, {
 
         // Set the fly to speed to teleport (instantaneous) when the user first
         // starts dragging a feature so that the GE Plugin does not lag
-        if (this.gePlugin != null && !this.gePluginFlyToSpeedSet) {
+        if (this.gePlugin !== null && !this.gePluginFlyToSpeedSet) {
             this.gePlugin.getOptions().setFlyToSpeed(this.gePlugin.SPEED_TELEPORT);
             this.gePluginFlyToSpeedSet = true;
         }

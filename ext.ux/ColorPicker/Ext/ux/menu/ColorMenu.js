@@ -31,7 +31,7 @@ Ext.ux.menu.ColorMenu = Ext.extend(Ext.menu.Menu, {
         this.relayEvents(this.picker, ['select']);
         this.on('select', this.menuHide, this);
         if (this.handler) {
-            this.on('select', this.handler, this.scope || this)
+            this.on('select', this.handler, this.scope || this);
         }
     },
 

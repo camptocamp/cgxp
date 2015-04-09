@@ -138,10 +138,10 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
         if (this.maxIsSky && cgxp.plugins.Print) {
             var self = this;
-            cgxp.plugins.Print.prototype.paramRenderer.floor = 
+            cgxp.plugins.Print.prototype.paramRenderer.floor =
                 function(value) {
                     return value === null ? self.skyText : value;
-                }
+                };
         }
 
         this.show();
@@ -173,7 +173,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             }
         }, this);
         if (this.mapPanel.params.floor === undefined) {
-            this.mapPanel.setParams({ 'floor': this.initialFloor })
+            this.mapPanel.setParams({ 'floor': this.initialFloor });
         }
     }
 });

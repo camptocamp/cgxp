@@ -114,7 +114,7 @@ GeoExt.ux.GeoNamesSearchCombo = Ext.extend(Ext.form.ComboBox, {
      *  ``String``
      */
     continentCode: '',
-    
+
     /** api: config[adminCode1]
      *  ``String`` Code of administrative subdivision, default is all
      *  administrative subdivisions.
@@ -222,7 +222,7 @@ GeoExt.ux.GeoNamesSearchCombo = Ext.extend(Ext.form.ComboBox, {
         var urlAppendString = '';
 
         if (this.countryString.length > 0) {
-            urlAppendString = urlAppendString + this.countryString;      
+            urlAppendString = urlAppendString + this.countryString;
         }
 
         if (this.featureClassString.length > 0) {
@@ -232,7 +232,7 @@ GeoExt.ux.GeoNamesSearchCombo = Ext.extend(Ext.form.ComboBox, {
         if (this.featureCodeString.length > 0) {
             urlAppendString = urlAppendString + this.featureCodeString;
         }
-        
+
         this.store = new Ext.data.Store({
             proxy: new Ext.data.ScriptTagProxy({
                 url: this.url + urlAppendString,

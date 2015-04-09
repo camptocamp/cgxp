@@ -57,7 +57,7 @@ GeoExt.ux.StyleSelectorComboBox = Ext.extend(Ext.Panel, {
 
     /** api: method[createLayout]
      *  This function returns a GeoExt object (Panel, Window, etc)
-     *  If a generic Styler class is created, then this class would be an 
+     *  If a generic Styler class is created, then this class would be an
      *  Observable that create and return a Panel in this function.
      */
     createLayout: function(config) {
@@ -86,13 +86,13 @@ GeoExt.ux.StyleSelectorComboBox = Ext.extend(Ext.Panel, {
 
         oItems.push(oCombo);
 
-        oCombo.on('select', 
+        oCombo.on('select',
             function(combo, record, index) {
                 oCombo.setValue(record.data.name);
                 this.fireEvent("change", OpenLayers.Util.applyDefaults(record.data.style, OpenLayers.Feature.Vector.style['default']));
             },
             this
-        );    
+        );
 
         Ext.apply(this, {items: oItems});
 

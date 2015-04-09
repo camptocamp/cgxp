@@ -46,15 +46,15 @@ Ext.namespace("cgxp.tree");
  *  Used state :
  *
  *  ``tree_group_opacity_[my_group]``:
- *   - Opacity of the given group (number between 0 an 1). 
- *   - Example: ``&tree_group_opacity_myAlmostInvisibleGroup=0.1`` 
+ *   - Opacity of the given group (number between 0 an 1).
+ *   - Example: ``&tree_group_opacity_myAlmostInvisibleGroup=0.1``
  *
- *  ``tree_groups``: 
+ *  ``tree_groups``:
  *   - Open and display the given theme. Use commas (%2c) to specify more than one theme.
- *     The first theme will be on the top, the second will be at the second position, and so on. 
- *   - Example: (%20 is space char.): ``&tree_groups=MyTopTheme%2cMy%20second%20theme`` 
- * 
- *  ``tree_group_layers_[my_group]``: 
+ *     The first theme will be on the top, the second will be at the second position, and so on.
+ *   - Example: (%20 is space char.): ``&tree_groups=MyTopTheme%2cMy%20second%20theme``
+ *
+ *  ``tree_group_layers_[my_group]``:
  *   - Open and display the given group. Use commas (%2c) to specify more than one group.
  *   - Example: ``&tree_group_opacity_myGroup=a_Layer%2can_another_layer``
  *
@@ -734,7 +734,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             case 'day':
                 labelFormat = this.datelabelText;
                 break;
-            case 'second':
+            //case 'second':
             default:
                 labelFormat = this.datetimelabelText;
         }
@@ -1037,7 +1037,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         wmtsInfo = {
                             capabilities: null,
                             layersInfo: []
-                        }
+                        };
                         this.wmtsInfos[child.url] = wmtsInfo;
                         OpenLayers.Request.GET({
                             url: child.url,
@@ -1426,7 +1426,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 if (this.messageElement) {
                     this.messageElement.remove();
-                    this.messageElement = null
+                    this.messageElement = null;
                 }
                 // delayed to solved conflict with scroll
                 this.messageTaskCreate = new Ext.util.DelayedTask(function() {
@@ -1519,7 +1519,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         }
         // handle layer groups from permalinkThemes and initialState
         var groups = [];
-        var i, l
+        var i, l;
         // get groups from permalinkThemes
         var themes = this.permalinkThemes || this.defaultThemes;
         if (themes && !this.initialState.groups) {
@@ -1555,31 +1555,33 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 var layer_groups = this.findGroupByLayerName(layer, true);
                 Ext.each(layer_groups, function(group) {
                     if (!(group.name in asked_groups)) {
-                        asked_groups[group.name] = []
+                        asked_groups[group.name] = [];
                     }
                     asked_groups[group.name].push(layer);
                 });
             }, this);
-            var asked_groups_array = []
-            for (group in asked_groups) {
-                asked_groups_array.push({
-                    group: group,
-                    layers: asked_groups[group]
-                });
+            var asked_groups_array = [];
+            for (var group in asked_groups) {
+                if (asked_groups.hasOwnProperty(group)) {
+                    asked_groups_array.push({
+                        group: group,
+                        layers: asked_groups[group]
+                    });
+                }
             }
 
             while (asked_groups_array.length > 0) {
                 asked_groups_array.sort(function(group1, group2) {
                     return group2.layers.length - group1.layers.length;
                 });
-                if (asked_groups_array[0].layers.length == 0) {
+                if (asked_groups_array[0].layers.length === 0) {
                     break;
                 }
                 groups.push(asked_groups_array[0].group);
-                var layers = [];
+                var group_layers = [];
                 Ext.each([].concat(asked_groups_array[0].layers),
                     function(layer) {
-                        layers.push(layer);
+                        group_layers.push(layer);
                         Ext.each(asked_groups_array, function(group) {
                             group.layers.remove(layer);
                         });
@@ -1587,7 +1589,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 );
                 this.initialState['group_layers_' +
                     asked_groups_array[0].group] =
-                    layers;
+                    group_layers;
             }
         }
         Ext.each(groups.reverse(), function(t) {
@@ -1599,7 +1601,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }
             var opacity = this.initialState['group_opacity_' + t] ?
                 this.initialState['group_opacity_' + t] : 1;
-            var layers = undefined;
+            var layers;
             if ('group_layers_' + t in this.initialState) {
                 layers = this.initialState['group_layers_' + t];
                 if (layers === '') {

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2009 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -21,22 +21,22 @@ Ext.namespace("GeoExt.ux");
  *  .. class:: MeasureArea(config)
  *
  *      Creates a GeoExt.Action for area measurements.
- * 
+ *
  *  JSBuild: OpenLayers/Handler/Polygon.js must be included.
  */
 GeoExt.ux.MeasureArea = Ext.extend(GeoExt.ux.Measure, {
 
     /** api: config[handlerClass]
      *  ``Function`` The handler class to pass to the measure control,
-     *  Defaults to ``OpenLayers.Handler.Polygon``. 
+     *  Defaults to ``OpenLayers.Handler.Polygon``.
      */
 
     /** api: config[iconCls]
-     *  ``String`` The CSS class selector that specifies a background image 
-     *  to be used as the header icon for all components using this action 
-     *  Defaults to 'gx-map-measurearea'. 
+     *  ``String`` The CSS class selector that specifies a background image
+     *  to be used as the header icon for all components using this action
+     *  Defaults to 'gx-map-measurearea'.
      */
-    
+
     /** api: config[template]
      *  ``String`` | ``Ext.XTemplate`` HTML template, or Ext.XTemplate used
      *  to display the measure. Optional.
@@ -46,7 +46,7 @@ GeoExt.ux.MeasureArea = Ext.extend(GeoExt.ux.Measure, {
      *  ``String`` The tooltip for the button. Defaults to "Area measurement".
      */
     tooltip: 'Area measurement',
-     
+
     /** private: method[constructor]
      */
     constructor: function(config) {

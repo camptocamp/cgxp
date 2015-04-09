@@ -1,17 +1,17 @@
 /*
-    Solves a problem with plugins GoogleEarth and StreetView causing a 
-    duplicated splitbar, due to the forced "rendered = false". The latter 
-    configuration is required otherwise the panels contents are not rendered 
+    Solves a problem with plugins GoogleEarth and StreetView causing a
+    duplicated splitbar, due to the forced "rendered = false". The latter
+    configuration is required otherwise the panels contents are not rendered
     correctly when the panels are re-opened.
 */
 Ext.layout.BorderLayout.SplitRegion.override({
-  
+
     render : function(ct, p){
 
         Ext.layout.BorderLayout.SplitRegion.superclass.render.call(this, ct, p);
 
         var ps = this.position;
-        
+
         // start override
         var elId = this.panel.id + '-xsplit';
         var el = Ext.get(elId);

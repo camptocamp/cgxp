@@ -224,17 +224,16 @@ GeoExt.ux.form.FeaturePanel.prototype.coordsFieldText = "Display coordinates";
 
 // some more redlining patch
 GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
-    var oItems, oGroup, feature, field, oGroupItems;
 
     // todo : for multiple features selection support, remove this...
     if (this.features.length != 1) {
         return;
-    } else {
-        feature = this.features[0];
     }
-    oItems = [];
-    oGroupItems = [];
-    oGroup = {
+
+    var feature = this.features[0];
+    var oItems = [];
+    var oGroupItems = [];
+    var oGroup = {
         id: this.attributeFieldSetId,
         xtype: 'fieldset',
         title: this.attributesText,
@@ -275,10 +274,10 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             name: 'name',
             fieldLabel: this.labelFieldText,
             id: 'name',
-            value: feature.attributes['name']
+            value: feature.attributes.name
         });
-        /* style override for label because point features and label features 
-           are no longer handled separatly in Mapfish Print due to commit 
+        /* style override for label because point features and label features
+           are no longer handled separatly in Mapfish Print due to commit
            https://github.com/mapfish/mapfish-print/commit/edcb78e698e34c6058148461211928f6dcc48425 */
         feature.style.fillOpacity = 0;
         feature.style.strokeOpacity = 0;

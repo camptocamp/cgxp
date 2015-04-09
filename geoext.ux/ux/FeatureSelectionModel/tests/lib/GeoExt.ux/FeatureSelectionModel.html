@@ -36,7 +36,7 @@
                 layer: layer,
                 features: [feature]
             });
-			
+
 		    selectControl = new OpenLayers.Control.SelectFeature(layer, {
                 hover: false,
                 multiple: false
@@ -59,9 +59,9 @@
                 sm: new GeoExt.ux.FeatureSelectionModel(),
                 plugins: [Ext.ux.grid.GridMouseEvents]
             });
-			
+
 			// 5 tests
-			
+
             t.ok(grid instanceof Ext.grid.GridPanel,
                  "ctor creates a Ext.grid.GridPanel object");
             t.ok(grid.getSelectionModel() instanceof GeoExt.ux.FeatureSelectionModel,
@@ -72,13 +72,13 @@
                  "class binds a select control if standard constructor is used");
 		    t.ok(!grid.getSelectionModel().boundHover,
                  "class binds no hover control if standard constructor is used");
-				 
+
             grid.destroy();
         }
-		
+
         function test_controls(t){
             t.plan(12);
-			
+
             // set up
             var map, layer, feature, grid, store, selectControl;
 
@@ -97,7 +97,7 @@
                 layer: layer,
                 features: [feature]
             });
-            
+
             grid = new Ext.grid.GridPanel({
                 renderTo: "grid",
                 store: store,
@@ -113,9 +113,9 @@
                 sm: new GeoExt.ux.FeatureSelectionModel({controlMode: 'select'}),
                 plugins: [Ext.ux.grid.GridMouseEvents]
             });
-			
+
 			var sm = grid.getSelectionModel();
-			
+
             t.ok(sm.bound,
                  "Selection model binds a select control if controlMode is set to 'select' in constructor");
             t.ok(!sm.boundHover,
@@ -124,9 +124,9 @@
                  "class has listener 'rowselect' if controlMode is set to 'select' in constructor");
 		    t.ok(!sm.hasListener('rowmouseenter'),
                  "class has no listener 'rowmouseenter' if controlMode is set to 'select' in constructor");
-		    
+
 			grid.destroy();
-				 
+
             grid = new Ext.grid.GridPanel({
                 renderTo: "grid",
                 store: store,
@@ -142,9 +142,9 @@
                 sm: new GeoExt.ux.FeatureSelectionModel({controlMode: 'hover'}),
                 plugins: [Ext.ux.grid.GridMouseEvents]
             });
-			
+
 			var sm = grid.getSelectionModel();
-            
+
             t.ok(!sm.bound,
                  "Selection model binds no select control if controlMode is set to 'hover' in constructor");
             t.ok(sm.boundHover,
@@ -153,9 +153,9 @@
                  "class has no listener 'rowselect' if controlMode is set to 'hover' in constructor");
             t.ok(grid.hasListener('rowmouseenter'),
                  "class has a listener 'rowmouseenter' if controlMode is set to 'hover' in constructor");
-				 
+
 		    grid.destroy();
-			
+
             grid = new Ext.grid.GridPanel({
                 renderTo: "grid",
                 store: store,
@@ -171,9 +171,9 @@
                 sm: new GeoExt.ux.FeatureSelectionModel({controlMode: 'both'}),
                 plugins: [Ext.ux.grid.GridMouseEvents]
             });
-			
+
 			var sm = grid.getSelectionModel();
-            
+
             t.ok(grid.getSelectionModel().bound,
                  "Selection model binds a select control if controlMode is set to 'both' in constructor");
             t.ok(grid.getSelectionModel().boundHover,
@@ -182,7 +182,7 @@
                  "class has a listener 'rowselect' if controlMode is set to 'both' in constructor");
             t.ok(grid.hasListener('rowmouseenter'),
                  "class has a listener 'rowmouseenter' if controlMode is set to 'both' in constructor");
-                 
+
             grid.destroy();
         }
     </script>

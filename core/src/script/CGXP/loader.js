@@ -154,14 +154,13 @@
     var len = jsfiles.length;
     var pieces = new Array(len);
 
-    for (var i=0; i<len; i++) {
+    for (var i = 0; i < len; i++) {
         pieces[i] = "<script src='" + path + "/" + jsfiles[i] + "'></script>";
     }
     document.write(pieces.join(""));
 
     if (GeoExt.Lang) {
-        GeoExt.Lang.set(OpenLayers.Util.getParameters()["lang"] || GeoExt.Lang.locale);
+        GeoExt.Lang.set(OpenLayers.Util.getParameters().lang || GeoExt.Lang.locale);
     }
 
 })();
-

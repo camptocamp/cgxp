@@ -22,4 +22,3 @@ read/write: extruded
 read/write: CDATA in description
 read/write: <LookAt>
 write: graphicXOffset,graphicYOffset,graphicWidth,graphicHeight
-

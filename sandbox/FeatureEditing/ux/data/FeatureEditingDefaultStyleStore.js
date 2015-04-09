@@ -4,9 +4,9 @@ GeoExt.ux.data.getFeatureEditingDefaultStyleStoreOptions = function() {
     return {
         fields: ['name', 'style'],
         data: [
-            [OpenLayers.i18n('blue'), {fillColor: 'blue', strokeColor: 'blue'}], 
-            [OpenLayers.i18n('red'), {fillColor: 'red', strokeColor: 'red'}], 
-            [OpenLayers.i18n('green'), {fillColor: 'green', strokeColor: 'green'}], 
+            [OpenLayers.i18n('blue'), {fillColor: 'blue', strokeColor: 'blue'}],
+            [OpenLayers.i18n('red'), {fillColor: 'red', strokeColor: 'red'}],
+            [OpenLayers.i18n('green'), {fillColor: 'green', strokeColor: 'green'}],
             [OpenLayers.i18n('yellow'), {fillColor: 'yellow', strokeColor: 'yellow'}],
             [OpenLayers.i18n('orange'), {fillColor: '#FFA500', strokeColor: '#FFA500'}],
             [OpenLayers.i18n('purple'), {fillColor: 'purple', strokeColor: 'purple'}],
@@ -26,5 +26,5 @@ GeoExt.ux.data.getFeatureEditingDefaultStyleStoreOptions = function() {
             [OpenLayers.i18n('gold'), {fillColor: '#FFD700', strokeColor: '#FFD700'}],
             [OpenLayers.i18n('silver'), {fillColor: 'silver', strokeColor: 'silver'}]
         ]
-    }
+    };
 };

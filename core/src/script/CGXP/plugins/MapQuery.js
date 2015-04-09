@@ -172,7 +172,7 @@ cgxp.plugins.MapQuery = Ext.extend(gxp.plugins.Tool, {
                         }
                         var location = new OpenLayers.Geometry.Collection(geoms).getCentroid();
 
-                        if (this.popup != null) {
+                        if (this.popup !== null) {
                             this.popup.close();
                         }
                         var title = this.titleTemplate.apply(e.features);

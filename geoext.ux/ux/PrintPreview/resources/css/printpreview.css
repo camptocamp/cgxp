@@ -1,4 +1,4 @@
-.x-btn .icon-print { 
+.x-btn .icon-print {
     background-image: url(../images/silk/printer.png);
 }
 
@@ -12,9 +12,9 @@
 }
 
 .gx-map-overlay {
-    z-index: 1000; 
-    position: absolute; 
-    right: 10px; 
+    z-index: 1000;
+    position: absolute;
+    right: 10px;
     bottom: 10px;
     text-align: left;
 }

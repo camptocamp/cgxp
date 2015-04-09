@@ -314,7 +314,7 @@ GeoExt.ux.form.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
 
         this.parseFormFieldsToFeatureAttributes(feature);
         if (feature.isLabel === true) {
-            if (feature.attributes[this.labelAttribute] != "") {
+            if (feature.attributes[this.labelAttribute] !== "") {
                 feature.style.label = feature.attributes[this.labelAttribute];
                 feature.style.graphic = false;
                 feature.style.labelSelect = true;

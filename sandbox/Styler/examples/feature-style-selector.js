@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -40,9 +40,9 @@ Ext.onReady(function() {
     var styleStore = new Ext.data.SimpleStore( {
         fields: ['name', 'style'],
         data: [
-            ['blue', {fillColor: 'blue', pointRadius: 6}], 
-            ['big red', {fillColor: 'red', pointRadius: 12}], 
-            ['tiny red', {fillColor: 'red', pointRadius: 5}], 
+            ['blue', {fillColor: 'blue', pointRadius: 6}],
+            ['big red', {fillColor: 'red', pointRadius: 12}],
+            ['tiny red', {fillColor: 'red', pointRadius: 5}],
             ['yellow', {fillColor: 'yellow', pointRadius: 6}]
               ]
     });
@@ -86,4 +86,3 @@ Ext.onReady(function() {
     mapPanel = Ext.getCmp("mappanel");
 
 });
-

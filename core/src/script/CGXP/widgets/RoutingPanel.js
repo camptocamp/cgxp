@@ -263,7 +263,7 @@ cgxp.RoutingPanel = Ext.extend(
                 }
             },
             scope: this
-        })
+        });
         this.map.addLayer(this.vectorLayer);
     },
 
@@ -326,12 +326,12 @@ cgxp.RoutingPanel = Ext.extend(
         var components = this.routeFeature.geometry.components;
         var n = components.length;
         var tolerance = this.map.resolution / 2;
-        var segment
+        var segment;
         var i;
         var j = 0;
         var dist;
 
-        if (features.length == 0) {
+        if (features.length === 0) {
             features.push(feature);
         } else {
             for (i = 1; i < n; i++) {
@@ -865,7 +865,7 @@ cgxp.RoutingPanel = Ext.extend(
                     }
                 }
             }]
-        })
+        });
 
         Ext.apply(this, {items: items});
     }

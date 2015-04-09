@@ -56,7 +56,6 @@ Ext.extend(cgxp.tree.TreeNodeTriStateUI,
             return;
         }
         this.partial = 0;
-        var cb = this.checkbox;
         Ext.each(this.node.childNodes, function(item){
             var ui = item.getUI();
             if (ui.isChecked()) {

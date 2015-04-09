@@ -4,13 +4,3 @@ point	id	title	description	icon	iconSize
 145605,554060	3	Mon parking	C'est celui-là le meilleur.	http://openlayers.org/dev/img/marker-gold.png	21,25
 145542,554688	4	Mon parking	Ce parking est<br/>le meillleur.	http://openlayers.org/dev/img/marker-gold.png	21,25
 145977,555638	5	Ma deuxième station	Sans-plomb pas cher.	http://openlayers.org/dev/img/marker-blue.png	21,25
-
-
-
-
-
- 
- 
- 
- 
- 

@@ -9,10 +9,10 @@
 
     <script type="text/javascript">
         var printCapabilities = {"scales":[{"name":"1:25,000","value":"25000"},{"name":"1:50,000","value":"50000"},{"name":"1:100,000","value":"100000"},{"name":"1:200,000","value":"200000"},{"name":"1:500,000","value":"500000"},{"name":"1:1,000,000","value":"1000000"},{"name":"1:2,000,000","value":"2000000"},{"name":"1:4,000,000","value":"4000000"}],"dpis":[{"name":"75","value":"75"},{"name":"150","value":"150"},{"name":"300","value":"300"}],"layouts":[{"name":"A4 portrait","map":{"width":440,"height":483},"rotation":true},{"name":"Legal","map":{"width":440,"height":483},"rotation":false}],"printURL":"http://demo.opengeo.org/geoserver/pdf/print.pdf","createURL":"http://demo.opengeo.org/geoserver/pdf/create.json"};
-       
+
         function test_initComponent(t) {
             t.plan(12);
-            
+
             var mapPanel = new GeoExt.MapPanel({
                 renderTo: "mappanel",
                 width: 256,
@@ -23,7 +23,7 @@
                 center: [146.56, -41.56],
                 zoom: 7
             });
-            
+
             var log = {};
             var printPreview = new GeoExt.ux.PrintPreview({
                 renderTo: "printpreview",
@@ -45,10 +45,10 @@
                     }]
                 }
             });
-            
+
             var size = printPreview.printProvider.layout.get("size");
             var center = mapPanel.map.getCenter();
-            
+
             t.eq(printPreview.printMapPanel.map.controls.length, printPreview.printMapPanel.map.controls[0].controls.length+2, "Preview map has only the controls we added,");
             t.ok(printPreview.printMapPanel.map.controls[0] instanceof OpenLayers.Control.PanPanel, "which is a PanPanel");
             t.ok(log.preaddlayer, "preaddlayer listener registered.");
@@ -57,20 +57,20 @@
             t.eq(printPreview.printMapPanel.items.get(1).getXType(), "panel", "and our map overlay with scaleline etc.");
             t.ok(printPreview.printProvider, "PrintProvider taken from printMapPanel config.");
             t.ok(printPreview.sourceMap, "sourceMap taken from printMapPanel config.");
-            
+
             var content = printPreview.items.get(1);
             t.eq(content.items.getCount(), 2, "PrintPreview content has two items,");
             t.eq(content.items.get(0).getXType(), "form", "a FormPanel");
             t.eq(content.items.get(1).getXType(), "gx_printmappanel", "and a PrintMapPanel,");
             t.eq(content.items.get(0).getWidth(), printPreview.items.get(1).getWidth(), "with the form having the same width as the map.");
-            
+
             printPreview.destroy();
             mapPanel.destroy();
         }
-        
+
         function test_createForm(t) {
             t.plan(3);
-            
+
             var mapPanel = new GeoExt.MapPanel({
                 renderTo: "mappanel",
                 width: 256,
@@ -81,7 +81,7 @@
                 center: [146.56, -41.56],
                 zoom: 7
             });
-            
+
             var printPreview = new GeoExt.ux.PrintPreview({
                 renderTo: "printpreview",
                 printProvider: {
@@ -104,7 +104,7 @@
             t.eq(printPreview.items.get(1).items.get(0).items.get(0).getXType(), "container", "textfield line created correctly with legend checkbox.");
             t.eq(printPreview.items.get(1).items.get(0).items.get(0).items.get(1).getValue(), true, "legend checkbox checked when includeLegend is set to true.");
             printPreview.destroy();
-            
+
             mapPanel.destroy();
         }
 

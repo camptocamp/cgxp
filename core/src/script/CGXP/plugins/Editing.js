@@ -588,7 +588,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         queryable.push(paramName);
                     }
                 });
-                options.params['queryable'] = queryable;
+                options.params.queryable = queryable;
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
@@ -634,12 +634,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
 
                 var response = this.protocol.read({
-                    maxFeatures: options.single == true ? this.maxFeatures : undefined,
+                    maxFeatures: options.single === true ? this.maxFeatures : undefined,
                     filter: filter,
                     callback: function(result) {
                         if (result.success()) {
                             if (result.features.length) {
-                                if (options.single == true) {
+                                if (options.single === true) {
                                     this.selectBestFeature(result.features,
                                         bounds.getCenterLonLat(), options);
                                 } else {
@@ -662,7 +662,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     },
                     scope: this
                 });
-                if(options.hover == true) {
+                if (options.hover === true) {
                     this.hoverResponse = response;
                 }
             }
@@ -878,7 +878,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             this.snapControl = new OpenLayers.Control.Snapping(options);
 
             this.snapWMSProperties = {};
-            for (l in this.snapLayers) {
+            for (var l in this.snapLayers) {
                 if (this.snapLayers.hasOwnProperty(l)) {
                     this.snapLayers[l] = this.snapLayers[l] || {};
                     this.snapLayers[l].layer = null;
@@ -887,7 +887,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         inRange: false,          // Whether the layer is in range
                         treeNodes: [],           // Tree nodes that have the WMS layer
                         url: this.mapserverUrl   // Map server url
-                    }
+                    };
                 }
             }
 
@@ -910,7 +910,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                             if (!local) {
                                 prop[name].url +=
                                     (prop[name].url.indexOf('?') == -1 ? '?' : '&') +
-                                    'EXTERNAL=true'
+                                    'EXTERNAL=true';
                             }
                             if (parent) {
                                 treeNodes.push(parent.name);
@@ -952,7 +952,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             this.checkSnapLayerVisibility();
             this.checkSnapLayerInRange();
 
-            for (l in this.snapWMSProperties) {
+            for (var l in this.snapWMSProperties) {
                 if (this.snapWMSProperties.hasOwnProperty(l) &&
                     this.snapWMSProperties[l].visibility &&
                     this.snapWMSProperties[l].inRange) {
@@ -1004,15 +1004,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }, this);
 
             // Compute the visibility for the WMS layers
-            for (layer in this.snapWMSProperties) {
+            for (var layer in this.snapWMSProperties) {
                 if (this.snapWMSProperties.hasOwnProperty(layer)) {
                     var visibility = false;
                     Ext.each(
                         this.snapWMSProperties[layer].treeNodes,
                         function(l) {
-                            visibility = visibility || nodeVisibilities[l]
+                            visibility = visibility || nodeVisibilities[l];
                         }
-                    )
+                    );
                     if (visibility != this.snapWMSProperties[layer].visibility) {
                         this.snapWMSProperties[layer].visibility = visibility;
                         if (this.snapWMSProperties[layer].inRange) {
@@ -1069,15 +1069,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }, this);
 
             // Compute the "inRange" for the WMS layers
-            for (layer in this.snapWMSProperties) {
+            for (var layer in this.snapWMSProperties) {
                 if (this.snapWMSProperties.hasOwnProperty(layer)) {
                     var inRange = false;
                     Ext.each(
                         this.snapWMSProperties[layer].treeNodes,
                         function(l) {
-                            inRange = inRange || nodeInRanges[l]
+                            inRange = inRange || nodeInRanges[l];
                         }
-                    )
+                    );
                     if (inRange != this.snapWMSProperties[layer].inRange) {
                         this.snapWMSProperties[layer].inRange = inRange;
                         if (this.snapWMSProperties[layer].visibility) {

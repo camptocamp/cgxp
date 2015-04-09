@@ -90,4 +90,3 @@ describe('plugins.ThemeSelector', function() {
         });
     });
 });
-

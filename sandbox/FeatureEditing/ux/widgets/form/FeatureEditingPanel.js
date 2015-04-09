@@ -7,9 +7,9 @@ Ext.namespace("GeoExt.ux.form");
 
 /** api: example
  *  Sample code to create a FeatureEditingPanel object
- * 
+ *
  *  .. code-block:: javascript
- *     
+ *
  *      var featureEditingPanel = new GeoExt.ux.form.FeatureEditingPanel({
  *          title: "FeatureEditingPanel"
  *          controler: controler
@@ -24,7 +24,7 @@ Ext.namespace("GeoExt.ux.form");
 
 /** api: constructor
  *  .. class:: FeatureEditingPanel
- * 
+ *
  *  Create a FeatureEditingPanel automatically linked to a cosmetic vector layer
  *  object.  Features created automatically have the "title" and "description"
  *  attributes.
@@ -76,7 +76,7 @@ GeoExt.ux.form.FeatureEditingPanel = Ext.extend(Ext.form.FormPanel, {
      *  ``String``  URL used in order to use a server download service. The attributes "format" and "content" are sent (POST) to this service.
      */
     downloadService: null,
-    
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -89,7 +89,7 @@ GeoExt.ux.form.FeatureEditingPanel = Ext.extend(Ext.form.FormPanel, {
     },
 
     /** private: method[initToolbar]
-     *  
+     *
      */
     initToolbar: function() {
         // Add buttons and toolbar
@@ -110,13 +110,13 @@ GeoExt.ux.form.FeatureEditingPanel = Ext.extend(Ext.form.FormPanel, {
 
         Ext.apply(this, {items: oItems});
     },
-    
+
     /** private: method[beforeDestroy]
      */
     beforeDestroy: function() {
         delete this.controler;
     }
-    
+
 });
 
 /** api: xtype = gx_featureform */

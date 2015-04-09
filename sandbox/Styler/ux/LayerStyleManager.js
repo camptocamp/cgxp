@@ -21,7 +21,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
     originalFeatureStyle: null,
 
     styler: null,
-    
+
     constructor: function(styler, config) {
         config = config || {};
 
@@ -56,10 +56,10 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
             "styleupdated"
 
         );
-        
+
         this.initialConfig = Ext.apply({}, config);
         Ext.apply(this, config);
-        
+
         GeoExt.ux.LayerStyleManager.superclass.constructor.call(this);
 
     },
@@ -78,7 +78,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
                     this.currentLayer.redraw();
                     this.fireEvent("styleupdated", this.currentFeature);
                 }
-                else if(!this.currentFeature && this.currentLayer && 
+                else if(!this.currentFeature && this.currentLayer &&
                         this.currentLayer.style != style) {
                     // TODO
                     // Need to support StyleMap as well
@@ -88,7 +88,7 @@ GeoExt.ux.LayerStyleManager = Ext.extend(Ext.util.Observable, {
 
         return layout;
     },
-    
+
     /** private: method[setCurrentLayer]
      */
     setCurrentLayer: function(layer) {

@@ -143,7 +143,7 @@ GeoExt.ux.LayerManagerImportPanel = Ext.extend(Ext.Panel, {
                                 xtype:'button',
                                 text: OpenLayers.i18n('Import'),
                                 handler: function() {
-                                    if (document.getElementById('fileselector').value == "") {
+                                    if (document.getElementById('fileselector').value === "") {
                                         alert(OpenLayers.i18n('Select a file to import'));
                                     } else {
                                         var filecontent;

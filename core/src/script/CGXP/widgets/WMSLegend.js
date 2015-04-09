@@ -117,7 +117,6 @@ Ext.reg('cgxp_wmslegend', cgxp.WMSLegend);
             name: '',
             classes: []
         }];
-        var icons = [];
         for (var i = 0, len = cmp.items.getCount() ; i < len ; ++i) {
             var url = cmp.items.get(i).url;
             if (url && url.toLowerCase().indexOf('request=getlegendgraphic') != -1) {

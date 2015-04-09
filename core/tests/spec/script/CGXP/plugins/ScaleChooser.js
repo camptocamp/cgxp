@@ -125,4 +125,3 @@ describe('plugins.ScaleChooser', function() {
         });
     });
 });
-

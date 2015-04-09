@@ -1,0 +1,8 @@
+{
+    "expr": true,
+    "curly": true,
+    "scripturl": true,
+    "loopfunc": true,
+    "-W082": false,
+    "-W122": false
+}

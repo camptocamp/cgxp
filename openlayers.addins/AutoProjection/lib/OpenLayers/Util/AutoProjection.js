@@ -76,7 +76,7 @@ OpenLayers.AutoProjection = OpenLayers.Class({
      *  :arg point: ``Array`` point to project
      *  :arg map: ``Object`` the map object
      *
-     *  It projects the point using the projection list 
+     *  It projects the point using the projection list
      *  and finds the first one for which it falls
      *  inside of the restricted Extent.
      */

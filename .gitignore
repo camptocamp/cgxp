@@ -1,4 +1,5 @@
 *.un~
+/node_modules/
 /core/src/doc/distribute-*.tar.gz
 /core/src/doc/env/
 /core/src/doc/lib/plugins/

@@ -1,0 +1,32 @@
+#! /bin/bash
+
+if [ ! -f ./node_modules/jshint/bin/jshint ]
+then
+    npm install jshint
+fi
+
+ARGS=
+for EXCLUDE in .git core/tests core/src/doc core/examples node_modules \
+    core/src/script/CGXP/loader.js \
+    geoext.ux/ux/WMSBrowser/lib/GeoExt.ux/WMSBrowser.js \
+    sandbox/FeatureEditing/ux/FeatureEditing.js \
+    geoext.ux/ux/SimplePrint/lib/loader.js \
+    geoext.ux/ux/PrintPreview/lib/loader.js \
+    geoext.ux/ux/FeatureBrowser/examples \
+    geoext.ux/ux/FeatureEditing/examples \
+    sandbox/FeatureEditing/tests \
+    sandbox/LayerManager/ux/downloadify \
+    ext dygraphs geoext gxp openlayers openlayers.addins/DynamicMeasure \
+    openlayers.addins/URLCompressed proj4js/proj4js styler
+do
+    ARGS="$ARGS -path ./${EXCLUDE} -prune -o"
+done
+
+RESULT=0
+while read f
+do
+    ./node_modules/jshint/bin/jshint --verbose "$f"
+    RESULT=`expr ${RESULT} \| $?`
+done < <(find ${ARGS} -name *.js -print)
+
+exit ${RESULT}

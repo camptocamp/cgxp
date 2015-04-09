@@ -2,7 +2,7 @@
 <html debug="true">
   <head>
     <script type="text/javascript" src="http://www.openlayers.org/api/2.9.1/OpenLayers.js"></script>
-    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/adapter/ext/ext-base.js"></script> 
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/ext-all.js"></script>
     <script type="text/javascript" src="../../../../../../geoext/lib/GeoExt.js"></script>
     <script type="text/javascript" src="../../../lib/GeoExt.ux/FeatureBrowser.js"></script>
@@ -68,7 +68,7 @@
             t.plan(7);
 
             var browser, tpl;
-            
+
             // no template
             browser = new GeoExt.ux.FeatureBrowser({
                 features: features
@@ -93,7 +93,7 @@
             // a unique template
             browser = new GeoExt.ux.FeatureBrowser({
                 features: features,
-                tpl: new Ext.Template('{foo}')  
+                tpl: new Ext.Template('{foo}')
             });
             tpl = browser.getTemplateForFeature(features[0]);
             t.eq(tpl.apply(features[0].attributes), 'foo0',

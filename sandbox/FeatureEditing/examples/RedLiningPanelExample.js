@@ -21,7 +21,7 @@ Ext.onReady(function() {
         map: mapPanel.map,
         popupOptions: {anchored: false, unpinnable: false, draggable: true}
     });
-    
+
     new Ext.Panel({
         renderTo: "content",
         layout: "border",

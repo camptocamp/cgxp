@@ -98,4 +98,3 @@ describe('plugins.ThemeFinder', function() {
         });
     });
 });
-

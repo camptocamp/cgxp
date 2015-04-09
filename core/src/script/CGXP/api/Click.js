@@ -94,7 +94,7 @@ cgxp.api.Click = OpenLayers.Class(OpenLayers.Control, {
                 if(dist < minDist) {
                     minDist = dist;
                     resultFeature = feature;
-                    if(minDist == 0) {
+                    if (minDist === 0) {
                         break;
                     }
                 }

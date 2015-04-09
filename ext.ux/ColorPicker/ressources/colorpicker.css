@@ -2,7 +2,7 @@
     position:absolute;
     cursor: pointer;
     _cursor: hand;
-    background-repeat: no-repeat;        
+    background-repeat: no-repeat;
     margin: 0;
     padding:0;
     border: none;
@@ -15,21 +15,21 @@
     background-image: url(slider-rgb.gif) !important;
 }
 .x-cp-rgbpicker {
-    left : 6px; 
+    left : 6px;
     top : 6px;
     width: 182px;
     height: 182px;
     background-image: url(mask.png);
     background-color: red;
-    _background-image:none;    
+    _background-image:none;
     _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='mask.png',sizingMethod='scale');
 }
 .x-cp-huepicker {
-    left : 196px; 
+    left : 196px;
     top : 6px;
     width: 9px;
     height: 183px;
-    background-image: url(hue.png) !important;    
+    background-image: url(hue.png) !important;
 }
 .x-cp-opacitypicker {
     left:6px;
@@ -48,7 +48,7 @@
     border: none;
     top : 6px;
     left : 215px;
-    width: 116px;        
+    width: 116px;
 }
 .x-cp-formcontainer input {
     text-align: center;

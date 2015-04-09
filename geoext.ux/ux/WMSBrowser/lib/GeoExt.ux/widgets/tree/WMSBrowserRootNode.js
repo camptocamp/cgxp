@@ -154,9 +154,9 @@ GeoExt.ux.tree.WMSBrowserRootNode = Ext.extend(Ext.tree.AsyncTreeNode, {
                 return;
             }
 
-            if (layer.metadata.title != "") {
+            if (layer.metadata.title !== "") {
                 layerName.push(layer.metadata.title);
-            } else if (layer.metadata.name != "") {
+            } else if (layer.metadata.name !== "") {
                 layerName.push(layer.metadata.name);
             }
         });

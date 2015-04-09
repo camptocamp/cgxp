@@ -12,8 +12,11 @@ before_script:
 - virtualenv --distribute --no-site-packages env
 - env/bin/pip install CherryPy==3.6.0 jasmine-core==2.2.0 jasmine==2.2.0
 - cd -
+- npm install jshint
 
 script:
+- if [ ${TRAVIS_PULL_REQUEST}} != "false" ] ; then git diff --check ${TRAVIS_BRANCH} ; fi
+- ./jshint
 - cd core/tests
 - env/bin/jasmine-ci --browser phantomjs
 - cd -

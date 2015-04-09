@@ -225,11 +225,6 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
             });
         });
 
-        // create a human readable group name
-        var urlObj = OpenLayers.Util.createUrlObject(layer.url, {
-            ignorePort80: true
-        });
-        
         // Use internalWMS: true to have the same UI as them.
         this.target.tools[this.layerTreeId].tree.addGroup({
             displayName: layer.name,
@@ -243,6 +238,6 @@ cgxp.plugins.WMSBrowser = Ext.extend(gxp.plugins.Tool, {
 });
 
 // layer name correspondence
-cgxp.plugins.WMSBrowser.layer_names = {}
+cgxp.plugins.WMSBrowser.layer_names = {};
 
 Ext.preg(cgxp.plugins.WMSBrowser.prototype.ptype, cgxp.plugins.WMSBrowser);
