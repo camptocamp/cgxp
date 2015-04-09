@@ -22,7 +22,11 @@ do
     ARGS="$ARGS -path ./${EXCLUDE} -prune -o"
 done
 
-find ${ARGS} -name *.js -print | while read f
+RESULT=0
+while read f
 do
     ./node_modules/jshint/bin/jshint --verbose "$f"
-done
+    RESULT=`expr ${RESULT} \| $?`
+done < <(find ${ARGS} -name *.js -print)
+
+exit ${RESULT}
