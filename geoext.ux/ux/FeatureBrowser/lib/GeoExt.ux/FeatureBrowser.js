@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -16,7 +16,7 @@ Ext.namespace("GeoExt.ux");
 
 /** api: constructor
  *  .. class:: FeatureBrowser(config)
- *      
+ *
  *      Creates a Panel to browse in a features list,
  *  show attributes for each using templates.
  */
@@ -36,7 +36,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
      *  to be used for features which don't match any of the tpl keys.
      *  Will be taken into account only if tpl is an Object. Optional.
      */
-    elseTpl: null, 
+    elseTpl: null,
 
     /** api: config[tpl]
      * ``Ext.Template`` | ``Ext.XTemplate`` | ``Object`` | ``Function``
@@ -62,7 +62,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
      *  not set. Optional.
      */
     skippedFeatureAttributes: null,
-    
+
     /** api: config[features]
      *  ``Array`` Array of ``OpenLayers.Feature.Vector`` to build the
      *  FeatureBrowser with. Required.
@@ -82,7 +82,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
         for (var i = 0; i < nbFeatures; i++) {
             feature = this.features[i];
             tpl = this.getTemplateForFeature(feature);
-            
+
             this.items.push(new Ext.BoxComponent({
                 id: 'card-'+ this.id + i,
                 html: tpl.apply(feature.attributes)
@@ -96,7 +96,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
                 {
                     id: 'move-prev' + this.id,
                     iconCls: "x-tbar-page-prev",
-                    handler: this.navHandler.createDelegate(this, 
+                    handler: this.navHandler.createDelegate(this,
                         [-1, nbFeatures, this.features]),
                     disabled: true,
                     listeners: {
@@ -108,7 +108,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
                 {
                     id: 'move-next' + this.id,
                     iconCls: "x-tbar-page-next",
-                    handler: this.navHandler.createDelegate(this, 
+                    handler: this.navHandler.createDelegate(this,
                         [1, nbFeatures, this.features]),
                     listeners: {
                         click: function(button, e) {
@@ -124,7 +124,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
 
         // add custom events
         this.addEvents(
-        
+
             /** api: events[featureselected]
              *  Fires when a feature is displayed in the FeatureBrowser.
              *  Application may use this to highlight it on the map, for
@@ -145,7 +145,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[navHandler]
-     *  The navigation handler method. Called when navigation buttons 
+     *  The navigation handler method. Called when navigation buttons
      *  (next or previous) are clicked
      */
     navHandler: function(direction, total, features) {

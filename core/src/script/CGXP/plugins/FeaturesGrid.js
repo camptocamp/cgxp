@@ -218,16 +218,16 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     totalResultsText: "results",
     suggestionText: "Suggestion",
     noLayerSelectedMessage: "No layer selected",
-    noLayerSelectedMessageTitle: "Info",    
+    noLayerSelectedMessageTitle: "Info",
     totalNbOfFeaturesText: "Total number of features: ",
     countingText: "(counting...)",
-    
+
     /** api: config[statusTemplateText]
      *  ``String`` Template for the size and number of result label. Leave it empties ("") to
      *  get only the number of results and not the "size" part.
-     */ 
+     */
     statusTemplateText: '{totalSizeText} {[values.geomSize.toFixed(2)]}{geomUnit} - {totalResult} {totalResultText}',
-    
+
     /** api: config[messageStyle]
      *  ``String`` CSS style used for the queryResult message.
      */
@@ -515,7 +515,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 }
             }
         }
-        
+
         return tpl.apply({
             totalSizeText: isPolygon ? this.totalSurfaceText : this.totalLengthText,
             geomSize: geomSize,
@@ -568,7 +568,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 }
             }
         }
-        return featureType; 
+        return featureType;
     },
 
     /** private: method[addOutput]
@@ -633,7 +633,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         }, this);
 
         this.events.on('nolayer', function() {
-            Ext.MessageBox.alert(this.noLayerSelectedMessageTitle, 
+            Ext.MessageBox.alert(this.noLayerSelectedMessageTitle,
                                  this.noLayerSelectedMessage);
         }, this);
 
@@ -642,13 +642,13 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 this.control.deactivate();
             }
         }, this);
-        
+
         this.events.on('queryinfos', function(infos) {
             if ('numberOfFeatures' in infos) {
                 this.numberOfFeatures += infos.numberOfFeatures;
                 var msg = '';
                 if (this.numberOfReturnedFeatures == this.maxFeatures) {
-                    msg += this.maxFeaturesText + ' (' + this.maxFeatures + ') - '; 
+                    msg += this.maxFeaturesText + ' (' + this.maxFeatures + ') - ';
                 }
                 msg += this.totalNbOfFeaturesText + this.numberOfFeatures;
                 this.setMessage(msg);

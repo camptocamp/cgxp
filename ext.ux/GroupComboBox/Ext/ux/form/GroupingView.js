@@ -16,30 +16,30 @@
  */
 
 Ext.ux.form.GroupingView = Ext.extend(Ext.DataView, {
-    
+
     /** api: config[groupTextTpl]
      *  ``String`` The template used to render the group text. Not required if
      *  `groupTpl` is set. Optional.
      */
     groupTextTpl : '{[OpenLayers.i18n(values.text)]}',
-    
+
     /** api: config[groupTpl]
      *  ``String`` The template used to render the group text. Optional.
      */
     groupTpl: null,
-    
+
     /** api: config[itemTpl]
      *  ``String`` The template used to render each item. Optional.
      */
     itemTpl: null,
-    
+
     /** private: method[initTemplates]
      */
     initComponent: function() {
         this.initTemplates();
         Ext.ux.form.GroupingView.superclass.initComponent.apply(this, arguments);
     },
-    
+
     /** private: method[initTemplates]
      */
     initTemplates: function() {
@@ -50,19 +50,19 @@ Ext.ux.form.GroupingView = Ext.extend(Ext.DataView, {
                 '</div>'
             ]);
         }
-        
+
         if (typeof this.itemTpl == "string") {
             this.itemTpl = new Ext.XTemplate(this.itemTpl);
         }
     },
-    
+
     /** private: method[initTemplates]
      * Refreshes the view by reloading the data from the store and re-rendering the template.
      */
     refresh: function() {
         this.clearSelections(false, true);
         this.el.update("");
-        
+
         var records = this.store.getRange();
         if (records.length < 1) {
             this.el.update(this.emptyText);

@@ -9,10 +9,10 @@
 
     <script type="text/javascript">
         var printCapabilities = {"scales":[{"name":"1:25,000","value":"25000"},{"name":"1:50,000","value":"50000"},{"name":"1:100,000","value":"100000"},{"name":"1:200,000","value":"200000"},{"name":"1:500,000","value":"500000"},{"name":"1:1,000,000","value":"1000000"},{"name":"1:2,000,000","value":"2000000"},{"name":"1:4,000,000","value":"4000000"}],"dpis":[{"name":"75","value":"75"},{"name":"150","value":"150"},{"name":"300","value":"300"}],"layouts":[{"name":"A4 portrait","map":{"width":440,"height":483},"rotation":true},{"name":"Legal","map":{"width":440,"height":483},"rotation":false}],"printURL":"http://demo.opengeo.org/geoserver/pdf/print.pdf","createURL":"http://demo.opengeo.org/geoserver/pdf/create.json"};
-       
+
         function test_initComponent(t) {
             t.plan(5);
-            
+
             var mapPanel = new GeoExt.MapPanel({
                 renderTo: "mappanel",
                 width: 256,
@@ -33,13 +33,13 @@
                 mapPanel: mapPanel,
                 printProvider: printProvider
             });
-            
+
             t.ok(printForm.printExtent, "PrintExtent created.");
             t.ok(printForm.printExtent.map == mapPanel.map, "PrintExtent added to map.");
             t.ok(printForm.printPage, "PrintPage assigned.");
             t.eq(printForm.items.getCount(), 4, "Form has four items.");
             t.ok(printForm.busyMask, "busy mask created.");
-            
+
             printForm.destroy();
             mapPanel.destroy();
         }

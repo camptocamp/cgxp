@@ -10,5 +10,5 @@ The :mod:`cgxp.plugins` module contains plugins that plug into
 .. toctree::
    :maxdepth: 1
    :glob:
-   
+
    plugins/*

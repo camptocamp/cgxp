@@ -276,8 +276,8 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             id: 'name',
             value: feature.attributes.name
         });
-        /* style override for label because point features and label features 
-           are no longer handled separatly in Mapfish Print due to commit 
+        /* style override for label because point features and label features
+           are no longer handled separatly in Mapfish Print due to commit
            https://github.com/mapfish/mapfish-print/commit/edcb78e698e34c6058148461211928f6dcc48425 */
         feature.style.fillOpacity = 0;
         feature.style.strokeOpacity = 0;

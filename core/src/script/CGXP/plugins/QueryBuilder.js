@@ -127,7 +127,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Title for the panel (i18n)
      */
     querierText: "Querier",
-    
+
     /** api: config[attributeURLs]
      *  ``Object`` Optional list of URL to feed combos for given fields
      *  for given layer.
@@ -171,7 +171,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``Ext.LoadMask``
      */
     mask: null,
-    
+
     /** private: property[storeUriProperty]
      *  ``String``
      */

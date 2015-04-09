@@ -138,7 +138,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
         if (this.maxIsSky && cgxp.plugins.Print) {
             var self = this;
-            cgxp.plugins.Print.prototype.paramRenderer.floor = 
+            cgxp.plugins.Print.prototype.paramRenderer.floor =
                 function(value) {
                     return value === null ? self.skyText : value;
                 };

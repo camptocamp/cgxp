@@ -507,8 +507,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         }
 
 
-        /** use OpenLayers.Control.DrawFeature instead of 
-         *  OpenLayers.Control.DynamicMeasure when drawing box or circle to 
+        /** use OpenLayers.Control.DrawFeature instead of
+         *  OpenLayers.Control.DynamicMeasure when drawing box or circle to
          *  work around document.onselectstart mixup in IE
          */
         var getControl = function(idControl, type, layer, options) {
@@ -598,7 +598,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                     });
                     break;
             }
-            
+
             this.drawControls.push(control);
             control.events.on({
                 "featureadded": this.onFeatureAdded,

@@ -9,8 +9,8 @@
 /** api: example[FeatureSelectionModel]
  *  Feature Selection Model
  *  ---------------------
- *  A row selection model which enables automatic selection and hovering 
- *      of features in the map when rows are selected or hovered in the grid 
+ *  A row selection model which enables automatic selection and hovering
+ *      of features in the map when rows are selected or hovered in the grid
  *      and vice-versa.
  */
 
@@ -24,8 +24,8 @@ Ext.ns('GeoExt.ux');
 /** api: constructor
  *  .. class:: FeatureSelectionModel
  *
- *      A row selection model which enables automatic selection and hovering 
- *      of features in the map when rows are selected or hovered in the grid 
+ *      A row selection model which enables automatic selection and hovering
+ *      of features in the map when rows are selected or hovered in the grid
  *      and vice-versa.
  */
 GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, {
@@ -36,9 +36,9 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
         var config = {
             id: 'terrestris_featselmod'
         };
-        
+
         Ext.apply(this, Ext.apply(this.initialConfig, config));
-        
+
         Terrestris.FeatureSelectionModel.superclass.initComponent.apply(this, arguments);
     },
     /** private */
@@ -51,20 +51,20 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
                 config.singleSelect = !(ctrl.multiple || !!ctrl.multipleKey);
             }
         }
-        else 
+        else
             if (config.layer instanceof OpenLayers.Layer.Vector) {
                 this.selectControl = this.createSelectControl(config.layer, config.selectControl);
                 delete config.layer;
                 delete config.selectControl;
             }
-        
+
         if (config.hoverControl instanceof OpenLayers.Control.SelectFeature) {
             if (!config.singleSelect) {
                 ctrl = config.hoverControl;
                 config.singleSelect = !(ctrl.multiple || !!ctrl.multipleKey);
             }
         }
-        else 
+        else
             if (config.layer instanceof OpenLayers.Layer.Vector) {
                 this.hoverControl = this.createHoverControl(config.layer, config.hoverControl);
                 delete config.layer;
@@ -73,7 +73,7 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
         this.superclass = arguments.callee.superclass;
         this.superclass.constructor.call(this, config);
     },
-        
+
     /** private: method[initEvents]
      *
      *  Called after this.grid is defined
@@ -101,9 +101,9 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
                 this.bindHover(this.hoverControl);
             }
         }
-        
+
     },
-    
+
     /** private: createHoverControl
      *  :param layer: ``OpenLayers.Layer.Vector`` The vector layer.
      *  :param config: ``Object`` The select feature control config.
@@ -123,7 +123,7 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
         layer.map.addControl(hoverControl);
         return hoverControl;
     },
-    
+
     /** api: method[bindHover]
      *
      *  :param obj: ``OpenLayers.Layer.Vector`` or
@@ -159,7 +159,7 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
         }
         return this.hoverControl;
     },
-    
+
     /** api: method[unbindHover]
      *  :return: ``OpenLayers.Control.SelectFeature`` The hover feature
      *      control this hover model used.
@@ -187,13 +187,13 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
         }
         return hoverControl;
     },
-    
+
     /** private: method[featureHighlighted]
      *  :param evt: ``Object`` An object with a feature property referencing
      *                         the highlighted feature.
      */
     featureHighlighted: function(evt){
-    
+
         if (!this._selecting) {
             var store = this.grid.store;
             var row = store.findBy(function(record, id){
@@ -208,13 +208,13 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
             }
         }
     },
-    
+
     /** private: method[featureUnhighlighted]
      *  :param evt: ``Object`` An object with a feature property referencing
      *                         the unhighlighted feature.
      */
     featureUnhighlighted: function(evt){
-    
+
         if (!this._selecting) {
             var store = this.grid.store;
             var row = store.findBy(function(record, id){
@@ -265,7 +265,7 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
             }
         }
     }
-    
+
 });
 
 Ext.reg('gxux_featureselectionmodel', GeoExt.ux.FeatureSelectionModel);

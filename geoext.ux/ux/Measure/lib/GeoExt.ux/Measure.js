@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2009 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -21,7 +21,7 @@ Ext.namespace("GeoExt.ux");
  *  .. class:: Measure(config)
  *
  *      Creates a GeoExt.Action for measurements.
- * 
+ *
  *  JSBuild: OpenLayers/Control/Measure.js, OpenLayers/StyleMap.js,
  *  OpenLayers/Style.js, OpenLayers/Rule.js, OpenLayers/Handler.js
  *  must be included.
@@ -48,7 +48,7 @@ GeoExt.ux.Measure = Ext.extend(GeoExt.Action, {
      *  ``Boolean`` Should the measure control be deactivated when closing
      *      the measurement tip. Optional. Defaults to false.
      */
-    
+
     /** private: property[tip]
      *  ``Ext.Tip`` The displayed tip.
      */
@@ -62,7 +62,7 @@ GeoExt.ux.Measure = Ext.extend(GeoExt.Action, {
      *  ``Ext.XTemplate`` The template used for the display of measures.
      */
     template: null,
-     
+
     /** api: config[decimals]
      *  ``Integer`` The number of decimals for the displayed values.
      *    Defaults to 2.
@@ -125,7 +125,7 @@ GeoExt.ux.Measure = Ext.extend(GeoExt.Action, {
         }, controlOptions);
         return new OpenLayers.Control.Measure(handlerClass, controlOptions);
     },
-    
+
     /** private: method[cleanup]
      *  Destroys the tip.
      */
@@ -135,7 +135,7 @@ GeoExt.ux.Measure = Ext.extend(GeoExt.Action, {
             this.tip = null;
         }
     },
-    
+
     /** private: method[makeString]
      *  Builds the HTML string for the tip.
      *

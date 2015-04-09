@@ -129,7 +129,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[googleEarthPluginId]
      *  ``String``
-     *  A reference id to the ``GoogleEarthView`` plugin, mandatory 
+     *  A reference id to the ``GoogleEarthView`` plugin, mandatory
      *  if you want to auto-load that plugin when loading a kml file.
      */
     googleEarthPluginId: null,
@@ -206,7 +206,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
                         var kmlObject = gePlugin.parseKml(kmlString);
                         gePlugin.getFeatures().appendChild(kmlObject);
                     }
-                } 
+                }
                 // Store kmlString to load them in GoogleEarth later
                 if (this.googleEarthPluginId) {
                     ge = this.target.tools[this.googleEarthPluginId];

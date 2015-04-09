@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2009 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -15,13 +15,13 @@ Ext.namespace("GeoExt.ux");
 
 /** api: constructor
  *  .. class:: PrintPreview
- * 
+ *
  *  A print preview with an interactive map. Requires a server-side print
  *  module configuration with two custom fields (by default ``mapTitle`` and
  *  ``comment``).
  */
 GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
-    
+
     /* begin i18n */
     /** api: config[paperSizeText] ``String`` i18n */
     paperSizeText: "Paper size:",
@@ -38,19 +38,19 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
     /** api: config[creatingPdfText] ``String`` i18n */
     creatingPdfText: "Creating PDF...",
     /* end i18n */
-    
+
     /** api: config[printProvider]
      *  :class:`GeoExt.data.PrintProvider`|``Object`` Instance or
      *  configuration for the PrintProvider that this dialog will use. Not
      *  required if provided with the
      *  :ref:`GeoExt.ux.PrintPreview.printMapPanel`.
      */
-    
+
     /** private: property[printProvider]
      *  :class:`GeoExt.data.PrintProvider`
      */
     printProvider: null,
-    
+
     /** api: config[sourceMap]
      *  :class:`GeoExt.MapPanel`|``OpenLayers.Map`` The map to copy layers and
      *  extent from for printing. Not required if provided with the
@@ -61,68 +61,68 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
      *  ``OpenLayers.Map`` The map to copy layers and extent from for printing.
      */
     sourceMap: null,
-    
+
     /** api: config[printMapPanel]
      *  :class:`GeoExt.PrintMapPanel`:``Object`` Optional. Useful e.g.
      *  for adding a ZoomSlider (via ``items``) or setting map options (like
      *  configuring custom controls or filtering out unsupported layers with
      *  a preaddlayer listener via ``map``).
-     *  
+     *
      *  .. note:: If provided as :class:`GeoExt.PrintMapPanel`, this has to be
      *       configured with ``printProvider`` and ``sourceMap``.
      */
-    
+
     /** api: property[printMapPanel]
      *  class:`GeoExt.PrintMapPanel` The print preview map. Read-only.
      */
     printMapPanel: null,
-    
+
     /** api: config[mapTitleField]
      *  ``String`` The custom field of the print service for the map title
      */
     mapTitleField: "mapTitle",
-    
+
     /** api: config[commentField]
      *  ``String`` The custom field of the print service for the comment
      */
     commentField: "comment",
-    
+
     /** api: config[legend]
      *  ref:`GeoExt.LegendPanel` The legend to include. If not provided, the
      *  dialog won't have an option to include the legend.
      */
     legend: null,
-    
+
     /** api: config[includeLegend]
      *  ``Boolean`` Initial status of the "Include legend?" checkbox. Will be
      *  ignored if :ref:`GeoExt.ux.PrintPreview.legend` is not provided.
      */
     includeLegend: false,
-    
+
     /** api: config[mapTitle]
      *  ``String`` An optional title to set for the mapTitle field when
      *  creating the dialog.
      */
     mapTitle: null,
-    
+
     /** api: config[comment]
      *  ``String`` An optional comment to set for the comment field when
      *  creating the dialog.
      */
     comment: null,
-    
+
     /** api: config[addMapOverlay]
      *  ``Boolean`` Set to false if no map overlay with scale, scale selector
      *  and north arrow should be added. Default is true.
      */
     addMapOverlay: true,
-    
+
     /** api: config[busyMask]
      *  ``Ext.LoadMask`` A LoadMask to use while the print document is
      *  prepared. Optional, will be auto-created with ``creatingPdfText` if
      *  not provided.
      */
-    
+
     /** private: property[busyMask]
      *  ``Ext.LoadMask``
      */
@@ -132,7 +132,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
      *  ``Ext.form.FormPanel`` The form for this dialog.
      */
     form: null,
-    
+
     /** private: property[autoEl]
      *  override
      */
@@ -142,7 +142,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
      *  override
      */
     cls: "x-panel-body x-panel-body-noheader",
-    
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -162,7 +162,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
         }
         this.sourceMap = this.printMapPanel.sourceMap;
         this.printProvider = this.printMapPanel.printProvider;
-        
+
         this.form = this.createForm();
 
         if (!this.items) {
@@ -180,7 +180,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
         });
 
         GeoExt.ux.PrintPreview.superclass.initComponent.call(this);
-        
+
         this.addMapOverlay && this.printMapPanel.add(this.createMapOverlay());
 
         this.printMapPanel.on({
@@ -204,7 +204,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
             scope: this
         });
     },
-    
+
     /** private: method[createToolbar]
      *  :return: ``Ext.Toolbar``
      */
@@ -257,7 +257,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
             items: items
         };
     },
-    
+
     /** private: method[createForm]
      *  :return: ``Ext.form.FormPanel``
      */
@@ -275,7 +275,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
                 printProvider: this.printProvider
             })
         };
-        
+
         var legendCheckbox = null;
         if (this.legend) {
             legendCheckbox = new Ext.form.Checkbox({
@@ -290,7 +290,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
                 scope: this
             });
         }
-        
+
         return new Ext.form.FormPanel({
             autoHeight: true,
             border: false,
@@ -403,7 +403,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
         }
         this.resumeEvents();
     },
-    
+
     /** private: method[beforeDestroy]
      */
     beforeDestroy: function() {
@@ -414,7 +414,7 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
         this.printMapPanel.un("resize", this.updateSize, this);
         GeoExt.ux.PrintPreview.superclass.beforeDestroy.apply(this, arguments);
     }
-    
+
 });
 
 /** api: xtype = gxux_printpreview */

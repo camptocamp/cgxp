@@ -62,7 +62,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
     /** api: config[recenteringZoom]
      *  ``Number``
      *
-     *  Zoomlevel to use when recentering to the user's location. Default is 11. 
+     *  Zoomlevel to use when recentering to the user's location. Default is 11.
      */
     recenteringZoom: 11,
 
@@ -70,13 +70,13 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
      *  ``Boolean``
      *
      *  If true, a circle is displayed around the user's position,
-     *  showing the accuracy of the geolocation. Default is false. 
+     *  showing the accuracy of the geolocation. Default is false.
      */
     drawAccuracy: false,
 
     /** api: config[stylePoint]
-    * ``Object`` 
-    * 
+    * ``Object``
+    *
     * Feature style hash to apply to the
     * position marker, default is {pointRadius: 4}.
     */
@@ -85,7 +85,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** api: config[styleAccuracy]
-    * ``Object`` 
+    * ``Object``
     *
     * Feature style hash to apply to the
     * accuracy circle, default is
@@ -135,7 +135,7 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
                         marker.geometry = center;
                         self.layer.addFeatures([circle, marker]);
                     }
-                }); 
+                });
             },
             scope: this
         });

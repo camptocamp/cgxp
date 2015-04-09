@@ -199,7 +199,7 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     showTreesLayer: null,
 
     /** api: property[kmlList]
-     *  List to store kml strings to be able to load them into GoogleEarth 
+     *  List to store kml strings to be able to load them into GoogleEarth
      *  when it is ready.
      */
     kmlList: [],
@@ -305,8 +305,8 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[loadingChecker]
-     *  Check if the east panel, which is shared between GoogleEarth and Streetview, 
-     *  is correctly cleaned up (ie. give time to the other tool to uninitialize 
+     *  Check if the east panel, which is shared between GoogleEarth and Streetview,
+     *  is correctly cleaned up (ie. give time to the other tool to uninitialize
      *  the panel content before creating the new content)
      */
     loadingChecker: function() {
@@ -419,13 +419,13 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.addControl(this.googleEarthViewControl);
 
         this.outputTarget.add(this.intermediateContainer);
-        
+
         this.intermediateContainer.add(this.googleEarthPanel);
         this.intermediateContainer.setSize(this.size, 0);
         this.intermediateContainer.setVisible(true);
 
         /* Marked as not rendered in order to force the rendering of the component.
-           Otherwise the panel is not rendered correctly when switching between 
+           Otherwise the panel is not rendered correctly when switching between
            GoogleEarth and StreetView. */
         this.outputTarget.layout.rendered = false;
 

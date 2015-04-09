@@ -160,7 +160,7 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
                 var left = parseFloat(coords[1].replace("'", ""));
                 var right = parseFloat(coords[2].replace("'", ""));
 
-                this.position = this.autoProjection.tryProjection([left, right]); 
+                this.position = this.autoProjection.tryProjection([left, right]);
                 if (this.position === null) {
                     this.position = this.autoProjection.tryProjection([right, left]);
                 }

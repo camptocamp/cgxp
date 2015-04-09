@@ -1,7 +1,7 @@
 
 GeoExt.Lang.add("es", {
 
-    "GeoExt.ux.PrintPreview.prototype": {   
+    "GeoExt.ux.PrintPreview.prototype": {
         paperSizeText: "Tamaño:",
         resolutionText: "Resolución:",
         printText: "Imprimir",
@@ -10,5 +10,5 @@ GeoExt.Lang.add("es", {
         emptyCommentText: "Escriba aquí sus comentarios.",
         creatingPdfText: "Creando PDF..."
     }
-    
+
 });

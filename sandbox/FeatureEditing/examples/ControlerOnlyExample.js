@@ -19,7 +19,7 @@ Ext.onReady(function() {
         styler: 'combobox',
         popupOptions: {anchored: false, unpinnable: false, draggable: true}
     });
-    
+
     new Ext.Panel({
         renderTo: "content",
         layout: "border",

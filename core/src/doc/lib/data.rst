@@ -9,5 +9,5 @@ The :mod:`cgxp.data` module contains data classes that are used to use the Routi
 .. toctree::
    :maxdepth: 1
    :glob:
-   
+
    data/*

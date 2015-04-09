@@ -39,24 +39,24 @@ Ext.namespace("cgxp");
  *
  *  Used state:
  *
- *  ``map_x``: 
- *   - Horizontal coordinate (depending on used SRID) as center of the map. 
- *   - Example: ``&map_x=654321`` 
+ *  ``map_x``:
+ *   - Horizontal coordinate (depending on used SRID) as center of the map.
+ *   - Example: ``&map_x=654321``
  *
- *  ``map_y``: 
- *   - Vertical coordinate (depending on used SRID) as center of the map. 
- *   - Example: ``&map_y=123456`` 
- * 
- *  ``map_zoom``: 
- *   - Zoom level of the map. 
+ *  ``map_y``:
+ *   - Vertical coordinate (depending on used SRID) as center of the map.
+ *   - Example: ``&map_y=123456``
+ *
+ *  ``map_zoom``:
+ *   - Zoom level of the map.
  *   - Example: ``&map_zoom=5``
  *
- *  ``map_crosshair``: 
+ *  ``map_crosshair``:
  *   - if true defined a point at the center of the screen with
- *     the style crosshairStyle (read only). 
- *   - Example: ``&map_crosshair=true`` or ``&map_crosshair=1`` 
- * 
- *  ``map_tooltip``: 
+ *     the style crosshairStyle (read only).
+ *   - Example: ``&map_crosshair=true`` or ``&map_crosshair=1``
+ *
+ *  ``map_tooltip``:
  *   - text that will be open in a popup at the center of the screen (readonly).
  *   - Example: ``&map_tooltip=sometext``
  *
@@ -70,9 +70,9 @@ Ext.namespace("cgxp");
  *      full text search
  *      centering map in api and xapi
  *      adding marker in api
- *  
+ *
  *  Sample code showing how to configure the mappanel for autoprojection.
- *  Here, the application is in 21781, the restricted extent corresponds to 
+ *  Here, the application is in 21781, the restricted extent corresponds to
  *  Swiss boundaries, and supported projection are 21781 and 2056.
  *
  *  .. code-block:: javascript

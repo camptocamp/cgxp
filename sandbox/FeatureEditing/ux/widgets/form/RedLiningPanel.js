@@ -7,9 +7,9 @@ Ext.namespace("GeoExt.ux.form");
 
 /** api: example
  *  Sample code to create a RedLiningPanel object
- * 
+ *
  *  .. code-block:: javascript
- *     
+ *
  *      var redLiningPanel = new GeoExt.ux.form.RedLiningPanel({
  *          title: "RedLining Panel"
  *          map: map
@@ -27,7 +27,7 @@ Ext.namespace("GeoExt.ux.form");
 
 /** api: constructor
  *  .. class:: RedLiningPanel
- * 
+ *
  *  Create a FeatureEditingPanel automatically linked to a cosmetic vector layer
  *  object.  Features created automatically have the "title" and "description"
  *  attributes.

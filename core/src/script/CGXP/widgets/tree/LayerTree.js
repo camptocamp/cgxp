@@ -46,15 +46,15 @@ Ext.namespace("cgxp.tree");
  *  Used state :
  *
  *  ``tree_group_opacity_[my_group]``:
- *   - Opacity of the given group (number between 0 an 1). 
- *   - Example: ``&tree_group_opacity_myAlmostInvisibleGroup=0.1`` 
+ *   - Opacity of the given group (number between 0 an 1).
+ *   - Example: ``&tree_group_opacity_myAlmostInvisibleGroup=0.1``
  *
- *  ``tree_groups``: 
+ *  ``tree_groups``:
  *   - Open and display the given theme. Use commas (%2c) to specify more than one theme.
- *     The first theme will be on the top, the second will be at the second position, and so on. 
- *   - Example: (%20 is space char.): ``&tree_groups=MyTopTheme%2cMy%20second%20theme`` 
- * 
- *  ``tree_group_layers_[my_group]``: 
+ *     The first theme will be on the top, the second will be at the second position, and so on.
+ *   - Example: (%20 is space char.): ``&tree_groups=MyTopTheme%2cMy%20second%20theme``
+ *
+ *  ``tree_group_layers_[my_group]``:
  *   - Open and display the given group. Use commas (%2c) to specify more than one group.
  *   - Example: ``&tree_group_opacity_myGroup=a_Layer%2can_another_layer``
  *

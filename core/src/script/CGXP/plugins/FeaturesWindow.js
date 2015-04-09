@@ -306,14 +306,14 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         return detail.join('');
     },
 
-    /** api: method[onRowExpand] 
+    /** api: method[onRowExpand]
      *  Called when a row is expanded. Do nothing by default.
      *  :arg expander: ``Object`` RowExpander object
      *  :arg record: ``Ext.data.Record`` Record for the selected row
      *  :arg body: ``Object`` Body element for the secondary row
      *  :arg rowIndex: ``Integer`` The current row index
      */
-    onRowExpand: function(expander, record, body, rowIndex) {},    
+    onRowExpand: function(expander, record, body, rowIndex) {},
 
     /** private: method[extendFeaturesAttributes]
      *

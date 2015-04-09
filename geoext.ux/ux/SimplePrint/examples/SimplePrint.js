@@ -7,7 +7,7 @@ Ext.onReady(function() {
         // For asynchronous requests, we would set method to "POST".
         method: "GET",
         //method: "POST",
-        
+
         // capabilities from script tag in Printing.html. For asynchonous
         // loading, we would configure url (and autoLoad) instead of
         // capabilities.
@@ -15,7 +15,7 @@ Ext.onReady(function() {
         //url: "/geoserver/pdf/",
         //autoLoad: true
     });
-    
+
     // create a vector layer, which will also be printed.
     var redline = new OpenLayers.Layer.Vector("vector", {
         styleMap: new OpenLayers.StyleMap({
@@ -42,7 +42,7 @@ Ext.onReady(function() {
         new Vec(geom("LINESTRING(14 48, 14 47, 15 48, 14 49, 16 49)")),
         new Vec(geom("POINT(16 49)"))
     ]);
-    
+
     // Create a vector layer for the print page extent and handles.
     // We only do this because we want fancy styles for the handles,
     // otherwise SimplePrint's PrintExtent would auto-create one for us.
@@ -70,7 +70,7 @@ Ext.onReady(function() {
             }
         })
     )});
-    
+
     // a simple print form
     printForm = new GeoExt.ux.SimplePrint({
         mapPanel: mapPanel,
@@ -85,13 +85,13 @@ Ext.onReady(function() {
         width: 200
     });
 
-   
+
     var formCt = new Ext.Panel({
         layout: "fit",
         region: "east",
         width: 200
     });
-    
+
     new Ext.Panel({
         renderTo: "content",
         layout: "border",
@@ -99,7 +99,7 @@ Ext.onReady(function() {
         height: 350,
         items: [mapPanel, formCt]
     });
-    
+
     // This function is to called once the print capabilities
     // are loaded. So if the print provider is configured with
     // a URL instead of capabilities then this function must

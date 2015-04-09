@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2010 The Open Source Geospatial Foundation
- * 
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -90,7 +90,7 @@ if (Ext.ux.StatusBar) {
         },
 
         /** private: method[onBeforeGetCapabilities]
-         *  Called when a "beforegetcapabilities" event is fired by the 
+         *  Called when a "beforegetcapabilities" event is fired by the
          *  :class:`GeoExt.ux.WMSBrowser` widget.  Set the status bar to "busy".
          */
         onBeforeGetCapabilities: function() {
@@ -98,7 +98,7 @@ if (Ext.ux.StatusBar) {
         },
 
         /** private: method[onGetCapabilitiesSuccess]
-         *  Called when a "getcapabilitiessuccess" event is fired by the 
+         *  Called when a "getcapabilitiessuccess" event is fired by the
          *  :class:`GeoExt.ux.WMSBrowser` widget.  Shows the according success
          *  message.
          */
@@ -111,7 +111,7 @@ if (Ext.ux.StatusBar) {
         },
 
         /** private: method[onGetCapabilitiesFail]
-         *  Called when a "getcapabilitiessuccess" event is fired by the 
+         *  Called when a "getcapabilitiessuccess" event is fired by the
          *  :class:`GeoExt.ux.WMSBrowser` widget.  Shows the according failure
          *  message.
          */
@@ -126,7 +126,7 @@ if (Ext.ux.StatusBar) {
         /** private: method[onGenericError]
          *  :param message: ``String``  The error message sent by the event.
          *
-         *  Called when a "genericerror" event is fired by the 
+         *  Called when a "genericerror" event is fired by the
          *  :class:`GeoExt.ux.WMSBrowser` widget.  Shows the message sent by
          *  the event.
          */
@@ -139,7 +139,7 @@ if (Ext.ux.StatusBar) {
         },
 
         /** private: method[onLayerAdded]
-         *  Called when a "layeradded" event is fired by the 
+         *  Called when a "layeradded" event is fired by the
          *  :class:`GeoExt.ux.WMSBrowser` widget.  Shows the according success
          *  message.
          */

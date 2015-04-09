@@ -3,12 +3,12 @@ Index: KML.js
 --- KML.js	(revision 9859)
 +++ KML.js	(working copy)
 @@ -15,45 +15,45 @@
- 
+
  /**
   * Class: OpenLayers.Format.KML
 - * Read/Wite KML. Create a new instance with the <OpenLayers.Format.KML>
-- *     constructor. 
-- * 
+- *     constructor.
+- *
 + * Read/Write KML. Create a new instance with the <OpenLayers.Format.KML>
 + *     constructor.
 + *
@@ -16,38 +16,38 @@ Index: KML.js
   *  - <OpenLayers.Format.XML>
   */
  OpenLayers.Format.KML = OpenLayers.Class(OpenLayers.Format.XML, {
--    
+-
 +
      /**
       * APIProperty: kmlns
       * {String} KML Namespace to use. Defaults to 2.0 namespace.
       */
      kmlns: "http://earth.google.com/kml/2.0",
--    
--    /** 
+-
+-    /**
 +
 +    /**
       * APIProperty: placemarksDesc
       * {String} Name of the placemarks.  Default is "No description available."
       */
      placemarksDesc: "No description available",
--    
--    /** 
+-
+-    /**
 +
 +    /**
       * APIProperty: foldersName
       * {String} Name of the folders.  Default is "OpenLayers export."
       */
      foldersName: "OpenLayers export",
--    
--    /** 
+-
+-    /**
 +
 +    /**
       * APIProperty: foldersDesc
       * {String} Description of the folders. Default is "Exported on [date]."
       */
      foldersDesc: "Exported on " + new Date(),
--    
+-
 +
      /**
       * APIProperty: extractAttributes
@@ -55,7 +55,7 @@ Index: KML.js
       *           Extracting styleUrls requires this to be set to true
       */
      extractAttributes: true,
--    
+-
 +
      /**
       * Property: extractStyles
@@ -64,41 +64,41 @@ Index: KML.js
       *           set to true
       */
      extractStyles: false,
--    
+-
 +
      /**
       * Property: internalns
       * {String} KML Namespace to use -- defaults to the namespace of the
--     *     Placemark node being parsed, but falls back to kmlns. 
+-     *     Placemark node being parsed, but falls back to kmlns.
 +     *     Placemark node being parsed, but falls back to kmlns.
       */
      internalns: null,
- 
+
      /**
       * Property: features
       * {Array} Array of features
--     *     
+-     *
 +     *
       */
      features: null,
- 
+
      /**
       * Property: styles
       * {Object} Storage of style objects
--     *     
+-     *
 +     *
       */
      styles: null,
--    
+-
 +
      /**
       * Property: styleBaseUrl
       * {String}
 @@ -98,7 +98,7 @@
- 
+
      /**
       * APIProperty: maxDepth
--     * {Integer} Maximum depth for recursive loading external KML URLs 
+-     * {Integer} Maximum depth for recursive loading external KML URLs
 +     * {Integer} Maximum depth for recursive loading external KML URLs
       *           Defaults to 0: do no external fetching
       */
@@ -115,12 +115,12 @@ Index: KML.js
          };
          OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);
      },
- 
+
      /**
       * APIMethod: read
--     * Read data from a string, and return a list of features. 
--     * 
--     * Parameters: 
+-     * Read data from a string, and return a list of features.
+-     *
+-     * Parameters:
 +     * Read data from a string, and return a list of features.
 +     *
 +     * Parameters:
@@ -135,16 +135,16 @@ Index: KML.js
 -        this.fetched  = {};
 +        this.styles = {};
 +        this.fetched = {};
- 
-         // Set default options 
+
+         // Set default options
          var options = {
 @@ -151,9 +153,9 @@
- 
+
      /**
       * Method: parseData
--     * Read data from a string, and return a list of features. 
--     * 
--     * Parameters: 
+-     * Read data from a string, and return a list of features.
+-     *
+-     * Parameters:
 +     * Read data from a string, and return a list of features.
 +     *
 +     * Parameters:
@@ -159,45 +159,45 @@ Index: KML.js
 +        if (typeof data == "string") {
              data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);
          }
- 
+
          // Loop throught the following node types in this order and
-         // process the nodes found 
+         // process the nodes found
          var types = ["Link", "NetworkLink", "Style", "StyleMap", "Placemark"];
 -        for(var i=0, len=types.length; i<len; ++i) {
 +        for (var i = 0, len = types.length; i < len; ++i) {
              var type = types[i];
- 
+
              var nodes = this.getElementsByTagNameNS(data, "*", type);
- 
+
              // skip to next type if no nodes are found
--            if(nodes.length == 0) { 
+-            if(nodes.length == 0) {
 +            if (nodes.length == 0) {
                  continue;
              }
- 
+
 @@ -204,21 +206,21 @@
                      break;
              }
          }
--        
+-
 +
          return this.features;
      },
- 
+
      /**
       * Method: parseLinks
       * Finds URLs of linked KML documents and fetches them
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * nodes   - {Array} of {DOMElement} data to read/parse.
       * options - {Object} Hash of options
--     * 
+-     *
 +     *
       */
      parseLinks: function(nodes, options) {
--        
+-
 +
          // Fetch external links <NetworkLink> and <Link>
          // Don't do anything if we have reached our maximum depth for recursion
@@ -205,7 +205,7 @@ Index: KML.js
 @@ -229,15 +231,15 @@
          var newOptions = OpenLayers.Util.extend({}, options);
          newOptions.depth++;
- 
+
 -        for(var i=0, len=nodes.length; i<len; i++) {
 +        for (var i = 0, len = nodes.length; i < len; i++) {
              var href = this.parseProperty(nodes[i], "*", "href");
@@ -216,21 +216,21 @@ Index: KML.js
                  if (data) {
                      this.parseData(data, newOptions);
                  }
--            } 
+-            }
 +            }
          }
- 
+
      },
 @@ -245,10 +247,10 @@
      /**
       * Method: fetchLink
       * Fetches a URL and returns the result
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * href  - {String} url to be fetched
--     * 
+-     *
 +     *
       */
      fetchLink: function(href) {
@@ -239,13 +239,13 @@ Index: KML.js
       * Method: parseStyles
       * Looks for <Style> nodes in the data and parses them
       * Also parses <StyleMap> nodes, but only uses the 'normal' key
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * nodes    - {Array} of {DOMElement} data to read/parse.
       * options  - {Object} Hash of options
--     * 
+-     *
 +     *
       */
      parseStyles: function(nodes, options) {
@@ -255,7 +255,7 @@ Index: KML.js
 -            if(style) {
 +            if (style) {
                  styleName = (options.styleBaseUrl || "") + "#" + style.id;
--                
+-
 +
                  this.styles[styleName] = style;
              }
@@ -264,53 +264,53 @@ Index: KML.js
       * Method: parseStyle
       * Parses the children of a <Style> node and builds the style hash
       * accordingly
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * node - {DOMElement} <Style> node
--     * 
+-     *
 +     *
       */
      parseStyle: function(node) {
          var style = {};
--        
+-
 +
          var types = ["LineStyle", "PolyStyle", "IconStyle", "BalloonStyle"];
          var type, nodeList, geometry, parser;
 -        for(var i=0, len=types.length; i<len; ++i) {
 +        for (var i = 0, len = types.length; i < len; ++i) {
              type = types[i];
--            styleTypeNode = this.getElementsByTagNameNS(node, 
+-            styleTypeNode = this.getElementsByTagNameNS(node,
 -                                                   "*", type)[0];
--            if(!styleTypeNode) { 
+-            if(!styleTypeNode) {
 +            styleTypeNode = this.getElementsByTagNameNS(node,
 +                    "*", type)[0];
 +            if (!styleTypeNode) {
                  continue;
              }
- 
+
 @@ -306,19 +308,19 @@
                      var color = this.parseProperty(styleTypeNode, "*", "color");
                      if (color) {
                          var matches = (color.toString()).match(
 -                                                         this.regExes.kmlColor);
 +                                this.regExes.kmlColor);
- 
+
                          // transparency
                          var alpha = matches[1];
                          style["strokeOpacity"] = parseInt(alpha, 16) / 255;
- 
+
                          // rgb colors (google uses bgr)
--                        var b = matches[2]; 
--                        var g = matches[3]; 
--                        var r = matches[4]; 
+-                        var b = matches[2];
+-                        var g = matches[3];
+-                        var r = matches[4];
 +                        var b = matches[2];
 +                        var g = matches[3];
 +                        var r = matches[4];
                          style["strokeColor"] = "#" + r + g + b;
                      }
--                    
+-
 +
                      var width = this.parseProperty(styleTypeNode, "*", "width");
                      if (width) {
@@ -321,15 +321,15 @@ Index: KML.js
                          var matches = (color.toString()).match(
 -                                                         this.regExes.kmlColor);
 +                                this.regExes.kmlColor);
- 
+
                          // transparency
                          var alpha = matches[1];
                          style["fillOpacity"] = parseInt(alpha, 16) / 255;
- 
+
                          // rgb colors (google uses bgr)
--                        var b = matches[2]; 
--                        var g = matches[3]; 
--                        var r = matches[4]; 
+-                        var b = matches[2];
+-                        var g = matches[3];
+-                        var r = matches[4];
 +                        var b = matches[2];
 +                        var g = matches[3];
 +                        var r = matches[4];
@@ -341,32 +341,32 @@ Index: KML.js
                      if (fill == "0") {
                          style["fillColor"] = "none";
                      }
--                   
+-
 +
                      break;
                  case "iconstyle":
                      // set scale
--                    var scale = parseFloat(this.parseProperty(styleTypeNode, 
+-                    var scale = parseFloat(this.parseProperty(styleTypeNode,
 -                                                          "*", "scale") || 1);
--  
+-
 +                    var scale = parseFloat(this.parseProperty(styleTypeNode,
 +                            "*", "scale") || 1);
 +
                      // set default width and height of icon
                      var width = 32 * scale;
                      var height = 32 * scale;
- 
--                    var iconNode = this.getElementsByTagNameNS(styleTypeNode, 
--                                               "*", 
+
+-                    var iconNode = this.getElementsByTagNameNS(styleTypeNode,
+-                                               "*",
 -                                               "Icon")[0];
 +                    var iconNode = this.getElementsByTagNameNS(styleTypeNode,
 +                            "*",
 +                            "Icon")[0];
                      if (iconNode) {
                          var href = this.parseProperty(iconNode, "*", "href");
--                        if (href) {                                                   
+-                        if (href) {
 +                        if (href) {
- 
+
                              var w = this.parseProperty(iconNode, "*", "w");
                              var h = this.parseProperty(iconNode, "*", "h");
 @@ -371,12 +373,12 @@
@@ -379,42 +379,42 @@ Index: KML.js
                                  h = 64;
                                  scale = scale / 2;
                              }
--                                
+-
 +
                              // if only dimension is defined, make sure the
                              // other one has the same value
                              w = w || h;
 @@ -399,19 +401,19 @@
-                             // and request the appropriate icon from the 
+                             // and request the appropriate icon from the
                              // google maps website
                              var matches = href.match(this.regExes.kmlIconPalette);
 -                            if (matches)  {
 +                            if (matches) {
                                  var palette = matches[1];
                                  var file_extension = matches[2];
- 
+
                                  var x = this.parseProperty(iconNode, "*", "x");
                                  var y = this.parseProperty(iconNode, "*", "y");
- 
+
 -                                var posX = x ? x/32 : 0;
 -                                var posY = y ? (7 - y/32) : 7;
 +                                var posX = x ? x / 32 : 0;
 +                                var posY = y ? (7 - y / 32) : 7;
- 
+
                                  var pos = posY * 8 + posX;
--                                href = "http://maps.google.com/mapfiles/kml/pal" 
+-                                href = "http://maps.google.com/mapfiles/kml/pal"
 -                                     + palette + "/icon" + pos + file_extension;
 +                                href = "http://maps.google.com/mapfiles/kml/pal"
 +                                        + palette + "/icon" + pos + file_extension;
                              }
- 
+
                              style["graphicOpacity"] = 1; // fully opaque
 @@ -422,9 +424,9 @@
- 
- 
+
+
                      // hotSpots define the offset for an Icon
--                    var hotSpotNode = this.getElementsByTagNameNS(styleTypeNode, 
--                                               "*", 
+-                    var hotSpotNode = this.getElementsByTagNameNS(styleTypeNode,
+-                                               "*",
 -                                               "hotSpot")[0];
 +                    var hotSpotNode = this.getElementsByTagNameNS(styleTypeNode,
 +                            "*",
@@ -430,9 +430,9 @@ Index: KML.js
 +                            style["graphicYOffset"] = -height * (1 - y) + 1;
                          }
                      }
- 
+
 @@ -458,10 +460,10 @@
- 
+
                  case "balloonstyle":
                      var balloonStyle = OpenLayers.Util.getXmlNodeValue(
 -                                            styleTypeNode);
@@ -448,53 +448,53 @@ Index: KML.js
       * Method: parseStyleMaps
       * Looks for <Style> nodes in the data and parses them
       * Also parses <StyleMap> nodes, but only uses the 'normal' key
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * nodes    - {Array} of {DOMElement} data to read/parse.
       * options  - {Object} Hash of options
--     * 
+-     *
 +     *
       */
      parseStyleMaps: function(nodes, options) {
          // Only the default or "normal" part of the StyleMap is processed now
          // To do the select or "highlight" bit, we'd need to change lots more
- 
+
 -        for(var i=0, len=nodes.length; i<len; i++) {
 +        for (var i = 0, len = nodes.length; i < len; i++) {
              var node = nodes[i];
--            var pairs = this.getElementsByTagNameNS(node, "*", 
+-            var pairs = this.getElementsByTagNameNS(node, "*",
 -                            "Pair");
 +            var pairs = this.getElementsByTagNameNS(node, "*",
 +                    "Pair");
- 
+
              var id = node.getAttribute("id");
 -            for (var j=0, jlen=pairs.length; j<jlen; j++) {
 +            for (var j = 0, jlen = pairs.length; j < jlen; j++) {
                  var pair = pairs[j];
-                 // Use the shortcut in the SLD format to quickly retrieve the 
-                 // value of a node. Maybe it's good to have a method in 
+                 // Use the shortcut in the SLD format to quickly retrieve the
+                 // value of a node. Maybe it's good to have a method in
 @@ -511,7 +513,7 @@
- 
+
                  if (styleUrl && key == "normal") {
                      this.styles[(options.styleBaseUrl || "") + "#" + id] =
 -                        this.styles[(options.styleBaseUrl || "") + styleUrl];
 +                    this.styles[(options.styleBaseUrl || "") + styleUrl];
                  }
- 
+
                  if (styleUrl && key == "highlight") {
 @@ -528,18 +530,18 @@
       * Method: parseFeatures
       * Loop through all Placemark nodes and parse them.
       * Will create a list of features
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * nodes    - {Array} of {DOMElement} data to read/parse.
       * options  - {Object} Hash of options
--     * 
+-     *
 +     *
       */
      parseFeatures: function(nodes, options) {
@@ -506,11 +506,11 @@ Index: KML.js
 -            if(feature) {
 +            var feature = this.parseFeature.apply(this, [featureNode]);
 +            if (feature) {
- 
-                 // Create reference to styleUrl 
+
+                 // Create reference to styleUrl
                  if (this.extractStyles && feature.attributes &&
 @@ -551,14 +553,14 @@
-                     // Make sure that <Style> nodes within a placemark are 
+                     // Make sure that <Style> nodes within a placemark are
                      // processed as well
                      var inlineStyleNode = this.getElementsByTagNameNS(featureNode,
 -                                                        "*",
@@ -536,9 +536,9 @@ Index: KML.js
 -        for(var i=0, len=order.length; i<len; ++i) {
 +        for (var i = 0, len = order.length; i < len; ++i) {
              type = order[i];
--            this.internalns = node.namespaceURI ? 
+-            this.internalns = node.namespaceURI ?
 -                    node.namespaceURI : this.kmlns;
--            nodeList = this.getElementsByTagNameNS(node, 
+-            nodeList = this.getElementsByTagNameNS(node,
 -                                                   this.internalns, type);
 -            if(nodeList.length > 0) {
 +            this.internalns = node.namespaceURI ?
@@ -552,9 +552,9 @@ Index: KML.js
 +                if (parser) {
                      geometry = parser.apply(this, [nodeList[0]]);
                      if (this.internalProjection && this.externalProjection) {
--                        geometry.transform(this.externalProjection, 
--                                           this.internalProjection); 
--                    }                       
+-                        geometry.transform(this.externalProjection,
+-                                           this.internalProjection);
+-                    }
 +                        geometry.transform(this.externalProjection,
 +                                this.internalProjection);
 +                    }
@@ -566,7 +566,7 @@ Index: KML.js
                  // stop looking for different geometry types
                  break;
 @@ -616,28 +618,28 @@
- 
+
          // construct feature (optionally with attributes)
          var attributes;
 -        if(this.extractAttributes) {
@@ -574,53 +574,53 @@ Index: KML.js
              attributes = this.parseAttributes(node);
          }
          var feature = new OpenLayers.Feature.Vector(geometry, attributes);
- 
+
          var fid = node.getAttribute("id") || node.getAttribute("name");
 -        if(fid != null) {
 +        if (fid != null) {
              feature.fid = fid;
          }
- 
+
          return feature;
--    },        
--    
+-    },
+-
 +    },
 +
      /**
       * Method: getStyle
       * Retrieves a style from a style hash using styleUrl as the key
--     * If the styleUrl doesn't exist yet, we try to fetch it 
+-     * If the styleUrl doesn't exist yet, we try to fetch it
 +     * If the styleUrl doesn't exist yet, we try to fetch it
       * Internet
--     * 
--     * Parameters: 
+-     *
+-     * Parameters:
 +     *
 +     * Parameters:
       * styleUrl  - {String} URL of style
--     * options   - {Object} Hash of options 
+-     * options   - {Object} Hash of options
 +     * options   - {Object} Hash of options
       *
       * Returns:
       * {Object}  - (reference to) Style hash
 @@ -651,10 +653,10 @@
          newOptions.styleBaseUrl = styleBaseUrl;
- 
-         // Fetch remote Style URLs (if not fetched before) 
--        if (!this.styles[styleUrl] 
--                && !OpenLayers.String.startsWith(styleUrl, "#") 
+
+         // Fetch remote Style URLs (if not fetched before)
+-        if (!this.styles[styleUrl]
+-                && !OpenLayers.String.startsWith(styleUrl, "#")
 +        if (!this.styles[styleUrl]
 +                && !OpenLayers.String.startsWith(styleUrl, "#")
                  && newOptions.depth <= this.maxDepth
 -                && !this.fetched[styleBaseUrl] ) {
 +                && !this.fetched[styleBaseUrl]) {
- 
+
              var data = this.fetchLink(styleBaseUrl);
              if (data) {
 @@ -667,14 +669,14 @@
          var style = OpenLayers.Util.extend({}, this.styles[styleUrl]);
          return style;
      },
--    
+-
 +
      /**
       * Property: parseGeometry
@@ -628,7 +628,7 @@ Index: KML.js
       *     on their type.
       */
      parseGeometry: {
--        
+-
 +
          /**
           * Method: parseGeometry.point
@@ -646,7 +646,7 @@ Index: KML.js
                  coordString = coordString.replace(this.regExes.removeSpace, "");
                  coords = coordString.split(",");
              }
- 
+
              var point = null;
 -            if(coords.length > 1) {
 +            if (coords.length > 1) {
@@ -663,7 +663,7 @@ Index: KML.js
              }
              return point;
          },
--        
+-
 +
          /**
           * Method: parseGeometry.linestring
@@ -678,7 +678,7 @@ Index: KML.js
 -            if(nodeList.length > 0) {
 +            if (nodeList.length > 0) {
                  var coordString = this.getChildValue(nodeList[0]);
- 
+
                  coordString = coordString.replace(this.regExes.trimSpace,
 -                                                  "");
 +                        "");
@@ -717,10 +717,10 @@ Index: KML.js
                      } else {
                          line = new OpenLayers.Geometry.LineString(points);
 @@ -764,7 +766,7 @@
- 
+
              return line;
          },
--        
+-
 +
          /**
           * Method: parseGeometry.polygon
@@ -751,7 +751,7 @@ Index: KML.js
              }
              return new OpenLayers.Geometry.Polygon(components);
          },
--        
+-
 +
          /**
           * Method: parseGeometry.multigeometry
@@ -779,28 +779,28 @@ Index: KML.js
              }
              return new OpenLayers.Geometry.Collection(parts);
          }
--        
+-
 +
      },
- 
+
      /**
 @@ -840,22 +842,22 @@
       */
      parseAttributes: function(node) {
          var attributes = {};
--       
+-
 +
          // Extended Data is parsed first.
          var edNodes = node.getElementsByTagName("ExtendedData");
          if (edNodes.length) {
              attributes = this.parseExtendedData(edNodes[0]);
          }
--        
+-
 +
          // assume attribute nodes are type 1 children with a type 3 or 4 child
          var child, grandchildren, grandchild;
          var children = node.childNodes;
- 
+
 -        for(var i=0, len=children.length; i<len; ++i) {
 +        for (var i = 0, len = children.length; i < len; ++i) {
              child = children[i];
@@ -829,7 +829,7 @@ Index: KML.js
                              attributes[name] = value;
                          }
                      }
--                } 
+-                }
 +                }
              }
          }
@@ -846,7 +846,7 @@ Index: KML.js
              var valueNode = data.getElementsByTagName("value");
              if (valueNode.length) {
                  ed['value'] = this.getChildValue(valueNode[0]);
--            }    
+-            }
 +            }
              var nameNode = data.getElementsByTagName("displayName");
              if (nameNode.length) {
@@ -864,12 +864,12 @@ Index: KML.js
              ed['displayName'] = key;
              attributes[key] = ed;
          }
--        
--        return attributes;    
+-
+-        return attributes;
 +
 +        return attributes;
      },
--    
+-
 +
      /**
       * Method: parseProperty
@@ -878,11 +878,11 @@ Index: KML.js
       * xmlNode    - {<DOMElement>}
       * namespace  - {String} namespace of the node to find
       * tagName    - {String} name of the property to parse
--     * 
+-     *
 +     *
       * Returns:
       * {String} The value for the requested property (defaults to null)
--     */    
+-     */
 +     */
      parseProperty: function(xmlNode, namespace, tagName) {
          var value;
@@ -891,16 +891,16 @@ Index: KML.js
          } catch(e) {
              value = null;
          }
--     
+-
 +
          return value;
--    },                                                              
+-    },
 +    },
- 
+
      /**
       * APIMethod: write
--     * Accept Feature Collection, and return a string. 
--     * 
+-     * Accept Feature Collection, and return a string.
+-     *
 +     * Accept Feature Collection, and return a string.
 +     *
       * Parameters:
@@ -934,7 +934,7 @@ Index: KML.js
      /**
       * Method: createFolderXML
       * Creates and returns a KML folder node
--     * 
+-     *
 +     *
       * Returns:
       * {DOMElement}
@@ -942,26 +942,26 @@ Index: KML.js
      createFolderXML: function() {
          // Folder name
          var folderName = this.createElementNS(this.kmlns, "name");
--        var folderNameText = this.createTextNode(this.foldersName); 
+-        var folderNameText = this.createTextNode(this.foldersName);
 +        var folderNameText = this.createTextNode(this.foldersName);
          folderName.appendChild(folderNameText);
- 
+
          // Folder description
--        var folderDesc = this.createElementNS(this.kmlns, "description");        
--        var folderDescText = this.createTextNode(this.foldersDesc); 
+-        var folderDesc = this.createElementNS(this.kmlns, "description");
+-        var folderDescText = this.createTextNode(this.foldersDesc);
 +        var folderDesc = this.createElementNS(this.kmlns, "description");
 +        var folderDescText = this.createTextNode(this.foldersDesc);
          folderDesc.appendChild(folderDescText);
- 
+
          // Folder
          var folder = this.createElementNS(this.kmlns, "Folder");
          folder.appendChild(folderName);
          folder.appendChild(folderDesc);
--        
+-
 +
          return folder;
      },
- 
+
      /**
 +     * Method: createDocumentXML
 +     * Creates and returns a KML document node
@@ -991,18 +991,18 @@ Index: KML.js
 +
 +    /**
       * Method: createPlacemarkXML
--     * Creates and returns a KML placemark node representing the given feature. 
--     * 
+-     * Creates and returns a KML placemark node representing the given feature.
+-     *
 +     * Creates and returns a KML placemark node representing the given feature.
 +     *
       * Parameters:
       * feature - {<OpenLayers.Feature.Vector>}
--     * 
+-     *
 +     *
       * Returns:
       * {DOMElement}
       */
--    createPlacemarkXML: function(feature) {        
+-    createPlacemarkXML: function(feature) {
 +    createPlacemarkXML: function(feature) {
          // Placemark name
          var placemarkName = this.createElementNS(this.kmlns, "name");
@@ -1010,14 +1010,14 @@ Index: KML.js
 -                    feature.attributes.name : feature.id;
 +                   feature.attributes.name : feature.id;
          placemarkName.appendChild(this.createTextNode(name));
- 
+
          // Placemark description
          var placemarkDesc = this.createElementNS(this.kmlns, "description");
          var desc = (feature.attributes.description) ?
 -                    feature.attributes.description : this.placemarksDesc;
 +                   feature.attributes.description : this.placemarksDesc;
          placemarkDesc.appendChild(this.createTextNode(desc));
--        
+-
 +
          // Placemark
          var placemarkNode = this.createElementNS(this.kmlns, "Placemark");
@@ -1027,7 +1027,7 @@ Index: KML.js
          }
          placemarkNode.appendChild(placemarkName);
          placemarkNode.appendChild(placemarkDesc);
- 
+
 +        // Optional Placemark styleUrl
 +        if (feature.attributes.styleUrl) {
 +            var placemarkStyleUrl = this.createElementNS(this.kmlns, "styleUrl");
@@ -1048,15 +1048,15 @@ Index: KML.js
 +
          // Geometry node (Point, LineString, etc. nodes)
          var geometryNode = this.buildGeometryNode(feature.geometry);
--        placemarkNode.appendChild(geometryNode);        
--        
+-        placemarkNode.appendChild(geometryNode);
+-
 +        placemarkNode.appendChild(geometryNode);
 +
          // TBD - deal with remaining (non name/description) attributes.
          return placemarkNode;
--    },    
+-    },
 +    },
- 
+
      /**
 +     * Method: createStyleXML
 +     * Creates and returns a KML style node representing the given feature.
@@ -1131,11 +1131,11 @@ Index: KML.js
 +    /**
       * Method: buildGeometryNode
       * Builds and returns a KML geometry node with the given geometry.
--     * 
+-     *
 +     *
       * Parameters:
       * geometry - {<OpenLayers.Geometry>}
--     * 
+-     *
 +     *
       * Returns:
       * {DOMElement}
@@ -1143,9 +1143,9 @@ Index: KML.js
      buildGeometryNode: function(geometry) {
          if (this.internalProjection && this.externalProjection) {
              geometry = geometry.clone();
--            geometry.transform(this.internalProjection, 
+-            geometry.transform(this.internalProjection,
 -                               this.externalProjection);
--        }                       
+-        }
 +            geometry.transform(this.internalProjection,
 +                    this.externalProjection);
 +        }
@@ -1162,7 +1162,7 @@ Index: KML.js
              kml.appendChild(this.buildCoordinatesNode(geometry));
              return kml;
          },
--        
+-
 +
          /**
           * Method: buildGeometry.multipoint
@@ -1171,7 +1171,7 @@ Index: KML.js
              kml.appendChild(this.buildCoordinatesNode(geometry));
              return kml;
          },
--        
+-
 +
          /**
           * Method: buildGeometry.multilinestring
@@ -1180,7 +1180,7 @@ Index: KML.js
              kml.appendChild(this.buildCoordinatesNode(geometry));
              return kml;
          },
--        
+-
 +
          /**
           * Method: buildGeometry.polygon
@@ -1202,7 +1202,7 @@ Index: KML.js
              }
              return kml;
          },
--        
+-
 +
          /**
           * Method: buildGeometry.multipolygon
@@ -1225,19 +1225,19 @@ Index: KML.js
       * Method: buildCoordinatesNode
       * Builds and returns the KML coordinates node with the given geometry
       * <coordinates>...</coordinates>
--     * 
+-     *
 +     *
       * Parameters:
       * geometry - {<OpenLayers.Geometry>}
--     * 
+-     *
 +     *
       * Return:
       * {DOMElement}
--     */     
+-     */
 +     */
      buildCoordinatesNode: function(geometry) {
          var coordinatesNode = this.createElementNS(this.kmlns, "coordinates");
--        
+-
 +
          var path;
          var points = geometry.components;
@@ -1256,17 +1256,17 @@ Index: KML.js
              // Point
              path = geometry.x + "," + geometry.y;
          }
--        
+-
 +
          var txtNode = this.createTextNode(path);
          coordinatesNode.appendChild(txtNode);
--        
+-
 +
          return coordinatesNode;
--    },    
+-    },
 +    },
- 
--    CLASS_NAME: "OpenLayers.Format.KML" 
+
+-    CLASS_NAME: "OpenLayers.Format.KML"
 +    /**
 +     * Method: color2KmlColor
 +     * Convert an opacity (from 0 to 1) and a colorcode (#ff2233) to a KML color code

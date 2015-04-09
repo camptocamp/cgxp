@@ -115,7 +115,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
      *  Default is 20
      */
     colorpickerWidth: 20,
-     
+
     /** api: config[layerTreeId]
      *  ``String``
      *  Id of the layertree tool.

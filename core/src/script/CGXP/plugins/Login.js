@@ -132,7 +132,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[ignoreExistingPermalink]
      *  ``Boolean``
-     *  if set to true, existing permalink in url are ignored and the permalink 
+     *  if set to true, existing permalink in url are ignored and the permalink
      *  corresponding to the up-to-date state of the application is used.
      *
      *  Default: false
@@ -143,14 +143,14 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      *  ``Boolean``
      *  if set to true, a menu is enabled, allowing the user to change his
      *  password.
-     * 
+     *
      *  Default: false
      */
     enablePasswordChange: false,
 
     /** api: config[forcePasswordChange]
      *  ``Boolean``
-     *  if set to true, display a message reminding the user to change his 
+     *  if set to true, display a message reminding the user to change his
      *  password (if he hasn't already).
      *  Require ``isPasswordChanged`` to be set.
      *
@@ -160,14 +160,14 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[loginFormTopCell]
      *  ``Ext.Component`` containing some HTML code to place above the form
-     *  of the login panel. Default is null. Not displayed in the password 
+     *  of the login panel. Default is null. Not displayed in the password
      *  change form.
      */
     loginFormTopCell: null,
 
     /** api: config[loginFormBottomCell]
      *  ``Ext.Component`` containing some HTML code to place below the form
-     *  of the login panel. Default is null. Not displayed in the password 
+     *  of the login panel. Default is null. Not displayed in the password
      *  change form.
      */
     loginFormBottomCell: null,
@@ -196,7 +196,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[toolbarItems]
      *  ``Array`` List of items shown in the toolbar for the login tool.
-     *  
+     *
      *  Default: empty array.
      */
     toolbarItems: [],
@@ -273,8 +273,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             window: this.loginWindow
-        }, this.actionConfig));        
-        
+        }, this.actionConfig));
+
         if (this.username) {
             // If available, add the username to the toolbar.
             this.toolbarItems.push(
@@ -475,7 +475,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 inputType: 'password',
                 width: 120,
                 allowBlank: false
-            }, 
+            },
             newPassword,
             newPasswordConfirm,
             {
@@ -538,9 +538,9 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                         window.external.AutoCompleteSaveForm(
                             this.loginForm.getForm().el.dom);
                     }
-                    /* this is needed to trigger the save password behaviour in the 
+                    /* this is needed to trigger the save password behaviour in the
                        browser, which only take into account normal form submit and
-                       not ajax form submit, so we submit the form a 2nd time just 
+                       not ajax form submit, so we submit the form a 2nd time just
                        to save the password */
                     if (this.mapMoved) {
                         this.loginForm.getForm().el.dom.action = this.getUrl();
@@ -567,7 +567,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      * otherwise get the permalink
      */
     getUrl: function() {
-        /* check if the current url is already a permalink (map_x exists) and 
+        /* check if the current url is already a permalink (map_x exists) and
            also check if all other other required parameters are set */
         var targetUrl;
         var currentUrl = window.location.href;
@@ -577,7 +577,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             return currentUrl;
         }
         // map_x is used as an indicator of existing permalink
-        if (!this.ignoreExistingPermalink && 
+        if (!this.ignoreExistingPermalink &&
               window.location.search.indexOf('map_x') > -1) {
             targetUrl = currentUrl;
         } else {

@@ -4056,26 +4056,26 @@
         </KeywordList>
         <SRS>EPSG:26713</SRS>
         <!--WKT definition of this CRS:
-PROJCS["NAD27 / UTM zone 13N", 
-  GEOGCS["NAD27", 
-    DATUM["North American Datum 1927", 
-      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]], 
-      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0], 
-      AUTHORITY["EPSG","6267"]], 
-    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-    UNIT["degree", 0.017453292519943295], 
-    AXIS["Geodetic longitude", EAST], 
-    AXIS["Geodetic latitude", NORTH], 
-    AUTHORITY["EPSG","4267"]], 
-  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]], 
-  PARAMETER["central_meridian", -105.0], 
-  PARAMETER["latitude_of_origin", 0.0], 
-  PARAMETER["scale_factor", 0.9996], 
-  PARAMETER["false_easting", 500000.0], 
-  PARAMETER["false_northing", 0.0], 
-  UNIT["m", 1.0], 
-  AXIS["Easting", EAST], 
-  AXIS["Northing", NORTH], 
+PROJCS["NAD27 / UTM zone 13N",
+  GEOGCS["NAD27",
+    DATUM["North American Datum 1927",
+      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]],
+      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0],
+      AUTHORITY["EPSG","6267"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic latitude", NORTH],
+    AUTHORITY["EPSG","4267"]],
+  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]],
+  PARAMETER["central_meridian", -105.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH],
   AUTHORITY["EPSG","26713"]]-->
         <LatLonBoundingBox minx="-103.8678559295459" miny="44.3738305876282" maxx="-103.63763045271456" maxy="44.434080121216205"/>
         <BoundingBox SRS="EPSG:26713" minx="590232.0" miny="4914096.0" maxx="608471.0" maxy="4920512.0"/>
@@ -4101,26 +4101,26 @@ PROJCS["NAD27 / UTM zone 13N",
         </KeywordList>
         <SRS>EPSG:26713</SRS>
         <!--WKT definition of this CRS:
-PROJCS["NAD27 / UTM zone 13N", 
-  GEOGCS["NAD27", 
-    DATUM["North American Datum 1927", 
-      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]], 
-      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0], 
-      AUTHORITY["EPSG","6267"]], 
-    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-    UNIT["degree", 0.017453292519943295], 
-    AXIS["Geodetic longitude", EAST], 
-    AXIS["Geodetic latitude", NORTH], 
-    AUTHORITY["EPSG","4267"]], 
-  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]], 
-  PARAMETER["central_meridian", -105.0], 
-  PARAMETER["latitude_of_origin", 0.0], 
-  PARAMETER["scale_factor", 0.9996], 
-  PARAMETER["false_easting", 500000.0], 
-  PARAMETER["false_northing", 0.0], 
-  UNIT["m", 1.0], 
-  AXIS["Easting", EAST], 
-  AXIS["Northing", NORTH], 
+PROJCS["NAD27 / UTM zone 13N",
+  GEOGCS["NAD27",
+    DATUM["North American Datum 1927",
+      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]],
+      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0],
+      AUTHORITY["EPSG","6267"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic latitude", NORTH],
+    AUTHORITY["EPSG","4267"]],
+  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]],
+  PARAMETER["central_meridian", -105.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH],
   AUTHORITY["EPSG","26713"]]-->
         <LatLonBoundingBox minx="-104.35148148738409" miny="44.25607459294179" maxx="-103.0750295549078" maxy="44.621871797688264"/>
         <BoundingBox SRS="EPSG:26713" minx="551796.8125" miny="4901896.0" maxx="652788.5625" maxy="4940954.0"/>
@@ -4146,26 +4146,26 @@ PROJCS["NAD27 / UTM zone 13N",
         </KeywordList>
         <SRS>EPSG:26713</SRS>
         <!--WKT definition of this CRS:
-PROJCS["NAD27 / UTM zone 13N", 
-  GEOGCS["NAD27", 
-    DATUM["North American Datum 1927", 
-      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]], 
-      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0], 
-      AUTHORITY["EPSG","6267"]], 
-    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-    UNIT["degree", 0.017453292519943295], 
-    AXIS["Geodetic longitude", EAST], 
-    AXIS["Geodetic latitude", NORTH], 
-    AUTHORITY["EPSG","4267"]], 
-  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]], 
-  PARAMETER["central_meridian", -105.0], 
-  PARAMETER["latitude_of_origin", 0.0], 
-  PARAMETER["scale_factor", 0.9996], 
-  PARAMETER["false_easting", 500000.0], 
-  PARAMETER["false_northing", 0.0], 
-  UNIT["m", 1.0], 
-  AXIS["Easting", EAST], 
-  AXIS["Northing", NORTH], 
+PROJCS["NAD27 / UTM zone 13N",
+  GEOGCS["NAD27",
+    DATUM["North American Datum 1927",
+      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]],
+      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0],
+      AUTHORITY["EPSG","6267"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic latitude", NORTH],
+    AUTHORITY["EPSG","4267"]],
+  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]],
+  PARAMETER["central_meridian", -105.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH],
   AUTHORITY["EPSG","26713"]]-->
         <LatLonBoundingBox minx="-103.8724583832911" miny="44.37729507653392" maxx="-103.63783694485966" maxy="44.48793465340441"/>
         <BoundingBox SRS="EPSG:26713" minx="589860.0" miny="4914479.0" maxx="608355.0" maxy="4926490.0"/>
@@ -4190,26 +4190,26 @@ PROJCS["NAD27 / UTM zone 13N",
         </KeywordList>
         <SRS>EPSG:26713</SRS>
         <!--WKT definition of this CRS:
-PROJCS["NAD27 / UTM zone 13N", 
-  GEOGCS["NAD27", 
-    DATUM["North American Datum 1927", 
-      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]], 
-      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0], 
-      AUTHORITY["EPSG","6267"]], 
-    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-    UNIT["degree", 0.017453292519943295], 
-    AXIS["Geodetic longitude", EAST], 
-    AXIS["Geodetic latitude", NORTH], 
-    AUTHORITY["EPSG","4267"]], 
-  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]], 
-  PARAMETER["central_meridian", -105.0], 
-  PARAMETER["latitude_of_origin", 0.0], 
-  PARAMETER["scale_factor", 0.9996], 
-  PARAMETER["false_easting", 500000.0], 
-  PARAMETER["false_northing", 0.0], 
-  UNIT["m", 1.0], 
-  AXIS["Easting", EAST], 
-  AXIS["Northing", NORTH], 
+PROJCS["NAD27 / UTM zone 13N",
+  GEOGCS["NAD27",
+    DATUM["North American Datum 1927",
+      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]],
+      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0],
+      AUTHORITY["EPSG","6267"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic latitude", NORTH],
+    AUTHORITY["EPSG","4267"]],
+  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]],
+  PARAMETER["central_meridian", -105.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH],
   AUTHORITY["EPSG","26713"]]-->
         <LatLonBoundingBox minx="-103.87778561486992" miny="44.37222288070277" maxx="-103.62277295981083" maxy="44.50211347714936"/>
         <BoundingBox SRS="EPSG:26713" minx="589443.0" miny="4913935.0" maxx="609526.75" maxy="4928059.5"/>
@@ -4235,14 +4235,14 @@ PROJCS["NAD27 / UTM zone 13N",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="-74.047185" miny="40.679648" maxx="-73.90782" maxy="40.882078"/>
         <BoundingBox SRS="EPSG:4326" minx="-74.047185" miny="40.679648" maxx="-73.90782" maxy="40.882078"/>
@@ -4268,14 +4268,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="-74.0118315772888" miny="40.70754683896324" maxx="-74.00857344353275" maxy="40.711945649065406"/>
         <BoundingBox SRS="EPSG:4326" minx="-74.0118315772888" miny="40.70754683896324" maxx="-74.00153046439813" maxy="40.719885123828675"/>
@@ -4300,14 +4300,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="-74.02722" miny="40.684221" maxx="-73.907005" maxy="40.878178"/>
         <BoundingBox SRS="EPSG:4326" minx="-74.02722" miny="40.684221" maxx="-73.907005" maxy="40.878178"/>
@@ -4335,14 +4335,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="16.935359954834" miny="-34.3737831115723" maxx="32.5472412109375" maxy="-22.7736549377441"/>
         <BoundingBox SRS="EPSG:4326" minx="16.935359954834" miny="-34.3737831115723" maxx="32.5472412109375" maxy="-22.7736549377441"/>
@@ -4375,14 +4375,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="16.4827766418457" miny="-46.9045600891113" maxx="37.9386329650879" maxy="-22.2347373962402"/>
         <BoundingBox SRS="EPSG:4326" minx="16.4827766418457" miny="-46.9045600891113" maxx="37.9386329650879" maxy="-22.2347373962402"/>
@@ -4407,14 +4407,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="16.4580821990967" miny="-34.8331336975098" maxx="32.8781242370605" maxy="-22.1271991729736"/>
         <BoundingBox SRS="EPSG:4326" minx="16.4580821990967" miny="-34.8331336975098" maxx="32.8781242370605" maxy="-22.1271991729736"/>
@@ -4439,14 +4439,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="16.4691715240479" miny="-34.8336486816406" maxx="32.8940010070801" maxy="-22.123929977417"/>
         <BoundingBox SRS="EPSG:4326" minx="16.4691715240479" miny="-34.8336486816406" maxx="32.8940010070801" maxy="-22.123929977417"/>
@@ -4470,14 +4470,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="145.19754" miny="-43.423512" maxx="148.27298000000002" maxy="-40.852802"/>
         <BoundingBox SRS="EPSG:4326" minx="147.2910004483" miny="-42.851001816890005" maxx="147.2910004483" maxy="-42.851001816890005"/>
@@ -4501,14 +4501,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="145.19754" miny="-43.423512" maxx="148.27298000000002" maxy="-40.852802"/>
         <BoundingBox SRS="EPSG:4326" minx="145.19754" miny="-43.423512" maxx="148.27298000000002" maxy="-40.852802"/>
@@ -4533,14 +4533,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="143.83482400000003" miny="-43.648056" maxx="148.47914100000003" maxy="-39.573891"/>
         <BoundingBox SRS="EPSG:4326" minx="143.83482400000003" miny="-43.648056" maxx="148.47914100000003" maxy="-39.573891"/>
@@ -4567,14 +4567,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="145.97161899999998" miny="-43.031944" maxx="147.219696" maxy="-41.775558"/>
         <BoundingBox SRS="EPSG:4326" minx="145.97161899999998" miny="-43.031944" maxx="147.219696" maxy="-41.775558"/>
@@ -4601,14 +4601,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="-124.731422" miny="24.955967" maxx="-66.969849" maxy="49.371735"/>
         <BoundingBox SRS="EPSG:4326" minx="-124.73142200000001" miny="24.955967" maxx="-66.969849" maxy="49.371735"/>
@@ -4633,14 +4633,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="19.649055480957" miny="59.9357719421387" maxx="31.5377140045166" maxy="69.9118957519531"/>
         <BoundingBox SRS="EPSG:4326" minx="19.649055480957" miny="59.9357719421387" maxx="31.5377140045166" maxy="69.9118957519531"/>
@@ -4664,14 +4664,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="19.5393085479736" miny="-2277.78344726562" maxx="2.971959E7" maxy="4927039.0"/>
         <BoundingBox SRS="EPSG:4326" minx="19.5393085479736" miny="-2277.78344726562" maxx="2.971959E7" maxy="4927039.0"/>
@@ -4695,14 +4695,14 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="19.5393085479736" miny="-2277.78344726562" maxx="2.971959E7" maxy="4927039.0"/>
         <BoundingBox SRS="EPSG:4326" minx="19.5393085479736" miny="-2277.78344726562" maxx="2.971959E7" maxy="4927039.0"/>
@@ -4726,26 +4726,26 @@ GEOGCS["WGS 84",
         </KeywordList>
         <SRS>EPSG:26713</SRS>
         <!--WKT definition of this CRS:
-PROJCS["NAD27 / UTM zone 13N", 
-  GEOGCS["NAD27", 
-    DATUM["North American Datum 1927", 
-      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]], 
-      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0], 
-      AUTHORITY["EPSG","6267"]], 
-    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-    UNIT["degree", 0.017453292519943295], 
-    AXIS["Geodetic longitude", EAST], 
-    AXIS["Geodetic latitude", NORTH], 
-    AUTHORITY["EPSG","4267"]], 
-  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]], 
-  PARAMETER["central_meridian", -105.0], 
-  PARAMETER["latitude_of_origin", 0.0], 
-  PARAMETER["scale_factor", 0.9996], 
-  PARAMETER["false_easting", 500000.0], 
-  PARAMETER["false_northing", 0.0], 
-  UNIT["m", 1.0], 
-  AXIS["Easting", EAST], 
-  AXIS["Northing", NORTH], 
+PROJCS["NAD27 / UTM zone 13N",
+  GEOGCS["NAD27",
+    DATUM["North American Datum 1927",
+      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]],
+      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0],
+      AUTHORITY["EPSG","6267"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic latitude", NORTH],
+    AUTHORITY["EPSG","4267"]],
+  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]],
+  PARAMETER["central_meridian", -105.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH],
   AUTHORITY["EPSG","26713"]]-->
         <LatLonBoundingBox minx="-103.87787616044085" miny="44.37286182959436" maxx="-103.62269938718721" maxy="44.50497230654195"/>
         <BoundingBox SRS="EPSG:26713" minx="589434.8125" miny="4914006.0" maxx="609527.25" maxy="4928377.0"/>
@@ -4769,14 +4769,14 @@ PROJCS["NAD27 / UTM zone 13N",
         </KeywordList>
         <SRS>EPSG:4326</SRS>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="19.8481521606445" miny="59.8213005065918" maxx="31.2861518859863" maxy="70.0596923828125"/>
         <BoundingBox SRS="EPSG:4326" minx="19.8481521606445" miny="59.8213005065918" maxx="31.2861518859863" maxy="70.0596923828125"/>
@@ -4800,14 +4800,14 @@ GEOGCS["WGS 84",
           <Keyword>arcGridSample_Coverage</Keyword>
         </KeywordList>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <SRS>EPSG:4326</SRS>
         <LatLonBoundingBox minx="-180.0" miny="-90.0" maxx="180.0" maxy="90.0"/>
@@ -4832,14 +4832,14 @@ GEOGCS["WGS 84",
           <Keyword>worldImageSample_Coverage</Keyword>
         </KeywordList>
         <!--WKT definition of this CRS:
-GEOGCS["WGS 84", 
-  DATUM["World Geodetic System 1984", 
-    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
-    AUTHORITY["EPSG","6326"]], 
-  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-  UNIT["degree", 0.017453292519943295], 
-  AXIS["Geodetic longitude", EAST], 
-  AXIS["Geodetic latitude", NORTH], 
+GEOGCS["WGS 84",
+  DATUM["World Geodetic System 1984",
+    SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]],
+    AUTHORITY["EPSG","6326"]],
+  PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+  UNIT["degree", 0.017453292519943295],
+  AXIS["Geodetic longitude", EAST],
+  AXIS["Geodetic latitude", NORTH],
   AUTHORITY["EPSG","4326"]]-->
         <SRS>EPSG:4326</SRS>
         <LatLonBoundingBox minx="-130.85168" miny="20.7052" maxx="-62.0054" maxy="54.1141"/>
@@ -4867,26 +4867,26 @@ GEOGCS["WGS 84",
           <Keyword>model</Keyword>
         </KeywordList>
         <!--WKT definition of this CRS:
-PROJCS["NAD27 / UTM zone 13N", 
-  GEOGCS["NAD27", 
-    DATUM["North American Datum 1927", 
-      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]], 
-      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0], 
-      AUTHORITY["EPSG","6267"]], 
-    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
-    UNIT["degree", 0.017453292519943295], 
-    AXIS["Geodetic longitude", EAST], 
-    AXIS["Geodetic latitude", NORTH], 
-    AUTHORITY["EPSG","4267"]], 
-  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]], 
-  PARAMETER["central_meridian", -105.0], 
-  PARAMETER["latitude_of_origin", 0.0], 
-  PARAMETER["scale_factor", 0.9996], 
-  PARAMETER["false_easting", 500000.0], 
-  PARAMETER["false_northing", 0.0], 
-  UNIT["m", 1.0], 
-  AXIS["Easting", EAST], 
-  AXIS["Northing", NORTH], 
+PROJCS["NAD27 / UTM zone 13N",
+  GEOGCS["NAD27",
+    DATUM["North American Datum 1927",
+      SPHEROID["Clarke 1866", 6378206.4, 294.9786982138982, AUTHORITY["EPSG","7008"]],
+      TOWGS84[-4.2, 135.4, 181.9, 0.0, 0.0, 0.0, 0.0],
+      AUTHORITY["EPSG","6267"]],
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]],
+    UNIT["degree", 0.017453292519943295],
+    AXIS["Geodetic longitude", EAST],
+    AXIS["Geodetic latitude", NORTH],
+    AUTHORITY["EPSG","4267"]],
+  PROJECTION["Transverse Mercator", AUTHORITY["EPSG","9807"]],
+  PARAMETER["central_meridian", -105.0],
+  PARAMETER["latitude_of_origin", 0.0],
+  PARAMETER["scale_factor", 0.9996],
+  PARAMETER["false_easting", 500000.0],
+  PARAMETER["false_northing", 0.0],
+  UNIT["m", 1.0],
+  AXIS["Easting", EAST],
+  AXIS["Northing", NORTH],
   AUTHORITY["EPSG","26713"]]-->
         <SRS>EPSG:26713</SRS>
         <LatLonBoundingBox minx="-103.87108701853181" miny="44.370187074132616" maxx="-103.62940739432703" maxy="44.5016011535299"/>

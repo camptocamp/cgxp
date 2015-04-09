@@ -164,7 +164,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     showRestrictedContentWarning: false,
 
     /* i18n */
-    restrictedContentWarning: "Some content you want to see is restricted to identified users only", 
+    restrictedContentWarning: "Some content you want to see is restricted to identified users only",
     restrictedContentWarningTitle: "Info",
 
     /** private: property[tree]
@@ -198,7 +198,7 @@ cgxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
         if (this.tree.restrictedContent) {
             if (this.showRestrictedContentWarning) {
-                Ext.MessageBox.alert(this.restrictedContentWarningTitle, 
+                Ext.MessageBox.alert(this.restrictedContentWarningTitle,
                                      this.restrictedContentWarning);
                 this.events.fireEvent('restrictedcontentnotdisplayed');
             }

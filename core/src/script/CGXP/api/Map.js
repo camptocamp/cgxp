@@ -47,9 +47,9 @@
  *  it is possible the SRS of an entered coordinates. This ability is called
  *  here "autoprojection". the restriction area must be defined such as
  *  any SRS in the list will be differiate without ambiguite.
- *  
+ *
  *  Sample code showing how to configure the mappanel for autoprojection.
- *  Here, the application is in 21781, the restricted extent corresponds to 
+ *  Here, the application is in 21781, the restricted extent corresponds to
  *  Swiss boundaries, and supported projection are 21781 and 2056.
  *
  *  The autoprojection will be enabled for API and XAPI.
@@ -243,7 +243,7 @@ cgxp.api.Map.prototype = {
     onViewerReady: function(viewer) {
         var i;
         this.map = viewer.mapPanel.map;
-        this.autoProjection = new OpenLayers.AutoProjection(viewer.mapPanel); 
+        this.autoProjection = new OpenLayers.AutoProjection(viewer.mapPanel);
 
         if (this.userConfig.center !== undefined) {
             var zoom = (this.userConfig.zoom === undefined ? 10 :
@@ -285,9 +285,9 @@ cgxp.api.Map.prototype = {
         OpenLayers.Util.extend(config, this.userConfig);
         this.map = new OpenLayers.Map(config);
         this.autoProjection = new OpenLayers.AutoProjection(this.map);
- 
+
         if (config.center !== undefined) {
-            this.recenter(config.center, config.zoom); 
+            this.recenter(config.center, config.zoom);
         }
 
         this.addOverlayLayers(this.userConfig.overlays);
@@ -401,9 +401,9 @@ cgxp.api.Map.prototype = {
         }
         this.map.setCenter(center, zoom);
     },
-    
+
     /** api: method[recenterOnBoundingBox]
-     *  allow to recenter on a bounding box 
+     *  allow to recenter on a bounding box
      *  :arg minx: ``Number`` minx coordinate
      *  :arg miny: ``Number`` miny coordinate
      *  :arg maxx: ``Number`` maxx coordinate
@@ -413,7 +413,7 @@ cgxp.api.Map.prototype = {
         var bbox = new OpenLayers.Bounds(minx, miny, maxx, maxy);
         this.map.zoomToExtent(bbox);
     },
- 
+
     /** api: method[recenterOnObjects]
      *  :arg layer: ``String`` The layer name
      *  :arg ids: ``Array(String)`` The ids of the feature to recenter on.
@@ -478,7 +478,7 @@ cgxp.api.Map.prototype = {
         if (options.position !== undefined){
             options.position = this.autoProjection.tryProjection(options.position);
         }
-       
+
         var lonlat = (options.position) ?
             new OpenLayers.LonLat(options.position[0], options.position[1]) :
             this.map.getCenter();
@@ -664,7 +664,7 @@ cgxp.api.Map.prototype = {
      *  :arg layerUrl: ``String`` The url the file to load
      *  :arg options: ``Object`` Options object with optional style properties
      *      for GPX layers: ``strokeColor``, ``strokeWidth``, ``strokeOpacity``
-     *      or optional parsing configuration for Text layers: ``attr`` (array 
+     *      or optional parsing configuration for Text layers: ``attr`` (array
      *      of fields identifiant)
      *      and optional callback functions for the HTTP request,
      *      ``success`` and ``error``.
@@ -749,7 +749,7 @@ cgxp.api.Map.prototype = {
                 var feature = evt.feature;
 
                 var attrList = options.attr || ['title', 'description'];
-                
+
                 var content = [];
                 for (var i = 0, l = attrList.length; i < l; i++) {
                     if (typeof feature.attributes[attrList[i]] != 'undefined') {
