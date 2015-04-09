@@ -12,4 +12,3 @@ describe('plugins.AddKMLFile', function() {
         });
     });
 });
-

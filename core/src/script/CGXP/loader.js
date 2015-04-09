@@ -154,7 +154,7 @@
     var len = jsfiles.length;
     var pieces = new Array(len);
 
-    for (var i=0; i<len; i++) {
+    for (var i = 0; i < len; i++) {
         pieces[i] = "<script src='" + path + "/" + jsfiles[i] + "'></script>";
     }
     document.write(pieces.join(""));
@@ -164,4 +164,3 @@
     }
 
 })();
-

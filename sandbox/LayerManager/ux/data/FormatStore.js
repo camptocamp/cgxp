@@ -50,6 +50,3 @@ GeoExt.ux.data.FormatStore = new Ext.data.SimpleStore({
     fields: ['shortName', 'openLayersClass', 'formatConfig'],
     data: GeoExt.ux.data.formats
 });
-
-
-

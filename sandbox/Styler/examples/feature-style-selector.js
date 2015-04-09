@@ -86,4 +86,3 @@ Ext.onReady(function() {
     mapPanel = Ext.getCmp("mappanel");
 
 });
-
