@@ -152,7 +152,7 @@ cgxp.RedLiningPanel = Ext.extend(
                     /* OL SVG renderer disable click event on label (svg's
                     pointerEvents is set to none) unless labelSelect
                     is true , and we need that to be able to edit label features */
-                    style['labelSelect'] = true;
+                    style.labelSelect = true;
                     style.label = feature.attributes.name;
                     feature.isLabel = true;
                     /* because OL URLCompressed ignore strokeOpacity(?), it is

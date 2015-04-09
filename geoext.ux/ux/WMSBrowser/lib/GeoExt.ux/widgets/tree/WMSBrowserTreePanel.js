@@ -158,7 +158,7 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
             layers.splice(index, 1);
         }
 
-        if (layers.length == 0) {
+        if (layers.length === 0) {
             this.wmsbrowser.resetLayerPreview();
         } else {
             layerPreview.mergeNewParams({'LAYERS': layers});
@@ -298,9 +298,9 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
         // output a message if not valid
         if (!compatible && !onlyGetMessage) {
             var layerName = "";
-            if (layer.metadata.title != "") {
+            if (layer.metadata.title !== "") {
                 layerName = layer.metadata.title + " : ";
-            } else if (layer.metadata.name != "") {
+            } else if (layer.metadata.name !== "") {
                 layerName = layer.metadata.name + " : ";
             }
             var message = layerName + this.wmsbrowser.layerCantBeAddedText + reasons.join(', ');

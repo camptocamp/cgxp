@@ -187,7 +187,7 @@ Ext.ux.form.ColorPickerField = Ext.extend(Ext.form.TwinTriggerField,  {
             return;
         }
         this.menus[0].show(this.el, "tl-bl?");
-        if (this.picker == 0) {
+        if (this.picker === 0) {
             this.menus[0].picker.setColor(this.getValue());
             this.menus[0].picker.updateColor();
         }

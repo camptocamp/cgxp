@@ -156,7 +156,7 @@ cgxp.plugins.Disclaimer = Ext.extend(gxp.plugins.Tool, {
     onRemove: function(store, record) {
         var d = record.get('disclaimer');
         Ext.iterate(d, function(key, value) {
-            if (--this.disclaimers[key].nb == 0) {
+            if (--this.disclaimers[key].nb === 0) {
                 this.removeDisclaimer(key);
             }
         }, this);

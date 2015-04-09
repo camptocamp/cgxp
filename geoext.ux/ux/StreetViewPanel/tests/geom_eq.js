@@ -105,6 +105,5 @@
         } catch(err) {
             this.fail(msg + ": " + err);
         }
-    }
-    
+    };
 })();

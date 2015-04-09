@@ -61,9 +61,9 @@ cgxp.slider.WMSTimeSliderTip = Ext.extend(GeoExt.SliderTip, {
      */
     getText: function(thumb) {
         var slider = thumb.slider;
-        var value = thumb.slider.timeValues
-            ? slider.getClosestValue(thumb.value)
-            : thumb.value;
+        var value = thumb.slider.timeValues ?
+            slider.getClosestValue(thumb.value) :
+            thumb.value;
 
         return this.compiledTemplate.apply({
             time: slider.formatLayerTimeLabel(new Date(value))

@@ -375,7 +375,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         if (this.featuresWindow) {
             this.featuresWindow.hide();
         }
-        cgxp.tools.notification.show(message, timeout)
+        cgxp.tools.notification.show(message, timeout);
     },
 
     /** private: method[showWindow]
@@ -403,7 +403,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
         }
 
         features = this.extendFeaturesAttributes(features);
-        if (features.length == 0) {
+        if (features.length === 0) {
             this.showNotification(this.noFeatureFound, 5000);
             return;
         }

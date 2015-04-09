@@ -20,32 +20,32 @@
     function createNode(text) {
         
         var index = text.indexOf('<');
-        if(index > 0) {
+        if (index > 0) {
             text = text.substring(index);
         }
         
         var doc;
-        if(window.ActiveXObject && !this.xmldom) {
+        if (window.ActiveXObject && !this.xmldom) {
             doc = new ActiveXObject("Microsoft.XMLDOM");
             try {
                 doc.loadXML(text);
             } catch(err) {
                 throw "ActiveXObject loadXML failed: " + err;
             }
-        } else if(window.DOMParser) {
+        } else if (window.DOMParser) {
             try {
                 doc = new DOMParser().parseFromString(text, 'text/xml');
             } catch(err) {
                 throw "DOMParser.parseFromString failed";
             }
-            if(doc.documentElement && doc.documentElement.nodeName == "parsererror") {
+            if (doc.documentElement && doc.documentElement.nodeName == "parsererror") {
                 throw "DOMParser.parseFromString returned parsererror";
             }
         } else {
             var req = new XMLHttpRequest();
             req.open("GET", "data:text/xml;charset=utf-8," +
                      encodeURIComponent(text), false);
-            if(req.overrideMimeType) {
+            if (req.overrideMimeType) {
                 req.overrideMimeType("text/xml");
             }
             req.send(null);
@@ -53,7 +53,7 @@
         }
         
         var root = doc.documentElement;
-        if(!root) {
+        if (!root) {
             throw "no documentElement";
         }
         return root;
@@ -72,17 +72,17 @@
      *     replaced with string representations of the above arguments.
      */
     function assertEqual(got, expected, msg) {
-        if(got === undefined) {
+        if (got === undefined) {
             got = "undefined";
         } else if (got === null) {
             got = "null";
         }
-        if(expected === undefined) {
+        if (expected === undefined) {
             expected = "undefined";
         } else if (expected === null) {
             expected = "null";
         }
-        if(got != expected) {
+        if (got != expected) {
             throw msg + ": got '" + got + "' but expected '" + expected + "'";
         }
     }
@@ -119,24 +119,24 @@
         assertEqual(gotName, expName, "Node name mismatch");
         
         // for text nodes compare value
-        if(got.nodeType == 3) {
+        if (got.nodeType == 3) {
             assertEqual(
                 got.nodeValue, expected.nodeValue, "Node value mismatch"
             );
         }
         // for element type nodes compare namespace, attributes, and children
-        else if(got.nodeType == 1) {
+        else if (got.nodeType == 1) {
             
             // test namespace alias and uri
-            if(got.prefix || expected.prefix) {
-                if(testPrefix) {
+            if (got.prefix || expected.prefix) {
+                if (testPrefix) {
                     assertEqual(
                         got.prefix, expected.prefix,
                         "Bad prefix for " + got.nodeName
                     );
                 }
             }
-            if(got.namespaceURI || expected.namespaceURI) {
+            if (got.namespaceURI || expected.namespaceURI) {
                 assertEqual(
                     got.namespaceURI, expected.namespaceURI,
                     "Bad namespaceURI for " + got.nodeName
@@ -148,21 +148,21 @@
             var gotAttr = {};
             var expAttrLen = 0;
             var expAttr = {};
-            var ga, ea, gn, en;
-            for(var i=0; i<got.attributes.length; ++i) {
+            var ga, ea, gn, en, i;
+            for (i = 0; i < got.attributes.length; ++i) {
                 ga = got.attributes[i];
-                if(ga.specified === undefined || ga.specified === true) {
-                    if(ga.name.split(":").shift() != "xmlns") {
+                if (ga.specified === undefined || ga.specified === true) {
+                    if (ga.name.split(":").shift() != "xmlns") {
                         gn = testPrefix ? ga.name : ga.name.split(":").pop();
                         gotAttr[gn] = ga;
                         ++gotAttrLen;
                     }
                 }
             }
-            for(var i=0; i<expected.attributes.length; ++i) {
+            for (i = 0; i < expected.attributes.length; ++i) {
                 ea = expected.attributes[i];
-                if(ea.specified === undefined || ea.specified === true) {
-                    if(ea.name.split(":").shift() != "xmlns") {
+                if (ea.specified === undefined || ea.specified === true) {
+                    if (ea.name.split(":").shift() != "xmlns") {
                         en = testPrefix ? ea.name : ea.name.split(":").pop();
                         expAttr[en] = ea;
                         ++expAttrLen;
@@ -175,7 +175,7 @@
             );
             var gv, ev;
             for(var name in gotAttr) {
-                if(expAttr[name] == undefined) {
+                if (expAttr[name] === undefined) {
                     throw "Attribute name " + gotAttr[name].name + " expected for element " + got.nodeName;
                 }
                 // test attribute namespace
@@ -246,8 +246,7 @@
               else if (child.nodeType == 3) {
                  //text node, add if non empty
                  if (child.nodeValue && 
-                       child.nodeValue.replace(/^\s*(.*?)\s*$/, "$1") != "" ) { 
-
+                       child.nodeValue.replace(/^\s*(.*?)\s*$/, "$1") !== "" ) {
                     nodes.push(child);
                  }
               }
@@ -282,7 +281,7 @@
     var proto = Test.AnotherWay._test_object_t.prototype;
     proto.xml_eq = function(got, expected, msg, options) {
         // convert arguments to nodes if string
-        if(typeof got == "string") {
+        if (typeof got == "string") {
             try {
                 got = createNode(got);
             } catch(err) {
@@ -290,7 +289,7 @@
                 return;
             }
         }
-        if(typeof expected == "string") {
+        if (typeof expected == "string") {
             try {
                 expected = createNode(expected);
             } catch(err) {
@@ -306,6 +305,5 @@
         } catch(err) {
             this.fail(msg + ": " + err);
         }
-    }
-    
+    };
 })();

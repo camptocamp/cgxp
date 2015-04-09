@@ -123,7 +123,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     /** api: config[getLegendPanel]
      *  ``Function`` get the legend panel
      */
-    getLegendPanel: function() { null },
+    getLegendPanel: function() { },
 
     /** api: property[printPage]
      *  :class:`GeoExt.data.PrintPage` The print page for this form. Useful
@@ -437,7 +437,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             });
             this.progressPanel.add(statusComponent);
             this.progressPanel.doLayout();
-            this.progressPanel.setHeight(35 * this.progressPanel.items.length)
+            this.progressPanel.setHeight(35 * this.progressPanel.items.length);
             this.doLayout();
             var statusCallback = function(ref, succes, currentStatus) {
                 if (!succes) {
@@ -454,7 +454,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                             statusComponent.destroy();
                             statusComponent = null;
                             self.progressPanel.doLayout();
-                            self.progressPanel.setHeight(35 * self.progressPanel.items.length)
+                            self.progressPanel.setHeight(35 * self.progressPanel.items.length);
                             self.doLayout();
                         };
                         return;

@@ -336,7 +336,7 @@ Ext.preg(cgxp.plugins.Routing.prototype.ptype, cgxp.plugins.Routing);
 
 // TODO: this probably isn't the right place for these but they need to
 //       be set somewhere
-OpenLayers.Lang['en'] = OpenLayers.Util.applyDefaults({
+OpenLayers.Lang.en = OpenLayers.Util.applyDefaults({
     "STATUS_0": "Successful",
     "STATUS_1": "Unknown server error",
     "STATUS_2": "Invalid parameter",

@@ -396,7 +396,7 @@ cgxp.api.Map.prototype = {
             return;
         }
         center = this.autoProjection.tryProjection(center);
-        if (center == null){
+        if (center === null) {
             center = new OpenLayers.LonLat(null, null);
         }
         this.map.setCenter(center, zoom);
@@ -515,7 +515,7 @@ cgxp.api.Map.prototype = {
             return;
         }
         var layer = this.getVectorLayer();
-        if (layer.features.length==0) {
+        if (layer.features.length === 0) {
             layer.events.register('featuresadded', this,
                 OpenLayers.Function.bind(this.selectObject, this, id));
             return;
@@ -580,7 +580,7 @@ cgxp.api.Map.prototype = {
                         layer.getVisibility() &&
                         layer.params.LAYERS !== null) {
                         for (var j = 0; j < queryableLayers.length; j++) {
-                            if (layer.params.LAYERS.indexOf(queryableLayers[j]) != -1){
+                            if (layer.params.LAYERS.indexOf(queryableLayers[j]) != -1) {
                                 layerNames.push(queryableLayers[j]);
                             }
                         }
@@ -679,7 +679,7 @@ cgxp.api.Map.prototype = {
         options = options || {};
         var protocol;
 
-        if (layerType=="gpx") {
+        if (layerType == "gpx") {
             protocol = new OpenLayers.Protocol.HTTP({
                 url: layerUrl,
                 format: new OpenLayers.Format.GPX({
@@ -753,7 +753,7 @@ cgxp.api.Map.prototype = {
                 var content = [];
                 for (var i = 0, l = attrList.length; i < l; i++) {
                     if (typeof feature.attributes[attrList[i]] != 'undefined') {
-                        var val = feature.attributes[attrList[i]]
+                        var val = feature.attributes[attrList[i]];
                         switch(attrList[i]) {
                             case 'title':
                                 content.push("<b>" + val + "</b>");

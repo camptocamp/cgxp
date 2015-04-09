@@ -632,8 +632,8 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                     unqueriedLayers: l.unqueriedLayers
                 });
             }
-            if (l.internalLayers.length == 0 && l.externalLayers.length == 0 &&
-                    l.unqueriedLayers.length == 0) {
+            if (l.internalLayers.length === 0 && l.externalLayers.length === 0 &&
+                    l.unqueriedLayers.length === 0) {
                 self.events.fireEvent('queryresults', {
                     features: []
                 });

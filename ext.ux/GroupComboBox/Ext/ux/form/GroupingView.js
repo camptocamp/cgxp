@@ -72,9 +72,8 @@ Ext.ux.form.GroupingView = Ext.extend(Ext.DataView, {
         var groupField = this.store.getSortState().field;
         var curGroup;
         var buf = [];
-        for (var i=0; i < records.length; i++) {
+        for (var i = 0; i < records.length; i++) {
             var r = records[i];
-            var gvalue = r.data[groupField];
             // add list items for group names
             if (!curGroup || !curGroup.text ||
                 curGroup.text != r.data[groupField]) {

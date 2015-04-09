@@ -587,7 +587,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         // handle query result table
         printProvider.on('beforeprint', function(printProvider, map, pages, options) {
-            for (param in this.target.mapPanel.params) {
+            var params = this.target.mapPanel.params;
+            for (var param in params) {
                 value = this.target.mapPanel.params[param];
                 if (this.paramRenderer[param]) {
                     value = this.paramRenderer[param](value);
@@ -616,7 +617,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     var printExport = this.target.tools[this.featureProvider].printExport();
                     if (printExport instanceof Array) {
                         var pageCount = 1;
-                        for (dataset in printExport) {
+                        for (var dataset in printExport) {
                             if (printExport.hasOwnProperty(dataset)) {
                                 // TODO, implement paging in case of too many result to display on only one page
                                 if (printExport[dataset].table.data.length > 0 &&
@@ -778,7 +779,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 displayField: 'label'
             },
             getLegendPanel: function() {
-                return self.target.tools[self.legendPanelId].legendPanel
+                return self.target.tools[self.legendPanelId].legendPanel;
             },
             dpiText: this.dpifieldText,
             scaleText: this.scalefieldText,

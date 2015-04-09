@@ -207,7 +207,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
                 Ext.each(layer.linkedLayers, function(linkedLayer) {
                     linkedLayer.setVisibility(layer.visibility);
                 });
-            })
+            });
         }
     },
 
@@ -348,7 +348,7 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
             return {
                 opacity: this.opacitySlider.getValue(),
                 ref: this.map.baseLayer.ref
-            }
+            };
         }
         return { ref: this.map.baseLayer.ref };
     },
@@ -372,9 +372,9 @@ cgxp.MapOpacitySlider = Ext.extend(Ext.Toolbar, {
     getBaseLayerFromTheme: function(theme) {
         var baseLayer = null;
         if ('functionalities' in theme &&
-            'default_basemap' in theme['functionalities'] &&
-            theme['functionalities']['default_basemap'].length > 0) {
-            var ref = theme['functionalities']['default_basemap'][0];
+            'default_basemap' in theme.functionalities &&
+            theme.functionalities.default_basemap.length > 0) {
+            var ref = theme.functionalities.default_basemap[0];
             baseLayer = this.map.getLayersBy('ref', ref)[0];
         }
         return baseLayer;

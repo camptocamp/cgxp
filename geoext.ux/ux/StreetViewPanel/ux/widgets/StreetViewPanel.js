@@ -437,10 +437,10 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
             if (data) {
                 if (data.code == 600) {
                     this.deleteFeatures();
-                    Ext.MessageBox.alert(self.title, self.noPanorama)
+                    Ext.MessageBox.alert(self.title, self.noPanorama);
                 } else if (data.code == 500) {
                     this.deleteFeatures();
-                    Ext.MessageBox.alert(self.title, self.serverError)
+                    Ext.MessageBox.alert(self.title, self.serverError);
                 } else if (data.code == 200) {
                     // Add the navigation tool
                     if (this.showTool) {
@@ -456,7 +456,7 @@ GeoExt.ux.StreetViewPanel = Ext.extend(Ext.Panel, {
                     }
                 } else {
                     this.deleteFeatures();
-                    Ext.MessageBox.alert(self.title, self.unexpectedProblem)
+                    Ext.MessageBox.alert(self.title, self.unexpectedProblem);
                 }
             }
         };

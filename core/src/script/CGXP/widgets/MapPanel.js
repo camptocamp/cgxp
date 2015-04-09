@@ -133,7 +133,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
     initComponent: function() {
         this.params = {};
         this.stateEvents.push('paramschange');
-        var result = cgxp.MapPanel.superclass.initComponent.call(this);
+        cgxp.MapPanel.superclass.initComponent.call(this);
         this.map.events.register('changebaselayer', this, this.applyStateOnChangebaselayer);
         // The crosshair should always be on top
         this.map.events.register('addlayer', this, function(event) {
@@ -270,7 +270,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
      */
     setParams: function(params) {
         var dirty = false;
-        for (param in params) {
+        for (var param in params) {
             if (this.params[param] !== params[param]) {
                 this.params[param] = params[param];
                 dirty = true;

@@ -110,7 +110,7 @@ GeoExt.ux.form.RedLiningPanel = Ext.extend(GeoExt.ux.form.FeatureEditingPanel, {
             'map': this.map,
             'import': this['import'],
             'export': this['export'],
-            'rotate': this['rotate'],
+            'rotate': this.rotate,
             'toggleGroup': this.toggleGroup,
             'popupOptions': this.popupOptions,
             'selectControlOptions': this.selectControlOptions

@@ -160,7 +160,7 @@
     document.write(pieces.join(""));
 
     if (GeoExt.Lang) {
-        GeoExt.Lang.set(OpenLayers.Util.getParameters()["lang"] || GeoExt.Lang.locale);
+        GeoExt.Lang.set(OpenLayers.Util.getParameters().lang || GeoExt.Lang.locale);
     }
 
 })();

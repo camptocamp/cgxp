@@ -235,8 +235,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.submitButton = new Ext.Button({
-            text: this.loginFormText !== undefined
-                ? this.loginFormText : this.loginText,
+            text: this.loginFormText !== undefined ?
+                this.loginFormText : this.loginText,
             formBind: true,
             handler: this.submitForm,
             scope: this
@@ -267,8 +267,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         this.loginWindow.render(Ext.getBody());
 
         this.loginAction = new cgxp.tool.Button(Ext.apply({
-            text: this.loginToolbarText !== undefined
-                ? this.loginToolbarText : this.loginText,
+            text: this.loginToolbarText !== undefined ?
+                this.loginToolbarText : this.loginText,
             tooltip: this.actionButtonTooltip,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
@@ -395,7 +395,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
               el.show();
               el.enable();
             }, this);
-        }
+        };
         var hideFields = function(l) {
             Ext.each(l, function(i) {
               var el = f.findField(i);
@@ -403,7 +403,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
               el.hide();
               el.disable();
             }, this);
-        }
+        };
 
         if (show) {
             hideFields(l1);
@@ -427,8 +427,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 this.loginFormBottomCellPanel.setVisible(true);
             }
             this.actionChangePassword = false;
-            this.submitButton.setText(this.loginFormText !== undefined
-                ? this.loginFormText : this.loginText);
+            this.submitButton.setText(this.loginFormText !== undefined ?
+                this.loginFormText : this.loginText);
             f.url = this.loginURL;
         }
     },
@@ -572,7 +572,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         var targetUrl;
         var currentUrl = window.location.href;
 
-        if (this.permalinkId == null) {
+        if (this.permalinkId === null) {
             alert('permalinkId is missing in your login plugin config.');
             return currentUrl;
         }

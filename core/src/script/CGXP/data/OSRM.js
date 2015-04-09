@@ -209,9 +209,8 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
                             message: OpenLayers.i18n("STATUS_"+data.status),
                         };
 
-                        if (data.status == 0) {
+                        if (data.status === 0) {
                             this.cacheHintData(options.source, options.target, options.via, data.hint_data);
-                            var geometry =
 
                             route.geometry = this.parseRouteGeometry(data.route_geometry);
                             route.distance = data.route_summary.total_distance;
@@ -292,6 +291,6 @@ cgxp.data.OSRM = Ext.extend(Ext.util.Observable, {
             position: info[3], // offset into geometry for this instruction
             time: info[4], // time in seconds
             compassDirection: info[6] // cardinal or ordinal direction
-        }
+        };
     }
 });

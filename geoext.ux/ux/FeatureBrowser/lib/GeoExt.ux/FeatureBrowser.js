@@ -189,7 +189,7 @@ GeoExt.ux.FeatureBrowser = Ext.extend(Ext.Panel, {
             var templateString = '';
             for (var k in attributes) {
                 if (attributes.hasOwnProperty(k) &&
-                    (this.skippedFeatureAttributes == null ||
+                    (this.skippedFeatureAttributes === null ||
                      this.skippedFeatureAttributes.indexOf(k) === -1)) {
 
                     templateString += '<div>' +

@@ -150,11 +150,11 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
             sourceMap: this.sourceMap,
             printProvider: this.printProvider
         };
-        if(this.printMapPanel) {
-            if(!(this.printMapPanel instanceof GeoExt.PrintMapPanel)) {
-                printMapPanelOptions.xtype = "gx_printmappanel"
+        if (this.printMapPanel) {
+            if (!(this.printMapPanel instanceof GeoExt.PrintMapPanel)) {
+                printMapPanelOptions.xtype = "gx_printmappanel";
                 this.printMapPanel = new GeoExt.PrintMapPanel(
-                    Ext.applyIf(this.printMapPanel, printMapPanelOptions));
+                    Ext.applyif (this.printMapPanel, printMapPanelOptions));
             }
         } else {
             this.printMapPanel = new GeoExt.PrintMapPanel(
@@ -276,8 +276,9 @@ GeoExt.ux.PrintPreview = Ext.extend(Ext.Container, {
             })
         };
         
-        if(this.legend) {
-            var legendCheckbox = new Ext.form.Checkbox({
+        var legendCheckbox = null;
+        if (this.legend) {
+            legendCheckbox = new Ext.form.Checkbox({
                 name: "legend",
                 checked: this.includeLegend,
                 boxLabel: this.includeLegendText,

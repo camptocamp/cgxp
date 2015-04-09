@@ -26,5 +26,5 @@ GeoExt.ux.data.getFeatureEditingDefaultStyleStoreOptions = function() {
             [OpenLayers.i18n('gold'), {fillColor: '#FFD700', strokeColor: '#FFD700'}],
             [OpenLayers.i18n('silver'), {fillColor: 'silver', strokeColor: 'silver'}]
         ]
-    }
+    };
 };

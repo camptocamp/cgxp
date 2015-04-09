@@ -180,7 +180,9 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
                 scale = scale.items[0];
                 zoomSelector.setValue(this.formatValue(scale));
             } else {
-                if (!zoomSelector.rendered) return;
+                if (!zoomSelector.rendered) {
+                    return;
+                }
                 zoomSelector.clearValue();
             }
         });
@@ -224,7 +226,7 @@ cgxp.plugins.ScaleChooser = Ext.extend(gxp.plugins.Tool, {
             var roundRest = 1;
             for (var i in this.roundValues) {
                 var v = this.roundValues[i];
-                var d = Math.abs(Math.log(v/rest))
+                var d = Math.abs(Math.log(v/rest));
                 if (d < diff) {
                     diff = d;
                     roundRest = v;

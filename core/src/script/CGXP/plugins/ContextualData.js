@@ -159,7 +159,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
                     result[key + '_label'] = OpenLayers.i18n(key);
                 }
             }
-        };
+        }
         return result;
     },
 
@@ -548,7 +548,7 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
     showLocationTooltip: function(ev) {
         if (this.showLocationInMapRequestOngoing) {
             return;
-        };
+        }
 
         this.lonLat = this.map.getLonLatFromPixel(ev.xy);
 

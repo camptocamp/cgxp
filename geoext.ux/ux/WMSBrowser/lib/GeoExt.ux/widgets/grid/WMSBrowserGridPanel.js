@@ -75,8 +75,8 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
             singleSelect: false,
             renderer: function(value, metaData, record) {
                 // Hide checkbox for certain records
-                if(record.get('srsCompatible') == false ||
-                   record.get('extentCompatible' == false)) {
+                if (record.get('srsCompatible') === false ||
+                   record.get('extentCompatible' === false)) {
                     return;
                 }
                 return Ext.grid.CheckboxSelectionModel.prototype.renderer.apply(
@@ -103,21 +103,33 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
 
         var columns = [
             checkboxSelectionModel,
-            { header: this.wmsbrowser.srsCompatibleText, scope: this,
-              dataIndex: "srsCompatible", hidden: false,
-              renderer: this.boolRenderer, width: 30, hidden: true},
-            { header: this.wmsbrowser.extentCompatibleText, scope: this,
-              dataIndex: "extentCompatible", hidden: false,
-              renderer: this.boolRenderer, width: 30, hidden: true},
-            { header: this.wmsbrowser.titleText, scope: this,
-              dataIndex: "title", id: "title", sortable: true},
-            { header: this.wmsbrowser.nameText, scope: this,
-              dataIndex: "name", sortable: true},
-            { header: this.wmsbrowser.queryableText, scope: this,
-              dataIndex: "queryable", sortable: true, hidden: true,
-              renderer: this.boolRenderer, width: 30},
-            { header: this.wmsbrowser.descriptionText, scope: this,
-              dataIndex: "abstract", hidden: true}
+            {
+                header: this.wmsbrowser.srsCompatibleText, scope: this,
+                dataIndex: "srsCompatible",
+                renderer: this.boolRenderer, width: 30, hidden: true
+            },
+            {
+                header: this.wmsbrowser.extentCompatibleText, scope: this,
+                dataIndex: "extentCompatible",
+                renderer: this.boolRenderer, width: 30, hidden: true
+            },
+            {
+                header: this.wmsbrowser.titleText, scope: this,
+                dataIndex: "title", id: "title", sortable: true
+            },
+            {
+                header: this.wmsbrowser.nameText, scope: this,
+                dataIndex: "name", sortable: true
+            },
+            {
+                header: this.wmsbrowser.queryableText, scope: this,
+                dataIndex: "queryable", sortable: true, hidden: true,
+                renderer: this.boolRenderer, width: 30
+            },
+            {
+                header: this.wmsbrowser.descriptionText, scope: this,
+                dataIndex: "abstract", hidden: true
+            }
         ];
 
         Ext.apply(this, {columns: columns, sm: checkboxSelectionModel});
@@ -131,9 +143,9 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
      *  Renders boolean values in color and with alternate text value.
      */
     boolRenderer: function(bool) {
-        return (bool)
-            ? '<span style="color:green;">'+this.wmsbrowser.yesText+'</span>'
-            : '<span style="color:red;">'+this.wmsbrowser.noText+'</span>';
+        return bool ?
+            '<span style="color:green;">' + this.wmsbrowser.yesText + '</span>' :
+            '<span style="color:red;">' + this.wmsbrowser.noText + '</span>';
     },
 
     /** private: method[addLayerToPreview]
@@ -209,11 +221,11 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
         var layerName = [];
         var records = this.getSelectionModel().getSelections();
 
-        for (var i=0, len=records.length; i<len; i++) {
+        for (var i = 0, len = records.length; i < len; i++) {
             var record = records[i];
-            if (record.get('title') != "") {
+            if (record.get('title') !== "") {
                 layerName.push(record.get('title'));
-            } else if (record.get('name') != "") {
+            } else if (record.get('name') !== "") {
                 layerName.push(record.get('name'));
             }
         }
@@ -264,9 +276,9 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
         // output a message if not valid
         if (!compatible) {
             var layerName = "";
-            if (record.get('title') != "") {
+            if (record.get('title') !== "") {
                 layerName = record.get('title') + " : ";
-            } else if (record.get('name') != "") {
+            } else if (record.get('name') !== "") {
                 layerName = record.get('name') + " : ";
             }
             var message = layerName + this.wmsbrowser.layerCantBeAddedText + reasons.join(', ');
@@ -287,9 +299,9 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
         var records = this.getSelectionModel().getSelections();
 
         // VALIDATION : record selection or connection established
-        if (records.length == 0) {
+        if (records.length === 0) {
             // if no record was selected
-            if(this.store.getTotalCount() > 0) {
+            if (this.store.getTotalCount() > 0) {
                 this.wmsbrowser.fireEvent(
                     'genericerror', this.wmsbrowser.pleaseSelectALayerText
                 );
@@ -308,7 +320,7 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
 
         var newlayerRecord, layersParam = [];
 
-        for (var i=0, len=records.length; i<len; i++) {
+        for (var i = 0, len = records.length; i < len; i++) {
             var record = records[i];
 
             // check the projection of the map is supported by the layer
@@ -318,7 +330,7 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
             }
 
             if (!newLayerRecord) {
-                var newLayerRecord = record.clone();
+                newLayerRecord = record.clone();
 
                 // the following line gives a "too much recursion" error.
                 //newLayerRecord.set("layer", record.get("layer"));
@@ -353,7 +365,7 @@ GeoExt.ux.grid.WMSBrowserGridPanel = Ext.extend(Ext.grid.GridPanel, {
                 this.wmsbrowser.fireEvent(
                     'layeradded', {'layerRecord': newLayerRecord}
                 );
-                if(this.wmsbrowser.zoomOnLayerAdded) {
+                if (this.wmsbrowser.zoomOnLayerAdded) {
                     // zoom to added layer extent (in the current map projection)
                     this.map.zoomToExtent(
                         OpenLayers.Bounds.fromArray(newLayerRecord.get("llbbox")).transform(

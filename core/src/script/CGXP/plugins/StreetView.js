@@ -185,9 +185,9 @@ cgxp.plugins.StreetView = Ext.extend(gxp.plugins.Tool, {
      *  the panel content before creating the new content)
      */
     loadingChecker: function() {
-        if (typeof this.outputTarget.layout.east != 'undefined' &&
-            typeof this.outputTarget.layout.east.splitEl != 'undefined' &&
-            this.outputTarget.layout.east.splitEl != null) {
+        if (this.outputTarget.layout.east !== undefined &&
+            this.outputTarget.layout.east.splitEl !== undefined &&
+            this.outputTarget.layout.east.splitEl !== null) {
             this.loadingChecker.defer(1000, this);
         } else {
             this.loadStreetView();

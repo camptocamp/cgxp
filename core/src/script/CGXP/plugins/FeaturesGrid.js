@@ -344,7 +344,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 var properties = [];
                 var q = this.quote;
                 // Include header row
-                if (this.csvIncludeHeader && index==0) {
+                if (this.csvIncludeHeader && index === 0) {
                     var header = [];
                     Ext.iterate(attributes, function iter(key, attr) {
                         header.push(q + OpenLayers.i18n(key).replace(q, q+q) + q);
@@ -409,7 +409,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             // get data from grids
             Ext.each(grids, function(grid) {
                 var records = [];
-                if (grids.length == 1) {
+                if (grids.length === 1) {
                     records = grid.getSelectionModel().getSelections();
                 } else {
                     if (!this.globalSelection) {
@@ -841,7 +841,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                 for (var k=0, lenk=queryResult.unqueriedLayers.length; k<lenk; k++) {
                     // check if tab already exists
                     var tab = this.tabpan.find('title', queryResult.unqueriedLayers[k].unqueriedLayerId);
-                    if (tab.length == 1) {
+                    if (tab.length === 1) {
                         this.tabpan.unhideTabStripItem(tab[0]);
                     } else {
                         // create tab
@@ -919,7 +919,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                             var onEach = function(record) {
                                 var found = false;
                                 Ext.each(grid.selection, function(refrecord) {
-                                    if (refrecord.get('id') == record.get('id')) {
+                                    if (refrecord.get('id') === record.get('id')) {
                                         found = true;
                                     }
                                 });
@@ -968,7 +968,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                         // has selection
                         if (bbox.left !== null) {
                             // is a point
-                            if (bbox.getWidth() + bbox.getHeight() == 0) {
+                            if (bbox.getWidth() + bbox.getHeight() === 0) {
                                 map.setCenter(bbox.getCenterLonLat(),
                                     this.pointRecenterZoom);
                             }

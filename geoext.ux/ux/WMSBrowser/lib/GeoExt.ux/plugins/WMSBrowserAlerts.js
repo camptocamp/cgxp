@@ -67,7 +67,7 @@ GeoExt.ux.plugins.WMSBrowserAlerts = Ext.extend(Ext.util.Observable, {
      */
     showPopup: function(title, message, extIcon) {
         if(!extIcon){
-            extIcon = Ext.MessageBox.WARNING
+            extIcon = Ext.MessageBox.WARNING;
         }
 
         // this fix makes sure that the Ext.MessageBow window used to display

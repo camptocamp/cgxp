@@ -8,11 +8,11 @@ Ext.onReady(function() {
     serverStore = new Ext.data.SimpleStore({
         fields: ['url'],
         data : [
-            ['./data/wmscap.xml']
-            ,['./data/dev4g.mapgears.com_cgi-bin_mswms_gmap.xml']
-            ,['./data/dev4g.mapgears.com_cgi-bin_mswms_bdga.xml']
-            ,['./data/dev4g.mapgears.com_cgi-bin_mswms_gmap_incompatible_srs.xml']
-            ,['./data/dev4g.mapgears.com_cgi-bin_mswms_gmap_1.3.0.xml']
+            ['./data/wmscap.xml'],
+            ['./data/dev4g.mapgears.com_cgi-bin_mswms_gmap.xml'],
+            ['./data/dev4g.mapgears.com_cgi-bin_mswms_bdga.xml'],
+            ['./data/dev4g.mapgears.com_cgi-bin_mswms_gmap_incompatible_srs.xml'],
+            ['./data/dev4g.mapgears.com_cgi-bin_mswms_gmap_1.3.0.xml']
             //,['http://dev4g.mapgears.com/cgi-bin/mswms_gmap']
         ]
     });

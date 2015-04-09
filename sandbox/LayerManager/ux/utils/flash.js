@@ -37,7 +37,7 @@ function GetFlashVersionPlugin() {
             var desc_segments = flash_desc.split(" ");
             var major_segments = desc_segments[2].split(".");
             var major = major_segments[0];
-            var minor_segments = (desc_segments[3] != "") ? desc_segments[3].split("r") : desc_segments[4].split("r");
+            var minor_segments = (desc_segments[3] !== "") ? desc_segments[3].split("r") : desc_segments[4].split("r");
             var minor = minor_segments[1] > 0 ? minor_segments[1] : 0;
             flash_version = parseFloat(major + "." + minor);
         }

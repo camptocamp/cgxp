@@ -104,11 +104,13 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
     /** private: method[addActions]
      */
     addActions: function() {
-        if (!('geolocation' in navigator)) return [];
+        if (!('geolocation' in navigator)) {
+            return [];
+        }
 
         var map = this.target.mapPanel.map;
         var layer = new OpenLayers.Layer.Vector("Geolocation");
-        this.layer = layer
+        this.layer = layer;
         this.target.on('ready', this.viewerReady, this);
         var circle = new OpenLayers.Feature.Vector(null, {}, this.styleAccuracy);
         var marker = new OpenLayers.Feature.Vector(null, {}, this.stylePoint);
@@ -126,13 +128,13 @@ cgxp.plugins.MyPosition = Ext.extend(gxp.plugins.Tool, {
                     self.layer.removeFeatures([circle, marker]);
                     circle.geometry = new OpenLayers.Geometry.Polygon.createRegularPolygon(
                                       center, pos.coords.accuracy, 64, 0);
-                    var nearestZoom = map.getZoomForExtent(circle.geometry.getBounds())
+                    var nearestZoom = map.getZoomForExtent(circle.geometry.getBounds());
                     var zoom = Math.max(Math.min(self.recenteringZoom, nearestZoom), 1);
                     map.setCenter(position, zoom);
                     if (self.drawAccuracy) {
                         marker.geometry = center;
                         self.layer.addFeatures([circle, marker]);
-                    };
+                    }
                 }); 
             },
             scope: this

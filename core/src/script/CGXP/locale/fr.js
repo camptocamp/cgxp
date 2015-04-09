@@ -339,7 +339,7 @@ GeoExt.Lang.add("fr", {
     }
 });
 
-OpenLayers.Lang["fr"] = OpenLayers.Util.applyDefaults({
+OpenLayers.Lang.fr = OpenLayers.Util.applyDefaults({
   "STATUS_0": "Successful",
   "STATUS_1": "Unknown server error",
   "STATUS_2": "Invalid parameter",

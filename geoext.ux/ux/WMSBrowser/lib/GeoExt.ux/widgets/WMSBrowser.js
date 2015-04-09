@@ -458,9 +458,9 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
             break;
         }
 
-        this.statusBar = (GeoExt.ux.WMSBrowserStatusBar)
-            ? new GeoExt.ux.WMSBrowserStatusBar({'wmsbrowser': this})
-            : null;
+        this.statusBar = (GeoExt.ux.WMSBrowserStatusBar) ?
+            new GeoExt.ux.WMSBrowserStatusBar({'wmsbrowser': this}) :
+            null;
 
         if (!this.statusBar) {
             Ext.apply(this, {plugins: [new GeoExt.ux.plugins.WMSBrowserAlerts()]});
@@ -753,7 +753,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
      *  Get the 'llbbox' value of the record layer and zoom to its location.
      */
     zoomToRecordLLBBox: function(record, zoomToMaxExtent) {
-        if (zoomToMaxExtent == null) {
+        if (zoomToMaxExtent === null) {
             zoomToMaxExtent = true;
         }
         var zoomed = false;
@@ -835,7 +835,7 @@ GeoExt.ux.WMSBrowser = Ext.extend(Ext.Panel, {
         var validLayerName = true;
 
         var layerName = this.layerNameField.getValue();
-        if (!layerName || layerName == "") {
+        if (!layerName || layerName === "") {
             this.fireEvent('genericerror', this.pleaseInputLayerNameText);
             validLayerName = false;
         }

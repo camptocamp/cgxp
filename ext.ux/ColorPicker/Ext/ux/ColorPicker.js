@@ -19,7 +19,7 @@ Ext.namespace('Ext.ux');
 
 Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
     opacity: true,
-    
+
     colorNames: {
         "aliceblue": "F0F8FF",
         "antiquewhite": "FAEBD7",
@@ -169,7 +169,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         "yellow": "FFFF00",
         "yellowgreen": "9ACD32"
     },
-    
+
     /**
      *
      */
@@ -188,7 +188,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         this.body = this.body || (this.container || (this.renderTo || Ext.DomHelper.append(Ext.getBody(), {}, true)));
         if (!this.el) {
             this.el = this.body;
-            if (this.cls) { 
+            if (this.cls) {
                 Ext.get(this.el).addClass(this.cls);
             }
         }
@@ -228,7 +228,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             'cls': 'x-cp-huepicker'
         },true);
         // Create Opacity Picker
-        if (this.opacity) {            
+        if (this.opacity) {
             this.opacityEl = Ext.DomHelper.append(this.body, {
                 'id': this.cpGetId('opacity'),
                 'cls': 'x-cp-opacitypicker'
@@ -243,7 +243,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         this.hueEl.on('mousedown', this.clickHUEPicker.createDelegate(this));
         // initialize start position
         Ext.get(this.hueSliderEl).moveTo(this.hueEl.getLeft() - 3, this.hueEl.getTop() - 7);
-        
+
         // Initialize RGB Picker DD
         this.rgbSliderEl = Ext.DomHelper.append(this.body, { 'cls': 'x-cp-slider',id:this.cpGetId('rgbSlider') },true);
         this.rgbDD = new Ext.dd.DD(this.rgbSliderEl.id, 'rgbPicker');
@@ -254,8 +254,8 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         // initialize start position
         this.rgbSliderEl.moveTo(this.rgbEl.getLeft() - 7, this.rgbEl.getTop() - 7);
         // Create color divs and Form elements
-        
-        if (this.opacity) {    
+
+        if (this.opacity) {
             // Initialize Opacity Picker DD
             this.opacitySliderEl = Ext.DomHelper.append(this.body, { 'cls': 'x-cp-slider' ,id:this.cpGetId('opacitySlider') },true);
             this.opacityDD = new Ext.dd.DD(this.opacitySliderEl.id, 'opacityPicker');
@@ -265,14 +265,14 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             this.opacityEl.on('mousedown', this.clickOpacityPicker.createDelegate(this));
             // initialize start position
             this.opacitySliderEl.moveTo(this.opacityEl.getRight() - 7, this.opacityEl.getTop() - 3);
-            this.alpha=255;        
-        }                
-        
+            this.alpha=255;
+        }
+
         Ext.DomHelper.append(this.body, {
             'id': this.cpGetId('fCont'),
             'cls': 'x-cp-formcontainer'
         }, true);
-                        
+
         this.formPanel = new Ext.form.FormPanel({
             renderTo: this.cpGetId('fCont'),
             height: this.opacity ? 202 : 182,
@@ -285,7 +285,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             items: [{
                 layout: 'column',
                 defaults: {
-                    columnWidth: .5,
+                    columnWidth: 0.5,
                     layout: 'form',
                     labelWidth: 10,
                     defaultType: 'numberfield',
@@ -395,11 +395,11 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
                     handler: this.selectColor.createDelegate(this),
                     style:{
                         marginTop:'2px'
-                    }                                        
+                    }
                 }]
             }]
         });
-        
+
         this.redCmp = Ext.getCmp(this.cpGetId('iRed'));
         this.greenCmp = Ext.getCmp(this.cpGetId('iGreen'));
         this.blueCmp = Ext.getCmp(this.cpGetId('iBlue'));
@@ -407,7 +407,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         this.satCmp = Ext.getCmp(this.cpGetId('iSat'));
         this.valCmp = Ext.getCmp(this.cpGetId('iVal'));
         this.hexaCmp = Ext.getCmp(this.cpGetId('iHexa'));
-        
+
         this.redCmp.on('change', this.updateFromIRGB.createDelegate(this));
         this.greenCmp.on('change', this.updateFromIRGB.createDelegate(this));
         this.blueCmp.on('change', this.updateFromIRGB.createDelegate(this));
@@ -415,23 +415,23 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         this.satCmp.on('change', this.updateFromIHSV.createDelegate(this));
         this.valCmp.on('change', this.updateFromIHSV.createDelegate(this));
         this.hexaCmp.on('change', this.updateFromIHexa.createDelegate(this));
-        
+
         this.previewEl = Ext.get(this.cpGetId('cColor'));
         this.opacityPreviewEl = Ext.get(this.cpGetId('cColorOpacity'));
         this.inverseButton = Ext.getCmp(this.cpGetId('cInverse'));
         this.webSafeButton = Ext.getCmp(this.cpGetId('cWebSafe'));
-        
-        Ext.DomHelper.append(this.body, {'tag':'br','cls':'x-cp-clearfloat'});        
+
+        Ext.DomHelper.append(this.body, {'tag':'br','cls':'x-cp-clearfloat'});
     },
-    
+
     onDestroy: function() {
         Ext.ux.ColorPicker.superclass.onDestroy.apply(this, arguments);
         Ext.destroyMembers(this, 'formPanel', 'inverseButton', 'webSafeButton',
                 'rgbEl', 'hueEl', 'opacityEl', 'rgbSliderEl', 'hueSliderEl',
                 'opacitySliderEl', 'previewEl', 'opacityPreviewEl', 'redCmp',
-                'greenCmp', 'blueCmp', 'hueCmp', 'satCmp', 'valCmp', 'hexaCmp');        
-    },    
-    
+                'greenCmp', 'blueCmp', 'hueCmp', 'satCmp', 'valCmp', 'hexaCmp');
+    },
+
     /**
      *
      */
@@ -450,7 +450,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         y = y > 181 ? 181 : y;
         this.HSV.s = this.getSaturation(x);
         this.HSV.v = this.getValue(y);
-        this.rgbSliderEl.moveTo(this.rgbEl.getLeft() + x - 7, 
+        this.rgbSliderEl.moveTo(this.rgbEl.getLeft() + x - 7,
                 this.rgbEl.getTop() + y - 7, (this.animateMove || true));
         this.updateColor();
     },
@@ -463,7 +463,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         y = y < 1 ? 1 : y;
         y = y > 181 ? 181 : y;
         this.HSV.h = Math.round(360 / 181 * (181 - y));
-        this.hueSliderEl.moveTo(this.hueSliderEl.getLeft(), this.hueEl.getTop() + y - 7, 
+        this.hueSliderEl.moveTo(this.hueSliderEl.getLeft(), this.hueEl.getTop() + y - 7,
                 this.animateMove || true);
         this.updateRGBPicker(this.HSV.h);
         this.updateColor();
@@ -476,7 +476,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         x = x < 1 ? 1 : x;
         x = x > 181 ? 181 : x;
         this.alpha = Math.round(x/181*255);
-        this.opacitySliderEl.moveTo(this.opacityEl.getLeft() + x - 7, 
+        this.opacitySliderEl.moveTo(this.opacityEl.getLeft() + x - 7,
                 this.opacitySliderEl.getTop(), (this.animateMove || true));
         this.updateColor();
     },
@@ -485,7 +485,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
      *
      */
     clickRGBPicker: function(event, element) {
-        this.updateRGBPosition(event.xy[0] - this.rgbEl.getLeft(), 
+        this.updateRGBPosition(event.xy[0] - this.rgbEl.getLeft(),
                 event.xy[1] - this.rgbEl.getTop());
     },
 
@@ -508,7 +508,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
      */
     moveRGBPicker: function(event) {
         this.rgbDD.constrainTo(this.rgbEl.id, -7);
-        this.updateRGBPosition(this.rgbSliderEl.getLeft() - this.rgbEl.getLeft() + 7, 
+        this.updateRGBPosition(this.rgbSliderEl.getLeft() - this.rgbEl.getLeft() + 7,
                 this.rgbSliderEl.getTop() - this.rgbEl.getTop() + 7);
     },
 
@@ -558,11 +558,11 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             this.satCmp.setValue(Math.round(this.HSV.s * 100));
             this.valCmp.setValue(Math.round(this.HSV.v * 100));
         }
-        
+
         var htmlC = this.rgbToHex(rgb);
         var websafeC = this.rgbToHex(websafe);
         var invertC = this.rgbToHex(invert);
-        
+
         this.previewEl.setStyle({
             'background': '#' + htmlC
         });
@@ -573,7 +573,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             this.opacityEl.setStyle({'background-color':'#'+htmlC});
             Ext.getCmp(this.cpGetId('iOpacity')).setValue(Math.round(this.alpha/2.56));
             this.opacityPreviewEl.applyStyles('opacity:'+(this.alpha/255));
-            
+
         }
         this.webSafeButton.cpColor=websafeC;
         this.inverseButton.cpColor = invertC;
@@ -584,7 +584,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         this.webSafeButton.setTooltip({
             title: 'WebSafe Color',
             text: '<div class="x-cp-tooltipcolorbox" style="background-color:#'+websafeC+';color:#'+invertC+'">#'+websafeC+'</div>'
-        })
+        });
         this.hueSliderEl.moveTo(this.hueSliderEl.getLeft(), this.hueEl.getTop() + this.getHPos(this.hueCmp.getValue()) - 7, (this.animateMove || true));
         this.rgbSliderEl.moveTo(this.rgbEl.getLeft() + this.getSPos(this.satCmp.getValue() / 100) - 7, this.hueEl.getTop() + this.getVPos(this.valCmp.getValue() / 100) - 7, (this.animateMove || true));
         this.rgbEl.setStyle({ 'background-color': '#' + this.rgbToHex(this.hsvToRgb(this.hueCmp.getValue(), 1, 1)) });
@@ -595,7 +595,9 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
      */
     setColor: function(c) {
         var s = this.splitAphaRgbHex(c.replace('#', ''));
-        if (!s) return;
+        if (!s) {
+            return;
+        }
         this.alpha=s.alpha;
         if (this.opacity) {
             this.opacitySliderEl.moveTo(this.opacityEl.getLeft() + (s.alpha/255*181) - 7, this.opacitySliderEl.getTop(), (this.animateMove || true));
@@ -603,7 +605,7 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
         this.hexaCmp.setValue(s.rgbHex);
         this.updateFromIHexa();
     },
-    
+
     splitAphaRgbHex: function(c) {
         if (this.opacity && /^[0-9a-fA-F]{8}$/.test(c)) {
             return {
@@ -611,13 +613,13 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
                 alphaHex: c.substring(0, 2),
                 rgbHex: c.substring(2),
                 alpha: this.hexToDec(c.substring(0, 2))
-            }
+            };
         }
-        if (c.indexOf("rgb(") == 0) {
+        if (c.indexOf("rgb(") === 0) {
             c = c.replace(/ /g, "");
             c = c.substring(4, c.length - 1).split(",");
             c = this.rgbToHex(c[0], c[1], c[2]);
-        } 
+        }
         else if (!/^[0-9a-fA-F]{6}$/.test(c)) {
             c = this.colorNames[c];
             if (!Ext.isDefined(c)) {
@@ -629,9 +631,9 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             alphaHex: 'FF',
             rgbHex:c,
             alpha:255
-        }
+        };
     },
-    
+
     /**
      *
      */
@@ -869,8 +871,8 @@ Ext.ux.ColorPicker = Ext.extend(Ext.BoxComponent, {
             var i, next;
             for (i=0; i<256; i=i+51) {
                 next = i + 51;
-                if (v>=i && v<=next) { 
-                    return (v - i > 25) ? next : i; 
+                if (v>=i && v<=next) {
+                    return (v - i > 25) ? next : i;
                 }
             }
         }

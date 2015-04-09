@@ -141,7 +141,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             cgxp.plugins.Print.prototype.paramRenderer.floor = 
                 function(value) {
                     return value === null ? self.skyText : value;
-                }
+                };
         }
 
         this.show();
@@ -173,7 +173,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             }
         }, this);
         if (this.mapPanel.params.floor === undefined) {
-            this.mapPanel.setParams({ 'floor': this.initialFloor })
+            this.mapPanel.setParams({ 'floor': this.initialFloor });
         }
     }
 });

@@ -44,9 +44,10 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
     /** private */
     constructor: function(config){
         config = config || {};
+        var ctrl;
         if (config.selectControl instanceof OpenLayers.Control.SelectFeature) {
             if (!config.singleSelect) {
-                var ctrl = config.selectControl;
+                ctrl = config.selectControl;
                 config.singleSelect = !(ctrl.multiple || !!ctrl.multipleKey);
             }
         }
@@ -59,7 +60,7 @@ GeoExt.ux.FeatureSelectionModel = Ext.extend(GeoExt.grid.FeatureSelectionModel, 
         
         if (config.hoverControl instanceof OpenLayers.Control.SelectFeature) {
             if (!config.singleSelect) {
-                var ctrl = config.hoverControl;
+                ctrl = config.hoverControl;
                 config.singleSelect = !(ctrl.multiple || !!ctrl.multipleKey);
             }
         }

@@ -45,9 +45,9 @@
  * </style>
  *
  *
- * If you only want the clear button, and want to hide the third one, use the following in your config :
+ * If you only want the clear button, and want to hide the third one, use the following in your config:
  * trigger3Class: 'x-form-trigger-no-width x-hidden'
- * And add the following class to your css :
+ * And add the following class to your css:
  * .x-form-trigger-no-width {
  *     width: 0 !important;
  * }
@@ -76,12 +76,12 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * @cfg {String} tooltipType
      * The type of tooltip to use. Either "qtip" (default) for QuickTips or "title" for title attribute.
      */
-    tooltipType : 'qtip',
+    tooltipType: 'qtip',
 
     /***
      * initComponent
      */
-    initComponent : function(){
+    initComponent: function() {
         Ext.ux.form.TwinTriggerComboBox.superclass.initComponent.call(this);
 
         /***
@@ -89,7 +89,7 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
          * @param {field: Ext.ux.form.TwinTriggerComboBox, button: Ext.Element}
          * fires when 2nd trigger is clicked
          */
-        this.addEvents({clear : true, trigger3 : true});
+        this.addEvents({clear: true, trigger3: true});
 
         // implement triggerConfig from Ext.form.TwinTriggerField
         this.triggerConfig = {
@@ -105,7 +105,7 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * copied from Ext.form.TwinTriggerField
      * @param {Object} index
      */
-    getTrigger : function(index){
+    getTrigger: function(index) {
         return this.triggers[index];
     },
 
@@ -113,24 +113,24 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * initTrigger
      * copied from Ext.form.TwinTriggerField
      */
-    initTrigger : function(){
+    initTrigger: function() {
         var ts = this.trigger.select('.x-form-trigger', true);
         this.wrap.setStyle('overflow', 'hidden');
         var triggerField = this;
-        ts.each(function(t, all, index){
-            t.hide = function(){
+        ts.each(function(t, all, index) {
+            t.hide = function() {
                 var w = triggerField.wrap.getWidth();
                 this.dom.style.display = 'none';
                 triggerField.el.setWidth(w-triggerField.trigger.getWidth());
             };
-            t.show = function(){
+            t.show = function() {
                 var w = triggerField.wrap.getWidth();
                 this.dom.style.display = '';
                 triggerField.el.setWidth(w-triggerField.trigger.getWidth());
             };
             var triggerIndex = 'Trigger'+(index+1);
 
-            if(this['hide'+triggerIndex]){
+            if (this['hide'+triggerIndex]) {
                 t.dom.style.display = 'none';
             }
             t.on("click", this['on'+triggerIndex+'Click'], this, {preventDefault:true});
@@ -146,11 +146,11 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
             for (var i in this.helpTipConfig) {
                 config[i] = this.helpTipConfig[i];
             }
-            var tip = new Ext.ToolTip(config);
+            new Ext.ToolTip(config);
         }
 
-        if (this.trigger3TipConfig){
-            if (typeof this.trigger3TipConfig == 'object'){
+        if (this.trigger3TipConfig) {
+            if (typeof this.trigger3TipConfig == 'object') {
                 Ext.QuickTips.register(Ext.apply({
                       target: this.getTrigger(2)
                 }, this.trigger3TipConfig));
@@ -164,7 +164,7 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * onTrigger1Click
      * event triggered when clicking on the clear trigger
      */
-    onTrigger1Click : function() {
+    onTrigger1Click: function() {
         this.clearValue();
         this.triggerBlur.defer(50, this);
     },
@@ -173,7 +173,7 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * onTrigger2Click
      * defer to std ComboBox trigger method
      */
-    onTrigger2Click : function() {
+    onTrigger2Click: function() {
         this.onTriggerClick();
     },
 
@@ -181,7 +181,7 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * onTrigger3Click
      * this is the third button handler.  fire 'trigger3Click' event
      */
-    onTrigger3Click : function() {
+    onTrigger3Click: function() {
         this.fireEvent('trigger3Click', this);
     },
 
@@ -208,7 +208,7 @@ Ext.extend(Ext.ux.form.TwinTriggerComboBox, Ext.form.ComboBox, {
      * @param {Object} index
      * @param {Object} data (
      */
-    insert : function(index, data) {
+    insert: function(index, data) {
         this.reset();
 
         var rec = new this.store.recordType(data);

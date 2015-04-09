@@ -233,16 +233,18 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 }
                 combo.blur();
 
+                var layer;
+
                 // load related group or layer
                 if (this.layerTreeId) {
                     var tree = this.target.tools[this.layerTreeId].tree;
-                    var layer = tree.findGroupByLayerName(record.get('layer_name'));
+                    layer = tree.findGroupByLayerName(record.get('layer_name'));
                     if (layer) {
                         tree.loadGroup(layer, [record.get('layer_name')], undefined, undefined, true);
                     }
                 } else {
                     // try to load layer directly
-                    var layer = map.getLayersBy('ref', record.get('layer_name'));
+                    layer = map.getLayersBy('ref', record.get('layer_name'));
                     if (layer && layer.length > 0) {
                         layer[0].setVisibility(true);
                     }
@@ -252,7 +254,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
                 this.vectorLayer.removeFeatures(this.vectorLayer.features);
             },
             'specialkey': function(field, event) {
-                if (this.position && event.getKey() == event.ENTER) {
+                if (this.position && event.getKey() === event.ENTER) {
                     this.applyPosition();
                     this.applyPositionTask.cancel();
                 }
@@ -294,8 +296,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         colorpicker.on('select', function(cm, color) {
             var i = 0;
             var features = layer.features;
-            layer.style.fillColor = color
-            layer.style.strokeColor = color
+            layer.style.fillColor = color;
+            layer.style.strokeColor = color;
             for (i; i < features.length ; i++){
                 features[i].style.fillColor = color;
                 features[i].style.strokeColor = color;

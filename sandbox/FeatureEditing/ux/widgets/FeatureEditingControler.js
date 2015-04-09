@@ -281,9 +281,9 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         this.initMap();
 
         // Manage layers manually created
-        if (config['layers'] != null) {
-            this.addLayers(config['layers']);
-            delete config['layers'];
+        if (config.layers !== null) {
+            this.addLayers(config.layers);
+            delete config.layers;
         }
 
         // if set, automatically creates a "cosmetic" layer
@@ -512,19 +512,20 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
          *  work around document.onselectstart mixup in IE
          */
         var getControl = function(idControl, type, layer, options) {
+            var control;
             switch (type) {
                 case OpenLayers.i18n("Box"):
                 case OpenLayers.i18n("Circle"):
-                    var control = new OpenLayers.Control.DrawFeature(layer,
+                    control = new OpenLayers.Control.DrawFeature(layer,
                         OpenLayers.Handler.RegularPolygon, options);
                 break;
                 default:
-                    var control = new OpenLayers.Control.DynamicMeasure(
+                    control = new OpenLayers.Control.DynamicMeasure(
                         handler, options);
             }
             control.idControl = idControl;
             return control;
-        }
+        };
 
         for (var i = 0; i < geometryTypes.length; i++) {
             options = {
@@ -878,7 +879,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         };
 
         if (this['export'] === true) {
-            options['plugins'] = [new GeoExt.ux.ExportFeature(), new GeoExt.ux.CloseFeatureDialog()];
+            options.plugins = [new GeoExt.ux.ExportFeature(), new GeoExt.ux.CloseFeatureDialog()];
         }
 
         var panelClass = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
@@ -1065,7 +1066,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
                 }
             }
 
-            if (options['redraw'] === true) {
+            if (options.redraw === true) {
                 layer.redraw();
             }
         }
@@ -1083,12 +1084,12 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
 
         switch (style) {
           case "faded":
-            feature.normalStyle = {}
+            feature.normalStyle = {};
             Ext.apply(feature.normalStyle, feature.style);
 
             for (var i = 0; i < this.opacityProperties.length; i++) {
                 property = this.opacityProperties[i];
-                if (feature.style != null && feature.style[property]) {
+                if (feature.style !== null && feature.style[property]) {
                     feature.style[property] *= this.fadeRatio;
                 }
             }
@@ -1101,7 +1102,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
             }
         }
 
-        if (options['redraw'] === true) {
+        if (options.redraw === true) {
             feature.layer.drawFeature(feature);
         }
     },

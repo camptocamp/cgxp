@@ -186,12 +186,14 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
                 map.addLayer(layer);
 
                 var googleEarthPanel = Ext.getCmp("googleearthpanel");
+                var gr;
+
                 // Autoload GoogleEarthPanel
                 if (!googleEarthPanel && this.autoloadGoogleEarth) {
                     if (!this.googleEarthPluginId) {
-                        alert('googleEarthPluginId must be defined in your cgxp_addkmlfile config.')
+                        alert('googleEarthPluginId must be defined in your cgxp_addkmlfile config.');
                     } else {
-                        var ge = this.target.tools[this.googleEarthPluginId];
+                        ge = this.target.tools[this.googleEarthPluginId];
                         ge.loadGoogleEarth();
                         // change button state to reflect current enabled state
                         ge.actions[0].items[0].toggle(true, true);
@@ -207,7 +209,7 @@ cgxp.plugins.AddKMLFile = Ext.extend(gxp.plugins.Tool, {
                 } 
                 // Store kmlString to load them in GoogleEarth later
                 if (this.googleEarthPluginId) {
-                    var ge = this.target.tools[this.googleEarthPluginId];
+                    ge = this.target.tools[this.googleEarthPluginId];
                     ge.kmlList.push(kmlString);
                 }
 

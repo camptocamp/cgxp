@@ -32,7 +32,7 @@
         // in FF2. Using document.documentElement.getElementsByTagName instead
         // works around this issue.
         var scripts = document.documentElement.getElementsByTagName('script');
-        for(var i=0, len=scripts.length; i<len; i++) {
+        for (var i = 0, len = scripts.length; i < len; i++) {
             var src = scripts[i].getAttribute('src');
             if(src) {
                 var index = src.lastIndexOf(scriptName); 

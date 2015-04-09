@@ -58,7 +58,7 @@ Ext.ux.ColorField = Ext.extend(Ext.form.TriggerField, {
         if (this.disabled) {
             return;
         }
-        if (this.menu == null) {
+        if (this.menu === null) {
             this.menu = new Ext.ux.ColorMenu({
                 hideOnClick: true
             });

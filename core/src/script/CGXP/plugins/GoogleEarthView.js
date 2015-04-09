@@ -310,9 +310,9 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
      *  the panel content before creating the new content)
      */
     loadingChecker: function() {
-        if (typeof this.outputTarget.layout.east != 'undefined' &&
-            typeof this.outputTarget.layout.east.splitEl != 'undefined' &&
-            this.outputTarget.layout.east.splitEl != null) {
+        if (this.outputTarget.layout.east !== undefined &&
+            this.outputTarget.layout.east.splitEl !== undefined &&
+            this.outputTarget.layout.east.splitEl !== null) {
             this.loadingChecker.defer(1000, this);
         } else {
             this.loadGoogleEarth();
@@ -406,11 +406,11 @@ cgxp.plugins.GoogleEarthView = Ext.extend(gxp.plugins.Tool, {
             this.activate();
 
             // load kml into GE
-            var gePlugin = googleEarthView.googleEarthPanel.earth;
-            if (gePlugin) {
-                for (var i=0,l=googleEarthView.kmlList.length; i<l; i++) {
-                    var kmlObject = gePlugin.parseKml(googleEarthView.kmlList[i]);
-                    gePlugin.getFeatures().appendChild(kmlObject);
+            var gePluginEarth = googleEarthView.googleEarthPanel.earth;
+            if (gePluginEarth) {
+                for (var i=0, l=googleEarthView.kmlList.length; i<l; i++) {
+                    var kmlObject = gePluginEarth.parseKml(googleEarthView.kmlList[i]);
+                    gePluginEarth.getFeatures().appendChild(kmlObject);
                 }
             }
 

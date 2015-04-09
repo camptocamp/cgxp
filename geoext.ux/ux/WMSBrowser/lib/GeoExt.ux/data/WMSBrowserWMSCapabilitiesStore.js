@@ -90,11 +90,11 @@ GeoExt.ux.data.WMSBrowserWMSCapabilitiesStore = Ext.extend(GeoExt.data.WMSCapabi
 
             // Check if the 'srs' contains a 'key' named by the srs OR
             // Check if the 'srs' is an array and contains the srs
-            if(record.get('srs')[srs] === true ||
+            if (record.get('srs')[srs] === true ||
                OpenLayers.Util.indexOf(record.get('srs'), srs) >= 0) {
                 record.set("srsCompatible", true);
             } else {
-                if(srs == 'EPSG:900913' && record.get('srs')['EPSG:3857'] === true) {
+                if (srs == 'EPSG:900913' && record.get('srs')['EPSG:3857'] === true) {
                     srs = 'EPSG:3857';
                     record.set("srsCompatible", true);
                 }
@@ -108,9 +108,9 @@ GeoExt.ux.data.WMSBrowserWMSCapabilitiesStore = Ext.extend(GeoExt.data.WMSCapabi
             var extent;
             if (layerExtent)
             {
-                if(typeof layerExtent == "string") {
+                if (typeof layerExtent == "string") {
                     extent = OpenLayers.Bounds.fromString(layerExtent);
-                } else if(layerExtent instanceof Array) {
+                } else if (layerExtent instanceof Array) {
                     extent = OpenLayers.Bounds.fromArray(layerExtent);
                 }
             }
@@ -122,7 +122,7 @@ GeoExt.ux.data.WMSBrowserWMSCapabilitiesStore = Ext.extend(GeoExt.data.WMSCapabi
             }
         }
 
-        if(this.getCount() > 0) {
+        if (this.getCount() > 0) {
             this.wmsbrowser.fireEvent('getcapabilitiessuccess');
 
             // select the first element of the list on load end
@@ -133,17 +133,17 @@ GeoExt.ux.data.WMSBrowserWMSCapabilitiesStore = Ext.extend(GeoExt.data.WMSCapabi
             // the url that was used was a valid WMS server, keep it if the
             // url field is a combobox and if it's not already added
             var xtype = this.wmsbrowser.serverComboBox.getXType();
-            if(xtype == Ext.form.ComboBox.xtype) {
+            if (xtype == Ext.form.ComboBox.xtype) {
                 var aszUrls =
                     this.wmsbrowser.serverComboBox.store.getValueArray('url');
                 var index = OpenLayers.Util.indexOf(
                     aszUrls, this.wmsbrowser.currentUrl
                 );
-                if(index == -1) {
-                    var record = new Ext.data.Record({
+                if (index == -1) {
+                    var new_record = new Ext.data.Record({
                         'url': this.wmsbrowser.currentUrl
                     });
-                    this.wmsbrowser.serverComboBox.store.add([record]);
+                    this.wmsbrowser.serverComboBox.store.add([new_record]);
                 }
             }
         } else {
