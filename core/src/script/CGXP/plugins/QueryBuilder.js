@@ -61,7 +61,8 @@ Ext.namespace("cgxp.plugins");
  *              // it is intended to be reactivated this once mapserver is fixed
  *              srsName: 'EPSG:21781',
  *              featureTypes: ['layer1', 'layer2'],
- *              attributeURLs: { 'layer1': { 'fieldA': 'http://path/to/json' }}
+ *              attributeURLs: { 'layer1': { 'fieldA': 'http://path/to/json' }},
+ *              describeFeatureTypeParams: ${dumps(url_role_params) | n}
  *          }
  *      % endif
  *          ]
@@ -127,12 +128,17 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Title for the panel (i18n)
      */
     querierText: "Querier",
-    
+
     /** api: config[attributeURLs]
      *  ``Object`` Optional list of URL to feed combos for given fields
      *  for given layer.
      */
     attributeURLs: {},
+
+    /** api: config[describeFeatureTypeParams]
+     *  ``Object`` Optional additional params given to DescribeFeatureType request
+     */
+    describeFeatureTypeParams: {},
 
     /* i18n */
     incompleteFormText: 'Incomplete form.',
@@ -171,7 +177,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
      *  ``Ext.LoadMask``
      */
     mask: null,
-    
+
     /** private: property[storeUriProperty]
      *  ``String``
      */
@@ -462,12 +468,12 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         var store = new GeoExt.data.AttributeStore({
             url: this.mapserverproxyURL,
             fields: ["name", "type", "displayName"],
-            baseParams: {
+            baseParams: Ext.apply({
                 "TYPENAME": featureType,
                 "REQUEST": "DescribeFeatureType",
                 "SERVICE": "WFS",
                 "VERSION": "1.1.0"
-            },
+            }, this.describeFeatureTypeParams),
             listeners: {
                 "load": function() {
                     // one shot listener:
