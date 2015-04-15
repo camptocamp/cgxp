@@ -361,7 +361,7 @@ GeoExt.ux.form.FeaturePanel.prototype.initMyItems = function() {
             }
         });
         feature.layer.events.register('featuremodified', null, function(e) {
-            if (e.feature == feature && !e.source instanceof Ext.ux.form.SpinnerField) {
+            if (e.feature == feature && !(e.source instanceof Ext.ux.form.SpinnerField)) {
                 radiusField.setValue(e.feature.geometry.getBounds().getWidth() / 2);
             }
         });
