@@ -4,6 +4,19 @@ div.x-panel a {
 div.x-panel a:hover {
     text-decoration: underline;
 }
+/* no underline on layer tree elements */
+div.x-panel a.x-tree-node-anchor:hover {
+    text-decoration: none;
+}
+/* no pointer on layer tree element */
+.x-tree-node-el {
+    cursor: default;
+}
+/* pointer on layer tree action */
+.gx-tree-layer-actions * {
+    cursor: pointer;
+}
+
 .x-map .x-toolbar {
     padding: 2px;
 }
