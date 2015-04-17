@@ -48,6 +48,7 @@ Ext.namespace("cgxp.plugins");
  *              loginURL: "${request.route_url('login')}",
  *              loginChangeURL: "${request.route_url('loginchange')}",
  *              logoutURL: "${request.route_url('logout')}",
+ *              loginResetPasswordURL: "${request.route_url('loginresetpassword')}",
  *              permalinkId: "permalink",
  *              enablePasswordChange: true,
  *              forcePasswordChange: true,
@@ -92,6 +93,12 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      */
     logoutURL: null,
 
+    /** api: config[loginResetPasswordURL]
+     *  URL of the login reset service.
+     *  Also enable the reset password button.
+     */
+    loginResetPasswordURL: null,
+
     /** api: config[username]
      *  Username of currently logged in user.
      */
@@ -122,6 +129,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     loginWindow: null,
     actionButton: null,
     submitButton: null,
+    resetButton: null,
 
     /** api: config[permalinkId]
      *  ``String``
@@ -219,6 +227,9 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
      *  value of the ``loginText`` parameter. Set to '' to display no text.
      */
 
+    /** private */
+    actionResetPassword: false,
+
     /* i18n */
     authenticationFailureText: "Impossible to connect.",
     loggedAsText: "Logged in as ${user}",
@@ -238,6 +249,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     pwdChangeKoTitle: "Password update has failed",
     pwdChangeForceTitle: "Change Password",
     pwdChangeForceText: "You must change your password.",
+    resetText: "Reset password",
+    generateNewPasswordText: "Generate new password",
 
     /** private: method[addActions]
      */
@@ -249,6 +262,14 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             handler: this.submitForm,
             scope: this
         });
+        if (this.loginResetPasswordURL && this.enablePasswordChange && !this.username) {
+            this.resetButton = new Ext.Button({
+                text: this.resetText,
+                handler: this.toggleReset,
+                scope: this
+            });
+        }
+
         this.loginForm = this.createLoginForm();
         var items = [this.loginForm];
 
@@ -380,6 +401,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         return cgxp.plugins.Login.superclass.addActions.apply(this, [this.toolbarItems]);
     },
 
+    toggleReset: function() {
+        this.submitButton.setText(this.generateNewPasswordText);
+        this.passwordField.disable();
+        this.passwordField.hide();
+        this.resetButton.hide();
+        this.loginForm.getForm().url = this.loginResetPasswordURL;
+        this.actionResetPassword = true;
+    },
+
     toggleLoginWindow: function() {
         this.togglePasswordChangeFields(true);
         if (!this.loginWindow.hidden) {
@@ -442,6 +472,14 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     },
 
     createLoginForm: function() {
+        this.passwordField = new Ext.form.TextField({
+            fieldLabel: this.passwordText,
+            name: 'password',
+            applyTo: 'password',
+            inputType: 'password',
+            width: 120,
+            allowBlank: false
+        });
         var newPassword = new Ext.form.TextField({
             fieldLabel: this.newPasswordText,
             name: 'newPassword',
@@ -476,14 +514,8 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 applyTo: 'login',
                 width: 120,
                 allowBlank: false
-            }, {
-                fieldLabel: this.passwordText,
-                name: 'password',
-                applyTo: 'password',
-                inputType: 'password',
-                width: 120,
-                allowBlank: false
             },
+            this.passwordField,
             newPassword,
             newPasswordConfirm,
             {
@@ -501,6 +533,11 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
         if (this.loginFormBottomCell) {
             this.loginFormBottomCellPanel = new Ext.Panel(this.loginFormBottomCell);
             formItems.push(this.loginFormBottomCellPanel);
+        }
+
+        var buttons = [this.submitButton];
+        if (this.resetButton) {
+            buttons.push(this.resetButton);
         }
 
         return new Ext.FormPanel({
@@ -521,7 +558,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             items: formItems,
-            buttons:[this.submitButton]
+            buttons: buttons
         });
     },
 
@@ -541,6 +578,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                     else {
                         Ext.Msg.alert(this.pwdChangeKoTitle, response.error);
                     }
+                } else if (this.actionResetPassword) {
+                    this.submitButton.setIconClass('');
+                    this.loginWindow.hide();
+                    this.submitButton.setText(this.loginFormText !== undefined ?
+                        this.loginFormText : this.loginText);
+                    this.passwordField.enable();
+                    this.passwordField.show();
+                    this.loginForm.getForm().url = this.loginURL;
+                    this.actionResetPassword = false;
                 } else {
                     if (Ext.isIE) {
                         window.external.AutoCompleteSaveForm(
