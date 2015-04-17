@@ -52,8 +52,8 @@ Ext.namespace("cgxp.plugins");
  *              legendPanelId: "legendPanel",
  *              featureProvider: "featuresProvider",
  *              outputTarget: "left-panel",
- *              printURL: "${request.route_url('printproxy', path='')}",
- *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              printURL: "${request.route_url('printproxy')}",
+ *              mapserverURL: "${request.route_url('mapserverproxy')}",
  *              printProviderConfig: ${dumps(url_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
@@ -81,8 +81,8 @@ Ext.namespace("cgxp.plugins");
  *              featureProvider: "featuresProvider",
  *              actionTarget: "center.tbar",
  *              toggleGroup: "maptools",
- *              printURL: "${request.route_url('printproxy', path='')}",
- *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              printURL: "${request.route_url('printproxy')}",
+ *              mapserverURL: "${request.route_url('mapserverproxy')}",
  *              printProviderConfig: ${dumps(url_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',

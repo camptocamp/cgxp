@@ -48,7 +48,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_wfspermalink",
- *              WFSURL: "${request.route_url('mapserverproxy', path='')}",
+ *              WFSURL: "${request.route_url('mapserverproxy')}",
  *              WFSGetFeatureId: "getfeature",
  *              maxFeatures: 10,
  *              pointRecenterZoom: 13,

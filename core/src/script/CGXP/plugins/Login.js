@@ -45,9 +45,9 @@ Ext.namespace("cgxp.plugins");
  *              username: "${user.username}",
  *              isPasswordChanged: ${"true" if user.is_password_changed else "false"},
  *      % endif
- *              loginURL: "${request.route_url('login', path='')}",
- *              loginChangeURL: "${request.route_url('loginchange', path='')}",
- *              logoutURL: "${request.route_url('logout', path='')}",
+ *              loginURL: "${request.route_url('login')}",
+ *              loginChangeURL: "${request.route_url('loginchange')}",
+ *              logoutURL: "${request.route_url('logout')}",
  *              permalinkId: "permalink",
  *              enablePasswordChange: true,
  *              forcePasswordChange: true,

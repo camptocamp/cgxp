@@ -56,7 +56,7 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_querier',
  *              outputTarget: "left-panel",
  *              events: EVENTS,
- *              mapserverproxyURL: "${request.route_url('mapserverproxy', path='')}",
+ *              mapserverproxyURL: "${request.route_url('mapserverproxy')}",
  *              // don't work with actual version of mapserver, the proxy will limit to 200
  *              // it is intended to be reactivated this once mapserver is fixed
  *              srsName: 'EPSG:21781',

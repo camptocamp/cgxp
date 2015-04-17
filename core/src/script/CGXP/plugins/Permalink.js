@@ -37,7 +37,7 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_permalink',
  *              actionTarget: 'center.tbar',
- *              shortenerCreateURL: "${request.route_url('shortener_create', path='')}"
+ *              shortenerCreateURL: "${request.route_url('shortener_create')}"
  *          }]
  *          ...
  *      });

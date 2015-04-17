@@ -49,7 +49,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
     /** api: config[url]
      *  ``String`` URL of the webservice used to retrieve the json data to be
      *  displayed in the plugin window. Typically set to
-     *  ``"${request.route_url('raster', path='')}"`` for altimetric data.
+     *  ``"${request.route_url('raster')}"`` for altimetric data.
      */
     url: null,
 
@@ -128,7 +128,7 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *
      *      {
      *         ptype: "cgxp_contextualdata",
-     *         url: "${request.route_url('raster', path='')}",
+     *         url: "${request.route_url('raster')}",
      *         actionTarget: "center.tbar",
      *         tpls: {
      *             allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +

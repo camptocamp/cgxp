@@ -106,7 +106,7 @@ Ext.namespace("cgxp.plugins");
  *          },
  *          {
  *              ptype: "cgxp_addkmlfile",
- *              echoUrl: "${request.route_url('echo', path='')}",
+ *              echoUrl: "${request.route_url('echo')}",
  *              actionTarget: "center.bbar"
  *          }]
  *          ...
