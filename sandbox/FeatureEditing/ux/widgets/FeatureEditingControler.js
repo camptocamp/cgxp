@@ -281,7 +281,7 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         this.initMap();
 
         // Manage layers manually created
-        if (config.layers !== null) {
+        if (config.layers !== undefined) {
             this.addLayers(config.layers);
             delete config.layers;
         }
