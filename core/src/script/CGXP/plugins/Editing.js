@@ -54,7 +54,8 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_editing',
  *              layerTreeId: 'layertree',
- *              layersURL: "${request.route_url('layers_root')}"
+ *              layersURL: "${request.route_url('layers_root')}",
+ *              metadataParams: ${dumps(version_role_params) | n}
  *          }, {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
@@ -73,7 +74,8 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_editing',
  *              layerTreeId: 'layertree',
  *              layersURL: "${request.route_url('layers_root')}",
- *              mapserverUrl: "${request.route_url('mapserverproxy', path='')}",
+ *              metadataParams: ${dumps(version_role_params) | n},
+ *              mapserverUrl: "${request.route_url('mapserverproxy')}",
  *              snapLayers: {
  *                  "layer_A": {
  *                      tolerance: 15,
@@ -120,6 +122,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  ``"${request.route_url('layers_root')}"``.
      */
     layersURL: null,
+
+    /** api: config[metadataParams]
+     *  ``Object`` Optional additional params given to metadata request.
+     */
+    metadataParams: {},
 
     /** api: config[layerTreeId]
      *  ``String``
@@ -691,6 +698,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var store = new GeoExt.data.AttributeStore({
             autoDestroy: true,
             url: this.layersURL + id + '/md.xsd',
+            baseParams: this.metadataParams,
             feature: feature
         });
         store.on({
