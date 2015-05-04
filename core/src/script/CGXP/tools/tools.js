@@ -113,3 +113,20 @@ cgxp.tools.notification.close = function(message, timeout, mapPanel) {
 cgxp.tools.modulo = function(dividend, divisor) {
     return (dividend % divisor + divisor) % divisor;
 };
+
+/**
+ * Formats a date.
+ */
+cgxp.tools.formatDate = function(date, format) {
+    var hasTime = format.indexOf('H') > -1;
+
+    if (hasTime) {
+        return date.format(format);
+    } else {
+        // We must use UTC time as there is no time part (only a date part)
+        return format
+            .replace(/Y/g, date.getUTCFullYear())
+            .replace(/m/g, OpenLayers.Number.zeroPad(date.getUTCMonth() + 1, 2))
+            .replace(/d/g, OpenLayers.Number.zeroPad(date.getUTCDate(), 2));
+    }
+};
