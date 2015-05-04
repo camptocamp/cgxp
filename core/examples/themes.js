@@ -5,98 +5,116 @@ App.themes = {
     "local": [{
         "children": [{
             "isExpanded": true,
-            "isInternalWMS": true,
-            "name": "Theme 1 - Physical",
+            "name": "OSM function",
             "isBaseLayer": false,
+            "id": 68,
+            "isInternalWMS": true,
             "children": [{
-                "name": "Features",
-                "isExpanded": true,
+                "name": "osm_time",
+                "icon": "http://geomapfish.demo-camptocamp.com/1.6/wsgi/mapserv_proxy?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetLegendGraphic&LAYER=osm_time&FORMAT=image/png&TRANSPARENT=TRUE&RULE=Dans les temps",
+                "type": "internal WMS",
+                "public": true,
+                "identifierAttribute": "name",
+                "isChecked": true,
+                "childLayers": [],
+                "queryable": 1,
+                "time": {
+                    "interval": [1, 0, 0, 0],
+                    "maxValue": "2013-12-31T00:00:00Z",
+                    "minValue": "2006-01-01T00:00:00Z",
+                    "maxDefValue": null,
+                    "minDefValue": null,
+                    "resolution": "month",
+                    "mode": "range",
+                    "widget": "datepicker"
+                },
+                "legend": true,
+                "disclaimer": "\u00a9 les contributeurs d\u2019OpenStreetMap",
+                "isLegendExpanded": false,
+                "id": 67,
+                "imageType": "image/jpeg",
+                "metadata": {}
+            }, {
+                "minResolutionHint": 0.53,
+                "name": "osm_scale",
+                "icon": "http://geomapfish.demo-camptocamp.com/1.6/wsgi/mapserv_proxy?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetLegendGraphic&LAYER=osm_scale&FORMAT=image/png&TRANSPARENT=TRUE&RULE=OSM",
+                "type": "internal WMS",
+                "public": true,
+                "identifierAttribute": "display_name",
+                "isChecked": true,
+                "childLayers": [],
+                "queryable": 1,
+                "maxResolutionHint": 1.41,
+                "legend": true,
+                "disclaimer": "\u00a9 les contributeurs d\u2019OpenStreetMap",
+                "isLegendExpanded": false,
+                "id": 74,
+                "imageType": "image/jpeg",
+                "metadata": {}
+            }],
+            "metadata": {}
+        }, {
+            "time": {
+                "mode": "range",
+                "interval": [0, 1, 0, 0],
+                "resolution": "year",
+                "maxValue": "2014-01-01T00:00:00Z",
+                "minValue": "2006-01-01T00:00:00Z",
+                "widget": "slider"
+            },
+            "isExpanded": false,
+            "name": "Time",
+            "isBaseLayer": false,
+            "isInternalWMS": true,
+            "children": [{
+                "name": "level1",
                 "children": [{
-                    "name": "drain_fn",
+
+                    "name": "osm_time",
+                    "isLegendExpanded": false,
                     "legend": true,
-                    "isChecked": true
-                }, {
-                    "name": "drainage",
-                    "legend": true,
+                    "identifierAttribute": "name",
                     "isChecked": true,
-                    "legendRule": "Water"
-                }, {
-                    "name": "Others",
-                    "children": [{
-                        "name": "rail",
-                        "legend": true,
-                        "isChecked": true,
-                        "minResolutionHint": 0.00005,
-                        "maxResolutionHint": 0.002
-                    }, {
-                        "name": "road",
-                        "isChecked": true,
-                        "legend": true,
-                        "legendRule": "Roads"
-                    }]
+                    "childLayers": [],
+                    "id": 67,
+                    "type": "internal WMS",
+                    "public": true,
+                    "imageType": null,
+                    "queryable": 1
                 }]
-            }, {
-                "name": "fedlimit",
-                "isChecked": true,
-                "legend": true,
-                "maxResolutionHint": 0.1
-            }, {
-                "name": "bathymetry",
-                "name": "Bathymetry",
-                "kml": loc.join('/') + "/sundials.kml",
-                "isChecked": true,
-                "metadataUrl": "http://yahoo.fr",
-                "icon": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png",
-                "legend": true,
-                "legendImage": "http://sitn.ne.ch/mapfish/app/images/layers/npa.png"
             }]
         }],
         "name": "Theme 1",
         "icon": "http://sitn.ne.ch/mapfish/app/images/themes/environnement.png"
     }, {
         "children": [{
-            "name": "bathymetry",
-            "isChecked": true
-        }],
-        "name": "Group with only one level"
-    }, {
-        "children": [{
+            "time": {
+                "mode": "range",
+                "interval": [0, 1, 0, 0],
+                "resolution": "year",
+                "maxValue": "2014-01-01T00:00:00Z",
+                "minValue": "2006-01-01T00:00:00Z",
+                "widget": "slider"
+            },
             "isExpanded": false,
-            "isInternalWMS": true,
-            "name": "Theme 2 - Group a - Cultural",
+            "name": "Time 2",
             "isBaseLayer": false,
-            "children": [{
-                "name": "prov_bound"
-            }, {
-                "name": "roads",
-                "children": [{
-                    "name": "rail"
-                }, {
-                    "name": "roads"
-                }]
-            }]
-        },{
-            "isExpanded": false,
             "isInternalWMS": true,
-            "name": "Theme 2 - Group b",
-            "isBaseLayer": false,
             "children": [{
-                "name": "popplace"
+                "name": "osm_time",
+                "isLegendExpanded": false,
+                "legend": true,
+                "identifierAttribute": "name",
+                "isChecked": true,
+                "childLayers": [],
+                "id": 67,
+                "type": "internal WMS",
+                "public": true,
+                "imageType": null,
+                "queryable": 1
             }]
         }],
         "name": "Theme 2",
-        "icon": "http://sitn.ne.ch/mapfish/app/images/themes/environnement.png"
-    }],
-    "external": [{
-        "children": [{
-            "isExpanded": false,
-            "name": "Theme ext 1 - Group a",
-            "isBaseLayer": false,
-            "children": [{
-                "name": "grid"
-            }]
-        }],
-        "name": "Theme external 1",
         "icon": "http://sitn.ne.ch/mapfish/app/images/themes/environnement.png"
     }]
 };
