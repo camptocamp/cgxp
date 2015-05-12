@@ -33,6 +33,8 @@
  * @include CGXP/widgets/tree/TreeNodeTriStateUI.js
  * @include CGXP/widgets/slider/WMSTimeSlider.js
  * @include CGXP/widgets/slider/WMSTimeSliderTip.js
+ * @include CGXP/widgets/WMSDatePicker.js
+ * @include CGXP/tools/tools.js
  */
 
 /** api: (define)
@@ -164,6 +166,10 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
     datemonthlabelText: 'Y-m',
     datelabelText: "Y-m-d",
     datetimelabelText: 'Y-m-d H:i:s',
+    datepickerrangeText: 'Please select a start and end date in <br>' +
+        'the period {from} to {to}.',
+    datepickersingleText: 'Please select a date in the period ' +
+        '{from} to {to}.',
     showhidelegendText: "Show/hide legend",
     themealreadyloadedText: "This theme is already loaded",
     showIn3dText: 'Show in 3D',
@@ -266,7 +272,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             this.actionsPlugin,
             new GeoExt.plugins.TreeNodeComponent(),
             new cgxp.tree.TreeNodeComponent({
-                configKey: "timeSlider"
+                configKey: "timeWidget"
             }),
             new cgxp.tree.TreeNodeComponent({
                 divCls: "legend-component",
@@ -395,9 +401,9 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 };
                 this.addMetadata(item, nodeConfig);
 
-                var timeSlider;
+                var timeWidget;
                 if (item.time) {
-                    timeSlider = this.getTimeSlider(item);
+                    timeWidget = this.getTimeWidget(item);
                 }
 
                 if (!item.children) {
@@ -416,7 +422,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         param: 'LAYERS',
                         layer_id: item.id, // layer_id is the id of the layer in database
                         editable: item.editable,
-                        timeSlider: timeSlider,
+                        timeWidget: timeWidget,
                         uiProvider: 'layer'
                     });
                     if (item.legendImage && styles) {
@@ -430,18 +436,20 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 item.node = parentNode.appendChild(nodeConfig);
 
-                // timeslider may need to be redrawn in case it's in a
+                // time widget may need to be redrawn in case it's in a
                 // collapsed node
                 item.node.parentNode.on('expand', function() {
-                    var timeSlider = item.node.timeSlider;
-                    if (timeSlider) {
-                        timeSlider.doLayout();
-                        var slider = timeSlider.items.get(1);
-                        // compute thumb half size manually to prevent
-                        // rendering issues
-                        var thumb = slider.innerEl.child('.x-slider-thumb');
-                        slider.halfThumb = thumb.getWidth() / 2;
-                        slider.syncThumb();
+                    var timeWidget = item.node.timeWidget;
+                    if (timeWidget) {
+                        timeWidget.doLayout();
+                        if (timeWidget.timeType === 'slider') {
+                            var slider = timeWidget.items.get(1);
+                            // compute thumb half size manually to prevent
+                            // rendering issues
+                            var thumb = slider.innerEl.child('.x-slider-thumb');
+                            slider.halfThumb = thumb.getWidth() / 2;
+                            slider.syncThumb();
+                        }
                     }
                 });
                 if (item.children) {
@@ -470,14 +478,14 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
         // internalWMS or layer leaf
         var actions = [];
-        var timeSlider;
+        var timeWidget;
         if (internalWMS || group.type) {
             actions = [{
                 action: "opacity",
                 qtip: this.opacityText
             }];
             if (group.time) {
-                timeSlider = this.getTimeSlider(group);
+                timeWidget = this.getTimeWidget(group);
             }
         }
         actions.push({
@@ -507,7 +515,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             layer: group.layer,
             allOlLayers: group.allOlLayers,
             component: internalWMS || group.type ? this.getOpacitySlider(group) : null,
-            timeSlider: timeSlider,
+            timeWidget: timeWidget,
             hasOpacity: internalWMS || group.type,
             actions: actions
         };
@@ -711,6 +719,23 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         });
     },
 
+    /** private: method[getTimeWidget]
+     *  Adds the time slider block.
+     *
+     * :arg node: ``Object``
+     * :arg anchor: ``String``
+     */
+    getTimeWidget: function(node, anchor) {
+        if (node.time.mode == 'disabled') {
+            return null;
+        }
+        if (node.time.widget === 'slider') {
+            return this.getTimeSlider(node, anchor);
+        } else {
+            return this.getDatePicker(node, anchor);
+        }
+    },
+
     /** private: method[getTimeSlider]
      *  Adds the time slider block.
      *
@@ -718,10 +743,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
      * :arg anchor: ``String``
      */
     getTimeSlider: function(node, anchor) {
-        if (node.time.mode == 'disabled') {
-            return null;
-        }
-
         var labelFormat;
 
         switch (node.time.resolution) {
@@ -774,7 +795,57 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 },
                 slider
-            ]
+            ],
+            timeType: 'slider'
+        });
+    },
+
+    /** private: method[getDatePicker]
+     *  Adds the time slider block.
+     *
+     * :arg node: ``Object``
+     * :arg anchor: ``String``
+     */
+    getDatePicker: function(node, anchor) {
+        var datePicker = new cgxp.datepicker.WMSDatePicker({
+            layer: node.layer,
+            wmsTime: node.time,
+            dateLabelFormat: this.datelabelText,
+            flex: 1
+        });
+
+        var labelFrom = cgxp.tools.formatDate(
+            datePicker.minDate, this.datelabelText);
+        var labelTo = cgxp.tools.formatDate(
+            datePicker.maxDate, this.datelabelText);
+        var tooltip = datePicker.isModeRange() ?
+            this.datepickerrangeText : this.datepickersingleText;
+        tooltip = tooltip
+                .replace('{from}', labelFrom)
+                .replace('{to}', labelTo);
+
+        return new Ext.Container({
+            layout: 'hbox',
+            cls: 'gx-tree-timeslider-container',
+            items: [
+                {
+                    xtype: 'box',
+                    html: '<div class="gx-tree-timeslider-icon"></div>',
+                    listeners: {
+                        render: function(cmp) {
+                            new Ext.ToolTip({
+                                target: cmp.el,
+                                html: tooltip
+                            });
+                            cmp.ownerCt.doLayout.defer(
+                                1, cmp.ownerCt, [true, true]
+                            );
+                        }
+                    }
+                },
+                datePicker
+            ],
+            timeType: 'datepicker'
         });
     },
 

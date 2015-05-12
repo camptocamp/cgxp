@@ -181,6 +181,10 @@ GeoExt.Lang.add("fr", {
         datemonthlabelText: "m/Y",
         datelabelText: "d/m/Y",
         datetimelabelText: "d/m/Y H:i:s",
+        datepickerrangeText: "Veuillez sélectionner une date de début et de fin <br>" +
+            "dans la période du {from} au {to}.",
+        datepickersingleText: "Veuillez sélectionner une date dans la " +
+            "période du {from} au {to}.",
         showhidelegendText: "Afficher/masquer la légende",
         themealreadyloadedText: "Ce thème est déjà chargé.",
         showIn3dText: "Afficher en 3D"

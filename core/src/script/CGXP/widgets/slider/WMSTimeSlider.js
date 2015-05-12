@@ -17,6 +17,7 @@
 
 /**
  * @include GeoExt/data/LayerRecord.js
+ * @include CGXP/tools/tools.js
  * @require OpenLayers/Layer.js
  */
 
@@ -118,13 +119,14 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         var minDate = OpenLayers.Date.parse(wmsTime.minValue);
         var maxDate = OpenLayers.Date.parse(wmsTime.maxValue);
 
-        var minDefDate = (wmsTime.minDefValue) ?
+        var minDefaultDate = (wmsTime.minDefValue) ?
             OpenLayers.Date.parse(wmsTime.minDefValue) : minDate;
-        var maxDefDate = (wmsTime.maxDefValue) ?
+        var maxDefaultDate = (wmsTime.maxDefValue) ?
             OpenLayers.Date.parse(wmsTime.maxDefValue) : maxDate;
 
         var defaultValues = (this.timeMode == "range") ?
-            [minDefDate.getTime(), maxDefDate.getTime()] : [minDefDate.getTime()];
+            [minDefaultDate.getTime(), maxDefaultDate.getTime()] :
+            [minDefaultDate.getTime()];
 
         if (wmsTime.values) {
             this.timeValues = [];
@@ -276,17 +278,7 @@ cgxp.slider.WMSTimeSlider = Ext.extend(Ext.slider.MultiSlider, {
      *  :param date: ``Date``
      */
     formatLayerTimeLabel: function(date) {
-        var hasTime = this.dateLabelFormat.indexOf('H') > -1;
-
-        if (hasTime) {
-            return date.format(this.dateLabelFormat);
-        } else {
-            // We must use UTC time as there is no time part (only a date part)
-            return this.dateLabelFormat
-                .replace(/Y/g, date.getUTCFullYear())
-                .replace(/m/g, OpenLayers.Number.zeroPad(date.getUTCMonth() + 1, 2))
-                .replace(/d/g, OpenLayers.Number.zeroPad(date.getUTCDate(), 2));
-        }
+        return cgxp.tools.formatDate(date, this.dateLabelFormat);
     },
 
     /** private: method[doSnap]
