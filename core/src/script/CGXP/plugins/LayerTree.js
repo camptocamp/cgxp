@@ -119,7 +119,7 @@ Ext.namespace("cgxp.plugins");
  *                  // default themes works only with theme groups
  *                  defaultThemes: ["default_theme_to_load"],
  *                  uniqueTheme: true,
- *                  wmsURL: "${request.route_url('mapserverproxy', path='')}"
+ *                  wmsURL: "${request.route_url('mapserverproxy')}"
  *              },
  *              outputTarget: "layerpanel"
  *          },

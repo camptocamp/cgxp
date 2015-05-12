@@ -42,7 +42,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *          tools: [{
  *              ptype: "cgxp_fulltextsearch",
- *              url: "${request.route_url('fulltextsearch', path='')}",
+ *              url: "${request.route_url('fulltextsearch')}",
  *              actionTarget: "center.tbar"
  *          }]
  *          ...
@@ -68,7 +68,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[url]
      *  ``String`` URL of the text search service. Typically set to
-     *  ``"${request.route_url('fulltextsearch', path='')}"``.
+     *  ``"${request.route_url('fulltextsearch')}"``.
      */
     url: null,
 

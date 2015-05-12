@@ -41,8 +41,8 @@ Ext.namespace("cgxp.plugins");
  *          tools: [{
  *              ptype: 'cgxp_routing',
  *              outputTarget: "left-panel",
- *              osrmURL: "${request.route_url('osrmproxy', path='')}",
- *              searchURL: "${request.route_url('ftsproxy', path='')}",
+ *              osrmURL: "${request.route_url('osrmproxy')}",
+ *              searchURL: "${request.route_url('ftsproxy')}",
  *              outputConfig: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -66,8 +66,8 @@ Ext.namespace("cgxp.plugins");
  *              ptype: 'cgxp_routing',
  *              actionTarget: "center.tbar",
  *              toggleGroup: "maptools",
- *              osrmURL: "${request.route_url('osrmproxy', path='')}",
- *              searchURL: "${request.route_url('ftsproxy', path='')}",
+ *              osrmURL: "${request.route_url('osrmproxy')}",
+ *              searchURL: "${request.route_url('ftsproxy')}",
  *              outputConfig: {
  *                  labelAlign: 'top',
  *                  defaults: {

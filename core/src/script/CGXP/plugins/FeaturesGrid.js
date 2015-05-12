@@ -63,7 +63,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              events: EVENTS,
  *              themes: THEMES,
- *              mapserverURL: "${request.route_url('mapserverproxy', path='')}",
+ *              mapserverURL: "${request.route_url('mapserverproxy')}",
  *              WFSTypes: ${WFSTypes | n},
  *              externalWFSTypes: ${externalWFSTypes | n},
  *              enableWMTSLayers: true
