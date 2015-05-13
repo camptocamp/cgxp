@@ -44,7 +44,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     /** api: config[creatingPdfText] ``String`` i18n */
     creatingPdfText: "Creating PDF...",
     /** api: config[printStatusText] ``String`` i18n */
-    printStatusText: '<tpl for=".">Queue position: {count}<br />Mean time per print: {timeS} [s]</tpl>',
+    printStatusText: '<tpl for=".">Queue position: {queuePosition}<br />Mean time per print: {timeS} [s]</tpl>',
     /** api: config[downloadPdfText] ``String`` i18n */
     downloadPdfText: "Download",
     /** api: config[statusErrorText] ``String`` i18n */
@@ -439,7 +439,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             this.progressPanel.doLayout();
             this.progressPanel.setHeight(35 * this.progressPanel.items.length);
             this.doLayout();
-            var statusCallback = function(ref, succes, currentStatus) {
+            var statusCallback = function(job, succes, currentStatus) {
                 if (!succes) {
                     statusComponent.update(self.statusErrorText);
                     clearInterval(interval);
@@ -465,7 +465,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                             event.preventDefault();
                         }
                         self.printProvider.download(
-                            self.printProvider.getDownloadURL(ref)
+                            self.printProvider.getDownloadURL(job)
                         );
                         self.progressPanel.remove(statusComponent);
                         statusComponent.destroy();
@@ -481,15 +481,16 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                         interval = setInterval(updateStatus, Math.max(500, currentStatus.time));
                     }
                     currentStatus.timeS = currentStatus.time / 1000.0;
+                    currentStatus.queuePosition = job.position - currentStatus.count;
                     statusComponent.update(
                         self.printStatusTemplate.apply(currentStatus)
                     );
                 }
             };
-            var printCallback = function(ref) {
+            var printCallback = function(job) {
                 self.busyMask.hide();
                 updateStatus = function() {
-                    self.printProvider.getStatus(ref, statusCallback);
+                    self.printProvider.getStatus(job, statusCallback);
                 };
                 updateStatus();
             };
