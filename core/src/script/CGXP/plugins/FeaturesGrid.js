@@ -556,14 +556,14 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     },
 
     /** private: method[getTabName]
-     * Returns the name of the tab that contains the given featureType
-     * or the featureType.
+     *  Returns the name of the tab that contains the given featureType
+     *  or the featureType.
      */
     getTabName: function(featureType) {
         var typeKey;
         for (typeKey in this.concatenateTabs) {
             if (this.concatenateTabs[typeKey] instanceof Array) {
-                if (this.concatenateTabs[typeKey].indexOf(featureType) > 0) {
+                if (this.concatenateTabs[typeKey].indexOf(featureType) >= 0) {
                     return typeKey;
                 }
             }
