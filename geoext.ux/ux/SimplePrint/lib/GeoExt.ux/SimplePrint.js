@@ -478,7 +478,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                 }
                 else {
                     if (interval === null) {
-                        interval = setInterval(updateStatus, Math.max(500, currentStatus.time));
+                        interval = setInterval(updateStatus, 1000);
                     }
                     currentStatus.timeS = currentStatus.time / 1000.0;
                     currentStatus.queuePosition = job.position - currentStatus.count;
