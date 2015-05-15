@@ -261,7 +261,8 @@ GeoExt.Lang.add("fr", {
         errorMsg: "Une erreur s'est produite avec l'outil de profil. Veuillez recommencer.",
         exportCsvText: "Exporter en CSV",
         tooltipText: "Afficher le profil altimétrique",
-        menuText: "Profil altimétrique"
+        menuText: "Profil altimétrique",
+        rasterLabel: "{0} : {1} m"
     },
 
     "cgxp.plugins.GoogleEarthView.prototype": {
