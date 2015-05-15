@@ -123,6 +123,10 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     errorMsg: "An error occurred with the profile tool. Please try again.",
 
+    /* i18n */
+    distanceLabel: "{0} m",
+    rasterLabel: "{0}: {1} m",
+
     /** api: config[style]
      *  ``Object``
      *  The style to be applied to the control vector layer (optional).
@@ -227,6 +231,14 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     /** private: method[addActions]
      */
     addActions: function() {
+        this.distanceLabelTmpl = new Ext.Template(this.distanceLabel, {compiled: true});
+        this.rasterLabelTmpl = new Ext.Template(this.rasterLabel, {compiled: true});
+
+        this.i18nRasterLayers = [];
+        Ext.each(this.rasterLayers, function(layer) {
+            this.i18nRasterLayers.push(OpenLayers.i18n(layer));
+        }, this);
+
         var control =  this.createControl();
         this.control = control;
         this.target.mapPanel.map.addControl(control);
@@ -248,7 +260,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
-        this.dummyForm = Ext.DomHelper.append(document.body, {tag : 'form'});
+        this.dummyForm = Ext.DomHelper.append(document.body, {tag: 'form'});
         var card = {
             xtype: 'container',
             layout: 'card',
@@ -454,22 +466,19 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         this.exportAsCsvLink.show();
 
         var values = [];
-        var layers = this.rasterLayers;
-        var i;
-        for (i=0; i < data.length; i++) {
-            var datum = data[i];
+        Ext.each(data, function(datum) {
             var value = [parseFloat(datum.dist)];
-            for (var j=0; j < layers.length; j++) {
-                var layer = layers[j];
+            Ext.each(this.rasterLayers, function(layer) {
                 value.push(parseFloat(datum[this.valuesProperty][layer]));
-            }
+            }, this);
             values.push(value);
-        }
+        }, this);
 
+        var self = this;
         this.chart = new Dygraph(
             cmp.el.dom,
             function() {
-                var ret = "X," + layers.join(',') + "\n";
+                var ret = "X," + self.i18nRasterLayers.join(',') + "\n";
                 for (var i = 0; i < values.length; i++) {
                     ret += values[i].join(',') + "\n";
                 }
@@ -533,15 +542,16 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
     },
 
     showMarker: function(row) {
-        var layers = this.rasterLayers;
         var datum = this.data[row];
         var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
         this.marker && this.marker.destroy();
 
-        var label = [datum.dist + " m"];
-        for (var i=0; i < layers.length; i++) {
-            var l = layers[i];
-            label.push(l + " : " + datum[this.valuesProperty][l] + " m");
+        var label = [this.distanceLabelTmpl.apply(datum.dist)];
+        for (var i = 0 ; i < this.rasterLayers.length ; i++) {
+            label.push(this.rasterLabelTmpl.apply(
+                this.i18nRasterLayers[i],
+                datum[this.valuesProperty][this.rasterLayers[i]]
+            ));
         }
         var style = OpenLayers.Util.extend({
             label: label.join(', ')
