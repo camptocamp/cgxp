@@ -146,6 +146,13 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
      */
     nbPoints: 100,
 
+    /** api: config[noDataValue]
+     *  ``Number``
+     *  The number representing no data values in the raster layers.
+     *  Default to null.
+     */
+    noDataValue: null,
+
     /** i18n */
     tooltipText: 'Profile',
     menuText: 'Profile',
@@ -469,6 +476,10 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         Ext.each(data, function(datum) {
             var value = [parseFloat(datum.dist)];
             Ext.each(this.rasterLayers, function(layer) {
+                if (!this.noDataValue &&
+                        datum[this.valuesProperty][layer] === this.noDataValue) {
+                    datum[this.valuesProperty][layer] = NaN;
+                }
                 value.push(parseFloat(datum[this.valuesProperty][layer]));
             }, this);
             values.push(value);
