@@ -87,8 +87,8 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *      tpls: {
      *          allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +
      *              "WGS Coord. Label : {wgs_x} {wgs_y}<br />" +
-     *              "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
-     *              "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
+     *              "Elevation Label (Terrain) : {mnt_value} [m]<br />" +
+     *              "Elevation Label (Surface) : {mns_value} [m]<br />" +
      *              "Height (Surface-Terrain) : {elevation_dhm} [m]<br />"
      *      }
      *
@@ -133,8 +133,8 @@ cgxp.plugins.ContextualData = Ext.extend(gxp.plugins.Tool, {
      *         tpls: {
      *             allTpl: "Local Coord. Label : {coord_x} {coord_y}<br />" +
      *                     "WGS Coord. Label : {wgs_x} {wgs_y}<br />" +
-     *                     "Elevation Label (Terrain) : {elevation_dtm} [m]<br />" +
-     *                     "Elevation Label (Surface) : {elevation_dsm} [m]<br />" +
+     *                     "Elevation Label (Terrain) : {mnt_value} [m]<br />" +
+     *                     "Elevation Label (Surface) : {mns_value} [m]<br />" +
      *                     "Height (Surface-Terrain) : {elevation_dhm} [m]<br />" +
      *                     "{custom_data_label} : {custom_data_value}"
      *         },
@@ -426,8 +426,8 @@ cgxp.plugins.ContextualData.Tooltip = OpenLayers.Class(cgxp.plugins.ContextualDa
      *  ``String`` Used to generate the Ext.Template for popup content with
      *  server elevation data
      */
-    defaultTplElevation: "Elevation (Terrain): {elevation_dtm} [m]<br />" +
-        "Elevation (Surface): {elevation_dsm} [m]<br />" +
+    defaultTplElevation: "Elevation (Terrain): {mnt_value} [m]<br />" +
+        "Elevation (Surface): {mns_value} [m]<br />" +
         "Height (Surface-Terrain): {elevation_dhm} [m]<br />",
 
     /** private: config[serviceUrl]
@@ -648,8 +648,8 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      *  ``String`` Used to generate the base Ext.Template used for elevation in
      *  popup content
      */
-    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{elevation_dtm} [m]</td></tr>" +
-        "<tr><td>Elevation (Surface)</td><td>{elevation_dsm} [m]</td></tr>" +
+    elevationTpl: "<tr><td>Elevation (Terrain)</td><td>{mnt_value} [m]</td></tr>" +
+        "<tr><td>Elevation (Surface)</td><td>{mns_value} [m]</td></tr>" +
         "<tr><td>Height (Surface-Terrain)</td><td>{elevation_dhm} [m]</td></tr>" +
         "<tr><td>Slope</td><td>{elevation_slope} [°]</td></tr>",
 
