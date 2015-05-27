@@ -84,7 +84,6 @@
         "../../../../sandbox/LayerManager/ux/widgets/LayerManagerImportPanel.js",
         "../../../../sandbox/LayerManager/ux/downloadify/js/downloadify.min.js",
         "../../../../sandbox/FeatureEditing/ux/widgets/plugins/ExportFeature.js",
-        "../../../../sandbox/FeatureEditing/ux/widgets/DynamicMeasure.js",
         "../../../../openlayers.addins/DynamicMeasure/lib/OpenLayers/Control/DynamicMeasure.js",
         "../../../../sandbox/LayerManager/ux/data/Export.js",
         "../../../../sandbox/LayerManager/ux/widgets/LayerManagerExportWindow.js",
