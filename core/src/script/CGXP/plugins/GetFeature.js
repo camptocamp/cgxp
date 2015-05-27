@@ -661,7 +661,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         this.ctrlWFSControl = new OpenLayers.Control.GetFeature({
             target: this.target,
             box: true,
-            click: this.disableGetFeatureInfo,
+            click: this.toolWFSControl ? false : this.disableGetFeatureInfo,
             single: false,
             handlerOptions: {
                 box: {
