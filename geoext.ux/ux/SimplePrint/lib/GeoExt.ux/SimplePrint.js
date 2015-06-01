@@ -160,6 +160,9 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *                      ...
      *                  }
      *              },
+     *              "debug": {
+     *                  ignore: true
+     *              },
      *              ...
      *          },
      *          ...
@@ -351,7 +354,9 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         Ext.each(printProvider.getAttributes(), function(attribute) {
             templateExtraAttributes = this.fieldsExtraClientConfiguration[layout.data.name] || {};
             extraAttributes = templateExtraAttributes[attribute.name] || {};
-            this.addAttribute(attribute, extraAttributes.fieldAttributes);
+            if (!extraAttributes.ignore) {
+                this.addAttribute(attribute, extraAttributes.fieldAttributes);
+            }
         }, this);
 
         if (this.initialConfig.items) {

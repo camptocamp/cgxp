@@ -281,6 +281,9 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *                          emptyText: "${_("Description")}",
      *                          autoCreate: {maxLength: 200}
      *                      }
+     *                  },
+     *                  "debug": {
+     *                      ignore: true
      *                  }
      *              }
      *          }
