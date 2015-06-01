@@ -52,7 +52,8 @@ do
     git reset --hard
     git clean -f -d
     git checkout --force ${VERSION}
-    git pull origin ${VERSION}
+    git fetch
+    git reset --hard origin/${VERSION}
 
     rm -rf lib/api
     rm -rf lib/plugins
