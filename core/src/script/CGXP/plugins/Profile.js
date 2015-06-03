@@ -557,12 +557,12 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         var point = new OpenLayers.Geometry.Point(datum.x, datum.y);
         this.marker && this.marker.destroy();
 
-        var label = [this.distanceLabelTmpl.apply(datum.dist)];
+        var label = [this.distanceLabelTmpl.apply([datum.dist])];
         for (var i = 0 ; i < this.rasterLayers.length ; i++) {
-            label.push(this.rasterLabelTmpl.apply(
+            label.push(this.rasterLabelTmpl.apply([
                 this.i18nRasterLayers[i],
                 datum[this.valuesProperty][this.rasterLayers[i]]
-            ));
+            ]));
         }
         var style = OpenLayers.Util.extend({
             label: label.join(', ')
