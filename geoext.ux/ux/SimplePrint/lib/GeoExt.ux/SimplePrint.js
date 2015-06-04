@@ -52,7 +52,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     /** api: config[includelegendText] ``String`` i18n */
     includelegendText: "Include legend",
     /** api: config[createPrintJobText] ``String`` i18n */
-    createPrintJobText: "Create new print job.",
+    createPrintJobText: "Creating new print job.",
     /* end i18n */
 
     /** api: config[printProvider]
@@ -100,6 +100,11 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *  ``Ext.LoadMask``
      */
     busyMask: null,
+
+    /** private: property[runningPrintJobs]
+     *  ``numbee``
+     */
+    runningPrintJobs: 0,
 
     /** api: config[printExtentOptions]
      *  ``Object`` Optional options for the `GeoExt.plugins.Print` plugin.
@@ -174,6 +179,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *
      *  The panel used to manage job in progress, used with the version 3.
      */
+    progressPanel: null,
 
     /** private: method[initComponent]
      */
@@ -215,7 +221,6 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
 
         this.printProvider.on({
             "beforeprint": this.busyMask.show,
-            "print": this.busyMask.hide,
             scope: this.busyMask
         });
 
@@ -444,13 +449,22 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             this.progressPanel.doLayout();
             this.progressPanel.setHeight(35 * this.progressPanel.items.length);
             this.doLayout();
+            this.runningPrintJobs++;
             var statusCallback = function(job, succes, currentStatus) {
                 if (!succes) {
+                    self.runningPrintJobs--;
+                    if (self.runningPrintJobs <= 0) {
+                        self.busyMask.hide();
+                    }
                     statusComponent.update(self.statusErrorText);
                     clearInterval(interval);
                     return;
                 }
                 if (currentStatus.done) {
+                    self.runningPrintJobs--;
+                    if (self.runningPrintJobs <= 0) {
+                        self.busyMask.hide();
+                    }
                     clearInterval(interval);
                     if (currentStatus.error) {
                         statusComponent.update(currentStatus.error.replace(/\n/g, "<br />"));
@@ -464,22 +478,16 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                         };
                         return;
                     }
-                    statusComponent.update('<a href="#">' + self.downloadPdfText + "</a>");
-                    statusComponent.el.dom.childNodes[0].onclick = function(event) {
-                        if (event.preventDefault) {
-                            event.preventDefault();
-                        }
-                        self.printProvider.download(
-                            self.printProvider.getDownloadURL(job)
-                        );
-                        self.progressPanel.remove(statusComponent);
-                        statusComponent.destroy();
-                        statusComponent = null;
-                        self.progressPanel.doLayout();
-                        self.progressPanel.setHeight(35 * self.progressPanel.items.length);
-                        self.doLayout();
-                        return false;
-                    };
+                    self.progressPanel.remove(statusComponent);
+                    statusComponent.destroy();
+                    statusComponent = null;
+                    self.progressPanel.doLayout();
+                    self.progressPanel.setHeight(35 * self.progressPanel.items.length);
+                    self.doLayout();
+
+                    self.printProvider.download(
+                        self.printProvider.getDownloadURL(job)
+                    );
                 }
                 else {
                     if (interval === null) {
@@ -487,13 +495,17 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                     }
                     currentStatus.timeS = currentStatus.time / 1000.0;
                     currentStatus.queuePosition = job.position - currentStatus.count;
+                    currentStatus.timeS = isNaN(currentStatus.timeS) ? '-' :
+                        currentStatus.timeS;
+                    currentStatus.queuePosition = isNaN(currentStatus.queuePosition) ? '-' :
+                        currentStatus.queuePosition;
+
                     statusComponent.update(
                         self.printStatusTemplate.apply(currentStatus)
                     );
                 }
             };
             var printCallback = function(job) {
-                self.busyMask.hide();
                 updateStatus = function() {
                     self.printProvider.getStatus(job, statusCallback);
                 };
