@@ -24,6 +24,11 @@ Ext.namespace('Ext.ux');
 
 Ext.ux.ColorField = Ext.extend(Ext.form.TriggerField, {
 
+    /** private: attribute[menu]
+     * ``Ext.ux.ColorMenu``
+     */
+    menu: null,
+
     invalidText: "Colors must be in a the hex format #FFFFFF.",
     regex: /^\#[0-9A-F]{6}$/i,
     allowBlank: false,
