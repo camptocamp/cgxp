@@ -1247,6 +1247,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             }, layer.id)]);
 
         this.updateIndicesInWmtsInfo(layerInfo.orderIndex);
+        this.checkInRange(treeNode);
 
         layerNode.slider.setLayer(layer);
 
