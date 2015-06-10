@@ -1,5 +1,5 @@
 /*
- * @requires OpenLayers/Lang/it.js
+ * @requires GeoExt/Lang.js
  */
 
-OpenLayers.Util.extend(OpenLayers.Lang.it, {});
+GeoExt.Lang.add("it", {});
