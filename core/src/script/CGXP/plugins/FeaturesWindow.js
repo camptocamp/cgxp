@@ -267,9 +267,6 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
 
         this.events.on('queryclose', function(queryResult) {
             cgxp.tools.notification.close();
-            if (this.featuresWindow) {
-                this.featuresWindow.hide();
-            }
         }, this);
 
         map.addLayer(this.vectorLayer);
