@@ -478,7 +478,16 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             applyTo: 'password',
             inputType: 'password',
             width: 120,
-            allowBlank: false
+            allowBlank: false,
+            enableKeyEvents: true,
+            listeners: {
+                specialkey: function(field, el) {
+                    if (el.getKey() == Ext.EventObject.ENTER) {
+                        this.submitForm();
+                    }
+                },
+                scope: this
+            }
         });
         var newPassword = new Ext.form.TextField({
             fieldLabel: this.newPasswordText,
@@ -487,7 +496,16 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
             inputType: 'password',
             width: 120,
             allowBlank: true,
-            hidden: true
+            hidden: true,
+            enableKeyEvents: true,
+            listeners: {
+                specialkey: function(field, el) {
+                    if (el.getKey() == Ext.EventObject.ENTER) {
+                        this.submitForm();
+                    }
+                },
+                scope: this
+            }
         });
 
         var newPasswordConfirm = new Ext.form.TextField({
@@ -504,6 +522,15 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     return true;
                 }
+            },
+            enableKeyEvents: true,
+            listeners: {
+                specialkey: function(field, el) {
+                    if (el.getKey() == Ext.EventObject.ENTER) {
+                        this.submitForm();
+                    }
+                },
+                scope: this
             }
         });
 
