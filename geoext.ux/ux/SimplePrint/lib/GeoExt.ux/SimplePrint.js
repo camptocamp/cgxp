@@ -453,18 +453,12 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             var statusCallback = function(job, succes, currentStatus) {
                 if (!succes) {
                     self.runningPrintJobs--;
-                    if (self.runningPrintJobs <= 0) {
-                        self.busyMask.hide();
-                    }
                     statusComponent.update(self.statusErrorText);
                     clearInterval(interval);
                     return;
                 }
                 if (currentStatus.done) {
                     self.runningPrintJobs--;
-                    if (self.runningPrintJobs <= 0) {
-                        self.busyMask.hide();
-                    }
                     clearInterval(interval);
                     if (currentStatus.error) {
                         statusComponent.update(currentStatus.error.replace(/\n/g, "<br />"));
@@ -506,6 +500,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                 }
             };
             var printCallback = function(job) {
+                self.busyMask.hide();
                 updateStatus = function() {
                     self.printProvider.getStatus(job, statusCallback);
                 };
