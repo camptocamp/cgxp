@@ -311,6 +311,13 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         type: "LegendAttributeValue"
     }],
 
+    /** public: method[addCustomItem]
+     *
+     *  Define this method to be able to manage unsupported types.
+     *
+     *  Arguments: item, attribute, extraAttributes, fieldAttributes
+     */
+
     /** api: config[version]
      *  ``Number``
      *  The print major version,
@@ -755,6 +762,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             getLegendPanel: function() {
                 return self.target.tools[self.legendPanelId].legendPanel;
             },
+            addCustomItem: this.addCustomItem,
             dpiText: this.dpifieldText,
             scaleText: this.scalefieldText,
             rotationText: this.rotationfieldText,
