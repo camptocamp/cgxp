@@ -308,10 +308,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *    }, {
      *        name: "comments",
      *        label: "Comments",
-     *        type: "String"
+     *        type: "String",
+     *        useTextArea: true
      *    }, {
      *        name: "legend",
-     *        type: "LegendAttributeValues"
+     *        type: "LegendAttributeValue"
      *    }]
      */
     additionalAttributes: [{
@@ -325,7 +326,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         useTextArea: true
     }, {
         name: "legend",
-        type: "LegendAttributeValues"
+        type: "LegendAttributeValue"
     }],
 
     /** api: config[version]
