@@ -235,24 +235,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: null,
 
-    /** api: config[fields]
-     *  ``Array``
-     *  Fields added in the print form, DEPRECATED.
-     *  E.g.:
-     *
-     *  .. code:: javascript
-     *
-     *    fields: ['title', 'comment', 'legend', {
-     *        xtype: 'textfield',
-     *        name: 'notes',
-     *        fieldLabel: 'Notes',
-     *        autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-     *    }]
-     *
-     *  Default to: ``[]``.
-     */
-    fields: [],
-
     /** api: config[options]
      *  ``Object``
      *  The options given to the print panel.
@@ -308,10 +290,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *    }, {
      *        name: "comments",
      *        label: "Comments",
-     *        type: "String"
+     *        type: "String",
+     *        useTextArea: true
      *    }, {
      *        name: "legend",
-     *        type: "LegendAttributeValues"
+     *        type: "LegendAttributeValue"
      *    }]
      */
     additionalAttributes: [{
@@ -325,8 +308,15 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         useTextArea: true
     }, {
         name: "legend",
-        type: "LegendAttributeValues"
+        type: "LegendAttributeValue"
     }],
+
+    /** public: method[addCustomItem]
+     *
+     *  Define this method to be able to manage unsupported types.
+     *
+     *  Arguments: item, attribute, extraAttributes, fieldAttributes
+     */
 
     /** api: config[version]
      *  ``Number``
@@ -705,17 +695,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         }.createDelegate(this));
 
-        var items = [];
-        Ext.each(this.fields, function(field) {
-            items.push(Ext.apply({
-                xtype: "textfield",
-                plugins: new GeoExt.plugins.PrintProviderField({
-                    printProvider: printProvider
-                }),
-                autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-            }, field));
-        }, this);
-
         var self = this;
 
         // create the print panel
@@ -776,7 +755,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 labelSeparator: ''
             },
             printProvider: printProvider,
-            items: items,
             comboOptions: {
                 editable: false,
                 displayField: 'label'
@@ -784,6 +762,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             getLegendPanel: function() {
                 return self.target.tools[self.legendPanelId].legendPanel;
             },
+            addCustomItem: this.addCustomItem,
             dpiText: this.dpifieldText,
             scaleText: this.scalefieldText,
             rotationText: this.rotationfieldText,
