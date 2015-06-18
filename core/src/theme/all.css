@@ -645,3 +645,9 @@ div.x-panel .olControlZoom a:hover {
 .GoogleEarthIEwarning .x-window-body {
     padding: 10px;
 }
+
+.print-load {
+    float: left;
+    margin-right: 0.4em;
+    margin-top: 0.4em;
+}

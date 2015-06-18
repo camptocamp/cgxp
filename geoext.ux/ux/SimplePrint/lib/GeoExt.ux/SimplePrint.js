@@ -44,7 +44,8 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     /** api: config[creatingPdfText] ``String`` i18n */
     creatingPdfText: "Creating PDF...",
     /** api: config[printStatusText] ``String`` i18n */
-    printStatusText: '<tpl for=".">Queue position: {queuePosition}<br />Mean time per print: {timeS} [s]</tpl>',
+    printStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />' +
+        'Queue position: {queuePosition}<br />Mean time per print: {timeS} [s]</tpl>',
     /** api: config[downloadPdfText] ``String`` i18n */
     downloadPdfText: "Download",
     /** api: config[statusErrorText] ``String`` i18n */
@@ -489,6 +490,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                         currentStatus.timeS;
                     currentStatus.queuePosition = isNaN(currentStatus.queuePosition) ? '-' :
                         currentStatus.queuePosition;
+                    currentStatus.loading_icon = OpenLayers.Util.getImagesLocation() + '../loading.gif';
 
                     statusComponent.update(
                         self.printStatusTemplate.apply(currentStatus)
