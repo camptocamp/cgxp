@@ -235,24 +235,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: null,
 
-    /** api: config[fields]
-     *  ``Array``
-     *  Fields added in the print form, DEPRECATED.
-     *  E.g.:
-     *
-     *  .. code:: javascript
-     *
-     *    fields: ['title', 'comment', 'legend', {
-     *        xtype: 'textfield',
-     *        name: 'notes',
-     *        fieldLabel: 'Notes',
-     *        autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-     *    }]
-     *
-     *  Default to: ``[]``.
-     */
-    fields: [],
-
     /** api: config[options]
      *  ``Object``
      *  The options given to the print panel.
@@ -706,17 +688,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
         }.createDelegate(this));
 
-        var items = [];
-        Ext.each(this.fields, function(field) {
-            items.push(Ext.apply({
-                xtype: "textfield",
-                plugins: new GeoExt.plugins.PrintProviderField({
-                    printProvider: printProvider
-                }),
-                autoCreate: {tag: "input", type: "text", size: "45", maxLength: "45"}
-            }, field));
-        }, this);
-
         var self = this;
 
         // create the print panel
@@ -777,7 +748,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 labelSeparator: ''
             },
             printProvider: printProvider,
-            items: items,
             comboOptions: {
                 editable: false,
                 displayField: 'label'

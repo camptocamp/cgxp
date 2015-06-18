@@ -364,10 +364,6 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             }
         }, this);
 
-        if (this.initialConfig.items) {
-            Ext.each(this.initialConfig.items, this.add);
-        }
-
         if (showUnique || printProvider.dpis.getCount() > 1) {
             this.add(Ext.apply({
                 xtype: "combo",
