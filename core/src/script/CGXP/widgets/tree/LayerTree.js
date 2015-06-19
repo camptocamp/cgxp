@@ -1675,17 +1675,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             }
         }
-        // Test if we try to see restricted content from an unchanged theme's groups
-        else {
-            for (var key in this.initialState) {
-                if (key.indexOf("group_layers_") === 0) {
-                    var groupName = key.substring("group_layers_".length);
-                    if (groups.indexOf(groupName) < 0) {
-                        this.restrictedContent = true;
-                    }
-                }
-            }
-        }
         Ext.each(groups.reverse(), function(t) {
             if (!this.checkGroupIsAllowed(t)) {
                 // this group is not in the list of allowed groups,
