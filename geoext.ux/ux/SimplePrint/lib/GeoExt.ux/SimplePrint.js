@@ -224,6 +224,12 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             "beforeprint": this.busyMask.show,
             scope: this.busyMask
         });
+        if (!this.printProvider.supportProgress()) {
+            this.printProvider.on({
+                "print": this.busyMask.hide,
+                scope: this.busyMask
+            });
+        }
 
         this.printProvider.on({
             "layoutchange": this.initForm,
