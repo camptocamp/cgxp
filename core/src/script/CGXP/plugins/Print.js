@@ -288,8 +288,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *        label: "Title",
      *        type: "String"
      *    }, {
-     *        name: "comments",
-     *        label: "Comments",
+     *        name: "comment",
+     *        label: "Comment",
      *        type: "String",
      *        useTextArea: true
      *    }, {
