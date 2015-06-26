@@ -43,9 +43,13 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     printText: "Print",
     /** api: config[creatingPdfText] ``String`` i18n */
     creatingPdfText: "Creating PDF...",
-    /** api: config[printStatusText] ``String`` i18n */
-    printStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />' +
-        'Queue position: {queuePosition}<br />Mean time per print: {timeS} [s]</tpl>',
+    /** api: config[printWaitingStatusText] ``String`` i18n */
+    printWaitingStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Your print will start in ' +
+        '<tpl if="waitingTimeMin == 0">less than one minute</tpl>' +
+        '<tpl if="waitingTimeMin == 1">about 1 minute</tpl>' +
+        '<tpl if="waitingTimeMin &gt; 1">about {waitingTimeMin} minutes</tpl></tpl>',
+    /** api: config[printRunningStatusText] ``String`` i18n */
+    printRunningStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Your print is running...</tpl>',
     /** api: config[downloadPdfText] ``String`` i18n */
     downloadPdfText: "Download",
     /** api: config[statusErrorText] ``String`` i18n */
@@ -53,7 +57,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
     /** api: config[includelegendText] ``String`` i18n */
     includelegendText: "Include legend",
     /** api: config[createPrintJobText] ``String`` i18n */
-    createPrintJobText: "Creating new print job.",
+    createPrintJobText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Creating new print job...</tpl>',
     /* end i18n */
 
     /** api: config[printProvider]
@@ -96,6 +100,10 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      *  prepared. Optional, will be auto-created with ``creatingPdfText` if
      *  not provided.
      */
+
+    /** private: config[jobHeight]
+     */
+    jobHeight: 32,
 
     /** private: property[busyMask]
      *  ``Ext.LoadMask``
@@ -200,8 +208,12 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                 layout: "vbox"
             });
         }
-        this.printStatusTemplate = new Ext.XTemplate(this.printStatusText);
-        this.printStatusTemplate.compile();
+        this.printWaitingStatusTemplate = new Ext.XTemplate(this.printWaitingStatusText);
+        this.printWaitingStatusTemplate.compile();
+        this.printRunningStatusTemplate = new Ext.XTemplate(this.printRunningStatusText);
+        this.printRunningStatusTemplate.compile();
+        this.createPrintJobTemplate = new Ext.XTemplate(this.createPrintJobText);
+        this.createPrintJobTemplate.compile();
 
         GeoExt.ux.SimplePrint.superclass.initComponent.call(this);
 
@@ -214,17 +226,17 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             layer: this.layer
         }, this.printExtentOptions));
 
-        if (!this.busyMask) {
-            this.busyMask = new Ext.LoadMask(Ext.getBody(), {
-                msg: this.creatingPdfText
-            });
-        }
-
-        this.printProvider.on({
-            "beforeprint": this.busyMask.show,
-            scope: this.busyMask
-        });
         if (!this.printProvider.supportProgress()) {
+            if (!this.busyMask) {
+                this.busyMask = new Ext.LoadMask(Ext.getBody(), {
+                    msg: this.creatingPdfText
+                });
+            }
+
+            this.printProvider.on({
+                "beforeprint": this.busyMask.show,
+                scope: this.busyMask
+            });
             this.printProvider.on({
                 "print": this.busyMask.hide,
                 scope: this.busyMask
@@ -442,35 +454,45 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             var interval = null;
             var updateStatus;
             var statusComponent = new Ext.Panel({
-                cls: "x-form-item",
+                cls: "x-form-item print-job",
                 width: "100%",
-                height: 35,
-                html: this.createPrintJobText,
+                height: this.jobHeight,
+                html: this.createPrintJobTemplate.apply({
+                    loading_icon: OpenLayers.Util.getImagesLocation() + '../loading.gif'
+                }),
                 unstyled: true
             });
             this.progressPanel.add(statusComponent);
             this.progressPanel.doLayout();
-            this.progressPanel.setHeight(35 * this.progressPanel.items.length);
+            this.progressPanel.setHeight(this.jobHeight * this.progressPanel.items.length);
             this.doLayout();
             this.runningPrintJobs++;
             var statusCallback = function(job, succes, currentStatus) {
                 if (!succes) {
                     self.runningPrintJobs--;
                     statusComponent.update(self.statusErrorText);
+                    statusComponent.el.dom.onclick = function(event) {
+                        self.progressPanel.remove(statusComponent);
+                        statusComponent.destroy();
+                        statusComponent = null;
+                        self.progressPanel.doLayout();
+                        self.progressPanel.setHeight(self.jobHeight * self.progressPanel.items.length);
+                        self.doLayout();
+                    };
                     clearInterval(interval);
                     return;
                 }
                 if (currentStatus.done) {
                     self.runningPrintJobs--;
                     clearInterval(interval);
-                    if (currentStatus.error) {
+                    if (currentStatus.status == "error") {
                         statusComponent.update(currentStatus.error.replace(/\n/g, "<br />"));
                         statusComponent.el.dom.onclick = function(event) {
                             self.progressPanel.remove(statusComponent);
                             statusComponent.destroy();
                             statusComponent = null;
                             self.progressPanel.doLayout();
-                            self.progressPanel.setHeight(35 * self.progressPanel.items.length);
+                            self.progressPanel.setHeight(self.jobHeight * self.progressPanel.items.length);
                             self.doLayout();
                         };
                         return;
@@ -479,7 +501,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                     statusComponent.destroy();
                     statusComponent = null;
                     self.progressPanel.doLayout();
-                    self.progressPanel.setHeight(35 * self.progressPanel.items.length);
+                    self.progressPanel.setHeight(self.jobHeight * self.progressPanel.items.length);
                     self.doLayout();
 
                     self.printProvider.download(
@@ -490,21 +512,39 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
                     if (interval === null) {
                         interval = setInterval(updateStatus, 1000);
                     }
-                    currentStatus.timeS = currentStatus.time / 1000.0;
-                    currentStatus.queuePosition = job.position - currentStatus.count;
-                    currentStatus.timeS = isNaN(currentStatus.timeS) ? '-' :
-                        currentStatus.timeS;
-                    currentStatus.queuePosition = isNaN(currentStatus.queuePosition) ? '-' :
-                        currentStatus.queuePosition;
                     currentStatus.loading_icon = OpenLayers.Util.getImagesLocation() + '../loading.gif';
 
-                    statusComponent.update(
-                        self.printStatusTemplate.apply(currentStatus)
-                    );
+                    if (currentStatus.status == "error") {
+                        statusComponent.update(currentStatus.error.replace(/\n/g, "<br />"));
+                        statusComponent.el.dom.onclick = function(event) {
+                            self.progressPanel.remove(statusComponent);
+                            statusComponent.destroy();
+                            statusComponent = null;
+                            self.progressPanel.doLayout();
+                            self.progressPanel.setHeight(self.jobHeight * self.progressPanel.items.length);
+                            self.doLayout();
+                        };
+                        return;
+                    }
+                    else if (currentStatus.status == "waiting") {
+                        currentStatus.waitingTimeMin = Math.round(currentStatus.waitingTime / 1000 / 60);
+                        currentStatus.elapsedTimeMin = Math.round(currentStatus.elapsedTime / 1000 / 60);
+                        statusComponent.update(
+                            self.printWaitingStatusTemplate.apply(currentStatus)
+                        );
+                    }
+                    else if (currentStatus.status == "running") {
+                        currentStatus.elapsedTimeMin = Math.round(currentStatus.elapsedTime / 1000 / 60);
+                        statusComponent.update(
+                            self.printRunningStatusTemplate.apply(currentStatus)
+                        );
+                    }
+                    else {
+                        statusComponent.update(OpenLayers.i18n(currentStatus.status));
+                    }
                 }
             };
             var printCallback = function(job) {
-                self.busyMask.hide();
                 updateStatus = function() {
                     self.printProvider.getStatus(job, statusCallback);
                 };
@@ -543,7 +583,9 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      */
     beforeDestroy: function() {
         var printProvider = this.printExtent.printProvider;
-        printProvider.un("beforePrint", this.busyMask.show, this.busyMask);
+        if (!printProvider.supportProgress()) {
+            printProvider.un("beforePrint", this.busyMask.show, this.busyMask);
+        }
         printProvider.un("print", this.busyMask.hide, this.busyMask);
         if(this.autoFit === true) {
             this.mapPanel.map.events.un({

@@ -17,11 +17,15 @@ GeoExt.Lang.add("fr", {
         scaleText: "Échelle",
         rotationText: "Rotation",
         printText: "Imprimer",
-        creatingPdfText: "Création du PDF ...",
-        printStatusText: '<tpl for=".">Position dans la file: {count}<br />Temps moyen par impression: {timeS} [s]</tpl>',
+        creatingPdfText: "Création du PDF...",
         downloadPdfText: "Téléchargement",
         statusErrorText: "Erreur",
         includelegendText: "Inclure la légende",
-        createPrintJobText: "Crée un nouveau travail d'impression"
+        createPrintJobText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Crée un nouveau travail d\'impression...</tpl>',
+        printWaitingStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Votre impression démare dans ' +
+            '<tpl if="waitingTimeMin == 0">moin d\'une minute</tpl>' +
+            '<tpl if="waitingTimeMin == 1">environ 1 minute</tpl>' +
+            '<tpl if="waitingTimeMin &gt; 1">environ {waitingTimeMin} minutes</tpl></tpl>',
+        printRunningStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Votre impression est en cours...</tpl>'
     }
 });

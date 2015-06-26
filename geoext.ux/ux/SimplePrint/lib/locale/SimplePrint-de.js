@@ -12,6 +12,17 @@
 
 GeoExt.Lang.add("de", {
     "GeoExt.ux.SimplePrint.prototype": {
-        includelegendText: "Legende anzeigen"
+        layoutText: "...",
+        dpiText: "...",
+        scaleText: "...",
+        rotationText: "...",
+        printText: "...",
+        creatingPdfText: "...",
+        downloadPdfText: "...",
+        statusErrorText: "...",
+        includelegendText: "Legende anzeigen",
+        createPrintJobText: "...",
+        printWaitingStatusText: '...',
+        printRunningStatusText: '...'
     }
 });

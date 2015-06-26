@@ -646,8 +646,10 @@ div.x-panel .olControlZoom a:hover {
     padding: 10px;
 }
 
+.print-job {
+    margin-top: 3px;
+}
 .print-load {
     float: left;
     margin-right: 0.4em;
-    margin-top: 0.4em;
 }
