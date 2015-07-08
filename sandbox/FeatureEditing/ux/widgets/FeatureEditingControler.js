@@ -796,6 +796,8 @@ GeoExt.ux.FeatureEditingControler = Ext.extend(Ext.util.Observable, {
         feature.isLabel = true;
         var panelClass = this.featurePanelClass || GeoExt.ux.form.FeaturePanel;
         feature.style.label = feature.attributes[panelClass.prototype.labelAttribute];
+        feature.style.fontSize = '12px';
+        feature.style.fontFamily = 'sans-serif';
     },
 
     /** private: method[onCircleAdded]
