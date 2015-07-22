@@ -1,9 +1,17 @@
 language: python
+
 python:
 - 2.7
 
+sudo: false
+
+addons:
+    apt:
+        packages:
+        - python-virtualenv
+        - nodejs
+
 before_script:
-- sudo apt-get install python-virtualenv nodejs
 - cd core/src/doc
 - virtualenv --distribute --no-site-packages env
 - env/bin/pip install -r requirements
