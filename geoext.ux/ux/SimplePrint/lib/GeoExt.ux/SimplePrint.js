@@ -585,8 +585,8 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         var printProvider = this.printExtent.printProvider;
         if (!printProvider.supportProgress()) {
             printProvider.un("beforePrint", this.busyMask.show, this.busyMask);
+            printProvider.un("print", this.busyMask.hide, this.busyMask);
         }
-        printProvider.un("print", this.busyMask.hide, this.busyMask);
         if(this.autoFit === true) {
             this.mapPanel.map.events.un({
                 "moveend": this.onMoveend,
