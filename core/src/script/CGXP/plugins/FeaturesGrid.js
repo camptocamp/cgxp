@@ -279,6 +279,13 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
     /** private: attribute[selectAll]
      */
 
+    /** api: config[csvExportLikeCurrentGrid]
+     *  ``String``  if true, export only the visible columns and in
+     *  the same order as in the featureGrid.
+     *  Default is false.
+     */
+    csvExportLikeCurrentGrid: false,
+
     /** private: attribute[numberOfFeatures]
      *  ``Integer`` Counter of features.
      */
@@ -330,7 +337,11 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     csvExport: function() {
         if (this.tabpan.activeTab) {
+            var i;
             var csv = [];
+            var headerIds = [];
+            var headerNames = [];
+            var columnModel = this.currentGrid.getColumnModel();
             var records = this.currentGrid.getSelectionModel().getSelections();
 
             if (records.length === 0) {
@@ -339,26 +350,47 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             if (records.length === 0) {
                 return;
             }
+
             Ext.each(records, function(r, index) {
                 var attributes = r.getFeature().attributes;
                 var properties = [];
                 var q = this.quote;
-                // Include header row
-                if (this.csvIncludeHeader && index === 0) {
-                    var header = [];
-                    Ext.iterate(attributes, function iter(key, attr) {
-                        header.push(q + OpenLayers.i18n(key).replace(q, q+q) + q);
-                    }, this);
-                    csv.push(header.join(this.csvSeparator));
-                }
-                for (var prop in attributes) {
-                    if (attributes.hasOwnProperty(prop)) {
-                        // special IE as it doesn't handle null element as string
-                        if (attributes[prop] !== null) {
-                            properties.push(q + attributes[prop].replace(q, q+q) + q);
-                        } else {
-                            properties.push(q + q);
+
+                // Get header ids
+                if (index === 0) {
+                    // Get only visible columns and keep columns order.
+                    if (this.csvExportLikeCurrentGrid) {
+                        for (i = 0; i < columnModel.getColumnCount(); i++) {
+                            if (!columnModel.isHidden(i)) {
+                                headerIds.push(columnModel.getDataIndex(i));
+                            }
                         }
+                    // Or take all columns with default order
+                    } else {
+                        Ext.iterate(attributes, function iter(key, attr) {
+                            headerIds.push(key);
+                        }, this);
+                    }
+
+                    // Include header names row
+                    if (this.csvIncludeHeader) {
+                        for (i = 0; i < headerIds.length; i++) {
+                            var name = OpenLayers.i18n(headerIds[i]);
+                            headerNames.push(q + name.replace(q, q+q) + q);
+                        }
+                        csv.push(headerNames.join(this.csvSeparator));
+                    }
+                }
+
+                // Get data for, and order by, previously kept headers
+                var value;
+                for (i = 0; i < headerIds.length; i++) {
+                    value = attributes[headerIds[i]];
+                    // Code for IE as it doesn't handle null element as string
+                    if (value !== null) {
+                        properties.push(q + value.replace(q, q + q) + q);
+                    } else {
+                        properties.push(q + q);
                     }
                 }
                 csv.push(properties.join(this.csvSeparator));
