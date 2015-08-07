@@ -37,7 +37,7 @@ fi
 
 git fetch
 
-for VERSION in master 1.3 1.4 1.5
+for VERSION in master 1.3 1.4 1.5 1.6
 do
 
     # BUILDDIR is where the HTML files are generated
