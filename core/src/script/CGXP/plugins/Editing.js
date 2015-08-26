@@ -92,7 +92,8 @@ Ext.namespace("cgxp.plugins");
  *              },
  *              selectionColors: {
  *                  23: '#FF0022'
- *              }
+ *              },
+ *              allowDrag: false
  *          }, {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
@@ -284,6 +285,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  * *defaults*,
      *  * *greedy*.
      */
+
+    /** api: config[allowDrag]
+     *  ``Boolean``
+     *  Whether or not to allow users to drag the lines or polygons when
+     *  editing the geometry. Defaults to true.
+     */
+    allowDrag: true,
 
     /** private: property[snapControl]
      * ``OpenLayers.Control.Snapping``
@@ -766,6 +774,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[showAttributesEditingWindow]
      */
     showAttributesEditingWindow: function(store) {
+        var modifyControlMode = OpenLayers.Control.ModifyFeature.RESHAPE;
+        if (this.allowDrag) {
+            modifyControlMode = modifyControlMode |
+                OpenLayers.Control.ModifyFeature.DRAG;
+        }
         this.editorGrid = new GeoExt.ux.FeatureEditorGrid({
             store: store,
             nameField: 'label',
@@ -780,8 +793,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             },
             modifyControlOptions: {
                 vertexRenderIntent: 'vertices',
-                mode: OpenLayers.Control.ModifyFeature.RESHAPE |
-                      OpenLayers.Control.ModifyFeature.DRAG
+                mode: modifyControlMode
             },
             listeners: {
                 done: function(panel, e) {
