@@ -89,6 +89,9 @@ Ext.namespace("cgxp.plugins");
  *                      ...
  *                  },
  *                  greedy: false
+ *              },
+ *              selectionColors: {
+ *                  23: '#FF0022'
  *              }
  *          }, {
  *              ptype: "cgxp_layertree",
@@ -267,6 +270,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *    does not contain too many features.
      */
 
+    /** api: config[selectionColors]
+     *  ``Object``
+     *  The keys are the layer id and the values are the color that will be
+     *  used when a feature from the corresponding layer is selected.
+     */
+
     /** api: config[snapOptions]
      *  ``Object``
      *  An object containing the options for the snap control. It might contain
@@ -403,7 +412,24 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[addEditingLayer]
      */
     addEditingLayer: function() {
+        var defaultSelectStyle = OpenLayers.Feature.Vector.style['select'];
+        var self = this;
+        var context = {
+            getColor: function(feature) {
+                return self.selectionColors &&
+                    self.selectionColors[feature.attributes.__layer_id__] ||
+                    defaultSelectStyle.strokeColor;
+            }
+        }
+        var template = {
+            fillColor: "${getColor}",
+            strokeColor: "${getColor}"
+        }
+        OpenLayers.Util.applyDefaults(template, defaultSelectStyle);
+        var style = new OpenLayers.Style(template, {context: context});
         var editingStyleMap = new OpenLayers.StyleMap({
+            'default': style,
+            'select': style,
             'vertices': new OpenLayers.Style({
                 pointRadius: 5,
                 graphicName: "square",
