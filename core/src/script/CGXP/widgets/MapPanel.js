@@ -199,8 +199,8 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
         this.initialState = state;
         var newCenter = this.autoProjection.tryProjection([state.x, state.y]);
         if (newCenter === null) {
-            state.x = null;
-            state.y = null;
+            delete state.x;
+            delete state.y;
         } else {
             state.x = newCenter[0];
             state.y = newCenter[1];
