@@ -118,7 +118,7 @@ div.x-panel a.x-tree-node-anchor:hover {
 .x-toolbar .info, .x-menu .info {
     background: url(img/information.png) top left no-repeat;
 }
-.x-toolbar .infotooltip, .x-menu .infotooltip {
+.x-btn .infotooltip, .x-toolbar .infotooltip, .x-menu .infotooltip {
     background: url(img/cursor.png) top left no-repeat;
 }
 .x-toolbar .help, .x-menu .help {
@@ -652,4 +652,12 @@ div.x-panel .olControlZoom a:hover {
 .print-load {
     float: left;
     margin-right: 0.4em;
+}
+
+.cut-help {
+    display: inline-block;
+    width: 68px;
+    height: 20px;
+    margin-left: 10px;
+    background: url(img/cut_help.png) no-repeat;
 }

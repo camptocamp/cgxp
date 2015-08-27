@@ -246,6 +246,36 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     queryServerErrorText: 'Query failed because of a server error.',
 
+    /** api: config[cutActionText]
+     *  ``String`` i18n
+     *  Cut menu item text.
+     **/
+    cutActionText: 'Cut geometry',
+
+    /** api: config[cutWizardTitle]
+     *  ``String`` i18n
+     *  Message to show as title in the cut wizard.
+     */
+    cutWizardTitle: 'Cut the polygon',
+
+    /** api: config[cutWizardSubtitle]
+     *  ``String`` i18n
+     *  Message to show as subtitle in the cut wizard.
+     */
+    cutWizardSubtitle: 'Choose polygon B:',
+
+    /** api: config[cutWizardSelectButtonText]
+     *  ``String`` i18n
+     *  "Select on map" button text in the cut wizard.
+     **/
+    cutWizardSelectButtonText: 'Select on map',
+
+    /** api: config[cutWizardDrawButtonText]
+     *  ``String`` i18n
+     *  "Draw a polygon" button text in the cut wizard.
+     **/
+    cutWizardDrawButtonText: 'Draw a polygon',
+
     /** private: config[pendingRequests]
      *  ``GeoExt.data.AttributeStore``
      *  The list of pendingRequests (actually the attribute stores)
@@ -532,8 +562,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         layer.attributes.layer_id;
                     var store = this.getAttributesStore(
                         layer.attributes.layer_id, f,
-                        function(store) {
-                            this.showAttributesEditingWindow(store);
+                        function(store, geometryType) {
+                            this.showAttributesEditingWindow(store, geometryType);
                         }
                     );
                 }, this),
@@ -715,8 +745,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 this.activateSnap();
                 var f = e.feature;
                 this.editingLayer.addFeatures([f]);
-                var store = this.getAttributesStore(f.attributes.__layer_id__, f, function(store) {
-                    this.showAttributesEditingWindow(store);
+                var store = this.getAttributesStore(f.attributes.__layer_id__, f, function(store, geometryType) {
+                    this.showAttributesEditingWindow(store, geometryType);
                 });
             },
             scope: this
@@ -773,12 +803,24 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
 
     /** private: method[showAttributesEditingWindow]
      */
-    showAttributesEditingWindow: function(store) {
+    showAttributesEditingWindow: function(store, geometryType) {
         var modifyControlMode = OpenLayers.Control.ModifyFeature.RESHAPE;
         if (this.allowDrag) {
             modifyControlMode = modifyControlMode |
                 OpenLayers.Control.ModifyFeature.DRAG;
         }
+        var actions = [];
+
+        if (geometryType.indexOf('Polygon') != -1) {
+            actions.push(
+                new Ext.menu.Item({
+                    text: this.cutActionText,
+                    handler: this.showCutWizard,
+                    scope: this
+                })
+            );
+        }
+
         this.editorGrid = new GeoExt.ux.FeatureEditorGrid({
             store: store,
             nameField: 'label',
@@ -795,6 +837,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 vertexRenderIntent: 'vertices',
                 mode: modifyControlMode
             },
+            extraActions: actions,
             listeners: {
                 done: function(panel, e) {
                     this.deactivateSnap();
@@ -820,7 +863,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 map: this.map,
                 height: 150,
                 width: 300,
-                layout: 'fit',
+                layout: 'vbox',
+                layoutConfig: {
+                    align: 'stretch',
+                    pack: 'start'
+                },
+                defaults: {
+                    flex: 1
+                },
                 title: 'Object #',
                 closable: false,
                 unpinnable: false,
@@ -1209,7 +1259,74 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
 
         return this.snapLayers[name];
+    },
+
+    /** private: method[showCutWizard]
+     *  Displays the window to cut a polygon geometry with an other geometry.
+     */
+    showCutWizard: function() {
+        console.log (this.editorGrid.store.feature);
+        this.editorGrid.hide();
+        var wizardPanel = new Ext.Panel({
+            defaults: {
+                style: {
+                    padding: '5px'
+                }
+            },
+            items: [{
+                xtype: 'container',
+                layout: 'hbox',
+                layoutConfig: {
+                    align: 'middle'
+                },
+                items: [{
+                    xtype: 'box',
+                    style: {
+                        'font-weight': 'bold'
+                    },
+                    html: this.cutWizardTitle
+                }, {
+                    xtype: 'box',
+                    html: '<span class="cut-help">'
+                }]
+            }, {
+                xtype: 'container',
+                html: this.cutWizardSubtitle
+            }, {
+                xtype: 'container',
+                layout: 'hbox',
+                layoutConfig: {
+                    align: 'middle'
+                },
+                defaults: {
+                    margins: '0 5 0 0'
+                },
+                items: [{
+                    xtype: 'button',
+                    iconCls: 'infotooltip',
+                    text: this.cutWizardSelectButtonText
+                }, {
+                    xtype: 'box',
+                    html: ' or '
+                }, {
+                    xtype: 'button',
+                    iconCls: 'gx-featureediting-draw-polygon',
+                    text: this.cutWizardDrawButtonText
+                }]
+            }],
+            bbar: ['->', {
+                text: 'Cancel',
+                handler: function() {
+                    this.editorGrid.show();
+                    this.attributePopup.remove(wizardPanel);
+                },
+                scope: this
+            }]
+        });
+        this.attributePopup.add(wizardPanel);
+        this.attributePopup.doLayout();
     }
 });
+
 
 Ext.preg(cgxp.plugins.Editing.prototype.ptype, cgxp.plugins.Editing);
