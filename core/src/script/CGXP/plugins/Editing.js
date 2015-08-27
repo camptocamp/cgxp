@@ -67,7 +67,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *      });
  *
- *      // with snapping enabled
+ *      // with snapping and several other options enabled
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -93,7 +93,8 @@ Ext.namespace("cgxp.plugins");
  *              selectionColors: {
  *                  23: '#FF0022'
  *              },
- *              allowDrag: false
+ *              allowDrag: false,
+ *              differenceServiceUrl: "${request.route_url('difference') | n}"
  *          }, {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
@@ -275,6 +276,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  "Draw a polygon" button text in the cut wizard.
      **/
     cutWizardDrawButtonText: 'Draw a polygon',
+
+    /** api: config[differenceServiceUrl]
+     *  ``String``
+     *  The URL to the difference service. Used by the cut wizard.
+     *  Typically set to ``"${request.route_url('difference')}"``
+     */
 
     /** private: config[pendingRequests]
      *  ``GeoExt.data.AttributeStore``
@@ -815,7 +822,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             actions.push(
                 new Ext.menu.Item({
                     text: this.cutActionText,
-                    handler: this.showCutWizard,
+                    handler: function() {
+                        this.showCutWizard(store.feature);
+                    },
                     scope: this
                 })
             );
@@ -1264,9 +1273,48 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** private: method[showCutWizard]
      *  Displays the window to cut a polygon geometry with an other geometry.
      */
-    showCutWizard: function() {
-        console.log (this.editorGrid.store.feature);
+    showCutWizard: function(feature) {
         this.editorGrid.hide();
+
+        function onComputeDone(geometry) {
+            // remove feature from editingLayer before updating the geometry
+            this.editingLayer.removeFeatures([feature]);
+            feature.geometry = geometry;
+            // then readd the feature to editingLayer
+            this.editingLayer.addFeatures([feature]);
+
+            feature.state = OpenLayers.State.INSERT ?
+                OpenLayers.State.INSERT : OpenLayers.State.UPDATE;
+            feature.layer.events.triggerEvent("featuremodified", {
+                feature: feature
+            });
+            this.editorGrid.modifyControl.activate();
+            this.editorGrid.modifyControl.selectFeature(feature);
+            closeWizard.call(this);
+        }
+
+        function onComputeError() {
+            // Do something
+        }
+
+        function closeWizard() {
+            this.editorGrid.show();
+            this.attributePopup.remove(wizardPanel);
+            // re-select the feature because it may have been unselected for
+            // example if a new polygon was drawn
+            this.editorGrid.modifyControl.selectFeature(feature);
+            handler.deactivate();
+        }
+
+        var handler = new OpenLayers.Handler.Polygon({
+            map: this.map
+        }, {
+            done: OpenLayers.Function.bind(function(geometry) {
+                handler.deactivate();
+                this.computeDifference(feature.geometry, geometry,
+                    onComputeDone, onComputeError);
+            }, this)
+        });
         var wizardPanel = new Ext.Panel({
             defaults: {
                 style: {
@@ -1304,27 +1352,58 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 items: [{
                     xtype: 'button',
                     iconCls: 'infotooltip',
-                    text: this.cutWizardSelectButtonText
+                    text: this.cutWizardSelectButtonText,
+                    handler: function() {
+                    },
+                    scope: this
                 }, {
                     xtype: 'box',
                     html: ' or '
                 }, {
                     xtype: 'button',
                     iconCls: 'gx-featureediting-draw-polygon',
-                    text: this.cutWizardDrawButtonText
+                    text: this.cutWizardDrawButtonText,
+                    handler: function() {
+                        this.editorGrid.modifyControl.unselectFeature(feature);
+                        handler.activate();
+                    },
+                    scope: this
                 }]
             }],
             bbar: ['->', {
                 text: 'Cancel',
-                handler: function() {
-                    this.editorGrid.show();
-                    this.attributePopup.remove(wizardPanel);
-                },
+                handler: closeWizard,
                 scope: this
             }]
         });
         this.attributePopup.add(wizardPanel);
         this.attributePopup.doLayout();
+        var loadMask = new Ext.LoadMask(wizardPanel.body);
+    },
+
+    /** private: method[computeDifference]
+     *  Sends request to difference service to the get the cut geometry back.
+     */
+    computeDifference: function(geomA, geomB, success, failure) {
+        var geojson = new OpenLayers.Format.GeoJSON();
+        geomA = Ext.util.JSON.decode(geojson.write(geomA));
+        geomB = Ext.util.JSON.decode(geojson.write(geomB));
+
+        Ext.Ajax.request({
+            url: this.differenceServiceUrl,
+            method: 'POST',
+            jsonData: {
+                geometries: [geomA, geomB]
+            },
+            success: function(result) {
+                success.call(this,
+                    geojson.read(result.responseText)[0].geometry);
+            },
+            failure: function() {
+                failure.call(this);
+            },
+            scope: this
+        });
     }
 });
 
