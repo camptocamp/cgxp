@@ -210,6 +210,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     createBtnText: 'Create a new feature',
 
+    /** api: config[undoButtonText]
+     *  ``String``
+     *  The text for the undo button (i18n).
+     */
+    undoButtonText: '',
+
+    /** api: config[undoButtonTooltip]
+     *  ``String``
+     *  The tooltip text for the undo button (i18n)
+     */
+    undoButtonTooltip: 'Undo last modification Ctrl+Z',
+
     /** api: config[forbiddenText]
      *  ``String``
      *  The text displayed when not allowed action is done (i18n).
@@ -338,8 +350,27 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             constrainHeader: true,
             items: [{
                 xtype: 'box',
-                html: this.helpText + '<hr />'
-            }, this.newFeatureBtn]
+                html: this.helpText,
+                style: {
+                    padding: '5px'
+                }
+            }],
+            bbar: [
+                this.newFeatureBtn,
+                '->',
+                {
+                    xtype: 'button',
+                    text: this.undoButtonText,
+                    iconCls: 'undo',
+                    tooltip: this.undoButtonTooltip,
+                    listeners: {
+                        click: function(button, pressed) {
+                            this.undo();
+                        },
+                        scope: this
+                    }
+                }
+            ]
         }, this.layersWindowOptions));
         this.target.mapPanel.on({
             'render': function() {
@@ -362,6 +393,59 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         });
+
+        this.initKeyEvent();
+    },
+
+    getActiveDrawControl: function() {
+        var draw;
+        if (this.newFeatureBtn.activeItem) {
+            draw = this.newFeatureBtn.activeItem.control;
+            if (draw.active) {
+                return draw;
+            }
+        }
+    },
+
+    undo: function() {
+        var draw = this.getActiveDrawControl();
+        if (draw) {
+            draw.undo();
+            return true;
+        }
+        if (this.editorGrid) {
+            return this.editorGrid.undo();
+        }
+    },
+
+    initKeyEvent: function() {
+        var editing = this;
+        this.onKeyPress = function(evt) {
+            // Only for DrawControl, EditorGrid handle keypress itself.
+            draw = editing.getActiveDrawControl();
+            if (draw) {
+                var handled = false;
+                switch (evt.keyCode) {
+                    case 90: // z
+                        if (evt.metaKey || evt.ctrlKey) {
+                            handled = draw.undo();
+                        }
+                        break;
+                    case 89: // y
+                        if (evt.metaKey || evt.ctrlKey) {
+                            handled = draw.redo();
+                        }
+                        break;
+                    case 27: // esc
+                        handled = draw.cancel();
+                        break;
+                }
+                if (handled) {
+                    OpenLayers.Event.stop(evt);
+                }
+            }
+        };
+        OpenLayers.Event.observe(document, "keydown", this.onKeyPress);
     },
 
     /** private: manageLayers
