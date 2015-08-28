@@ -179,6 +179,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     editorGrid: null,
 
+    /** private: property[mainSelectControl]
+     *  ``cgxp.plugins.Editing.GetFeature``
+     *  The control with which the feature are selected on the map and can then
+     *  be edited;
+     */
+    mainSelectControl: null,
+
     /** private: property[win]
      *  ``Ext.Window``
      *  The main window. The one that include the button to create
@@ -636,37 +643,46 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         return layers;
     },
 
+    /** private: method[prepareProtocolOptions]
+     *  Add additional parameters to HTTP protocol read options.
+     */
+    prepareProtocolOptions: function(options) {
+        var baseURL = this.layersURL;
+        var layerIds = [];
+        var editLayers = this.getEditableLayers();
+
+        for (var i in editLayers) {
+            if (editLayers.hasOwnProperty(i)) {
+                layerIds.push(i);
+            }
+        }
+        if (layerIds.length === 0) {
+            // we need to reset the cursor manually
+            OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            return;
+        }
+        options.url = baseURL + layerIds.join(',');
+        options.params = Ext.apply(options.params || {}, this.readParams);
+        var queryable = [];
+        Ext.each(this.usedMapParams, function(paramName) {
+            var param = this.target.mapPanel.params[paramName];
+            if (param !== undefined) {
+                options.params[paramName + "__eq"] = param;
+                queryable.push(paramName);
+            }
+        });
+        options.params.queryable = queryable;
+        return options;
+    },
+
     /** private: method[createGetFeatureControl]
      */
     createGetFeatureControl: function() {
         var self = this;
-        var baseURL = this.layersURL;
         var protocol = new OpenLayers.Protocol.HTTP({
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
-                var layerIds = [];
-                var editLayers = self.getEditableLayers();
-                for (var i in editLayers) {
-                    if (editLayers.hasOwnProperty(i)) {
-                        layerIds.push(i);
-                    }
-                }
-                if (layerIds.length === 0) {
-                    // we need to reset the cursor manually
-                    OpenLayers.Element.removeClass(self.map.viewPortDiv, "olCursorWait");
-                    return;
-                }
-                options.url = baseURL + layerIds.join(',');
-                options.params = Ext.apply(options.params || {}, self.readParams);
-                var queryable = [];
-                Ext.each(self.usedMapParams, function(paramName) {
-                    var param = self.target.mapPanel.params[paramName];
-                    if (param !== undefined) {
-                        options.params[paramName + "__eq"] = param;
-                        queryable.push(paramName);
-                    }
-                });
-                options.params.queryable = queryable;
+                options = self.prepareProtocolOptions(options);
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
@@ -714,6 +730,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         });
+
+        this.mainSelectControl = control;
     },
 
     /** private: method[getAttributesStore]
@@ -1231,6 +1249,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     showCutWizard: function(feature) {
         this.editorGrid.hide();
+        // we don't want current feature to be unselected by
+        // clickout
+        this.mainSelectControl.deactivate();
 
         function onComputeDone(geometry) {
             // remove feature from editingLayer before updating the geometry
@@ -1246,7 +1267,6 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             });
             this.editorGrid.modifyControl.activate();
             this.editorGrid.modifyControl.selectFeature(feature);
-            closeWizard.call(this);
         }
 
         function onComputeError() {
@@ -1260,8 +1280,33 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             // example if a new polygon was drawn
             this.editorGrid.modifyControl.selectFeature(feature);
             handler.deactivate();
+            handler.destroy()
+            selectControl.deactivate();
+            selectControl.destroy();
+            this.mainSelectControl.activate();
         }
 
+        var self = this;
+        var protocol = new OpenLayers.Protocol.HTTP({
+            format: new OpenLayers.Format.GeoJSON(),
+            read: function(options) {
+                options = self.prepareProtocolOptions(options);
+                OpenLayers.Protocol.HTTP.prototype.read.call(this, options);
+            }
+        });
+        var selectControl = new cgxp.plugins.Editing.GetFeature({
+            protocol: protocol
+        });
+        selectControl.events.on({
+            "featureselected": function(e) {
+                var geomB = e.feature.geometry;
+                // TODO ensure that geometry is polygon
+                this.computeDifference(feature.geometry, geomB,
+                   onComputeDone, onComputeDone);
+           },
+           scope: this
+        })
+        this.map.addControl(selectControl);
         var handler = new OpenLayers.Handler.Polygon({
             map: this.map
         }, {
@@ -1310,7 +1355,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     iconCls: 'infotooltip',
                     text: this.cutWizardSelectButtonText,
                     handler: function() {
-
+                        handler.deactivate();
+                        selectControl.activate();
                     },
                     scope: this
                 }, {
@@ -1323,12 +1369,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     handler: function() {
                         this.editorGrid.modifyControl.unselectFeature(feature);
                         handler.activate();
+                        selectControl.deactivate();
                     },
                     scope: this
                 }]
             }],
             bbar: ['->', {
                 text: 'Cancel',
+                // TODO cancel modifications before closing
+                handler: closeWizard,
+                scope: this
+            }, {
+                text: 'OK',
                 handler: closeWizard,
                 scope: this
             }]
