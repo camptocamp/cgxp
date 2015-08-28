@@ -1316,6 +1316,19 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     onComputeDone, onComputeError);
             }, this)
         });
+
+        var selectButton = new Ext.Button({
+            xtype: 'button',
+            iconCls: 'infotooltip',
+            text: this.cutWizardSelectButtonText,
+            handler: function() {
+                handler.deactivate();
+                selectButton.toggle(true);
+                selectControl.activate();
+            },
+            scope: this
+        });
+
         var wizardPanel = new Ext.Panel({
             defaults: {
                 style: {
@@ -1350,16 +1363,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 defaults: {
                     margins: '0 5 0 0'
                 },
-                items: [{
-                    xtype: 'button',
-                    iconCls: 'infotooltip',
-                    text: this.cutWizardSelectButtonText,
-                    handler: function() {
-                        handler.deactivate();
-                        selectControl.activate();
-                    },
-                    scope: this
-                }, {
+                items: [selectButton, {
                     xtype: 'box',
                     html: ' or '
                 }, {
@@ -1369,6 +1373,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     handler: function() {
                         this.editorGrid.modifyControl.unselectFeature(feature);
                         handler.activate();
+                        selectButton.toggle(false);
                         selectControl.deactivate();
                     },
                     scope: this
