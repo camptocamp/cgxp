@@ -1248,10 +1248,20 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  Displays the window to cut a polygon geometry with an other geometry.
      */
     showCutWizard: function(feature) {
+        // temporarily set a new geometry on feature
+        // removing and readding the feature prevent side effects with old
+        // geometry not being cleared
+        this.editingLayer.removeFeatures([feature]);
+        var initialGeometry = feature.geometry;
+        var geometry = feature.geometry.clone();
+        feature.geometry = geometry;
+        this.editingLayer.addFeatures([feature]);
+
         this.editorGrid.hide();
         // we don't want current feature to be unselected by
         // clickout
         this.mainSelectControl.deactivate();
+        this.editorGrid.modifyControl.unselectFeature(feature);
 
         function onComputeDone(geometry) {
             // remove feature from editingLayer before updating the geometry
@@ -1259,20 +1269,28 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             feature.geometry = geometry;
             // then readd the feature to editingLayer
             this.editingLayer.addFeatures([feature]);
-
-            feature.state = OpenLayers.State.INSERT ?
-                OpenLayers.State.INSERT : OpenLayers.State.UPDATE;
-            feature.layer.events.triggerEvent("featuremodified", {
-                feature: feature
-            });
-            this.editorGrid.modifyControl.activate();
-            this.editorGrid.modifyControl.selectFeature(feature);
             loadMask.hide();
         }
 
         function onComputeError() {
             // Do something
             loadMask.hide();
+        }
+
+        function cancel() {
+            this.editingLayer.removeFeatures([feature]);
+            feature.geometry = initialGeometry;
+            this.editingLayer.addFeatures([feature]);
+            closeWizard.call(this);
+        }
+
+        function validate() {
+            feature.state = OpenLayers.State.INSERT ?
+                OpenLayers.State.INSERT : OpenLayers.State.UPDATE;
+            feature.layer.events.triggerEvent("featuremodified", {
+                feature: feature
+            });
+            closeWizard.call(this);
         }
 
         function closeWizard() {
@@ -1316,19 +1334,38 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             done: OpenLayers.Function.bind(function(geometry) {
                 loadMask.show();
                 handler.deactivate();
+                drawButton.toggle(false);
                 this.computeDifference(feature.geometry, geometry,
                     onComputeDone, onComputeError);
             }, this)
         });
 
         var selectButton = new Ext.Button({
-            xtype: 'button',
             iconCls: 'infotooltip',
             text: this.cutWizardSelectButtonText,
             handler: function() {
                 handler.deactivate();
                 selectButton.toggle(true);
                 selectControl.activate();
+                drawButton.toggle(false);
+            },
+            scope: this
+        });
+
+        // I can't use a GeoExt.Action here because we rely directly on the
+        // handler instead of a control
+        var drawButton = new Ext.Button({
+            iconCls: 'gx-featureediting-draw-polygon',
+            text: this.cutWizardDrawButtonText,
+            enableToggle: true,
+            handler: function(b) {
+                if (b.pressed) {
+                    handler.activate();
+                    selectButton.toggle(false);
+                    selectControl.deactivate();
+                } else {
+                    handler.deactivate();
+                }
             },
             scope: this
         });
@@ -1370,27 +1407,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 items: [selectButton, {
                     xtype: 'box',
                     html: ' or '
-                }, {
-                    xtype: 'button',
-                    iconCls: 'gx-featureediting-draw-polygon',
-                    text: this.cutWizardDrawButtonText,
-                    handler: function() {
-                        this.editorGrid.modifyControl.unselectFeature(feature);
-                        handler.activate();
-                        selectButton.toggle(false);
-                        selectControl.deactivate();
-                    },
-                    scope: this
-                }]
+                }, drawButton]
             }],
             bbar: ['->', {
                 text: 'Cancel',
-                // TODO cancel modifications before closing
-                handler: closeWizard,
+                handler: cancel,
                 scope: this
             }, {
                 text: 'OK',
-                handler: closeWizard,
+                handler: validate,
                 scope: this
             }]
         });
