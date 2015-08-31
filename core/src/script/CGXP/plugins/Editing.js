@@ -1267,10 +1267,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             });
             this.editorGrid.modifyControl.activate();
             this.editorGrid.modifyControl.selectFeature(feature);
+            loadMask.hide();
         }
 
         function onComputeError() {
             // Do something
+            loadMask.hide();
         }
 
         function closeWizard() {
@@ -1299,6 +1301,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
         selectControl.events.on({
             "featureselected": function(e) {
+                loadMask.show();
                 var geomB = e.feature.geometry;
                 // TODO ensure that geometry is polygon
                 this.computeDifference(feature.geometry, geomB,
@@ -1311,6 +1314,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             map: this.map
         }, {
             done: OpenLayers.Function.bind(function(geometry) {
+                loadMask.show();
                 handler.deactivate();
                 this.computeDifference(feature.geometry, geometry,
                     onComputeDone, onComputeError);
