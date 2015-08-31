@@ -1300,7 +1300,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             // example if a new polygon was drawn
             this.editorGrid.modifyControl.selectFeature(feature);
             handler.deactivate();
-            handler.destroy()
+            handler.destroy();
             selectControl.deactivate();
             selectControl.destroy();
             this.mainSelectControl.activate();
@@ -1326,7 +1326,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                    onComputeDone, onComputeDone);
            },
            scope: this
-        })
+        });
         this.map.addControl(selectControl);
         var handler = new OpenLayers.Handler.Polygon({
             map: this.map
