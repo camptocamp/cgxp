@@ -659,7 +659,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         if (layerIds.length === 0) {
             // we need to reset the cursor manually
             OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
-            return;
+            return false;
         }
         options.url = baseURL + layerIds.join(',');
         options.params = Ext.apply(options.params || {}, this.readParams);
@@ -683,6 +683,10 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
                 options = self.prepareProtocolOptions(options);
+                if (!options) {
+                    return;
+                }
+
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
