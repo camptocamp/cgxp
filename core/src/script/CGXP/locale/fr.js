@@ -157,6 +157,8 @@ GeoExt.Lang.add("fr", {
         helpText: "Cliquer sur la carte pour <b>éditer des objets</b>, ou",
         layerMenuText: "Choisir une couche",
         createBtnText: "Créer un nouvel objet",
+        undoButtonText: "",
+        undoButtonTooltip: "Annuler la dernière modification Ctrl+Z",
         forbiddenText: "Vous n'êtes pas autorisé à réaliser cette action&nbsp;!",
         titleText: "Edition",
         saveServerErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur.",

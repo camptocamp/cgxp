@@ -127,6 +127,9 @@ div.x-panel a.x-tree-node-anchor:hover {
 .x-toolbar .print, .x-menu .print {
     background: url(img/printer.png) top left no-repeat;
 }
+.x-toolbar .undo {
+    background: url(img/arrow_undo.png) top left no-repeat;
+}
 
 div.olControlOverviewMapElement {
     border-radius: 0.4em 0 0 0;
