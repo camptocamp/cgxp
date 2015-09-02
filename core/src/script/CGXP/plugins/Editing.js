@@ -17,10 +17,10 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Protocol/HTTP.js
  * @include OpenLayers/Format/JSON.js
  * @include OpenLayers/Format/GeoJSON.js
- * @include OpenLayers/Control/GetFeature.js
  * @include OpenLayers/Control/ModifyFeature.js
  * @include OpenLayers/Control/DrawFeature.js
  * @include OpenLayers/Handler/Point.js
@@ -67,7 +67,7 @@ Ext.namespace("cgxp.plugins");
  *          ...
  *      });
  *
- *      // with snapping enabled
+ *      // with snapping and several other options enabled
  *      new gxp.Viewer({
  *          ...
  *          tools: [{
@@ -93,7 +93,8 @@ Ext.namespace("cgxp.plugins");
  *              selectionColors: {
  *                  23: '#FF0022'
  *              },
- *              allowDrag: false
+ *              allowDrag: false,
+ *              differenceServiceUrl: "${request.route_url('difference') | n}"
  *          }, {
  *              ptype: "cgxp_layertree",
  *              id: "layertree",
@@ -178,6 +179,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     editorGrid: null,
 
+    /** private: property[mainSelectControl]
+     *  ``cgxp.plugins.Editing.GetFeature``
+     *  The control with which the feature are selected on the map and can then
+     *  be edited;
+     */
+    mainSelectControl: null,
+
     /** private: property[win]
      *  ``Ext.Window``
      *  The main window. The one that include the button to create
@@ -257,6 +265,42 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  Message display when the query failed
      */
     queryServerErrorText: 'Query failed because of a server error.',
+
+    /** api: config[cutActionText]
+     *  ``String`` i18n
+     *  Cut menu item text.
+     **/
+    cutActionText: 'Cut geometry',
+
+    /** api: config[cutWizardTitle]
+     *  ``String`` i18n
+     *  Message to show as title in the cut wizard.
+     */
+    cutWizardTitle: 'Cut the polygon',
+
+    /** api: config[cutWizardSubtitle]
+     *  ``String`` i18n
+     *  Message to show as subtitle in the cut wizard.
+     */
+    cutWizardSubtitle: 'Choose polygon B:',
+
+    /** api: config[cutWizardSelectButtonText]
+     *  ``String`` i18n
+     *  "Select on map" button text in the cut wizard.
+     **/
+    cutWizardSelectButtonText: 'Select on map',
+
+    /** api: config[cutWizardDrawButtonText]
+     *  ``String`` i18n
+     *  "Draw a polygon" button text in the cut wizard.
+     **/
+    cutWizardDrawButtonText: 'Draw a polygon',
+
+    /** api: config[differenceServiceUrl]
+     *  ``String``
+     *  The URL to the difference service. Used by the cut wizard.
+     *  Typically set to ``"${request.route_url('difference')}"``
+     */
 
     /** private: config[pendingRequests]
      *  ``GeoExt.data.AttributeStore``
@@ -616,8 +660,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                         layer.attributes.layer_id;
                     var store = this.getAttributesStore(
                         layer.attributes.layer_id, f,
-                        function(store) {
-                            this.showAttributesEditingWindow(store);
+                        function(store, geometryType) {
+                            this.showAttributesEditingWindow(store, geometryType);
                         }
                     );
                 }, this),
@@ -683,37 +727,50 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         return layers;
     },
 
+    /** private: method[prepareProtocolOptions]
+     *  Add additional parameters to HTTP protocol read options.
+     */
+    prepareProtocolOptions: function(options) {
+        var baseURL = this.layersURL;
+        var layerIds = [];
+        var editLayers = this.getEditableLayers();
+
+        for (var i in editLayers) {
+            if (editLayers.hasOwnProperty(i)) {
+                layerIds.push(i);
+            }
+        }
+        if (layerIds.length === 0) {
+            // we need to reset the cursor manually
+            OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            return false;
+        }
+        options.url = baseURL + layerIds.join(',');
+        options.params = Ext.apply(options.params || {}, this.readParams);
+        var queryable = [];
+        Ext.each(this.usedMapParams, function(paramName) {
+            var param = this.target.mapPanel.params[paramName];
+            if (param !== undefined) {
+                options.params[paramName + "__eq"] = param;
+                queryable.push(paramName);
+            }
+        });
+        options.params.queryable = queryable;
+        return options;
+    },
+
     /** private: method[createGetFeatureControl]
      */
     createGetFeatureControl: function() {
         var self = this;
-        var baseURL = this.layersURL;
         var protocol = new OpenLayers.Protocol.HTTP({
             format: new OpenLayers.Format.GeoJSON(),
             read: function(options) {
-                var layerIds = [];
-                var editLayers = self.getEditableLayers();
-                for (var i in editLayers) {
-                    if (editLayers.hasOwnProperty(i)) {
-                        layerIds.push(i);
-                    }
-                }
-                if (layerIds.length === 0) {
-                    // we need to reset the cursor manually
-                    OpenLayers.Element.removeClass(self.map.viewPortDiv, "olCursorWait");
+                options = self.prepareProtocolOptions(options);
+                if (!options) {
                     return;
                 }
-                options.url = baseURL + layerIds.join(',');
-                options.params = Ext.apply(options.params || {}, self.readParams);
-                var queryable = [];
-                Ext.each(self.usedMapParams, function(paramName) {
-                    var param = self.target.mapPanel.params[paramName];
-                    if (param !== undefined) {
-                        options.params[paramName + "__eq"] = param;
-                        queryable.push(paramName);
-                    }
-                });
-                options.params.queryable = queryable;
+
                 // ensure that there's no unsaved modification before sending
                 // the request.
                 function doRead(options) {
@@ -745,52 +802,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
-        var control = new OpenLayers.Control.GetFeature({
-            protocol: protocol,
-            // override the Openlayers method to catch the failure
-            request: function(bounds, options) {
-                options = options || {};
-                var filter = new OpenLayers.Filter.Spatial({
-                    type: this.filterType,
-                    value: bounds
-                });
-
-                // Set the cursor to "wait" to tell the user we're working.
-                OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
-
-                var response = this.protocol.read({
-                    maxFeatures: options.single === true ? this.maxFeatures : undefined,
-                    filter: filter,
-                    callback: function(result) {
-                        if (result.success()) {
-                            if (result.features.length) {
-                                if (options.single === true) {
-                                    this.selectBestFeature(result.features,
-                                        bounds.getCenterLonLat(), options);
-                                } else {
-                                    this.select(result.features);
-                                }
-                            } else if(options.hover) {
-                                this.hoverSelect();
-                            } else {
-                                this.events.triggerEvent("clickout");
-                                if(this.clickout) {
-                                    this.unselectAll();
-                                }
-                            }
-                        }
-                        else {
-                             Ext.MessageBox.alert(self.titleText, self.queryServerErrorText);
-                        }
-                        // Reset the cursor.
-                        OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
-                    },
-                    scope: this
-                });
-                if (options.hover === true) {
-                    this.hoverResponse = response;
-                }
-            }
+        var control = new cgxp.plugins.Editing.GetFeature({
+            protocol: protocol
         });
         this.map.addControl(control);
         control.activate();
@@ -799,12 +812,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 this.activateSnap();
                 var f = e.feature;
                 this.editingLayer.addFeatures([f]);
-                var store = this.getAttributesStore(f.attributes.__layer_id__, f, function(store) {
-                    this.showAttributesEditingWindow(store);
+                var store = this.getAttributesStore(f.attributes.__layer_id__, f, function(store, geometryType) {
+                    this.showAttributesEditingWindow(store, geometryType);
                 });
             },
             scope: this
         });
+
+        this.mainSelectControl = control;
     },
 
     /** private: method[getAttributesStore]
@@ -857,12 +872,26 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
 
     /** private: method[showAttributesEditingWindow]
      */
-    showAttributesEditingWindow: function(store) {
+    showAttributesEditingWindow: function(store, geometryType) {
         var modifyControlMode = OpenLayers.Control.ModifyFeature.RESHAPE;
         if (this.allowDrag) {
             modifyControlMode = modifyControlMode |
                 OpenLayers.Control.ModifyFeature.DRAG;
         }
+        var actions = [];
+
+        if (geometryType.indexOf('Polygon') != -1) {
+            actions.push(
+                new Ext.menu.Item({
+                    text: this.cutActionText,
+                    handler: function() {
+                        this.showCutWizard(store.feature);
+                    },
+                    scope: this
+                })
+            );
+        }
+
         this.editorGrid = new GeoExt.ux.FeatureEditorGrid({
             store: store,
             nameField: 'label',
@@ -879,6 +908,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 vertexRenderIntent: 'vertices',
                 mode: modifyControlMode
             },
+            extraActions: actions,
             listeners: {
                 done: function(panel, e) {
                     this.deactivateSnap();
@@ -904,7 +934,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 map: this.map,
                 height: 150,
                 width: 300,
-                layout: 'fit',
+                layout: 'vbox',
+                layoutConfig: {
+                    align: 'stretch',
+                    pack: 'start'
+                },
+                defaults: {
+                    flex: 1
+                },
                 title: 'Object #',
                 closable: false,
                 unpinnable: false,
@@ -1293,6 +1330,266 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
 
         return this.snapLayers[name];
+    },
+
+    /** private: method[showCutWizard]
+     *  Displays the window to cut a polygon geometry with an other geometry.
+     */
+    showCutWizard: function(feature) {
+        // temporarily set a new geometry on feature
+        // removing and readding the feature prevent side effects with old
+        // geometry not being cleared
+        this.editingLayer.removeFeatures([feature]);
+        var initialGeometry = feature.geometry;
+        var geometry = feature.geometry.clone();
+        feature.geometry = geometry;
+        this.editingLayer.addFeatures([feature]);
+
+        this.editorGrid.hide();
+        // we don't want current feature to be unselected by
+        // clickout
+        this.mainSelectControl.deactivate();
+        this.editorGrid.modifyControl.unselectFeature(feature);
+
+        function onComputeDone(geometry) {
+            // remove feature from editingLayer before updating the geometry
+            this.editingLayer.removeFeatures([feature]);
+            feature.geometry = geometry;
+            // then readd the feature to editingLayer
+            this.editingLayer.addFeatures([feature]);
+            loadMask.hide();
+        }
+
+        function onComputeError() {
+            // Do something
+            loadMask.hide();
+        }
+
+        function cancel() {
+            this.editingLayer.removeFeatures([feature]);
+            feature.geometry = initialGeometry;
+            this.editingLayer.addFeatures([feature]);
+            closeWizard.call(this);
+        }
+
+        function validate() {
+            feature.state = OpenLayers.State.INSERT ?
+                OpenLayers.State.INSERT : OpenLayers.State.UPDATE;
+            feature.layer.events.triggerEvent("featuremodified", {
+                feature: feature
+            });
+            closeWizard.call(this);
+        }
+
+        function closeWizard() {
+            this.editorGrid.show();
+            this.attributePopup.remove(wizardPanel);
+            // re-select the feature because it may have been unselected for
+            // example if a new polygon was drawn
+            this.editorGrid.modifyControl.selectFeature(feature);
+            handler.deactivate();
+            handler.destroy();
+            selectControl.deactivate();
+            selectControl.destroy();
+            this.mainSelectControl.activate();
+        }
+
+        var self = this;
+        var protocol = new OpenLayers.Protocol.HTTP({
+            format: new OpenLayers.Format.GeoJSON(),
+            read: function(options) {
+                options = self.prepareProtocolOptions(options);
+                OpenLayers.Protocol.HTTP.prototype.read.call(this, options);
+            }
+        });
+        var selectControl = new cgxp.plugins.Editing.GetFeature({
+            protocol: protocol
+        });
+        selectControl.events.on({
+            "featureselected": function(e) {
+                loadMask.show();
+                var geomB = e.feature.geometry;
+                // TODO ensure that geometry is polygon
+                this.computeDifference(feature.geometry, geomB,
+                   onComputeDone, onComputeDone);
+           },
+           scope: this
+        });
+        this.map.addControl(selectControl);
+        var handler = new OpenLayers.Handler.Polygon({
+            map: this.map
+        }, {
+            done: OpenLayers.Function.bind(function(geometry) {
+                loadMask.show();
+                handler.deactivate();
+                drawButton.toggle(false);
+                this.computeDifference(feature.geometry, geometry,
+                    onComputeDone, onComputeError);
+            }, this)
+        });
+
+        var selectButton = new Ext.Button({
+            iconCls: 'infotooltip',
+            text: this.cutWizardSelectButtonText,
+            handler: function() {
+                handler.deactivate();
+                selectButton.toggle(true);
+                selectControl.activate();
+                drawButton.toggle(false);
+            },
+            scope: this
+        });
+
+        // I can't use a GeoExt.Action here because we rely directly on the
+        // handler instead of a control
+        var drawButton = new Ext.Button({
+            iconCls: 'gx-featureediting-draw-polygon',
+            text: this.cutWizardDrawButtonText,
+            enableToggle: true,
+            handler: function(b) {
+                if (b.pressed) {
+                    handler.activate();
+                    selectButton.toggle(false);
+                    selectControl.deactivate();
+                } else {
+                    handler.deactivate();
+                }
+            },
+            scope: this
+        });
+
+        var wizardPanel = new Ext.Panel({
+            defaults: {
+                style: {
+                    padding: '5px'
+                }
+            },
+            items: [{
+                xtype: 'container',
+                layout: 'hbox',
+                layoutConfig: {
+                    align: 'middle'
+                },
+                items: [{
+                    xtype: 'box',
+                    style: {
+                        'font-weight': 'bold'
+                    },
+                    html: this.cutWizardTitle
+                }, {
+                    xtype: 'box',
+                    html: '<span class="cut-help">'
+                }]
+            }, {
+                xtype: 'container',
+                html: this.cutWizardSubtitle
+            }, {
+                xtype: 'container',
+                layout: 'hbox',
+                layoutConfig: {
+                    align: 'middle'
+                },
+                defaults: {
+                    margins: '0 5 0 0'
+                },
+                items: [selectButton, {
+                    xtype: 'box',
+                    html: ' or '
+                }, drawButton]
+            }],
+            bbar: ['->', {
+                text: 'Cancel',
+                handler: cancel,
+                scope: this
+            }, {
+                text: 'OK',
+                handler: validate,
+                scope: this
+            }]
+        });
+        this.attributePopup.add(wizardPanel);
+        this.attributePopup.doLayout();
+        var loadMask = new Ext.LoadMask(wizardPanel.body);
+    },
+
+    /** private: method[computeDifference]
+     *  Sends request to difference service to the get the cut geometry back.
+     */
+    computeDifference: function(geomA, geomB, success, failure) {
+        var geojson = new OpenLayers.Format.GeoJSON();
+        geomA = Ext.util.JSON.decode(geojson.write(geomA));
+        geomB = Ext.util.JSON.decode(geojson.write(geomB));
+
+        Ext.Ajax.request({
+            url: this.differenceServiceUrl,
+            method: 'POST',
+            jsonData: {
+                geometries: [geomA, geomB]
+            },
+            success: function(result) {
+                success.call(this,
+                    geojson.read(result.responseText)[0].geometry);
+            },
+            failure: function() {
+                failure.call(this);
+            },
+            scope: this
+        });
+    }
+});
+
+/** api: (define)
+ *  module = cgxp.plugins.Editing
+ *  class = GetFeature
+ *
+ *  It's a class inherited from OpenLayers.Control.GetFeature. The goal is to
+ *  overrride the request method so that we can show a message when the request
+ *  fails.
+ */
+cgxp.plugins.Editing.GetFeature = OpenLayers.Class(OpenLayers.Control.GetFeature, {
+    request: function(bounds, options) {
+        options = options || {};
+        var filter = new OpenLayers.Filter.Spatial({
+            type: this.filterType,
+            value: bounds
+        });
+
+        // Set the cursor to "wait" to tell the user we're working.
+        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+
+        var response = this.protocol.read({
+            maxFeatures: options.single === true ? this.maxFeatures : undefined,
+            filter: filter,
+            callback: function(result) {
+                if (result.success()) {
+                    if (result.features.length) {
+                        if (options.single === true) {
+                            this.selectBestFeature(result.features,
+                                bounds.getCenterLonLat(), options);
+                        } else {
+                            this.select(result.features);
+                        }
+                    } else if(options.hover) {
+                        this.hoverSelect();
+                    } else {
+                        this.events.triggerEvent("clickout");
+                        if(this.clickout) {
+                            this.unselectAll();
+                        }
+                    }
+                }
+                else {
+                    Ext.MessageBox.alert(this.titleText,
+                        cgxp.plugins.Editing.prototype.queryServerErrorText);
+                }
+                // Reset the cursor.
+                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            },
+            scope: this
+        });
+        if (options.hover === true) {
+            this.hoverResponse = response;
+        }
     }
 });
 
