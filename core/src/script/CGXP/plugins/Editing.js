@@ -230,6 +230,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     undoButtonTooltip: 'Undo last modification Ctrl+Z',
 
+    /** api: config[copyToBtnText]
+     *  ``String``
+     *  The text for the copy to another layer button (i18n).
+     */
+    copyToBtnText: 'Copy to',
+
+    /** api: config[copyToBtnTooltip]
+     *  ``String``
+     *  The tooltip for the copy to another layer button (i18n).
+     */
+    copyToBtnTooltip: 'Create new feature in another layer with same geometry',
+
     /** api: config[forbiddenText]
      *  ``String``
      *  The text displayed when not allowed action is done (i18n).
@@ -870,6 +882,89 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.pendingRequests = [];
     },
 
+    /** private: method[getLayerNodeById]
+     */
+    getLayerNodeById: function(layer_id) {
+        var tree = this.target.tools[this.layerTreeId].tree;
+        var layerNode;
+        tree.root.cascade(function(node) {
+            if (node.attributes.nodeType == "cgxp_layerparam" &&
+                node.attributes.layer_id == layer_id) {
+                layerNode = node;
+            }
+        });
+        return layerNode;
+    },
+
+    /** private: method[getLayerNodeByName]
+     */
+    getLayerNodeByName: function(layerName) {
+        var tree = this.target.tools[this.layerTreeId].tree;
+        var layerNode;
+        tree.root.cascade(function(node) {
+            if (node.attributes.nodeType == "cgxp_layerparam" &&
+                node.attributes.item == layerName) {
+                layerNode = node;
+            }
+        });
+        return layerNode;
+    },
+
+    /** private: method[getExtraActions]
+     *  :param feature: ``OpenLayers.Feature.Vector``
+     *  :return: ``Array(Ext.menu.Item)`` List of items to put in the
+     *  FeatureEditorGrid actions menu.
+     *
+     *  Return extra actions for a given feature.
+     */
+    getExtraActions: function(feature) {
+        var layer = this.getLayerNodeById(feature.attributes.__layer_id__);
+
+        var actions = [];
+        var metadata = layer.attributes.metadata;
+        if (metadata.copy_to !== undefined) {
+            var copyToItem = {
+                xtype: 'menuitem',
+                text: this.copyToBtnText,
+                tooltip: this.copyToBtnTooltip,
+                menu: []
+            };
+            Ext.each(metadata.copy_to.split(','), function(layerName) {
+                var toLayer = this.getLayerNodeByName(layerName);
+                copyToItem.menu.push({
+                    xtype: 'menuitem',
+                    text: toLayer.attributes.text,
+                    name: toLayer.attributes.name,
+                    layer_id: toLayer.attributes.layer_id,
+                    handler: function(item, evt) {
+                        // Create new feature
+                        var srcFeature = this.editorGrid.store.feature;
+                        var dstFeature = new OpenLayers.Feature.Vector(
+                            srcFeature.geometry.clone(),
+                            {
+                                __layer_id__: item.layer_id
+                            }
+                        );
+                        dstFeature.state = OpenLayers.State.INSERT;
+
+                        // Open editing on new feature
+                        this.closeEditing();
+                        this.editingLayer.addFeatures([dstFeature]);
+                        var store = this.getAttributesStore(
+                            item.layer_id, dstFeature,
+                            function(store) {
+                                this.showAttributesEditingWindow(store);
+                            }
+                        );
+                    },
+                    scope: this
+                });
+            }, this);
+            actions.push(copyToItem);
+        }
+        return actions;
+    },
+
     /** private: method[showAttributesEditingWindow]
      */
     showAttributesEditingWindow: function(store, geometryType) {
@@ -878,7 +973,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             modifyControlMode = modifyControlMode |
                 OpenLayers.Control.ModifyFeature.DRAG;
         }
-        var actions = [];
+        var actions = this.getExtraActions(store.feature);
 
         if (geometryType.indexOf('Polygon') != -1) {
             actions.push(
