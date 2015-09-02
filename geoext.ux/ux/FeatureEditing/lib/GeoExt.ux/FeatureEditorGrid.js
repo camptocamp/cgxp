@@ -28,6 +28,11 @@ Ext.namespace("GeoExt.ux");
 GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     /* begin i18n */
+    /** api: config[actionsButtonText] ``String`` i18n */
+    actionsButtonText: "Actions",
+    /** api: config[actionsButtonTooltip] ``String`` i18n */
+    actionsButtonTooltip: "More actions on this feature",
+
     /** api: config[deleteMsgTitle] ``String`` i18n */
     deleteMsgTitle: "Delete Feature?",
     /** api: config[deleteMsg]
@@ -104,6 +109,11 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      *  the editing of feature. Default is true.
      */
     allowCancel: true,
+
+    /** api: config[extraActions]
+     * ``Array(Ext.menu.Item)`` List of items to put in the actions menu.
+     */
+    extraActions: undefined,
 
     /** api: config[extraColumns]
      *  ``Array`` Extra columns to use in this grid's column model.
@@ -214,8 +224,10 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         var feature = this.store.feature;
 
+        var items;
+
         // create bottom bar
-        this.deleteButton = new Ext.Button({
+        var deleteButtonConfig = {
             text: this.deleteButtonText,
             tooltip: this.deleteButtonTooltip,
             cls: 'x-delete-btn',
@@ -223,7 +235,21 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             handler: this.deleteHandler,
             disabled: feature.state == OpenLayers.State.INSERT,
             scope: this
-        });
+        };
+
+        if (this.extraActions) {
+            var menu = [new Ext.menu.Item(deleteButtonConfig)];
+
+            var actionsButton = new Ext.Button({
+                text: this.actionsButtonText,
+                tooltip: this.actionsButtonTooltip,
+                menu: menu.concat(this.extraActions)
+            });
+            items = [actionsButton];
+        } else {
+            items = [new Ext.Button(deleteButtonConfig)];
+        }
+
         this.cancelButton = new Ext.Button({
             text: this.cancelButtonText,
             tooltip: this.cancelButtonTooltip,
@@ -242,12 +268,11 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             scope: this
         });
         this.bbar = new Ext.Toolbar({
-            items: [
-                this.deleteButton,
+            items: items.concat([
                 '->',
                 this.cancelButton,
                 this.saveButton
-            ]
+            ])
         });
         this.dirty = this.isDirty();
 
