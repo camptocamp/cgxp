@@ -54,7 +54,7 @@ Ext.namespace("cgxp.plugins");
  *              outputTarget: "left-panel",
  *              printURL: "${request.route_url('printproxy')}",
  *              mapserverURL: "${request.route_url('mapserverproxy')}",
- *              printProviderConfig: ${dumps(url_role_params)|n},
+ *              printProviderConfig: ${dumps(version_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -83,7 +83,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              printURL: "${request.route_url('printproxy')}",
  *              mapserverURL: "${request.route_url('mapserverproxy')}",
- *              printProviderConfig: ${dumps(url_role_params)|n},
+ *              printProviderConfig: ${dumps(version_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
