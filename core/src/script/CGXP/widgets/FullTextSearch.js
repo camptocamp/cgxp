@@ -242,6 +242,11 @@ cgxp.FullTextSearch = Ext.extend(Ext.Panel, {
                 component.getEl().dom.onkeydown = stop;
                 this.fireEvent('render', component);
             },
+            'beforequery': function(combo, query, force, cancel) {
+                // force focus because Ext doesnt automatically reacquire focus in some cases
+                // solve search result not being displayed after interrupted search
+                combo.combo.hasFocus = true;
+            },
             scope: this
         });
         return combo;
