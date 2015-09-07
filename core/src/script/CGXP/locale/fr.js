@@ -159,6 +159,8 @@ GeoExt.Lang.add("fr", {
         createBtnText: "Créer un nouvel objet",
         undoButtonText: "",
         undoButtonTooltip: "Annuler la dernière modification Ctrl+Z",
+        copyToBtnText: "Copier vers",
+        copyToBtnTooltip: "Créer un nouvel objet dans une autre couche avec la même géométrie",
         forbiddenText: "Vous n'êtes pas autorisé à réaliser cette action&nbsp;!",
         titleText: "Edition",
         saveServerErrorText: "L'enregistrement a échoué en raison d'une erreur du serveur.",

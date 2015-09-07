@@ -155,6 +155,8 @@ GeoExt.Lang.add("de", {
         createBtnText: "Erstellen Sie ein neues Element",
         undoButtonText: "",
         undoButtonTooltip: "Die letzte Modifikation rückgängig machen STRG+Z",
+        copyToBtnText: "Kopieren nach",
+        copyToBtnTooltip: "Erstelle neues Feature in einem anderen Layer mit der gleichen Geometrie",
         forbiddenText: "Diese Aktion ist nicht erlaubt!",
         titleText: "Editieren",
         saveServerErrorText: "Speichern nicht möglich wegen eines Serverfehlers.",
