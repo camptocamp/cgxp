@@ -3,6 +3,7 @@ python:
 - 2.7
 
 before_script:
+- openssl aes-256-cbc -K $encrypted_5df8eba1858b_key -iv $encrypted_5df8eba1858b_iv -in deploy_key.enc -out ~/.ssh/id_rsa -d
 - sudo apt-get install python-virtualenv nodejs
 - cd core/src/doc
 - virtualenv --distribute --no-site-packages env
