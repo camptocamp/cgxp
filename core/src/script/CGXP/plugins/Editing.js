@@ -212,13 +212,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     forbiddenText: 'You are not allowed to do this action!',
 
-    /** api: config[title]
+    /** api: config[titleText]
      *  ``String``
      *  Message display title
      */
     titleText: 'Editing',
 
-    /** api: config[titleValidationError]
+    /** api: config[titleValidationErrorText]
      *  ``String``
      *  Message display title for validation error
      */
