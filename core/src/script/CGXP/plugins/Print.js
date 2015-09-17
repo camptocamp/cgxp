@@ -54,7 +54,7 @@ Ext.namespace("cgxp.plugins");
  *              outputTarget: "left-panel",
  *              printURL: "${request.route_url('printproxy')}",
  *              mapserverURL: "${request.route_url('mapserverproxy')}",
- *              printProviderConfig: ${dumps(url_role_params)|n},
+ *              printProviderConfig: ${dumps(version_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -83,7 +83,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              printURL: "${request.route_url('printproxy')}",
  *              mapserverURL: "${request.route_url('mapserverproxy')}",
- *              printProviderConfig: ${dumps(url_role_params)|n},
+ *              printProviderConfig: ${dumps(version_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -547,26 +547,35 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     encodedLayer.layers = layer.mapserverLayers.split(',');
                 }
                 encodedLayer.customParams = layer.mapserverParams;
-                encodedLayer.format = 'image/png';
                 apply = true;
             }
             if (apply) {
                 encodedLayer.baseURL = this.mapserverURL;
-                encodedLayer.type = 'WMS';
                 delete encodedLayer.dimensions;
-                delete encodedLayer.formatSuffix;
+                delete encodedLayer.requestEncoding;
+                delete encodedLayer.style;
                 delete encodedLayer.layer;
                 delete encodedLayer.matrixSet;
-                delete encodedLayer.maxExtent;
-                delete encodedLayer.params;
-                delete encodedLayer.requestEncoding;
-                delete encodedLayer.resolutions;
-                delete encodedLayer.style;
-                delete encodedLayer.tileOrigin;
-                delete encodedLayer.tileSize;
-                delete encodedLayer.version;
-                delete encodedLayer.zoomOffset;
-                encodedLayer.singleTile = true;
+                if (this.version == 3) {
+                    encodedLayer.type = 'wms';
+                    encodedLayer.imageFormat = 'image/png';
+                    delete encodedLayer.matrices;
+                    delete encodedLayer.dimensionParams;
+                    delete encodedLayer.format;
+                    delete encodedLayer.matrices;
+                } else {
+                    encodedLayer.type = 'WMS';
+                    encodedLayer.format = 'image/png';
+                    encodedLayer.singleTile = true;
+                    delete encodedLayer.formatSuffix;
+                    delete encodedLayer.maxExtent;
+                    delete encodedLayer.params;
+                    delete encodedLayer.resolutions;
+                    delete encodedLayer.tileOrigin;
+                    delete encodedLayer.tileSize;
+                    delete encodedLayer.version;
+                    delete encodedLayer.zoomOffset;
+                }
             }
             Ext.apply(encodedLayer,
                 encodedLayer.baseURL == this.mapserverURL ?

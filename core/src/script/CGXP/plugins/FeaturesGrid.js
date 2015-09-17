@@ -302,6 +302,12 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     enableTotalHits: false,
 
+    /** api: config[defaultColumnWidth]
+     *  ``Integer``  The grid default column width.
+     *  Default is 100.
+     */
+    defaultColumnWidth: 100,
+
     /** private: method[init]
      */
     init: function() {
@@ -788,7 +794,8 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                         },
                         colModel: new Ext.grid.ColumnModel({
                             defaults: {
-                                sortable: true
+                                sortable: true,
+                                width: this.defaultColumnWidth
                             },
                             columns: columns
                         }),
