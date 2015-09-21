@@ -8,7 +8,7 @@ Ext.onReady(function() {
             renderTo: document.body,
             layout: "border",
             width: 1024,
-            height: 800,
+            height: 400,
             items: ["mymap", {
                 id: "left-panel",
                 region: 'west',
@@ -58,8 +58,8 @@ Ext.onReady(function() {
             units: "m",
             maxResolution: 156543.0339,
             maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-            center: [0, 0],
-            zoom: 2,
+            center: [626242, 5904607],
+            zoom: 12,
             tbar: [],
             layers: [{
                 source: "osm",
