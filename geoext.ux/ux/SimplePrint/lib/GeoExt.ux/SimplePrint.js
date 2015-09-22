@@ -605,6 +605,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      * Handler for the panel's expand/activate/enable event
      */
     showExtent: function() {
+        this.printPage.fit(this.mapPanel.map, {mode: "screen"});
         this.printExtent.show();
     },
 
