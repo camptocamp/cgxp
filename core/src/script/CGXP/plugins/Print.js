@@ -684,14 +684,27 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         var printPanel;
         printProvider.on('loadcapabilities', function(printProvider, capabilities) {
             // if png is supported, add a button into the print panel
-            if (Ext.pluck(capabilities.outputFormats, 'name').indexOf('png') != -1) {
+            var formats = capabilities.formats !== undefined ? capabilities.formats :
+                Ext.pluck(capabilities.outputFormats, 'name');
+            if (formats.indexOf('png') != -1) {
                 if (printPanel) {
                     printPanel.addButton({
                         text: this.exportpngbuttonText
                     }, function() {
-                        printProvider.customParams.outputFormat = 'png';
-                        this.printExtent.print(this.printOptions);
-                        delete printProvider.customParams.outputFormat;
+                        if (this.printProvider.supportProgress()) {
+                            printProvider.outputFormat = {
+                                name: "png",
+                                get: function(key) {
+                                    return this[key];
+                                }
+                            };
+                            this.print();
+                            delete printProvider.outputFormat;
+                        } else {
+                            printProvider.customParams.outputFormat = 'png';
+                            this.print();
+                            delete printProvider.customParams.outputFormat;
+                        }
                     }, printPanel);
                 }
             }
