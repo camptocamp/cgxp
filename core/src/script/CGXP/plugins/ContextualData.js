@@ -642,7 +642,7 @@ cgxp.plugins.ContextualData.ContextPopup = OpenLayers.Class(cgxp.plugins.Context
      */
     coordTpl: "<tr><td width=\"150\">Swiss coordinate</td>" +
         "<td>{coord_x} {coord_y}</td></tr>" +
-        "<tr><td>WGS 84</td><td>{wgx} {wgs_y}</td></tr>",
+        "<tr><td>WGS 84</td><td>{wgs_x} {wgs_y}</td></tr>",
 
     /** private: config[elevationTpl]
      *  ``String`` Used to generate the base Ext.Template used for elevation in
