@@ -931,34 +931,36 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             };
             Ext.each(metadata.copy_to.split(','), function(layerName) {
                 var toLayer = this.getLayerNodeByName(layerName);
-                copyToItem.menu.push({
-                    xtype: 'menuitem',
-                    text: toLayer.attributes.text,
-                    name: toLayer.attributes.name,
-                    layer_id: toLayer.attributes.layer_id,
-                    handler: function(item, evt) {
-                        // Create new feature
-                        var srcFeature = this.editorGrid.store.feature;
-                        var dstFeature = new OpenLayers.Feature.Vector(
-                            srcFeature.geometry.clone(),
-                            {
-                                __layer_id__: item.layer_id
-                            }
-                        );
-                        dstFeature.state = OpenLayers.State.INSERT;
+                if (toLayer) {
+		    copyToItem.menu.push({
+                        xtype: 'menuitem',
+                        text: toLayer.attributes.text,
+                        name: toLayer.attributes.name,
+                        layer_id: toLayer.attributes.layer_id,
+                        handler: function(item, evt) {
+                            // Create new feature
+                            var srcFeature = this.editorGrid.store.feature;
+                            var dstFeature = new OpenLayers.Feature.Vector(
+                                srcFeature.geometry.clone(),
+                                {
+                                    __layer_id__: item.layer_id
+                                }
+                            );
+                            dstFeature.state = OpenLayers.State.INSERT;
 
-                        // Open editing on new feature
-                        this.closeEditing();
-                        this.editingLayer.addFeatures([dstFeature]);
-                        var store = this.getAttributesStore(
-                            item.layer_id, dstFeature,
-                            function(store) {
-                                this.showAttributesEditingWindow(store);
-                            }
-                        );
-                    },
-                    scope: this
-                });
+                            // Open editing on new feature
+                            this.closeEditing();
+                            this.editingLayer.addFeatures([dstFeature]);
+                            var store = this.getAttributesStore(
+                                item.layer_id, dstFeature,
+                                function(store, geometryType) {
+                                    this.showAttributesEditingWindow(store, geometryType);
+		                }
+                            );
+                        },
+                        scope: this
+                    });
+                }
             }, this);
             actions.push(copyToItem);
         }
