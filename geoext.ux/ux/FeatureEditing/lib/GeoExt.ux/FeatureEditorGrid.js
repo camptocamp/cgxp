@@ -28,6 +28,11 @@ Ext.namespace("GeoExt.ux");
 GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     /* begin i18n */
+    /** api: config[actionsButtonText] ``String`` i18n */
+    actionsButtonText: "Actions",
+    /** api: config[actionsButtonTooltip] ``String`` i18n */
+    actionsButtonTooltip: "More actions on this feature",
+
     /** api: config[deleteMsgTitle] ``String`` i18n */
     deleteMsgTitle: "Delete Feature?",
     /** api: config[deleteMsg]
@@ -105,6 +110,11 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     allowCancel: true,
 
+    /** api: config[extraActions]
+     * ``Array(Ext.menu.Item)`` List of items to put in the actions menu.
+     */
+    extraActions: undefined,
+
     /** api: config[extraColumns]
      *  ``Array`` Extra columns to use in this grid's column model.
      */
@@ -147,6 +157,17 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      *  whether the feature is modified. Read-only.
      */
     dirty: false,
+
+    /** private: property[previous]
+     *  ``Object`` Hold the current feature properties to be stashed on next
+     *  featuremodified event.
+     */
+    previous: undefined,
+
+    /** private: property[undoStack]
+     *  ``Array`` Feature properties stack for undo functionality.
+     */
+    undoStack: [],
 
     // private config overrides
     clicksToEdit: 1,
@@ -203,8 +224,10 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         var feature = this.store.feature;
 
+        var items;
+
         // create bottom bar
-        this.deleteButton = new Ext.Button({
+        var deleteButtonConfig = {
             text: this.deleteButtonText,
             tooltip: this.deleteButtonTooltip,
             cls: 'x-delete-btn',
@@ -212,7 +235,21 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             handler: this.deleteHandler,
             disabled: feature.state == OpenLayers.State.INSERT,
             scope: this
-        });
+        };
+
+        if (this.extraActions) {
+            var menu = [new Ext.menu.Item(deleteButtonConfig)];
+
+            var actionsButton = new Ext.Button({
+                text: this.actionsButtonText,
+                tooltip: this.actionsButtonTooltip,
+                menu: menu.concat(this.extraActions)
+            });
+            items = [actionsButton];
+        } else {
+            items = [new Ext.Button(deleteButtonConfig)];
+        }
+
         this.cancelButton = new Ext.Button({
             text: this.cancelButtonText,
             tooltip: this.cancelButtonTooltip,
@@ -231,14 +268,13 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             scope: this
         });
         this.bbar = new Ext.Toolbar({
-            items: [
-                this.deleteButton,
+            items: items.concat([
                 '->',
                 this.cancelButton,
                 this.saveButton
-            ]
+            ])
         });
-        this.dirty = feature.state == OpenLayers.State.INSERT;
+        this.dirty = this.isDirty();
 
         // create column model
         var columns = [
@@ -299,8 +335,9 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         // feature state
         this.on({
             "afteredit": function() {
-                this.setFeatureState(this.getDirtyState());
-                this.saveButton.setDisabled(!this.getDirtyState());
+                this.setFeatureState(this.featureInfo.state === OpenLayers.State.INSERT ?
+                        OpenLayers.State.INSERT : OpenLayers.State.UPDATE);
+                this.saveButton.setDisabled(!this.dirty);
             }
         });
         this.mon(this.selModel, 'beforecellselect', function(sm, rowIndex, colIndex){
@@ -309,6 +346,34 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 return false;
             }
         }, this);
+
+        this.stack(feature);
+
+        var editorgrid = this;
+        this.onKeyPress = function(evt) {
+            var handled = false;
+            switch (evt.keyCode) {
+                case 90: // z
+                    if (evt.metaKey || evt.ctrlKey) {
+                        editorgrid.undo();
+                        handled = true;
+                    }
+                    break;
+            }
+            if (handled) {
+                OpenLayers.Event.stop(evt);
+            }
+        };
+        OpenLayers.Event.observe(document, "keydown", this.onKeyPress);
+    },
+
+    /** private: method[isDirty]
+     *  :return: ``Boolean`` True if dirty, false otherwise
+     *
+     *  Get the dirty state from the feature state.
+     */
+    isDirty: function() {
+        return this.store.feature.state !== null;
     },
 
     /** private: method[onFeaturemodified]
@@ -318,9 +383,74 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     onFeaturemodified: function(e) {
         if(e.feature === this.store.feature) {
-            this.dirty = true;
-            this.saveButton.setDisabled();
+            if (e.action == 'undo') {
+                // Do nothing
+            }
+            else {
+                if (this.isDirty()) {
+                    this.stack(e.feature);
+                    this.dirty = this.isDirty();
+                }
+            }
+            this.saveButton.setDisabled(!this.dirty);
         }
+    },
+
+    /** private: method[stack]
+     *  :param feature: ``OpenLayers.Feature`` The feature state to stack.
+     *
+     *  Stack feature state and properties for the undo functionality.
+     */
+    stack: function(feature) {
+        if (this.previous !== null) {
+            this.undoStack.push(this.previous);
+        }
+        this.previous = {
+            geometry: feature.geometry.clone(),
+            attributes: Ext.apply({}, feature.attributes),
+            state: feature.state
+        };
+    },
+
+    /** public: method[undo]
+     *  :return: ``Boolean`` True if something have been undone, false otherwise.
+     *
+     *  Undo the last feature modification.
+     */
+    undo: function() {
+        var previous = this.undoStack.pop();
+        if (previous !== undefined) {
+
+            // restore feature
+            var feature = this.store.feature;
+
+            feature.geometry = Ext.apply(previous.geometry.clone(), {
+                id: feature.geometry.id
+            });
+            feature.attributes = Ext.apply({}, previous.attributes);
+            feature.state = previous.state;
+            this.dirty = this.isDirty();
+
+            // refresh map
+            var modifyControl = this.modifyControl;
+            modifyControl.layer.drawFeature(feature, modifyControl.standalone ?
+                undefined : 'select');
+            modifyControl.resetVertices();
+
+            // refresh grid
+            this.store.each(function(record) {
+                record.set('value', feature.attributes[record.get("name")]);
+            });
+
+            feature.layer.events.triggerEvent("featuremodified", {
+                feature: feature,
+                action: 'undo'
+            });
+            this.previous = previous;
+
+            return true;
+        }
+        return false;
     },
 
     /** private: method[getEditor]
@@ -337,18 +467,6 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         var field = (config) ?
             Ext.ComponentMgr.create(config) : new Ext.form.TextField();
         return new Ext.grid.GridEditor(field);
-    },
-
-    /** private: method[getDirtyState]
-     *  :return: ``Number`` The feature state.
-     *
-     *  Get the appropriate OpenLayers.State value to indicate a dirty feature.
-     *  We don't cache this value because the popup may remain open through
-     *  several state changes.
-     */
-    getDirtyState: function() {
-        return this.store.feature.state === OpenLayers.State.INSERT ?
-            this.store.feature.state : OpenLayers.State.UPDATE;
     },
 
     /** private: method[cancelHandler]
@@ -404,6 +522,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         feature.geometry = this.featureInfo.geometry;
         feature.attributes = this.featureInfo.attributes;
         feature.state = this.featureInfo.state;
+        this.dirty = this.isDirty();
 
         layer.drawFeature(feature);
     },
@@ -464,11 +583,16 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     setFeatureState: function(state) {
         var feature = this.store.feature, layer = feature.layer;
+        var event = (state != feature.state);
         feature.state = state;
+        this.dirty = this.isDirty();
         if(layer && layer.events) {
-            layer.events.triggerEvent("featuremodified", {
-                feature: feature
-            });
+            if (event) {
+                layer.events.triggerEvent("featuremodified", {
+                    feature: feature,
+                    action: 'setFeatureState'
+                });
+            }
             layer.drawFeature(feature);
         }
     },
@@ -477,6 +601,8 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      * Private method called during the destroy sequence.
      */
     beforeDestroy: function() {
+        OpenLayers.Event.stopObserving(document, "keydown", this.onKeyPress);
+
         GeoExt.ux.FeatureEditorGrid.superclass.beforeDestroy.apply(
             this, arguments);
 
