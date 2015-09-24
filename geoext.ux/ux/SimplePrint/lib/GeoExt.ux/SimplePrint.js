@@ -405,10 +405,6 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             }, cbOptions));
         }
         if (showUnique || printProvider.scales.getCount() > 1) {
-            var format = Ext.util.Format.numberRenderer("0,000");
-            printProvider.scales.each(function(record) {
-                record.set("name", "1:" + format(record.get("value")).replace(",", " "));
-            });
             this.add(Ext.apply({
                 xtype: "combo",
                 fieldLabel: this.scaleText,
