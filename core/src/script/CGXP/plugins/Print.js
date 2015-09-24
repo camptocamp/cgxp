@@ -681,6 +681,12 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             record.set('label', OpenLayers.i18n(record.get('name')));
         };
 
+        var translate_scales_name = function(record) {
+            var format = Ext.util.Format.numberRenderer("0,000");
+            var name = "1:" + format(record.get("value")).replace(",", " ");
+            record.set('label', OpenLayers.i18n(name));
+        };
+
         var printPanel;
         printProvider.on('loadcapabilities', function(printProvider, capabilities) {
             // if png is supported, add a button into the print panel
@@ -711,10 +717,14 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
             // Makes sure the print capabilities are fully loaded before rendering
             // the print interface.
-            printProvider.scales.each(translate_name);
             printProvider.layouts.each(translate_name);
             printProvider.dpis.each(translate_name);
 
+        }.createDelegate(this));
+
+        //Add a translated label on each scale record.
+        printProvider.scales.on('datachanged', function(scales) {
+            scales.each(translate_scales_name);
         }.createDelegate(this));
 
         var self = this;
