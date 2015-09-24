@@ -116,10 +116,7 @@ Ext.namespace("cgxp.plugins");
  *                  },
  *                  autoFit: true
  *              },
- *              version: 3,
- *              encodeLayer: {},
- *              encodeExternalLayer: {},
- *              additionalAttributes: []
+ *              version: 3
  *          }]
  *          ...
  *      });
@@ -212,20 +209,18 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     /** api: config[encodeLayer]
      * ``Object``
      * Additional attribute used to encode internal layer.
-     * Default to { useNativeAngle: true }
+     * Default for version 2: { useNativeAngle: true }
+     * for version 3: { useNativeAngle: true, serverType: 'mapserver' }
      */
-    encodeLayer: {
-        useNativeAngle: true
-    },
+    encodeLayer: undefined,
 
     /** api: config[encodeExternalLayer]
      * ``Object``
      * Additional attribute used to encode external layer.
-     * Default to { useNativeAngle: false }
+     * Default for version 2: { useNativeAngle: true }
+     * for version 3: { useNativeAngle: true, serverType: 'mapserver' }
      */
-    encodeExternalLayer: {
-        useNativeAngle: false
-    },
+    encodeExternalLayer: undefined,
 
     /** api: config[actionTarget]
      *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
@@ -279,7 +274,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  ``Array``
      *  Attributes added in the print form used especially with print V2.
      *
-     *  Default to:
+     *  Default for version 2:
      *
      *  .. code:: javascript
      *
@@ -296,20 +291,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *        name: "legend",
      *        type: "LegendAttributeValue"
      *    }]
+     *
+     *  For version 3: []
      */
-    additionalAttributes: [{
-        name: "title",
-        label: "Title",
-        type: "String"
-    }, {
-        name: "comment",
-        label: "Comment",
-        type: "String",
-        useTextArea: true
-    }, {
-        name: "legend",
-        type: "LegendAttributeValue"
-    }],
+    additionalAttributes: undefined,
 
     /** public: method[addCustomItem]
      *
@@ -353,6 +338,30 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         if (this.activateToggleGroup) {
             cgxp.plugins.ToolActivateMgr.register(this);
         }
+
+        var encodeLayer = this.version == 2 ? {
+            useNativeAngle: true
+        } : {
+            useNativeAngle: true,
+            serverType: 'mapserver'
+        };
+        this.encodeLayer = this.encodeLayer === undefined || encodeLayer;
+        this.encodeExternalLayer = this.encodeExternalLayer === undefined || encodeLayer;
+
+        this.additionalAttributes = this.additionalAttributes === undefined || this.version == 2 ?
+            [{
+                name: "title",
+                label: "Title",
+                type: "String"
+            }, {
+                name: "comment",
+                label: "Comment",
+                type: "String",
+                useTextArea: true
+            }, {
+                name: "legend",
+                type: "LegendAttributeValue"
+            }] : [];
     },
 
     /** private: method[addOutput]
@@ -577,13 +586,15 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     delete encodedLayer.zoomOffset;
                 }
             }
-            Ext.apply(encodedLayer,
-                encodedLayer.baseURL == this.mapserverURL ?
-                this.encodeLayer : this.encodeExternalLayer);
-            if (encodedLayer.type == 'WMS') {
-                encodedLayer.customParams = encodedLayer.customParams || {};
-                encodedLayer.customParams.map_resolution =
-                        printProvider.dpi.data.value;
+            if (encodedLayer.type.toLowerCase() === 'wms') {
+                Ext.apply(encodedLayer,
+                    encodedLayer.baseURL == this.mapserverURL ?
+                    this.encodeLayer : this.encodeExternalLayer);
+                if (this.version == 2) {
+                    encodedLayer.customParams = encodedLayer.customParams || {};
+                    encodedLayer.customParams.map_resolution =
+                            printProvider.dpi.data.value;
+                }
             }
         }, this);
 
