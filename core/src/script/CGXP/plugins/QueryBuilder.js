@@ -62,7 +62,7 @@ Ext.namespace("cgxp.plugins");
  *              srsName: 'EPSG:21781',
  *              featureTypes: ['layer1', 'layer2'],
  *              attributeURLs: { 'layer1': { 'fieldA': 'http://path/to/json' }},
- *              describeFeatureTypeParams: ${dumps(url_role_params) | n}
+ *              describeFeatureTypeParams: ${dumps(version_role_params) | n}
  *          }
  *      % endif
  *          ]

@@ -88,6 +88,16 @@ function addEditorGrid(feature) {
         }]
     });
 
+    // Examples of extra actions
+    var actions = [new Ext.menu.Item({
+        text: 'Show coordinates',
+        handler: function() {
+            var geom = editorGrid.store.feature.geometry;
+            var text = ["Feature coordinates: ", geom.x, ', ', geom.y].join('');
+            alert(text);
+        }
+    })];
+
     var editorGrid = new GeoExt.ux.FeatureEditorGrid({
         nameField: "label",
         store: store,
@@ -95,6 +105,7 @@ function addEditorGrid(feature) {
         allowSave: true,
         allowCancel: true,
         allowDelete: true,
+        extraActions: actions,
         border: false,
         hideHeaders: true,
         viewConfig: {
@@ -136,6 +147,7 @@ function addEditorGrid(feature) {
 }
 
 Ext.onReady(function() {
+    Ext.QuickTips.init();
 
     var map = new OpenLayers.Map({controls: []});
 

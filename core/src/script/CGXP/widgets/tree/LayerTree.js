@@ -423,7 +423,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         layer_id: item.id, // layer_id is the id of the layer in database
                         editable: item.editable,
                         timeWidget: timeWidget,
-                        uiProvider: 'layer'
+                        uiProvider: 'layer',
+                        metadata: item.metadata
                     });
                     if (item.legendImage && styles) {
                         styles.push({

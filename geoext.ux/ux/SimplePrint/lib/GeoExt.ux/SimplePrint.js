@@ -245,6 +245,13 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
 
         this.printProvider.on({
             "layoutchange": this.initForm,
+            "loadCapabilities": function() {
+                this.addButton({
+                    text: this.printText,
+                    handler: this.print,
+                    scope: this
+                });
+            },
             scope: this,
             single: true
         });
@@ -423,12 +430,6 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
             }));
         }
 
-        this.addButton({
-            text: this.printText,
-            handler: this.print,
-            scope: this
-        });
-
         if (printProvider.supportProgress()) {
             this.add(this.progressPanel);
         }
@@ -600,6 +601,7 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
      * Handler for the panel's expand/activate/enable event
      */
     showExtent: function() {
+        this.printPage.fit(this.mapPanel.map, {mode: "screen"});
         this.printExtent.show();
     },
 

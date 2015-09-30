@@ -260,10 +260,16 @@ GeoExt.ux.tree.WMSBrowserTreePanel = Ext.extend(Ext.tree.TreePanel, {
             new OpenLayers.Projection('EPSG:4326')
         );
 
+        // capabilities srs should be uppercase
+        var layer_srs = {};
+        for (var key in layer.metadata.srs) {
+          layer_srs[key.toUpperCase()] = layer.metadata.srs[key];
+        }
+
         // validate srs
-        if(!(layer.metadata.srs[srs] === true ||
-            OpenLayers.Util.indexOf(layer.metadata.srs, srs) >= 0)) {
-            if(srs == 'EPSG:900913' && layer.metadata.srs['EPSG:3857'] === true){
+        if(!(layer_srs[srs] === true ||
+            OpenLayers.Util.indexOf(layer_srs, srs) >= 0)) {
+            if(srs == 'EPSG:900913' && layer_srs['EPSG:3857'] === true){
                 srs = 'EPSG:3857';
             }
             else {

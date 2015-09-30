@@ -54,7 +54,7 @@ Ext.namespace("cgxp.plugins");
  *              outputTarget: "left-panel",
  *              printURL: "${request.route_url('printproxy')}",
  *              mapserverURL: "${request.route_url('mapserverproxy')}",
- *              printProviderConfig: ${dumps(url_role_params)|n},
+ *              printProviderConfig: ${dumps(version_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -83,7 +83,7 @@ Ext.namespace("cgxp.plugins");
  *              toggleGroup: "maptools",
  *              printURL: "${request.route_url('printproxy')}",
  *              mapserverURL: "${request.route_url('mapserverproxy')}",
- *              printProviderConfig: ${dumps(url_role_params)|n},
+ *              printProviderConfig: ${dumps(version_role_params)|n},
  *              options: {
  *                  labelAlign: 'top',
  *                  defaults: {
@@ -116,10 +116,7 @@ Ext.namespace("cgxp.plugins");
  *                  },
  *                  autoFit: true
  *              },
- *              version: 3,
- *              encodeLayer: {},
- *              encodeExternalLayer: {},
- *              additionalAttributes: []
+ *              version: 3
  *          }]
  *          ...
  *      });
@@ -212,20 +209,18 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     /** api: config[encodeLayer]
      * ``Object``
      * Additional attribute used to encode internal layer.
-     * Default to { useNativeAngle: true }
+     * Default for version 2: { useNativeAngle: true }
+     * for version 3: { useNativeAngle: true, serverType: 'mapserver' }
      */
-    encodeLayer: {
-        useNativeAngle: true
-    },
+    encodeLayer: undefined,
 
     /** api: config[encodeExternalLayer]
      * ``Object``
      * Additional attribute used to encode external layer.
-     * Default to { useNativeAngle: false }
+     * Default for version 2: { useNativeAngle: true }
+     * for version 3: { useNativeAngle: true, serverType: 'mapserver' }
      */
-    encodeExternalLayer: {
-        useNativeAngle: false
-    },
+    encodeExternalLayer: undefined,
 
     /** api: config[actionTarget]
      *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
@@ -279,7 +274,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  ``Array``
      *  Attributes added in the print form used especially with print V2.
      *
-     *  Default to:
+     *  Default for version 2:
      *
      *  .. code:: javascript
      *
@@ -296,20 +291,10 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *        name: "legend",
      *        type: "LegendAttributeValue"
      *    }]
+     *
+     *  For version 3: []
      */
-    additionalAttributes: [{
-        name: "title",
-        label: "Title",
-        type: "String"
-    }, {
-        name: "comment",
-        label: "Comment",
-        type: "String",
-        useTextArea: true
-    }, {
-        name: "legend",
-        type: "LegendAttributeValue"
-    }],
+    additionalAttributes: undefined,
 
     /** public: method[addCustomItem]
      *
@@ -353,6 +338,30 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         if (this.activateToggleGroup) {
             cgxp.plugins.ToolActivateMgr.register(this);
         }
+
+        var encodeLayer = this.version == 2 ? {
+            useNativeAngle: true
+        } : {
+            useNativeAngle: true,
+            serverType: 'mapserver'
+        };
+        this.encodeLayer = this.encodeLayer === undefined || encodeLayer;
+        this.encodeExternalLayer = this.encodeExternalLayer === undefined || encodeLayer;
+
+        this.additionalAttributes = this.additionalAttributes === undefined || this.version == 2 ?
+            [{
+                name: "title",
+                label: "Title",
+                type: "String"
+            }, {
+                name: "comment",
+                label: "Comment",
+                type: "String",
+                useTextArea: true
+            }, {
+                name: "legend",
+                type: "LegendAttributeValue"
+            }] : [];
     },
 
     /** private: method[addOutput]
@@ -547,34 +556,45 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     encodedLayer.layers = layer.mapserverLayers.split(',');
                 }
                 encodedLayer.customParams = layer.mapserverParams;
-                encodedLayer.format = 'image/png';
                 apply = true;
             }
             if (apply) {
                 encodedLayer.baseURL = this.mapserverURL;
-                encodedLayer.type = 'WMS';
                 delete encodedLayer.dimensions;
-                delete encodedLayer.formatSuffix;
+                delete encodedLayer.requestEncoding;
+                delete encodedLayer.style;
                 delete encodedLayer.layer;
                 delete encodedLayer.matrixSet;
-                delete encodedLayer.maxExtent;
-                delete encodedLayer.params;
-                delete encodedLayer.requestEncoding;
-                delete encodedLayer.resolutions;
-                delete encodedLayer.style;
-                delete encodedLayer.tileOrigin;
-                delete encodedLayer.tileSize;
-                delete encodedLayer.version;
-                delete encodedLayer.zoomOffset;
-                encodedLayer.singleTile = true;
+                if (this.version == 3) {
+                    encodedLayer.type = 'wms';
+                    encodedLayer.imageFormat = 'image/png';
+                    delete encodedLayer.matrices;
+                    delete encodedLayer.dimensionParams;
+                    delete encodedLayer.format;
+                    delete encodedLayer.matrices;
+                } else {
+                    encodedLayer.type = 'WMS';
+                    encodedLayer.format = 'image/png';
+                    encodedLayer.singleTile = true;
+                    delete encodedLayer.formatSuffix;
+                    delete encodedLayer.maxExtent;
+                    delete encodedLayer.params;
+                    delete encodedLayer.resolutions;
+                    delete encodedLayer.tileOrigin;
+                    delete encodedLayer.tileSize;
+                    delete encodedLayer.version;
+                    delete encodedLayer.zoomOffset;
+                }
             }
-            Ext.apply(encodedLayer,
-                encodedLayer.baseURL == this.mapserverURL ?
-                this.encodeLayer : this.encodeExternalLayer);
-            if (encodedLayer.type == 'WMS') {
-                encodedLayer.customParams = encodedLayer.customParams || {};
-                encodedLayer.customParams.map_resolution =
-                        printProvider.dpi.data.value;
+            if (encodedLayer.type.toLowerCase() === 'wms') {
+                Ext.apply(encodedLayer,
+                    encodedLayer.baseURL == this.mapserverURL ?
+                    this.encodeLayer : this.encodeExternalLayer);
+                if (this.version == 2) {
+                    encodedLayer.customParams = encodedLayer.customParams || {};
+                    encodedLayer.customParams.map_resolution =
+                            printProvider.dpi.data.value;
+                }
             }
         }, this);
 
@@ -672,27 +692,50 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             record.set('label', OpenLayers.i18n(record.get('name')));
         };
 
+        var translate_scales_name = function(record) {
+            var format = Ext.util.Format.numberRenderer("0,000");
+            var name = "1:" + format(record.get("value")).replace(",", " ");
+            record.set('label', OpenLayers.i18n(name));
+        };
+
         var printPanel;
         printProvider.on('loadcapabilities', function(printProvider, capabilities) {
             // if png is supported, add a button into the print panel
-            if (Ext.pluck(capabilities.outputFormats, 'name').indexOf('png') != -1) {
+            var formats = capabilities.formats !== undefined ? capabilities.formats :
+                Ext.pluck(capabilities.outputFormats, 'name');
+            if (formats.indexOf('png') != -1) {
                 if (printPanel) {
                     printPanel.addButton({
                         text: this.exportpngbuttonText
                     }, function() {
-                        printProvider.customParams.outputFormat = 'png';
-                        this.printExtent.print(this.printOptions);
-                        delete printProvider.customParams.outputFormat;
+                        if (this.printProvider.supportProgress()) {
+                            printProvider.outputFormat = {
+                                name: "png",
+                                get: function(key) {
+                                    return this[key];
+                                }
+                            };
+                            this.print();
+                            delete printProvider.outputFormat;
+                        } else {
+                            printProvider.customParams.outputFormat = 'png';
+                            this.print();
+                            delete printProvider.customParams.outputFormat;
+                        }
                     }, printPanel);
                 }
             }
 
             // Makes sure the print capabilities are fully loaded before rendering
             // the print interface.
-            printProvider.scales.each(translate_name);
             printProvider.layouts.each(translate_name);
             printProvider.dpis.each(translate_name);
 
+        }.createDelegate(this));
+
+        //Add a translated label on each scale record.
+        printProvider.scales.on('datachanged', function(scales) {
+            scales.each(translate_scales_name);
         }.createDelegate(this));
 
         var self = this;
