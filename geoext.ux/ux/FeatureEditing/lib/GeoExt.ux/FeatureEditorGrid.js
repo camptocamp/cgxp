@@ -424,12 +424,15 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             // restore feature
             var feature = this.store.feature;
 
-            feature.geometry = Ext.apply(previous.geometry.clone(), {
-                id: feature.geometry.id
-            });
+            var layer = feature.layer;
+            // Remove feature from layer before changing its geometry
+            // then re-add it later to prevent ghost rendering
+            layer.removeFeatures([feature]);
+            feature.geometry = previous.geometry.clone();
             feature.attributes = Ext.apply({}, previous.attributes);
             feature.state = previous.state;
             this.dirty = this.isDirty();
+            layer.addFeatures([feature]);
 
             // refresh map
             var modifyControl = this.modifyControl;
