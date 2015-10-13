@@ -280,11 +280,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *
      *    [{
      *        name: "title",
-     *        label: "Title",
+     *        label: OpenLayers.i18n("Title"),
      *        type: "String"
      *    }, {
      *        name: "comment",
-     *        label: "Comment",
+     *        label: OpenLayers.i18n("Comment"),
      *        type: "String",
      *        useTextArea: true
      *    }, {
@@ -351,11 +351,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
         this.additionalAttributes = this.additionalAttributes === undefined || this.version == 2 ?
             [{
                 name: "title",
-                label: "Title",
+                label: OpenLayers.i18n("Title"),
                 type: "String"
             }, {
                 name: "comment",
-                label: "Comment",
+                label: OpenLayers.i18n("Comment"),
                 type: "String",
                 useTextArea: true
             }, {
