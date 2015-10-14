@@ -353,8 +353,10 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 features = [features];
             }
 
-            var geometry = null, maxExtent = null;
+            var geometry = null;
+            var maxExtent = null;
             var newParams = {};
+            var self = this;
             function addParams(attributes, paramsLink) {
                 if (paramsLink) {
                     for (wfsAttribute in paramsLink) {
@@ -385,13 +387,20 @@ cgxp.plugins.WFSPermalink = Ext.extend(gxp.plugins.Tool, {
                 addParams(attributes, this.paramsLink[features[i].type]);
             }
             this.target.mapPanel.setParams(newParams);
-            if (maxExtent) {
-                this.target.mapPanel.map.zoomToExtent(maxExtent);
-            }
 
             if (this.pointRecenterZoom && features.length == 1 &&
                 features[0].geometry instanceof OpenLayers.Geometry.Point) {
-                this.target.mapPanel.map.zoomTo(this.pointRecenterZoom);
+                setTimeout(function() {
+                    self.target.mapPanel.map.zoomTo(self.pointRecenterZoom);
+                    self.target.mapPanel.map.setCenter(new OpenLayers.LonLat(
+                        features[0].geometry.x,
+                        features[0].geometry.y
+                    ));
+                });
+            } else if (maxExtent !== null) {
+                setTimeout(function() {
+                    self.target.mapPanel.map.zoomToExtent(maxExtent);
+                });
             }
 
             this.events.fireEvent('queryresults', {

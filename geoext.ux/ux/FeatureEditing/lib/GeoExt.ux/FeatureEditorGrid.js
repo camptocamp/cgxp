@@ -185,10 +185,10 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         );
 
         // create an attribute store if none is provided
-        if(!this.store) {
+        if (!this.store) {
             var data = [], attributes = this.feature.attributes;
-            for(var a in attributes) {
-                if(attributes.hasOwnProperty(a)) {
+            for (var a in attributes) {
+                if (attributes.hasOwnProperty(a)) {
                     data.push({
                         "name": a,
                         "type": typeof attributes[a]
@@ -263,7 +263,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 }
             })
         ];
-        if(this.extraColumns) {
+        if (this.extraColumns) {
             columns = columns.concat(this.extraColumns);
         }
         this.colModel = new Ext.grid.ColumnModel({
@@ -303,8 +303,8 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 this.saveButton.setDisabled(!this.getDirtyState());
             }
         });
-        this.mon(this.selModel, 'beforecellselect', function(sm, rowIndex, colIndex){
-            if(colIndex === 0){
+        this.mon(this.selModel, 'beforecellselect', function(sm, rowIndex, colIndex) {
+            if (colIndex === 0) {
                 this.startEditing.defer(200, this, [rowIndex, 1]);
                 return false;
             }
@@ -364,19 +364,19 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 feature: this.store.feature,
                 modified: this.dirty
             }, e);
-            if(this.fireEvent("cancel", this, e) !== false) {
+            if (this.fireEvent("cancel", this, e) !== false) {
                 this.cancel();
             }
         }.createDelegate(this);
 
-        if(this.cancelMsg && this.dirty) {
+        if (this.cancelMsg && this.dirty) {
             Ext.Msg.show({
                 title: this.cancelMsgTitle,
                 msg: this.cancelMsg,
                 buttons: Ext.Msg.YESNO,
                 icon: Ext.MessageBox.QUESTION,
                 fn: function(button) {
-                    if(button === "yes") {
+                    if (button === "yes") {
                         _cancel();
                     }
                 }
@@ -425,14 +425,14 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             this.fireEvent("done", this, e);
         }.createDelegate(this);
 
-        if(this.deleteMsg) {
+        if (this.deleteMsg) {
             Ext.Msg.show({
                 title: this.deleteMsgTitle,
                 msg: this.deleteMsg,
                 buttons: Ext.Msg.YESNO,
                 icon: Ext.MessageBox.QUESTION,
                 fn: function(button) {
-                    if(button === "yes") {
+                    if (button === "yes") {
                         _delete();
                     }
                 }
@@ -474,14 +474,14 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
 
     /** private: method[beforeDestroy]
-     * Private method called during the destroy sequence.
+     *  Private method called during the destroy sequence.
      */
     beforeDestroy: function() {
         GeoExt.ux.FeatureEditorGrid.superclass.beforeDestroy.apply(
             this, arguments);
 
         var layer = this.store.feature.layer;
-        if(layer && layer.events) {
+        if (layer && layer.events) {
             layer.events.un({
                 featuremodified: this.onFeaturemodified,
                 scope: this
@@ -493,7 +493,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.modifyControl.deactivate();
         this.modifyControl.destroy();
 
-        if(!this.initialConfig.store) {
+        if (!this.initialConfig.store) {
             this.store.destroy();
         }
     }
