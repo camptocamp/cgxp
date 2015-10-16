@@ -766,7 +766,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 options.params[paramName + "__eq"] = param;
                 queryable.push(paramName);
             }
-        });
+        }, this);
         options.params.queryable = queryable;
         return options;
     },
