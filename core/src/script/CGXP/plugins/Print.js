@@ -280,11 +280,11 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *
      *    [{
      *        name: "title",
-     *        label: "Title",
+     *        label: OpenLayers.i18n("Title"),
      *        type: "String"
      *    }, {
      *        name: "comment",
-     *        label: "Comment",
+     *        label: OpenLayers.i18n("Comment"),
      *        type: "String",
      *        useTextArea: true
      *    }, {
@@ -345,23 +345,27 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             useNativeAngle: true,
             serverType: 'mapserver'
         };
-        this.encodeLayer = this.encodeLayer === undefined || encodeLayer;
-        this.encodeExternalLayer = this.encodeExternalLayer === undefined || encodeLayer;
+        this.encodeLayer = this.encodeLayer === undefined ?
+            encodeLayer : this.encodeLayer;
+        this.encodeExternalLayer = this.encodeExternalLayer === undefined ?
+            encodeLayer : this.encodeExternalLayer;
 
-        this.additionalAttributes = this.additionalAttributes === undefined || this.version == 2 ?
-            [{
-                name: "title",
-                label: "Title",
-                type: "String"
-            }, {
-                name: "comment",
-                label: "Comment",
-                type: "String",
-                useTextArea: true
-            }, {
-                name: "legend",
-                type: "LegendAttributeValue"
-            }] : [];
+        this.additionalAttributes = this.additionalAttributes === undefined ?
+            this.version == 2 ?
+                [{
+                    name: "title",
+                    label: OpenLayers.i18n("Title"),
+                    type: "String"
+                }, {
+                    name: "comment",
+                    label: OpenLayers.i18n("Comment"),
+                    type: "String",
+                    useTextArea: true
+                }, {
+                    name: "legend",
+                    type: "LegendAttributeValue"
+                }] : [] :
+            this.additionalAttributes;
     },
 
     /** private: method[addOutput]

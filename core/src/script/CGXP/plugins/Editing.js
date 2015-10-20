@@ -766,7 +766,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 options.params[paramName + "__eq"] = param;
                 queryable.push(paramName);
             }
-        });
+        }, this);
         options.params.queryable = queryable;
         return options;
     },
@@ -1613,6 +1613,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     computeDifference: function(geomA, geomB, success, failure) {
         var geojson = new OpenLayers.Format.GeoJSON();
+        var multi = geomA.CLASS_NAME.indexOf('Multi') != -1;
         geomA = Ext.util.JSON.decode(geojson.write(geomA));
         geomB = Ext.util.JSON.decode(geojson.write(geomB));
 
@@ -1623,8 +1624,19 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 geometries: [geomA, geomB]
             },
             success: function(result) {
-                success.call(this,
-                    geojson.read(result.responseText)[0].geometry);
+                var geometry = geojson.read(result.responseText)[0].geometry;
+
+                // if geomA was multi and isn't anymore force it to multi
+                if (multi) {
+                    var olgeom = OpenLayers.Geometry;
+                    if (geometry instanceof olgeom.Polygon) {
+                        geometry = new olgeom.MultiPolygon([geometry]);
+                    } else if (geometry instanceof olgeom.LineString) {
+                        geometry = new olgeom.MultiLineString([geometry]);
+                    }
+                }
+
+                success.call(this, geometry);
             },
             failure: function() {
                 failure.call(this);
