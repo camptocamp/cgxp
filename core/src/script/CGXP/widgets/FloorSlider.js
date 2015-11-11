@@ -40,6 +40,11 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
      *  The max floor value.
      */
 
+    /** api: config[floors]
+     * ``Array``
+     * The optional list of floor names (will be computed if not provided)
+     */
+
     /** api: config[maxIsSky]
      *  ``Boolean``
      *  Max value mean all floor, default is true.
@@ -90,6 +95,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
     /** private: method[constructor]
      */
     constructor: function(config) {
+        floorMap = this.generateFloorMap(config);
         var ul = document.createElement('ul');
         for (var i = config.maxValue; i >= config.minValue; i--) {
             var li = Ext.DomHelper.append(ul, {
@@ -98,8 +104,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             var a = Ext.DomHelper.append(li, {
                 tag: 'a',
                 'href': 'javascript:',
-                html: config.maxIsSky && i == config.maxValue ?
-                        this.skyText : i.toString()
+                html: floorMap[i]
             }, true);
             a.on({
                 click: (function(value) {
@@ -111,7 +116,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         this.slider = new Ext.slider.SingleSlider({
             increment: 1,
             vertical: true,
-            value: config.value,
+            value: this.floor2pos(config.value),
             minValue: config.minValue,
             maxValue: config.maxValue,
             clickToChange: false,
@@ -153,6 +158,61 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
                 this.anchorPosition, this.anchorOffsets]);
     },
 
+    /** private: method[generateFloorMap]
+    */
+    generateFloorMap: function(config) {
+        var floorMap = {};
+        if (!config.floors) {
+            //floors not provided => compute them
+            for (var i = config.minValue; i <= config.maxValue; ++i) {
+                if (i == config.maxValue && config.maxIsSky) {
+                    floorMap[i] = this.skyText;
+                } else {
+                    floorMap[i] = i.toString();
+                }
+            }
+        } else {
+            //floors provided => compute min/max
+            config.minValue = 0;
+            config.maxValue = config.floors.length - 1;
+            for(var j = 0; j <= config.maxValue; ++j) {
+                floorMap[j] = config.floors[j];
+            }
+        }
+        return floorMap;
+    },
+
+    /** private: method[pos2floor]
+     */
+    pos2floor: function(pos) {
+        if (this.maxIsSky && pos == this.maxValue) {
+            return null;
+        }
+        if (this.floors) {
+            return this.floors[pos];
+        } else {
+            return pos;
+        }
+    },
+
+    /** private: method[floor2pos]
+     */
+    floor2pos: function(floor) {
+        if (this.maxIsSky && floor === null) {
+            return this.maxValue;
+        }
+        if (this.floors) {
+            for (var pos = 0; pos < this.floors.length; ++pos) {
+                if (this.floors[pos] == floor) {
+                    return pos;
+                }
+            }
+            throw "Invalid floor value";
+        } else {
+            return floor;
+        }
+    },
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -160,16 +220,12 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
 
         this.slider.on('change', function() {
             var value = this.slider.getValue();
-            var floor = this.maxIsSky && value == this.maxValue ? null : value;
+            var floor = this.pos2floor(value);
             this.mapPanel.setParams({ 'floor': floor });
         }, this);
         this.mapPanel.on('paramschange', function(params) {
             if (params.floor !== undefined) {
-                floor = params.floor;
-                if (this.maxIsSky && floor === null) {
-                    floor = this.maxValue;
-                }
-                this.slider.setValue(parseInt(floor, 10));
+                this.slider.setValue(this.floor2pos(params.floor));
             }
         }, this);
         if (this.mapPanel.params.floor === undefined) {
