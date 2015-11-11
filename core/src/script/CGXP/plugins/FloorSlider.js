@@ -91,6 +91,12 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
      */
     maxValue: 10,
 
+    /** api: config[floors]
+     * ``Array``
+     * The optional list of floor names (will be computed if not provided)
+     */
+    floors: null,
+
     /** api: config[maxIsSky]
      *  ``Boolean``
      *  If set to ``true`` the label for the slider's max value will be
@@ -121,6 +127,7 @@ cgxp.plugins.FloorSlider = Ext.extend(gxp.plugins.Tool, {
             this.floorSlider = new cgxp.FloorSlider(Ext.apply({
                 minValue: this.minValue,
                 maxValue: this.maxValue,
+                floors: this.floors,
                 value: this.value,
                 maxIsSky: this.maxIsSky,
                 mapPanel: mapPanel

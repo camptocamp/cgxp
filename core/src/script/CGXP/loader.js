@@ -99,6 +99,7 @@
         "plugins/Routing.js",
         "plugins/ScaleChooser.js",
         "plugins/FloorSlider.js",
+        "widgets/FloorSlider.js",
         "plugins/StreetView.js",
         "../../../../openlayers.addins/SwitchableWMTS/lib/OpenLayers/Layer/SwitchableWMTS.js",
         "plugins/ThemeSelector.js",
