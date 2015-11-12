@@ -239,6 +239,11 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                     }
                     this.events.fireEvent("queryclose");
                 },
+                "expand": function() {
+                    if (this.drawingLayer) {
+                        this.drawingLayer.setVisibility(true);
+                    }
+                },
                 scope: this
             },
             scope: this
