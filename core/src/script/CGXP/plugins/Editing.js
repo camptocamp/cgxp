@@ -1094,7 +1094,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     save: function(feature) {
         var protocol = new OpenLayers.Protocol.HTTP({
             url: this.layersURL + feature.attributes.__layer_id__,
-            format: new OpenLayers.Format.GeoJSON()
+            format: new OpenLayers.Format.GeoJSON(),
+            headers: {'Content-Type': 'application/json'}
         });
         var self = this;
         var validationError = null;
