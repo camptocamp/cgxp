@@ -469,8 +469,6 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *      panel.
      */
     createPrintPanel: function(panelOptions) {
-        this.includeLegend = this.checkLegend && !!this.legendPanelId;
-
         // create a print provider
         var printProviderOptions = {
             url: this.printURL,
@@ -815,7 +813,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             rotationText: this.rotationfieldText,
             printText: this.printbuttonText,
             layoutText: this.layoutText,
-            creatingPdfText: this.waitingText
+            creatingPdfText: this.waitingText,
+            includeLegend: this.checkLegend && !!this.legendPanelId
         }, this.options);
 
         Ext.apply(options, panelOptions);

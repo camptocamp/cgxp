@@ -218,6 +218,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     createBtnText: 'Create a new feature',
 
+    /** api: config[enableUndo]
+     *  ``Boolean``
+     *  If true, the undo feature is enabled.
+     **/
+    enableUndo: true,
+
     /** api: config[undoButtonText]
      *  ``String``
      *  The text for the undo button (i18n).
@@ -277,6 +283,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      *  Message display when the query failed
      */
     queryServerErrorText: 'Query failed because of a server error.',
+
+    /** api: config[enableCutWizard]
+     *  ``Boolean``
+     *  If true, the cut wizard is enabled.
+     **/
+    enableCutWizard: true,
 
     /** api: config[cutActionText]
      *  ``String`` i18n
@@ -396,6 +408,27 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.createGetFeatureControl();
 
         this.newFeatureBtn = this.createNewFeatureBtn();
+
+        var bbar_actions = [
+            this.newFeatureBtn,
+        ];
+        if (this.enableUndo) {
+            bbar_actions.push(
+                '->',
+                {
+                    xtype: 'button',
+                    text: this.undoButtonText,
+                    iconCls: 'undo',
+                    tooltip: this.undoButtonTooltip,
+                    listeners: {
+                        click: function(button, pressed) {
+                            this.undo();
+                        },
+                        scope: this
+                    }
+                }
+            );
+        }
         var win = this.win = new Ext.Window(Ext.apply({
             width: 300,
             border: false,
@@ -411,22 +444,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     padding: '5px'
                 }
             }],
-            bbar: [
-                this.newFeatureBtn,
-                '->',
-                {
-                    xtype: 'button',
-                    text: this.undoButtonText,
-                    iconCls: 'undo',
-                    tooltip: this.undoButtonTooltip,
-                    listeners: {
-                        click: function(button, pressed) {
-                            this.undo();
-                        },
-                        scope: this
-                    }
-                }
-            ]
+            bbar: bbar_actions
         }, this.layersWindowOptions));
         this.target.mapPanel.on({
             'render': function() {
@@ -977,7 +995,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
         var actions = this.getExtraActions(store.feature);
 
-        if (geometryType.indexOf('Polygon') != -1) {
+        if (this.enableCutWizard && geometryType.indexOf('Polygon') != -1) {
             actions.push(
                 new Ext.menu.Item({
                     text: this.cutActionText,
@@ -1076,7 +1094,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     save: function(feature) {
         var protocol = new OpenLayers.Protocol.HTTP({
             url: this.layersURL + feature.attributes.__layer_id__,
-            format: new OpenLayers.Format.GeoJSON()
+            format: new OpenLayers.Format.GeoJSON(),
+            headers: {'Content-Type': 'application/json'}
         });
         var self = this;
         var validationError = null;
