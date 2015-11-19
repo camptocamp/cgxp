@@ -221,7 +221,7 @@ cgxp.MapPanel = Ext.extend(GeoExt.MapPanel, {
                 )
             ]);
         }
-        params = {};
+        var params = {};
         for (var key in state) {
             if (state.hasOwnProperty(key) && key.indexOf('param_') === 0) {
                 params[key.substring(6)] = state[key];
