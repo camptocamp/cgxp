@@ -501,12 +501,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 var handled = false;
                 switch (evt.keyCode) {
                     case 90: // z
-                        if (evt.metaKey || evt.ctrlKey) {
+                        if (editing.enableUndo && (evt.metaKey || evt.ctrlKey)) {
                             handled = draw.undo();
                         }
                         break;
                     case 89: // y
-                        if (evt.metaKey || evt.ctrlKey) {
+                        if (editing.enableUndo && (evt.metaKey || evt.ctrlKey)) {
                             handled = draw.redo();
                         }
                         break;
@@ -1014,6 +1014,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             allowSave: true,
             allowCancel: true,
             allowDelete: true,
+            allowUndo: this.enableUndo,
             border: false,
             hideHeaders: true,
             viewConfig: {

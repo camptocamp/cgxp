@@ -110,6 +110,12 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     allowCancel: true,
 
+    /** api: config[allowUndo]
+     *  ``Boolean`` Set to true to allow to undo operations (CTRL-Z).
+     *  Default is true.
+     */
+    allowUndo: true,
+
     /** api: config[extraActions]
      * ``Array(Ext.menu.Item)`` List of items to put in the actions menu.
      */
@@ -354,7 +360,7 @@ GeoExt.ux.FeatureEditorGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             var handled = false;
             switch (evt.keyCode) {
                 case 90: // z
-                    if (evt.metaKey || evt.ctrlKey) {
+                    if (editorgrid.allowUndo && (evt.metaKey || evt.ctrlKey)) {
                         editorgrid.undo();
                         handled = true;
                     }
