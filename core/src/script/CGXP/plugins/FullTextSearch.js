@@ -152,7 +152,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         }, this.vectorLayerConfig));
 
         if (!this.vectorLayer.style) {
-            this.vectorLayer.style = this.vectorLayer.styleMap.styles.default.defaultStyle;
+            this.vectorLayer.style = this.vectorLayer.styleMap.styles['default'].defaultStyle;
         }
 
         this.target.on('ready', this.viewerReady, this);
