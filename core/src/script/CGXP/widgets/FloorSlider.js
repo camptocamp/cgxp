@@ -116,7 +116,6 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
         this.slider = new Ext.slider.SingleSlider({
             increment: 1,
             vertical: true,
-            value: this.floor2pos(config.value),
             minValue: config.minValue,
             maxValue: config.maxValue,
             clickToChange: false,
@@ -140,6 +139,12 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             ]
         }, config);
         cgxp.FloorSlider.superclass.constructor.call(this, config);
+
+        var startFloor = this.mapPanel.params.floor !== undefined ?
+            this.mapPanel.params.floor : this.value;
+        if (startFloor !== undefined) {
+            this.slider.setValue(this.floor2pos(startFloor));
+        }
 
         if (this.maxIsSky && cgxp.plugins.Print) {
             var self = this;
