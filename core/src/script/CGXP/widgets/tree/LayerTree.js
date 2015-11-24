@@ -389,6 +389,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 var nodeConfig = {
                     text: item.displayName,
                     name: item.name,
+                    layer_id: item.id, // layer_id is the id of the layer in database
                     iconCls: 'no-icon',
                     loaded: true,
                     checked: checkedNodes.indexOf(item.name) != -1,
@@ -420,7 +421,6 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                         allItems: group.allLayers,
                         item: item.name,
                         param: 'LAYERS',
-                        layer_id: item.id, // layer_id is the id of the layer in database
                         editable: item.editable,
                         timeWidget: timeWidget,
                         uiProvider: 'layer',
@@ -514,6 +514,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
             checked: visibility !== undefined ? visibility : !!group.isChecked,
             expanded: group.isExpanded,
             layer: group.layer,
+            group_id: group.id, // id of the layer group in the database
             allOlLayers: group.allOlLayers,
             component: internalWMS || group.type ? this.getOpacitySlider(group) : null,
             timeWidget: timeWidget,
