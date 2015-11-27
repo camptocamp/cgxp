@@ -472,7 +472,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                     datum[this.valuesProperty][layer] = NaN;
                 }
                 value.push(parseFloat(datum[this.valuesProperty][layer]));
-            }
+            });
             values.push(value);
         }
 
