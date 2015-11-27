@@ -143,6 +143,7 @@ describe('plugins.Editing', function() {
                 on: function() {},
                 mapPanel: {
                     on: function() {},
+                    body: document.body,
                     map: map
                 }
             });

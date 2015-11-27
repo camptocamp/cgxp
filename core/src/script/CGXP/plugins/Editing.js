@@ -373,6 +373,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     allowDrag: true,
 
+    /** api: config[hideWhenNoLayer]
+     *  'Boolean'
+     *  If true, the edition window will be hidden instead of just disabled
+     *  when there is no editable layer.
+     */
+    hideWhenNoLayer: false,
+
     /** private: property[snapControl]
      * ``OpenLayers.Control.Snapping``
      */
@@ -446,12 +453,19 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }],
             bbar: bbar_actions
         }, this.layersWindowOptions));
-        this.target.mapPanel.on({
+        var mapPanel = this.target.mapPanel;
+        win.on({
             'render': function() {
-                win.show();
-                win.anchorTo.defer(100, win, [this.body, 'tl-tl', [55, 10]]);
+                win.anchorTo.defer(100, win, [mapPanel.body, 'tl-tl', [55, 10]]);
             }
         });
+        if (!this.hideWhenNoLayer) {
+            mapPanel.on({
+                'render': function() {
+                    win.show();
+                }
+            });
+        }
 
         var portal = this.target;
         portal.on({
@@ -533,7 +547,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
         var self = this;
         // Add a delay to query the md.xsd because previously we query it,
-        // cancel the query, query agane, cancel it again,
+        // cancel the query, query again, cancel it again,
         // and finally do the right query ...
         this.manageLayersTimer = setTimeout(function() {
             if (this.snapControl && this.snapControl.active) {
@@ -566,6 +580,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             }
+            self.win.setVisible(!self.hideWhenNoLayer || size !== 0);
             self.win.setDisabled(size === 0);
             if (size === 0) {
                 self.newFeatureBtn.toggle(false);
