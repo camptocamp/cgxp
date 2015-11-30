@@ -476,7 +476,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         Ext.each(data, function(datum) {
             var value = [parseFloat(datum.dist)];
             Ext.each(this.rasterLayers, function(layer) {
-                if (!this.noDataValue &&
+                if (this.noDataValue !== null &&
                         datum[this.valuesProperty][layer] === this.noDataValue) {
                     datum[this.valuesProperty][layer] = NaN;
                 }
