@@ -445,6 +445,7 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
 
         this.protocol = new OpenLayers.Protocol.WFS({
             url: this.mapserverproxyURL,
+            maxFeatures: this.maxFeatures,
             featureType: featureType,
             featureNS: cgxp.WFS_FEATURE_NS,
             srsName: this.srsName,
