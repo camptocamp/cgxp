@@ -443,6 +443,12 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     var timeWidget = item.node.timeWidget;
                     if (timeWidget) {
                         timeWidget.doLayout();
+                        if (Ext.isIE) {
+                            // redo the doLayout to force display in IE11
+                            setTimeout(function(){
+                                timeWidget.doLayout();
+                            }, 100);
+                        }
                         if (timeWidget.timeType === 'slider') {
                             var slider = timeWidget.items.get(1);
                             // compute thumb half size manually to prevent
