@@ -694,7 +694,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
         }, this);
 
         this.events.on('queryresults', function(queryResult, selectAll) {
-            features = queryResult.features;
+            var features = queryResult.features;
             this.numberOfReturnedFeatures = features.length;
             if ('maxFeatures' in queryResult) {
                 this.maxFeatures = queryResult.maxFeatures;
@@ -821,7 +821,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
                     // add the grid tab before the unqueried layer tabs, if any
                     var nbitems = this.tabpan.items.getCount();
                     if (nbitems > 0) {
-                        var idx = 0;
+                        var idx = nbitems;
                         for (var j=0, itemslen=nbitems; j<itemslen; j++)  {
                             if (this.tabpan.items.itemAt(j).getXType() != 'grid') {
                                 idx = j;
