@@ -18,6 +18,7 @@
 /**
  * @include GeoExt/data/LayerRecord.js
  * @require OpenLayers/Layer.js
+ * @require ExtOverrides/ExtendIeDetection.js
  */
 
 /** api: (define)
