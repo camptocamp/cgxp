@@ -3,6 +3,7 @@ python:
 - 2.7
 
 before_script:
+- sudo apt-get update
 - sudo apt-get install python-virtualenv nodejs
 - cd core/src/doc
 - virtualenv --distribute --no-site-packages env
