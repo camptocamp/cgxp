@@ -22,8 +22,8 @@ GeoExt.Lang.add("fr", {
         statusErrorText: "Erreur",
         includelegendText: "Inclure la légende",
         createPrintJobText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Crée un nouveau travail d\'impression...</tpl>',
-        printWaitingStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Votre impression démare dans ' +
-            '<tpl if="waitingTimeMin == 0">moin d\'une minute</tpl>' +
+        printWaitingStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Votre impression démarrera dans ' +
+            '<tpl if="waitingTimeMin == 0">moins d\'une minute</tpl>' +
             '<tpl if="waitingTimeMin == 1">environ 1 minute</tpl>' +
             '<tpl if="waitingTimeMin &gt; 1">environ {waitingTimeMin} minutes</tpl></tpl>',
         printRunningStatusText: '<tpl for="."><img class="print-load" src="{loading_icon}" />Votre impression est en cours...</tpl>'
