@@ -195,6 +195,9 @@ cgxp.plugins.Menu = Ext.extend(gxp.plugins.Tool, {
                 handler: function(button, event) {
                     if (button.pressed && this.activeItem) {
                         this.activeItem.setChecked(true);
+                        this.activeItem.handler.apply(
+                            this.activeItem.scope || window
+                        );
                     }
                 },
                 scope: this,
