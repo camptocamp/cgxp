@@ -239,6 +239,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
     changePasswordButtonText: "Submit",
     usernameText: "Username",
     passwordText: "Password",
+    oldPasswordText: "Current Password",
     newPasswordText: "New Password",
     confirmNewPasswordText: "Confirm New Password",
     changePasswordText: "Change password",
@@ -423,7 +424,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
 
     togglePasswordChangeFields: function(show) {
         var l1 = ['login', 'password'];
-        var l2 = ['newPassword', 'confirmNewPassword'];
+        var l2 = ['oldPassword', 'newPassword', 'confirmNewPassword'];
         var f = this.loginForm.getForm();
 
         var showFields = function(l) {
@@ -489,6 +490,26 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
+
+        var oldPassword = new Ext.form.TextField({
+            fieldLabel: this.oldPasswordText,
+            name: 'oldPassword',
+            applyTo: 'oldPassword',
+            inputType: 'password',
+            width: 120,
+            allowBlank: true,
+            hidden: true,
+            enableKeyEvents: true,
+            listeners: {
+                specialkey: function(field, el) {
+                    if (el.getKey() == Ext.EventObject.ENTER) {
+                        this.submitForm();
+                    }
+                },
+                scope: this
+            }
+        });
+
         var newPassword = new Ext.form.TextField({
             fieldLabel: this.newPasswordText,
             name: 'newPassword',
@@ -543,6 +564,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 allowBlank: false
             },
             this.passwordField,
+            oldPassword,
             newPassword,
             newPasswordConfirm,
             {
