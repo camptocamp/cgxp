@@ -440,25 +440,27 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 // time widget may need to be redrawn in case it's in a
                 // collapsed node
                 item.node.parentNode.on('expand', function() {
-                    var timeWidget = item.node.timeWidget;
-                    if (timeWidget) {
-                        timeWidget.doLayout();
-                        if (Ext.isIE) {
-                            // redo the doLayout to force display in IE11
-                            setTimeout(function(){
-                                timeWidget.doLayout();
-                            }, 100);
+                    item.node.cascade(function(node) {
+                        var timeWidget = node.timeWidget;
+                        if (timeWidget) {
+                            timeWidget.doLayout();
+                            if (Ext.isIE) {
+                                // redo the doLayout to force display in IE11
+                                setTimeout(function(){
+                                    timeWidget.doLayout();
+                                }, 100);
+                            }
+                            if (timeWidget.timeType === 'slider') {
+                                var slider = timeWidget.items.get(1);
+                                // compute thumb half size manually to prevent
+                                // rendering issues
+                                var thumb = slider.innerEl.child('.x-slider-thumb');
+                                slider.halfThumb = thumb.getWidth() / 2;
+                                slider.syncThumb();
+                            }
                         }
-                        if (timeWidget.timeType === 'slider') {
-                            var slider = timeWidget.items.get(1);
-                            // compute thumb half size manually to prevent
-                            // rendering issues
-                            var thumb = slider.innerEl.child('.x-slider-thumb');
-                            slider.halfThumb = thumb.getWidth() / 2;
-                            slider.syncThumb();
-                        }
-                    }
-                });
+                    }, this);
+                }, this);
                 if (item.children) {
                     addNodes.call(this, item.children, item.node, level+1);
                 }
