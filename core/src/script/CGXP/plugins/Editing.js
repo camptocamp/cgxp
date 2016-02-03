@@ -1701,7 +1701,6 @@ cgxp.plugins.Editing.GetFeature = OpenLayers.Class(OpenLayers.Control.GetFeature
         OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
 
         var response = this.protocol.read({
-            maxFeatures: options.single === true ? this.maxFeatures : undefined,
             filter: filter,
             callback: function(result) {
                 if (result.success()) {
