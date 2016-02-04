@@ -1701,24 +1701,11 @@ cgxp.plugins.Editing.GetFeature = OpenLayers.Class(OpenLayers.Control.GetFeature
         OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
 
         var response = this.protocol.read({
-            maxFeatures: options.single === true ? this.maxFeatures : undefined,
             filter: filter,
             callback: function(result) {
                 if (result.success()) {
                     if (result.features.length) {
-                        if (options.single === true) {
-                            this.selectBestFeature(result.features,
-                                bounds.getCenterLonLat(), options);
-                        } else {
-                            this.select(result.features);
-                        }
-                    } else if(options.hover) {
-                        this.hoverSelect();
-                    } else {
-                        this.events.triggerEvent("clickout");
-                        if(this.clickout) {
-                            this.unselectAll();
-                        }
+                        this.select(result.features[0]);
                     }
                 }
                 else {
@@ -1730,9 +1717,6 @@ cgxp.plugins.Editing.GetFeature = OpenLayers.Class(OpenLayers.Control.GetFeature
             },
             scope: this
         });
-        if (options.hover === true) {
-            this.hoverResponse = response;
-        }
     }
 });
 
