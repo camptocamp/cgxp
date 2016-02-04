@@ -158,11 +158,11 @@ describe('plugins.Editing', function() {
         });
         var layers;
         it('sets the editing plugin window to enabled', function() {
-            layers = {
-                'l3': {
+            layers = [
+                {
                     attributes: 'bar'
                 }
-            };
+            ];
 
             // don't use timeout to directly gets the result
             // as I see the current setTimeout function never
@@ -190,7 +190,7 @@ describe('plugins.Editing', function() {
         });
 
         it('sets the editing plugin window to disabled', function() {
-            layers = {};
+            layers = [];
             e.manageLayers();
             expect(e.win.disabled).toBeTruthy();
         });
