@@ -610,7 +610,7 @@ cgxp.plugins.FeaturesWindow = Ext.extend(cgxp.plugins.FeaturesResult, {
      */
     printExport: function() {
 
-        var groupedRecords = [];
+        var groupedRecords = {};
 
         if (!this.grid || !this.grid.getStore()) {
             return groupedRecords;
