@@ -630,7 +630,7 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     }
 
                     var printExport = this.target.tools[this.featureProvider].printExport();
-                    if (printExport instanceof Array) {
+                    if (printExport instanceof Object) {
                         var pageCount = 1;
                         for (var dataset in printExport) {
                             if (printExport.hasOwnProperty(dataset)) {
