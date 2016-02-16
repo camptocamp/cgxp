@@ -178,8 +178,8 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         if (this.showCenter) {
             // show a point feature to materialize the center
             var feature = new OpenLayers.Feature.Vector(
-                new OpenLayers.Geometry.Point(this.position.lon,
-                                              this.position.lat),
+                new OpenLayers.Geometry.Point(this.position[0],
+                                              this.position[1]),
                 {}, this.coordsRecenteringStyle || {}
             );
             this.vectorLayer.removeAllFeatures();
