@@ -1213,7 +1213,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     this.mapPanel.map.getProjectionObject()) : undefined,
             style: layerNode.style,
             matrixSet: layerNode.matrixSet,
-            dimension: layerNode.dimension,
+            params: layerNode.dimensions,
             visibility: layerNode.isChecked,
             isBaseLayer: false,
             mapserverURL: layerNode.wmsUrl,
