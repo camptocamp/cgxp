@@ -145,6 +145,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     usedMapParams: [],
 
+    /** api: config[getFeatureTolerance]
+     *  ``Integer``
+     *  Click tolerance for the filter query in pixels.
+     *  Default is 5 (as in OpenLayers).
+     */
+    getFeatureTolerance: 5,
+
     /** api: config[layersWindowOptions]
      * ``Object`` Additional options given to the layer selector window constructor.
      */
@@ -841,6 +848,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
 
         var control = new cgxp.plugins.Editing.GetFeature({
+            clickTolerance: this.getFeatureTolerance,
             protocol: protocol
         });
         this.map.addControl(control);
@@ -1528,6 +1536,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }
         });
         var selectControl = new cgxp.plugins.Editing.GetFeature({
+            clickTolerance: this.getFeatureTolerance,
             protocol: protocol
         });
         selectControl.events.on({
