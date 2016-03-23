@@ -477,6 +477,7 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
                                 wmsOptions.params[param] = layer.params[param];
                             }
                         }
+                        Ext.apply(wmsOptions.params, self.target.mapPanel.params);
                         OpenLayers.Request.GET(wmsOptions);
                     }
                     return queryDone;

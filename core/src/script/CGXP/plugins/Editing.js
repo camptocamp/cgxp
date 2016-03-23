@@ -145,6 +145,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     usedMapParams: [],
 
+    /** api: config[getFeatureTolerance]
+     *  ``Integer``
+     *  Click tolerance for the filter query in pixels.
+     *  Default is 5 (as in OpenLayers).
+     */
+    getFeatureTolerance: 5,
+
     /** api: config[layersWindowOptions]
      * ``Object`` Additional options given to the layer selector window constructor.
      */
@@ -546,6 +553,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             clearTimeout(this.manageLayersTimer);
         }
         var self = this;
+        var i;
         // Add a delay to query the md.xsd because previously we query it,
         // cancel the query, query again, cancel it again,
         // and finally do the right query ...
@@ -553,8 +561,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             if (this.snapControl && this.snapControl.active) {
                 this.checkSnapLayerVisibility();
             }
-            var layers = self.getEditableLayers();
-            var size = 0;
+            var editLayers = self.getEditableLayers();
+            var layerIds = [];
+            for (i = 0; i < editLayers.length; i++) {
+                layerIds.push(editLayers[i].attributes.layer_id);
+            }
             var menu = self.newFeatureBtn.menu;
             self.abortPendingRequests();
             var alreadyAvailableItems = [];
@@ -562,24 +573,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 if (!item.layerId) {
                     return;
                 }
-                // remove items that are not in the layers list anymore
-                if (!layers[item.layerId]) {
-                    menu.remove(item);
-                } else {
-                    alreadyAvailableItems.push(item.layerId);
-                }
+                menu.remove(item);
             });
-            for (var i in layers) {
-                if (layers.hasOwnProperty(i)) {
-                    size++;
-                    // only add an item for new editable layers
-                    if (alreadyAvailableItems.indexOf(parseInt(i, 10)) == -1) {
-                        self.getAttributesStore(layers[i].attributes.layer_id, null, (function(store, geometryType, layer) {
-                            menu.add(self.createMenuItem(layer, geometryType));
-                        }).createDelegate(self, [layers[i]], true));
-                    }
-                }
+            for (i = 0; i < editLayers.length; i++) {
+                var layer = editLayers[i];
+                self.getAttributesStore(layer.attributes.layer_id, null, (function(store, geometryType, layer) {
+                    menu.add(self.createMenuItem(layer, geometryType));
+                }).createDelegate(self, [layer], true));
             }
+            var size = editLayers.length;
             self.win.setVisible(!self.hideWhenNoLayer || size !== 0);
             self.win.setDisabled(size === 0);
             if (size === 0) {
@@ -763,10 +765,10 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     getEditableLayers: function() {
         // FIXME use cache
         var tree = this.target.tools[this.layerTreeId].tree;
-        var layers = {};
+        var layers = [];
         tree.root.cascade(function(node) {
             if (node.attributes.editable && node.attributes.checked) {
-                layers[node.attributes.layer_id] = node;
+                layers.push(node);
             }
         });
         return layers;
@@ -780,10 +782,8 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         var layerIds = [];
         var editLayers = this.getEditableLayers();
 
-        for (var i in editLayers) {
-            if (editLayers.hasOwnProperty(i)) {
-                layerIds.push(i);
-            }
+        for (var i = 0; i < editLayers.length; i++) {
+            layerIds.push(editLayers[i].attributes.layer_id);
         }
         if (layerIds.length === 0) {
             // we need to reset the cursor manually
@@ -848,6 +848,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         });
 
         var control = new cgxp.plugins.Editing.GetFeature({
+            clickTolerance: this.getFeatureTolerance,
             protocol: protocol
         });
         this.map.addControl(control);
@@ -1083,7 +1084,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         }
         if (!this.attributesWindowOptions.title) {
             var selectedLayerId = this.editorGrid.featureInfo.attributes.__layer_id__;
-            var selectedLayerName = this.getEditableLayers()[selectedLayerId].item;
+            var selectedLayerName = this.getLayerNodeById(selectedLayerId).attributes.item;
             this.attributePopup.setTitle(OpenLayers.i18n(selectedLayerName));
         }
         this.attributePopup.add(this.editorGrid);
@@ -1535,6 +1536,7 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             }
         });
         var selectControl = new cgxp.plugins.Editing.GetFeature({
+            clickTolerance: this.getFeatureTolerance,
             protocol: protocol
         });
         selectControl.events.on({
@@ -1701,24 +1703,11 @@ cgxp.plugins.Editing.GetFeature = OpenLayers.Class(OpenLayers.Control.GetFeature
         OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
 
         var response = this.protocol.read({
-            maxFeatures: options.single === true ? this.maxFeatures : undefined,
             filter: filter,
             callback: function(result) {
                 if (result.success()) {
                     if (result.features.length) {
-                        if (options.single === true) {
-                            this.selectBestFeature(result.features,
-                                bounds.getCenterLonLat(), options);
-                        } else {
-                            this.select(result.features);
-                        }
-                    } else if(options.hover) {
-                        this.hoverSelect();
-                    } else {
-                        this.events.triggerEvent("clickout");
-                        if(this.clickout) {
-                            this.unselectAll();
-                        }
+                        this.select(result.features[0]);
                     }
                 }
                 else {
@@ -1730,9 +1719,6 @@ cgxp.plugins.Editing.GetFeature = OpenLayers.Class(OpenLayers.Control.GetFeature
             },
             scope: this
         });
-        if (options.hover === true) {
-            this.hoverResponse = response;
-        }
     }
 });
 
