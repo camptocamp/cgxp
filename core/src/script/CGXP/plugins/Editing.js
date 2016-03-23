@@ -122,6 +122,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = cgxp_editing */
     ptype: "cgxp_editing",
 
+    /** api: config[stateId]
+     *  ``String``
+     *  Prefix of the permalink parameters. Default is "edit".
+     *  Optional.
+     */
+    stateId: 'edit',
+
     /** api: config[layersURL]
      *  ``String`` URL to the layers web service. Typically set to
      *  ``"${request.route_url('layers_root')}"``.
@@ -492,6 +499,55 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
         this.initKeyEvent();
     },
 
+    /** private: method[applyState]
+     */
+    applyState: function(state) {
+        if (state && state.layer !== undefined) {
+            if (state.id !== undefined) {
+                var protocol = new OpenLayers.Protocol.HTTP({
+                    url: this.layersURL + state.layer + '/' + state.id,
+                    format: new OpenLayers.Format.GeoJSON()
+                });
+                protocol.read({
+                    callback: function(result) {
+                        if (result.success()) {
+                            for (var i = 0, ii = result.features.length; i < ii; i++) {
+                                var feature = result.features[i];
+                                if (feature.fid == state.id) {
+                                    feature.attributes.__layer_id__ = state.layer;
+                                    this.mainSelectControl.setModifiers();
+                                    this.mainSelectControl.select(feature);
+
+                                    var bounds = feature.geometry.getBounds();
+                                    this.map.moveTo(bounds.getCenterLonLat());
+                                    break;
+                                }
+                            }
+                        } else {
+                            // specified feature not found, activate draw feature
+                            this.activateDrawToolForLayer(state.layer);
+                        }
+                    },
+                    scope: this
+                });
+            } else {
+                // no feature specified, activate draw feature
+                this.activateDrawToolForLayer(state.layer);
+            }
+        }
+    },
+
+    activateDrawToolForLayer: function(layerId) {
+        var menu = this.newFeatureBtn.menu;
+        var item = menu.items.find(function(value) {
+            return value.layerId == layerId;
+        });
+        if (item) {
+            item.ownerCt.ownerCt = this.newFeatureBtn;
+            item.setChecked(true);
+        }
+    },
+
     getActiveDrawControl: function() {
         var draw;
         if (this.newFeatureBtn.activeItem) {
@@ -562,8 +618,9 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 this.checkSnapLayerVisibility();
             }
             var editLayers = self.getEditableLayers();
+            var size = editLayers.length;
             var layerIds = [];
-            for (i = 0; i < editLayers.length; i++) {
+            for (i = 0; i < size; i++) {
                 layerIds.push(editLayers[i].attributes.layer_id);
             }
             var menu = self.newFeatureBtn.menu;
@@ -575,13 +632,18 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                 }
                 menu.remove(item);
             });
-            for (i = 0; i < editLayers.length; i++) {
+            var createdMenuCount = 0;
+            for (i = 0; i < size; i++) {
                 var layer = editLayers[i];
                 self.getAttributesStore(layer.attributes.layer_id, null, (function(store, geometryType, layer) {
                     menu.add(self.createMenuItem(layer, geometryType));
+                    createdMenuCount++;
+                    if (createdMenuCount === size) {
+                        // all the menus have been created
+                        self.applyState(Ext.state.Manager.get(self.stateId));
+                    }
                 }).createDelegate(self, [layer], true));
             }
-            var size = editLayers.length;
             self.win.setVisible(!self.hideWhenNoLayer || size !== 0);
             self.win.setDisabled(size === 0);
             if (size === 0) {
