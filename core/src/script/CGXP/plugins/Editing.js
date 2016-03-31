@@ -175,6 +175,11 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     readParams: {},
 
+    /** private: property[defaultAttributes]
+     *  ``Object``
+     */
+    defaultAttributes: {},
+
     /** private: property[editingLayer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector editing layer
@@ -533,6 +538,13 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
             } else {
                 // no feature specified, activate draw feature
                 this.activateDrawToolForLayer(state.layer);
+            }
+        }
+
+        for (var key in state) {
+            var parts = key.split('attribute_');
+            if (parts.length === 2) {
+                this.defaultAttributes[parts[1]] = state[key];
             }
         }
     },
@@ -955,6 +967,16 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                     }
                     r.set('label', OpenLayers.i18n(r.get('name')));
                 });
+                store.each(function(record) {
+                    // set the default values
+                    var attributes = this.defaultAttributes;
+                    var name = record.get('name');
+                    if (attributes && name in attributes) {
+                        if (record.get('value') === undefined) {
+                            record.set('value', attributes[name]);
+                        }
+                    }
+                }, this);
                 callback.call(this, store, geometryType);
             },
             beforeload: function(store) {
