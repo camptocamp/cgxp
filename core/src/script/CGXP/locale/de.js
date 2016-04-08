@@ -117,7 +117,9 @@ GeoExt.Lang.add("de", {
         pwdChangeOkText: "Das neue Passwort wurde geändert.",
         pwdChangeKoTitle: "Die Passwortänderung ist fehlgeschlagen",
         pwdChangeForceTitle: "Passwort ändern",
-        pwdChangeForceText: "Sie müssen Ihr Passwort ändern."
+        pwdChangeForceText: "Bitte ändern Sie ihr Password.",
+        resetText: "Passwort zurücksetzen.",
+        generateNewPasswordText: "Neues Passwort generieren."
     },
 
     "cgxp.plugins.Help.prototype": {
