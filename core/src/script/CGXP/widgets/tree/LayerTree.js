@@ -63,6 +63,14 @@ Ext.namespace("cgxp.tree");
  *  ``tree_Layers``:
  *   - Display the given layers. Use commas (%2c) to specify more than one layer.
  *   - Example: ``&layers=a_layer%2can_another_layer``
+ *
+ *  ``tree_time_[my_group]``:
+ *   - Set the default min and max values of a time range or a single value.
+ *   - Only set the min value: ``&tree_time_myGroupA=2006-01-01/``
+ *   - Only set the max value: ``&tree_time_myGroupA=/2013-12-31``
+ *   - Set both the min and max values: ``&tree_time_myGroupA=2006-01-01/2013-12-31``
+ *   - Set the value: ``&tree_time_myGroupA=2008-05-05``
+ *
  */
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
@@ -404,6 +412,17 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
                 var timeWidget;
                 if (item.time) {
+                    if (this.initialState && this.initialState['time_' + item.name]) {
+                        var times = this.initialState['time_' + item.name].split('/');
+                        if (!item.time.minDefValue) {
+                          item.time.minDefValue = times[0];
+                        }
+                        if (times.length === 2) {
+                            if (!item.time.maxDefValue) {
+                                item.time.maxDefValue = times[1];
+                            }
+                        }
+                    }
                     timeWidget = this.getTimeWidget(item);
                 }
 
