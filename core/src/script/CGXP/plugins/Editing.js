@@ -351,6 +351,14 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
      */
     pendingRequests: null,
 
+    /** api: config[pointRecenterZoom]
+     *  ``Number``
+     *  Zoom level to use when recentering to a single point feature.
+     *  Default is 9.
+     *  Optional.
+     */
+    pointRecenterZoom: 9,
+
     /** api: config[mapserverUrl]
      *  ``String``
      *  The mapserver proxy URL, required when snapping is used. Typically set to
@@ -524,7 +532,12 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
                                     this.mainSelectControl.select(feature);
 
                                     var bounds = feature.geometry.getBounds();
-                                    this.map.moveTo(bounds.getCenterLonLat());
+                                    if (bounds.left === bounds.right && bounds.top === bounds.bottom) {
+                                        // point geometry
+                                        this.map.moveTo(bounds.getCenterLonLat(), this.pointRecenterZoom);
+                                    } else {
+                                        this.map.zoomToExtent(bounds);
+                                    }
                                     break;
                                 }
                             }
