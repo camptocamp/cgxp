@@ -1244,8 +1244,8 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
         layerInfo.allOlLayers[layerInfo.allOlLayersIndex] = layer;
 
         var disclaimer = {};
-        if (layerInfo.disclaimer) {
-            disclaimer[layerInfo.disclaimer] = true;
+        if (layerInfo.node.disclaimer) {
+            disclaimer[layerInfo.node.disclaimer] = true;
         }
         this.mapPanel.layers.insert(layerInfo.currentIndex, [
             new this.recordType({
