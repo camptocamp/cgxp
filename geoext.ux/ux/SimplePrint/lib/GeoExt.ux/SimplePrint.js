@@ -347,6 +347,8 @@ GeoExt.ux.SimplePrint = Ext.extend(Ext.form.FormPanel, {
         if (item) {
             if (fieldAttributes.autoCreate) {
                 Ext.apply(item.autoCreate, fieldAttributes.autoCreate);
+                // clone
+                fieldAttributes = Ext.apply({}, fieldAttributes);
                 delete fieldAttributes.autoCreate;
             }
             Ext.apply(item, fieldAttributes);
