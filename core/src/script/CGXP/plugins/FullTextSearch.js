@@ -272,6 +272,7 @@ cgxp.plugins.FullTextSearch = Ext.extend(gxp.plugins.Tool, {
         var layer = this.vectorLayer;
         var colorpicker = new Ext.ux.ColorField({
             editable: false,
+            allowBlank: true,
             style: {
                 'background': layer.style.fillColor || '#ff0000'
             },
