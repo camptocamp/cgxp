@@ -411,7 +411,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.addMetadata(item, nodeConfig);
 
                 var timeWidget;
-                if (item.time) {
+                if (item.time && !parentNode.timeWidget) {
                     if (this.initialState && this.initialState['time_' + item.name]) {
                         var times = this.initialState['time_' + item.name].split('/');
                         if (!item.time.minDefValue) {
