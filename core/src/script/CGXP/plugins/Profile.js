@@ -176,6 +176,13 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         labelYOffset: 5
     }, OpenLayers.Feature.Vector.style['default']),
 
+    /** api: config[dygraphOptions]
+     *  ``Object``
+     *  Configuration object for the dygraph object created by this plugin.
+     *  (optional).
+     */
+    dygraphOptions: {},
+
     /** private: property[control]
      *  ``cgxp.plugins.Profile.Control``
      *  The Profile control
@@ -495,7 +502,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 }
                 return ret;
             },
-            {
+            Ext.apply({
                 ylabel: this.yLabelText,
                 xlabel: this.xLabelText,
                 interactionModel: {},
@@ -518,7 +525,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
                 unhighlightCallback: (function(e, x, pts, row) {
                     this.marker && this.marker.destroy();
                 }).createDelegate(this)
-            }
+            }, this.dygraphOptions)
         );
         this.output[0].getEl().unmask();
 
