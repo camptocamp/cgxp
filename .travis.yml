@@ -1,3 +1,6 @@
+git:
+    submodules: false
+
 language: python
 python:
 - 2.7
@@ -5,6 +8,7 @@ python:
 before_script:
 - sudo apt-get update
 - sudo apt-get install python-virtualenv nodejs
+- git submodule update --init
 - cd core/src/doc
 - virtualenv --distribute --no-site-packages env
 - env/bin/pip install -r requirements
