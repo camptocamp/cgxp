@@ -2,3 +2,4 @@ Jinja2
 JSTools
 Sphinx
 alabaster
+requests[security]
