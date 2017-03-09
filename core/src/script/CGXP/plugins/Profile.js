@@ -176,6 +176,13 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
         labelYOffset: 5
     }, OpenLayers.Feature.Vector.style['default']),
 
+    /** api: config[markerLabelSeparator]
+     *  ``String``
+     *  The separator to use to join distance and raster labels
+     *  (optional).
+     */
+    markerLabelSeparator: ', ',
+
     /** api: config[dygraphOptions]
      *  ``Object``
      *  Configuration object for the dygraph object created by this plugin.
@@ -572,7 +579,7 @@ cgxp.plugins.Profile = Ext.extend(gxp.plugins.Tool, {
             ]));
         }
         var style = OpenLayers.Util.extend({
-            label: label.join(', ')
+            label: label.join(this.markerLabelSeparator)
         }, this.markerStyle);
 
         this.marker = new OpenLayers.Feature.Vector(point, datum, style);
