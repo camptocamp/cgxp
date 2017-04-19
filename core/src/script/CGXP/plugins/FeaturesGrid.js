@@ -242,7 +242,7 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  ``Object`` Merge each layer in one tab for each given array.
      *  All layers from one array must have only identical attributes.
      *
-     *  Exemple:
+     *  Example:
      *  concatenateTabs: {'tab_title': [layer1, ..., layerN]}
      */
     concatenateTabs: {},
@@ -307,6 +307,21 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
      *  Default is 100.
      */
     defaultColumnWidth: 100,
+
+    /** api: config[customActionMenuHandlers]
+     *  ``Array`` Some object with a property 'menuHandler' (function) that
+     *  will be called when the 'selection action menu' opens. You can also add
+     *  a property 'menuHandlerArgs' to give some arguments to your handler.
+     *  This handler will have the current instance of the gridFeature as
+     *  context.
+     *
+     *  Example:
+     *  customActionMenuHandlers: [{
+     *  menuHandler: function(args) {...},
+     *  menuHandlerArgs: ['a', 12]
+     *  }]
+     */
+    customActionMenuHandlers: [],
 
     /** private: method[init]
      */
@@ -992,38 +1007,52 @@ cgxp.plugins.FeaturesGrid = Ext.extend(cgxp.plugins.FeaturesResult, {
             scope: this
         });
 
+        var selectionActionButtonItems = [{
+                text: this.zoomToSelectionText,
+                handler: function() {
+                    var sm = this.currentGrid.getSelectionModel();
+                    var bbox = new OpenLayers.Bounds();
+                    Ext.each(sm.getSelections(), function(r){
+                        bbox.extend(r.getFeature().geometry.getBounds());
+                    });
+                    // has selection
+                    if (bbox.left !== null) {
+                        // is a point
+                        if (bbox.getWidth() + bbox.getHeight() === 0) {
+                            map.setCenter(bbox.getCenterLonLat(),
+                                this.pointRecenterZoom);
+                        }
+                        else {
+                            map.zoomToExtent(bbox.scale(1.05));
+                        }
+                    }
+                },
+                scope: this
+            }, {
+                text: this.csvSelectionExportText,
+                handler: this.csvExport,
+                target: this,
+                scope: this
+            }];
+
+        var customActionMenuHandlers = this.customActionMenuHandlers;
         this.selectionActionButton = {
             text: this.actionsText,
             menu: new Ext.menu.Menu ({
                 plain: true,
-                items: [{
-                    text: this.zoomToSelectionText,
-                    handler: function() {
-                        var sm = this.currentGrid.getSelectionModel();
-                        var bbox = new OpenLayers.Bounds();
-                        Ext.each(sm.getSelections(), function(r){
-                            bbox.extend(r.getFeature().geometry.getBounds());
-                        });
-                        // has selection
-                        if (bbox.left !== null) {
-                            // is a point
-                            if (bbox.getWidth() + bbox.getHeight() === 0) {
-                                map.setCenter(bbox.getCenterLonLat(),
-                                    this.pointRecenterZoom);
-                            }
-                            else {
-                                map.zoomToExtent(bbox.scale(1.05));
-                            }
-                        }
-                    },
-                    scope: this
-                }, {
-                    text: this.csvSelectionExportText,
-                    handler: this.csvExport,
-                    target: this,
-                    scope: this
-                }]
-            })
+                items: selectionActionButtonItems
+            }),
+            // Add custom handlers on "menuOpen"
+            handler: function() {
+              for (var i = 0; i < customActionMenuHandlers.length; i++) {
+                var customActionMenuHandler = customActionMenuHandlers[i];
+                var menuHandler = customActionMenuHandler.menuHandler;
+                var menuHandlerArgs = customActionMenuHandler.menuHandlerArgs;
+                if (menuHandler instanceof Function) {
+                  menuHandler.apply(this, menuHandlerArgs);
+                }
+              }
+            }.bind(this)
         };
 
         config = {
