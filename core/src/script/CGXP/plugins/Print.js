@@ -550,6 +550,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             return true;
         }, this);
         printProvider.on('encodelayer', function(printProvider, layer, encodedLayer) {
+            delete encodedLayer.minScaleDenominator;
+            delete encodedLayer.maxScaleDenominator;
             var apply = false;
             if (layer.mapserverLayers) {
                 if (Ext.isArray(layer.mapserverLayers)) {
@@ -596,6 +598,16 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     encodedLayer.customParams = encodedLayer.customParams || {};
                     encodedLayer.customParams.map_resolution =
                             printProvider.dpi.data.value;
+                }
+            }
+            if (encodedLayer.type.toLowerCase() === 'tiledwms') {
+                Ext.apply(this.encodeExternalLayer);
+                if (this.version == 2) {
+                    encodedLayer.customParams = encodedLayer.customParams || {};
+                    encodedLayer.customParams.map_resolution =
+                            printProvider.dpi.data.value;
+                } else {
+                    encodedLayer.tileSize = [256, 256];
                 }
             }
         }, this);
