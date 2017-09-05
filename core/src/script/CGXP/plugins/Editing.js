@@ -1053,14 +1053,15 @@ cgxp.plugins.Editing = Ext.extend(gxp.plugins.Tool, {
 
         var actions = [];
         var metadata = layer.attributes.metadata;
-        if (metadata.copy_to !== undefined) {
+        var copyTo = metadata.copyTo || metadata.copy_to;
+        if (copyTo !== undefined) {
             var copyToItem = {
                 xtype: 'menuitem',
                 text: this.copyToBtnText,
                 tooltip: this.copyToBtnTooltip,
                 menu: []
             };
-            Ext.each(metadata.copy_to.split(','), function(layerName) {
+            Ext.each(copyTo.split(','), function(layerName) {
                 var toLayer = this.getLayerNodeByName(layerName);
                 if (toLayer) {
 		    copyToItem.menu.push({
