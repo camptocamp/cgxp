@@ -1110,7 +1110,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     child.layer = new OpenLayers.Layer.WMS(
                         child.name, child.url, {
                             STYLE: child.style,
-                            LAYER: child.name,
+                            LAYERS: child.name,
                             FORMAT: child.imageType,
                             TRANSPARENT: child.imageType == 'image/png'
                         }, {
