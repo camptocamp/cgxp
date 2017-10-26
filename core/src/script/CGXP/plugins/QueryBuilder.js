@@ -275,6 +275,11 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 return false;
             } else if (f.CLASS_NAME == "OpenLayers.Filter.Comparison") {
                 f.matchCase = this.matchCase;
+                // On 'Like' comparison, analyse a string 'as is', not as regexp.
+                if (f.type === OpenLayers.Filter.Comparison.LIKE) {
+                    var toEscape = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+                    f.value = f.value.replace(toEscape, "\\$&");
+                }
             }
         }
         return true;
