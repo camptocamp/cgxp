@@ -265,8 +265,6 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
         var filters = filter.filters || [filter];
         for (var i=0, l=filters.length; i<l; i++) {
             var f = filters[i];
-            // Escape double quote on all operations.
-            f.value = f.value.replace(/["]/g, "\\$&");
             if (f.CLASS_NAME == 'OpenLayers.Filter.Logical') {
                 if (!this.checkFilter(f)) {
                     return false;
@@ -276,6 +274,8 @@ cgxp.plugins.QueryBuilder = Ext.extend(gxp.plugins.Tool, {
                 alert(this.incompleteFormText);
                 return false;
             } else if (f.CLASS_NAME == "OpenLayers.Filter.Comparison") {
+                // Escape double quote on all operations.
+                f.value = f.value.replace(/["]/g, "\\$&");
                 f.matchCase = this.matchCase;
                 // On 'Like' comparison, analyse a string 'as is', not as regexp.
                 if (f.type === OpenLayers.Filter.Comparison.LIKE) {
