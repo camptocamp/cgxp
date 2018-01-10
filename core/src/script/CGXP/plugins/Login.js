@@ -620,7 +620,7 @@ cgxp.plugins.Login = Ext.extend(gxp.plugins.Tool, {
                 if (this.actionChangePassword) {
                     this.submitButton.setIconClass('');
                     this.loginWindow.hide();
-                    var response = new OpenLayers.format.json.read(evt.response.responseText);
+                    var response = new OpenLayers.Format.JSON().read(evt.response.responseText);
                     if (response.success) {
                         Ext.Msg.alert(this.pwdChangeOkTitle, this.pwdChangeOkText);
                     }
