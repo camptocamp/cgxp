@@ -258,7 +258,14 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
         if (this.activateToggleGroup) {
             cgxp.plugins.ToolActivateMgr.register(this);
         }
-        this.buildControls(target.mapPanel.map);
+        var that = this;
+        setTimeout((function() {
+            // Initializing control AFTER baselayers (and projection) have
+            // been initialized in the map and map projection is set,
+            // to solve some weird behavior with Mapserver when the snsName
+            // attribute is not set in the wfs request.
+            that.buildControls(target.mapPanel.map);
+        }), 500) ;
         cgxp.plugins.GetFeature.superclass.init.call(this, target);
     },
 
