@@ -23,9 +23,6 @@ script:
 - if [ ${TRAVIS_PULL_REQUEST} != "false" ] ; then git fetch origin ${TRAVIS_BRANCH}:${TRAVIS_BRANCH} ; fi
 - if [ ${TRAVIS_PULL_REQUEST} != "false" ] ; then git diff --check ${TRAVIS_BRANCH} -- ; fi
 - ./jshint
-- cd core/tests
-- env/bin/jasmine-ci --browser phantomjs
-- cd -
 - ./travis.sh
 
 notifications:

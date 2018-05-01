@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Do test
+# cd core/tests
+# env/bin/jasmine-ci --browser phantomjs
+# cd -
+
+# Generate the doc
 cd core/src/doc
 source env/bin/activate
 mkdir _build/html
