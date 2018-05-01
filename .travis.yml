@@ -27,8 +27,3 @@ script:
 - env/bin/jasmine-ci --browser phantomjs
 - cd -
 - ./travis.sh
-
-notifications:
-  email:
-    recipients:
-    - c2cgeoportal@camptocamp.com
