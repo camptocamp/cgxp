@@ -24,8 +24,3 @@ script:
 - if [ ${TRAVIS_PULL_REQUEST} != "false" ] ; then git diff --check ${TRAVIS_BRANCH} -- ; fi
 - ./jshint
 - ./travis.sh
-
-notifications:
-  email:
-    recipients:
-    - c2cgeoportal@camptocamp.com

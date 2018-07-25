@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2014 by Camptocamp SA
+ * Copyright (c) 2011-2017 by Camptocamp SA
  *
  * CGXP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -230,6 +230,19 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     actionTarget: null,
 
+    /** api: config[qgisRes]
+     *  ``Array`` List of regular expressions used to identify qgis sever
+     */
+    qgisRes: [],
+    /** api: config[geoserverRes]
+     *  ``Array`` List of regular expressions used to identify geosever
+     */
+    geoserverRes: [],
+    /** api: config[otherRes]
+     *  ``Array`` List of regular expressions used to identify other sever (default server type is mapserver)
+     */
+    otherRes: [],
+
     /** api: config[options]
      *  ``Object``
      *  The options given to the print panel.
@@ -339,11 +352,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             cgxp.plugins.ToolActivateMgr.register(this);
         }
 
-        var encodeLayer = this.version == 2 ? {
+        var encodeLayer = {
             useNativeAngle: true
-        } : {
-            useNativeAngle: true,
-            serverType: 'mapserver'
         };
         this.encodeLayer = this.encodeLayer === undefined ?
             encodeLayer : this.encodeLayer;
@@ -550,6 +560,8 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             return true;
         }, this);
         printProvider.on('encodelayer', function(printProvider, layer, encodedLayer) {
+            delete encodedLayer.minScaleDenominator;
+            delete encodedLayer.maxScaleDenominator;
             var apply = false;
             if (layer.mapserverLayers) {
                 if (Ext.isArray(layer.mapserverLayers)) {
@@ -596,6 +608,39 @@ cgxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     encodedLayer.customParams = encodedLayer.customParams || {};
                     encodedLayer.customParams.map_resolution =
                             printProvider.dpi.data.value;
+                } else {
+                    var serverType = 'mapserver';
+                    this.qgisRes.forEach(function(e) {
+                        if (e.test(encodedLayer.baseURL)) {
+                            serverType = 'qgisserver';
+                            return false;
+                        }
+                    });
+                    this.geoserverRes.forEach(function(e) {
+                        if (e.test(encodedLayer.baseURL)) {
+                            serverType = 'geoserver';
+                            return false;
+                        }
+                    });
+                    this.otherRes.forEach(function(e) {
+                        if (e.test(encodedLayer.baseURL)) {
+                            serverType = undefined;
+                            return false;
+                        }
+                    });
+                    if (serverType !== undefined) {
+                        encodedLayer.serverType = serverType;
+                    }
+                }
+            }
+            if (encodedLayer.type.toLowerCase() === 'tiledwms') {
+                Ext.apply(this.encodeExternalLayer);
+                if (this.version == 2) {
+                    encodedLayer.customParams = encodedLayer.customParams || {};
+                    encodedLayer.customParams.map_resolution =
+                            printProvider.dpi.data.value;
+                } else {
+                    encodedLayer.tileSize = [256, 256];
                 }
             }
         }, this);

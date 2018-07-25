@@ -214,7 +214,7 @@ cgxp.FloorSlider = Ext.extend(Ext.Window, {
             }
             throw "Invalid floor value";
         } else {
-            return floor;
+            return parseInt(floor);
         }
     },
 

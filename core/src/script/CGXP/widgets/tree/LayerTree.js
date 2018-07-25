@@ -63,6 +63,14 @@ Ext.namespace("cgxp.tree");
  *  ``tree_Layers``:
  *   - Display the given layers. Use commas (%2c) to specify more than one layer.
  *   - Example: ``&layers=a_layer%2can_another_layer``
+ *
+ *  ``tree_time_[my_group]``:
+ *   - Set the default min and max values of a time range or a single value.
+ *   - Only set the min value: ``&tree_time_myGroupA=2006-01-01/``
+ *   - Only set the max value: ``&tree_time_myGroupA=/2013-12-31``
+ *   - Set both the min and max values: ``&tree_time_myGroupA=2006-01-01/2013-12-31``
+ *   - Set the value: ``&tree_time_myGroupA=2008-05-05``
+ *
  */
 cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
 
@@ -403,7 +411,18 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 this.addMetadata(item, nodeConfig);
 
                 var timeWidget;
-                if (item.time) {
+                if (item.time && !parentNode.timeWidget) {
+                    if (this.initialState && this.initialState['time_' + item.name]) {
+                        var times = this.initialState['time_' + item.name].split('/');
+                        if (!item.time.minDefValue) {
+                          item.time.minDefValue = times[0];
+                        }
+                        if (times.length === 2) {
+                            if (!item.time.maxDefValue) {
+                                item.time.maxDefValue = times[1];
+                            }
+                        }
+                    }
                     timeWidget = this.getTimeWidget(item);
                 }
 
@@ -440,25 +459,27 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                 // time widget may need to be redrawn in case it's in a
                 // collapsed node
                 item.node.parentNode.on('expand', function() {
-                    var timeWidget = item.node.timeWidget;
-                    if (timeWidget) {
-                        timeWidget.doLayout();
-                        if (Ext.isIE) {
-                            // redo the doLayout to force display in IE11
-                            setTimeout(function(){
-                                timeWidget.doLayout();
-                            }, 100);
+                    item.node.cascade(function(node) {
+                        var timeWidget = node.timeWidget;
+                        if (timeWidget) {
+                            timeWidget.doLayout();
+                            if (Ext.isIE) {
+                                // redo the doLayout to force display in IE11
+                                setTimeout(function(){
+                                    timeWidget.doLayout();
+                                }, 100);
+                            }
+                            if (timeWidget.timeType === 'slider') {
+                                var slider = timeWidget.items.get(1);
+                                // compute thumb half size manually to prevent
+                                // rendering issues
+                                var thumb = slider.innerEl.child('.x-slider-thumb');
+                                slider.halfThumb = thumb.getWidth() / 2;
+                                slider.syncThumb();
+                            }
                         }
-                        if (timeWidget.timeType === 'slider') {
-                            var slider = timeWidget.items.get(1);
-                            // compute thumb half size manually to prevent
-                            // rendering issues
-                            var thumb = slider.innerEl.child('.x-slider-thumb');
-                            slider.halfThumb = thumb.getWidth() / 2;
-                            slider.syncThumb();
-                        }
-                    }
-                });
+                    }, this);
+                }, this);
                 if (item.children) {
                     addNodes.call(this, item.children, item.node, level+1);
                 }
@@ -1089,7 +1110,7 @@ cgxp.tree.LayerTree = Ext.extend(Ext.tree.TreePanel, {
                     child.layer = new OpenLayers.Layer.WMS(
                         child.name, child.url, {
                             STYLE: child.style,
-                            LAYER: child.name,
+                            LAYERS: child.name,
                             FORMAT: child.imageType,
                             TRANSPARENT: child.imageType == 'image/png'
                         }, {

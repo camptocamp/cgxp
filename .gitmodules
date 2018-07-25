@@ -1,6 +1,6 @@
 [submodule "openlayers"]
 	path = openlayers
-	url = https://github.com/camptocamp/openlayers.git
+	url = https://github.com/openlayers/ol2.git
 [submodule "geoext"]
 	path = geoext
 	url = https://github.com/geoext/geoext.git

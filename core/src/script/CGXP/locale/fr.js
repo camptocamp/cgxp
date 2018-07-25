@@ -112,6 +112,7 @@ GeoExt.Lang.add("fr", {
         passwordText: "Mot de passe",
         loginMenuText: "Compte",
         changePasswordButtonText: "Envoyer",
+        oldPasswordText: "Mot de passe actuel",
         newPasswordText: "Nouveau mot de passe",
         confirmNewPasswordText: "Confirmation mot de passe",
         changePasswordText: "Changer le mot de passe",

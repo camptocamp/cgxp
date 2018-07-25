@@ -619,11 +619,13 @@ cgxp.plugins.GetFeature = Ext.extend(gxp.plugins.Tool, {
             var l = self.getLayers.call(self);
             if (l.internalLayers.length > 0) {
                 protocol.format.featureType = l.internalLayers;
+                protocol.format.featureNS = cgxp.WFS_FEATURE_NS; //reset NS (updated after request)
                 this.protocol = protocol;
                 OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
             }
             if (l.externalLayers.length > 0) {
                 externalProtocol.format.featureType = l.externalLayers;
+                protocol.format.featureNS = cgxp.WFS_FEATURE_NS; //reset NS (updated after request)
                 this.protocol = externalProtocol;
                 OpenLayers.Control.GetFeature.prototype.request.apply(this, arguments);
             }
