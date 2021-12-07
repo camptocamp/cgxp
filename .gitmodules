@@ -3,7 +3,7 @@
 	url = https://github.com/openlayers/ol2.git
 [submodule "geoext"]
 	path = geoext
-	url = https://github.com/geoext/geoext.git
+	url = https://github.com/geoext/geoext1.git
 [submodule "gxp"]
 	path = gxp
 	url = https://github.com/boundlessgeo/gxp.git
